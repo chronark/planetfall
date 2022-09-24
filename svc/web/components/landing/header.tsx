@@ -17,10 +17,11 @@ export const Header: React.FC = (): JSX.Element => {
   }, []);
   return (
     <header
-      className={`fixed top-0  w-full z-50  transition-shadow duration-500 ${isScrolled
-        ? "bg-white/95 backdrop-blur [@supports(backdrop-filter:blur(0))]:bg-white/75 shadow-lg"
-        : "bg-transparent"
-        }`}
+      className={`fixed top-0  w-full z-50  transition-shadow duration-500 ${
+        isScrolled
+          ? "bg-white/95 backdrop-blur [@supports(backdrop-filter:blur(0))]:bg-white/75 shadow-lg"
+          : "bg-transparent"
+      }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -35,7 +36,6 @@ export const Header: React.FC = (): JSX.Element => {
           </div>
           {/* Desktop navigation */}
           <nav className="flex grow items-center">
-
             <ul className="flex grow justify-end flex-wrap items-center gap-8">
               <li className="hidden md:block">
                 <Link
@@ -45,7 +45,6 @@ export const Header: React.FC = (): JSX.Element => {
                   Pricing
                 </Link>
               </li>
-
 
               <li>
                 <Link href="/signup">

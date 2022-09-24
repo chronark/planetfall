@@ -1,18 +1,26 @@
-import Link from 'next/link'
+import Link from "next/link";
 
-import React from 'react'
+import React from "react";
 
 export const Footer: React.FC = (): JSX.Element => {
   return (
     <footer className="bg-slate-50">
       <div className="container mx-auto">
-
         <div className="py-16 text-center ">
-          <Link href="https://planetfall.io" className="font-extrabold text-2xl hover:text-primary-800">planetfall.io</Link>
+          <Link
+            href="https://planetfall.io"
+            className="font-extrabold text-2xl hover:text-primary-800"
+          >
+            planetfall.io
+          </Link>
           <nav className="mt-10 text-sm" aria-label="quick links">
             <div className="-my-1 flex justify-center gap-x-6">
-              <Link href="#features" className="hover:text-info-600">Features</Link>
-              <Link href="#pricing" className="hover:text-info-600">Pricing</Link>
+              <Link href="#features" className="hover:text-info-600">
+                Features
+              </Link>
+              <Link href="#pricing" className="hover:text-info-600">
+                Pricing
+              </Link>
             </div>
           </nav>
         </div>
@@ -44,11 +52,11 @@ export const Footer: React.FC = (): JSX.Element => {
             </Link>
           </div>
           <p className="mt-6 text-sm text-slate-500 sm:mt-0">
-            Copyright &copy; {new Date().getFullYear()} planetfall.io. All rights
-            reserved.
+            Copyright &copy; {new Date().getFullYear()}{" "}
+            planetfall.io. All rights reserved.
           </p>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};

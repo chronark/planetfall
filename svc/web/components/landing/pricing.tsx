@@ -22,28 +22,28 @@ const tiers: {
   description: string;
   cta: string;
 }[] = [
-    {
-      name: "Free",
-      href: "#",
-      monthlyPrice: 0,
-      description: "No Credit Card required",
-      cta: "Start for free",
-    },
-    {
-      name: "Pro",
-      href: "#",
-      monthlyPrice: 20,
-      description: "For growing APIs and teams",
-      cta: "Buy Pro",
-    },
-    {
-      name: "Enterprise",
-      href: "#",
-      monthlyPrice: -1,
-      description: "For large-scale APIs",
-      cta: "Contact us",
-    },
-  ];
+  {
+    name: "Free",
+    href: "#",
+    monthlyPrice: 0,
+    description: "No Credit Card required",
+    cta: "Start for free",
+  },
+  {
+    name: "Pro",
+    href: "#",
+    monthlyPrice: 20,
+    description: "For growing APIs and teams",
+    cta: "Buy Pro",
+  },
+  {
+    name: "Enterprise",
+    href: "#",
+    monthlyPrice: -1,
+    description: "For large-scale APIs",
+    cta: "Contact us",
+  },
+];
 const sections: {
   name: string;
   features: {
@@ -51,63 +51,63 @@ const sections: {
     tiers: Record<Tier, string | boolean | number>;
   }[];
 }[] = [
-    {
-      name: "Features",
-      features: [
-        {
-          name: "Included requests",
-          tiers: { Free: "100k", Pro: "2 million", Enterprise: "Custom" },
-        },
-        {
-          name: "Additional requests",
-          tiers: { Free: false, Pro: "$10 / million", Enterprise: "Custom" },
-        },
-        {
-          name: "Requests limit",
-          tiers: { Free: "100k / mo", Pro: "500k / mo", Enterprise: "Unlimited" },
-        },
-        { name: "Teams", tiers: { Free: false, Pro: true, Enterprise: true } },
-        {
-          name: "Integrated Domains",
-          tiers: { Free: false, Pro: true, Enterprise: true },
-        },
-      ],
-    },
-    {
-      name: "Endpoints",
-      features: [
-        {
-          name: "Minimum Frequency",
-          tiers: { Free: "10s", Pro: "1s", Enterprise: "1s" },
-        },
-        {
-          name: "Eget risus integer.",
-          tiers: { Free: false, Pro: true, Enterprise: true },
-        },
-        {
-          name: "Gravida leo urna velit.",
-          tiers: { Free: false, Pro: false, Enterprise: true },
-        },
-        {
-          name: "Elementum ut dapibus mi feugiat cras nisl.",
-          tiers: { Free: false, Pro: false, Enterprise: true },
-        },
-      ],
-    },
-    {
-      name: "Alerts",
-      features: [
-        { name: "Webhooks", tiers: { Free: true, Pro: true, Enterprise: true } },
-        { name: "Slack", tiers: { Free: true, Pro: true, Enterprise: true } },
-        { name: "Email", tiers: { Free: false, Pro: true, Enterprise: true } },
-        {
-          name: "Opsgenie",
-          tiers: { Free: false, Pro: false, Enterprise: true },
-        },
-        { name: "Custom", tiers: { Free: false, Pro: false, Enterprise: true } },
-      ],
-    },
-  ];
+  {
+    name: "Features",
+    features: [
+      {
+        name: "Included requests",
+        tiers: { Free: "100k", Pro: "2 million", Enterprise: "Custom" },
+      },
+      {
+        name: "Additional requests",
+        tiers: { Free: false, Pro: "$10 / million", Enterprise: "Custom" },
+      },
+      {
+        name: "Requests limit",
+        tiers: { Free: "100k / mo", Pro: "500k / mo", Enterprise: "Unlimited" },
+      },
+      { name: "Teams", tiers: { Free: false, Pro: true, Enterprise: true } },
+      {
+        name: "Integrated Domains",
+        tiers: { Free: false, Pro: true, Enterprise: true },
+      },
+    ],
+  },
+  {
+    name: "Endpoints",
+    features: [
+      {
+        name: "Minimum Frequency",
+        tiers: { Free: "10s", Pro: "1s", Enterprise: "1s" },
+      },
+      {
+        name: "Eget risus integer.",
+        tiers: { Free: false, Pro: true, Enterprise: true },
+      },
+      {
+        name: "Gravida leo urna velit.",
+        tiers: { Free: false, Pro: false, Enterprise: true },
+      },
+      {
+        name: "Elementum ut dapibus mi feugiat cras nisl.",
+        tiers: { Free: false, Pro: false, Enterprise: true },
+      },
+    ],
+  },
+  {
+    name: "Alerts",
+    features: [
+      { name: "Webhooks", tiers: { Free: true, Pro: true, Enterprise: true } },
+      { name: "Slack", tiers: { Free: true, Pro: true, Enterprise: true } },
+      { name: "Email", tiers: { Free: false, Pro: true, Enterprise: true } },
+      {
+        name: "Opsgenie",
+        tiers: { Free: false, Pro: false, Enterprise: true },
+      },
+      { name: "Custom", tiers: { Free: false, Pro: false, Enterprise: true } },
+    ],
+  },
+];
 
 function classNames(...classes: unknown[]) {
   return classes.filter(Boolean).join(" ");
@@ -288,7 +288,6 @@ export const Pricing: React.FC = (): JSX.Element => {
                       >
                         <div className="relative table h-full w-full">
                           <p>
-
                             {tier.monthlyPrice >= 0
                               ? (
                                 <>

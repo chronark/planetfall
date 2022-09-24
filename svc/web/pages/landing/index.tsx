@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Features, Header, Hero, Pricing, Footer } from "components/landing";
+import { Features, Footer, Header, Hero, Pricing } from "components/landing";
 import Head from "next/head";
 
 function Home() {

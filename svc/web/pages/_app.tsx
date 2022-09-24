@@ -5,23 +5,22 @@ import { withTRPC } from "@trpc/next";
 import { Router } from "./api/v1/trpc/[trpc]";
 import { useRouter } from "next/router";
 import { httpBatchLink } from "@trpc/react";
-import PlausibleProvider from 'next-plausible'
+import PlausibleProvider from "next-plausible";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   return (
     <PlausibleProvider domain="planetfall.io">
-
-    <ClerkProvider>
-      <SignedIn>
-        <Component {...pageProps} />
-      </SignedIn>
-      <SignedOut>
-        <div className="w-screen h-screen flex items-center justify-center">
-          <SignIn />
-        </div>
-      </SignedOut>
-    </ClerkProvider>
+      <ClerkProvider>
+        <SignedIn>
+          <Component {...pageProps} />
+        </SignedIn>
+        <SignedOut>
+          <div className="w-screen h-screen flex items-center justify-center">
+            <SignIn />
+          </div>
+        </SignedOut>
+      </ClerkProvider>
     </PlausibleProvider>
   );
 }
