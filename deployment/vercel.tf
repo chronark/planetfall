@@ -5,6 +5,8 @@ resource "vercel_project" "pinger" {
   serverless_function_region = each.value
 
 
+  build_command  = "cd ../.. && npx turbo run build --filter=pinger"
+  root_directory = "svc/pinger"
 
   environment = [
 
