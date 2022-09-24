@@ -2,15 +2,11 @@ import type { AppProps } from "next/app";
 import "tailwindcss/tailwind.css";
 import { withTRPC } from "@trpc/next";
 import { Router } from "./api/v1/trpc/[trpc]";
-import { useRouter } from "next/router";
 import { httpBatchLink } from "@trpc/react";
-import PlausibleProvider from "next-plausible";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <PlausibleProvider domain="planetfall.io">
-      <Component {...pageProps} />
-    </PlausibleProvider>
+    <Component {...pageProps} />
   );
 }
 
