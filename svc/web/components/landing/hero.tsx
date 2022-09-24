@@ -4,7 +4,7 @@ const Rings: React.FC = (): JSX.Element => {
   let id = useId();
 
   return (
-    <div className="absolute left-1/2 w-4/5 h-full stroke-gray-300/70 [mask-image:linear-gradient(to_top,white_20%,transparent_75%)]  -translate-x-1/2 sm:-top-20 md:-top-28 lg:-top-32  xl:-top-48">
+    <div className="absolute left-1/2 w-4/5 h-full stroke-gray-300/70 [mask-image:linear-gradient(to_top,white_20%,transparent_75%)] -translate-x-1/2 sm:-top-20 md:-top-28 lg:-top-32 xl:-top-48">
       {/* Outer ring */}
       <svg
         viewBox="0 0 1026 1026"
@@ -78,7 +78,7 @@ export const Hero: React.FC = (): JSX.Element => {
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         <div className="pt-32 md:pt-40">
           {/* Hero content */}
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="mx-auto text-center">
             <h1 className="text-6xl font-extrabold lg:whitespace-nowrap">
               Planet-wide Latency Analysis
             </h1>
