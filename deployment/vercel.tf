@@ -1,7 +1,6 @@
 resource "vercel_project" "pinger" {
   for_each                   = var.vercel_regions
   name                       = "planetfall-pinger-${each.value}"
-  framework                  = "nextjs"
   serverless_function_region = each.value
 
 
