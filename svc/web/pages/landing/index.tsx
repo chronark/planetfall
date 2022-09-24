@@ -12,8 +12,12 @@ function Home() {
           name="description"
           content="Keep track of your API latency and performance across the globe."
         />
-        <script defer data-domain="planetfall.io" src="https://plausible.io/js/plausible.js"></script>
-
+        <script
+          defer
+          data-domain="planetfall.io"
+          src="https://plausible.io/js/plausible.js"
+        >
+        </script>
       </Head>
       <div className="flex flex-col min-h-screen overflow-hidden">
         {/*  Site header */}

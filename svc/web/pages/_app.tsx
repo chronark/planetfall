@@ -5,9 +5,7 @@ import { Router } from "./api/v1/trpc/[trpc]";
 import { httpBatchLink } from "@trpc/react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <Component {...pageProps} />
-  );
+  return <Component {...pageProps} />;
 }
 
 export default withTRPC<Router>({

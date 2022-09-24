@@ -12,9 +12,9 @@
   "license": "ISC",
   "packageManager": "pnpm@7.12.1",
   "devDependencies": {
-    "@planetfall/eslint": "workspace:*",
+    "@planetfall/eslint": "workspace:0.0.0",
     "prettier": "^2.7.1",
-    "turbo": "^1.5.1"
+    "turbo": "^1.5.3"
   },
   "prisma": {
     "schema": "pkg/db/prisma/schema.prisma"

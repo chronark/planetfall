@@ -83,8 +83,8 @@ export const Hero: React.FC = (): JSX.Element => {
               Planet-wide Latency Analysis
             </h1>
             <p className="text-xl text-slate-500 mt-6">
-              Track, measure and share the latency and performance of your APIs from across the
-              planet.
+              Track, measure and share the latency and performance of your APIs
+              from across the planet.
             </p>
             <div className="mt-10 max-w-xs mx-auto sm:max-w-none sm:inline-flex sm:justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <div>
