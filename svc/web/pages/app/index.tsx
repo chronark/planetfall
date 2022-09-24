@@ -1,4 +1,5 @@
 import { trpc } from "@planetfall/svc/web/lib/hooks/trpc";
+import { WithAuth } from "../../components/auth";
 
 export default function IndexPage() {
   const hello = trpc.hello.useQuery({ text: "client" });
@@ -7,8 +8,10 @@ export default function IndexPage() {
     return <div>Loading...</div>;
   }
   return (
-    <div>
-      <p>{hello.data.greeting}</p>
-    </div>
+    <WithAuth>
+      <div>
+        <p>{hello.data.greeting}</p>
+      </div>
+    </WithAuth>
   );
 }

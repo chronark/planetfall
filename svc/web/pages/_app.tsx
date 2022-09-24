@@ -1,5 +1,4 @@
 import type { AppProps } from "next/app";
-import { ClerkProvider, SignedIn, SignedOut, SignIn } from "@clerk/nextjs";
 import "tailwindcss/tailwind.css";
 import { withTRPC } from "@trpc/next";
 import { Router } from "./api/v1/trpc/[trpc]";
@@ -8,19 +7,9 @@ import { httpBatchLink } from "@trpc/react";
 import PlausibleProvider from "next-plausible";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter();
   return (
     <PlausibleProvider domain="planetfall.io">
-      <ClerkProvider>
-        <SignedIn>
-          <Component {...pageProps} />
-        </SignedIn>
-        <SignedOut>
-          <div className="w-screen h-screen flex items-center justify-center">
-            <SignIn />
-          </div>
-        </SignedOut>
-      </ClerkProvider>
+      <Component {...pageProps} />
     </PlausibleProvider>
   );
 }
