@@ -25,7 +25,7 @@ resource "vercel_project" "pinger" {
 
 
 
-data "vercel_project_directory" "nextjs" {
+data "vercel_project_directory" "pinger-directory" {
   path = "../svc/pinger"
 }
 
