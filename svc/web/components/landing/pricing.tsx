@@ -112,9 +112,9 @@ export const Pricing: React.FC = (): JSX.Element => {
     <section id="pricing">
       <div className="relative py-16 sm:py-24 lg:py-32">
         <div className="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
-          <h2 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-t from-primary-500 to-info-300">
+          {/* <h2 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-t from-primary-500 to-info-300">
             Pricing
-          </h2>
+          </h2> */}
           <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Transparent pricing
           </p>
