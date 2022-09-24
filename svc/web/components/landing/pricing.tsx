@@ -3,15 +3,6 @@ import Image from "next/image";
 import Illustration from "../../public/landing/pricing-illustration.svg";
 import Link from "next/link";
 import { CheckIcon, MinusIcon } from "@heroicons/react/24/solid";
-const freeFeatures = ["100k Requests / month", "22 Regions", "1 Status Page"];
-const teamFeatures = [
-  "100k free Requests / month ",
-  "Then $10 per million",
-  "Up tp 50 million requests per month",
-  "Teams",
-  "3 Status Pages per Team",
-];
-const enterpriseFeatures = ["Unlimited Requests", "Custom Pricing"];
 
 type Tier = "Free" | "Pro" | "Enterprise";
 
@@ -48,7 +39,7 @@ const sections: {
   name: string;
   features: {
     name: string;
-    tiers: Record<Tier, string | boolean | number>;
+    tiers: Record<Tier, string | boolean>;
   }[];
 }[] = [
   {
@@ -56,20 +47,20 @@ const sections: {
     features: [
       {
         name: "Included requests",
-        tiers: { Free: "100k", Pro: "2 million", Enterprise: "Custom" },
+        tiers: { Free: "100k", Pro: "1 million", Enterprise: "Custom" },
       },
       {
         name: "Additional requests",
         tiers: { Free: false, Pro: "$10 / million", Enterprise: "Custom" },
       },
-      {
-        name: "Requests limit",
-        tiers: { Free: "100k / mo", Pro: "500k / mo", Enterprise: "Unlimited" },
-      },
       { name: "Teams", tiers: { Free: false, Pro: true, Enterprise: true } },
       {
         name: "Integrated Domains",
         tiers: { Free: false, Pro: true, Enterprise: true },
+      },
+      {
+        name: "Timeout",
+        tiers: { Free: "5s", Pro: "30s", Enterprise: "Custom" },
       },
     ],
   },
@@ -77,19 +68,24 @@ const sections: {
     name: "Endpoints",
     features: [
       {
+        name: "Number of endpoints",
+        tiers: { Free: "5", Pro: "100", Enterprise: "∞" },
+      },
+      {
         name: "Minimum Frequency",
         tiers: { Free: "10s", Pro: "1s", Enterprise: "1s" },
       },
+    ],
+  },
+  {
+    name: "Storage",
+    features: [
       {
-        name: "Eget risus integer.",
-        tiers: { Free: false, Pro: true, Enterprise: true },
+        name: "Data Retention",
+        tiers: { Free: "24h", Pro: "7 days", Enterprise: "90 days" },
       },
       {
-        name: "Gravida leo urna velit.",
-        tiers: { Free: false, Pro: false, Enterprise: true },
-      },
-      {
-        name: "Elementum ut dapibus mi feugiat cras nisl.",
+        name: "Audit Logs",
         tiers: { Free: false, Pro: false, Enterprise: true },
       },
     ],
@@ -104,7 +100,6 @@ const sections: {
         name: "Opsgenie",
         tiers: { Free: false, Pro: false, Enterprise: true },
       },
-      { name: "Custom", tiers: { Free: false, Pro: false, Enterprise: true } },
     ],
   },
 ];
@@ -115,21 +110,19 @@ function classNames(...classes: unknown[]) {
 export const Pricing: React.FC = (): JSX.Element => {
   return (
     <section id="pricing">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="py-12 md:py-20 border-t border-slate-100">
-          {/* Section header */}
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-5xl font-extrabold">
-              Find a plan that&apos;s right for you
-            </h2>
-            <div className="mt-4 max-w-2xl mx-auto">
-              <p className="text-xl text-slate-400">
-                Get started for free, no credit card required
-              </p>
-            </div>
-          </div>
-          {/* Pricing tables */}
-
+      <div className="relative py-16 sm:py-24 lg:py-32">
+        <div className="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
+          <h2 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-t from-primary-500 to-info-300">
+            Pricing
+          </h2>
+          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Transparent pricing
+          </p>
+          <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
+            Start for free, then upgrade as you grow.
+          </p>
+        </div>
+        <div className="mt-12">
           <div className="mx-auto max-w-7xl bg-white py-16 sm:py-24 sm:px-6 lg:px-8">
             {/* xs to lg */}
             <div className="mx-auto max-w-2xl space-y-16 lg:hidden">
@@ -338,7 +331,10 @@ export const Pricing: React.FC = (): JSX.Element => {
                             {feature.name}
                           </th>
                           {tiers.map((tier) => (
-                            <td key={tier.name} className="py-5 px-6">
+                            <td
+                              key={tier.name}
+                              className="py-5 px-6 text-center"
+                            >
                               {typeof feature.tiers[tier.name] === "string"
                                 ? (
                                   <span className="block text-sm text-gray-700">
@@ -346,7 +342,7 @@ export const Pricing: React.FC = (): JSX.Element => {
                                   </span>
                                 )
                                 : (
-                                  <>
+                                  <div className="flex justify-center">
                                     {feature.tiers[tier.name] === true
                                       ? (
                                         <CheckIcon
@@ -366,7 +362,7 @@ export const Pricing: React.FC = (): JSX.Element => {
                                         ? "Included"
                                         : "Not included"} in {tier.name}
                                     </span>
-                                  </>
+                                  </div>
                                 )}
                             </td>
                           ))}

@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/solid";
 import React from "react";
 
-const items = [
+const features = [
   {
     title: "22 Regions",
     description: "Run latency checks from anywhere on the planet.",
@@ -48,37 +48,44 @@ const items = [
 ];
 
 export const Features: React.FC = (): JSX.Element => {
-  console.log({ items });
   return (
     <section id="features">
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="">
-        </div>
-        <div className="py-12 md:py-20">
-          {/* Section header */}
-          <div className="text-center pb-12 md:pb-20">
-            <h2 className="text-5xl font-extrabold">
-              Get insights into your users&apos; experience
-            </h2>
-          </div>
-          <ul className="max-w-sm mx-auto grid gap-8 md:grid-cols-3 lg:gap-16 items-start md:max-w-none">
-            {items.map((item) => (
-              <li
-                key={item.title}
-                className="animate-fade-in flex flex-col items-center group"
-              >
-                <div className="rounded-full p-4 bg-gradient-to-t from-primary-500 to-info-400 text-slate-100">
-                  <item.icon className="h-8 w-8" />
+      <div className="relative bg-white py-16 sm:py-24 lg:py-32">
+        <div className="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
+          {/* <h2 className="text-lg font-semibold text-primary-600"></h2> */}
+          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Gain insights into how your APIs perform
+          </p>
+          <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
+            Automated API monitoring and alerting for your APIs. Monitor the
+            latency of your APIs from around the planet.
+          </p>
+          <div className="mt-12">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {features.map((feature) => (
+                <div key={feature.title} className="pt-6">
+                  <div className="flow-root rounded bg-slate-50 px-6 pb-8">
+                    <div className="-mt-6">
+                      <div>
+                        <span className="inline-flex items-center justify-center rounded-md bg-gradient-to-t from-primary-500 to-info-500 p-3 shadow-lg">
+                          <feature.icon
+                            className="h-6 w-6 text-white"
+                            aria-hidden="true"
+                          />
+                        </span>
+                      </div>
+                      <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">
+                        {feature.title}
+                      </h3>
+                      <p className="mt-5 text-base text-gray-500">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <h4 className="mt-4 text-3xl font-semibold text-slate-800 text-center">
-                  {item.title}
-                </h4>
-                <p className="mt-2 text-lg text-gray-400 text-center">
-                  {item.description}
-                </p>
-              </li>
-            ))}
-          </ul>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
