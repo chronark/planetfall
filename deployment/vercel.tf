@@ -25,15 +25,15 @@ resource "vercel_project" "pinger" {
 
 
 
-data "vercel_project_directory" "pinger-directory" {
+data "vercel_project_directory" "pinger" {
   path = "../svc/pinger"
 }
 
 resource "vercel_deployment" "pinger" {
   for_each    = vercel_project.pinger
   project_id  = each.value.id
-  files       = data.vercel_project_directory.nextjs.files
-  path_prefix = data.vercel_project_directory.nextjs.path
+  files       = data.vercel_project_directory.pinger.files
+  path_prefix = data.vercel_project_directory.pinger.path
   production  = true
 }
 
