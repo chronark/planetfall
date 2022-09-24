@@ -2,11 +2,11 @@ resource "vercel_project" "pinger" {
   for_each                   = var.vercel_regions
   name                       = "planetfall-pinger-${each.value}"
   serverless_function_region = each.value
+  framework                  = "nextjs"
 
 
   build_command  = "cd ../.. && npx turbo run build --filter=pinger"
   root_directory = "svc/pinger"
-  output_directory = "svc/pinger"
 
   environment = [
 

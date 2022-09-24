@@ -1,20 +1,28 @@
 {
   "name": "@planetfall/pinger",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "keywords": [],
-  "author": "Andreas Thomas",
-  "license": "ISC",
   "dependencies": {
-    "@trpc/server": "^10.0.0-proxy-beta.3",
+    "@trpc/server": "10.0.0-proxy-beta.3",
+    "next": "12.3.1",
+    "next-transpile-modules": "^9.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "zod": "^3.19.1"
   },
   "devDependencies": {
+    "@planetfall/eslint": "workspace:*",
+    "@planetfall/tsconfig": "workspace:*",
     "@types/node": "18.7.18",
-    "typescript": "^4.8.3"
+    "@types/react": "18.0.20",
+    "@types/react-dom": "18.0.6",
+    "eslint": "^7.23.0",
+    "typescript": "4.8.3"
   }
 }
