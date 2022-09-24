@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server";
-import { createNextApiHandler } from "@trpc/server/adapters/next";
+import { createNextApiHandler, CreateNextContextOptions } from "@trpc/server/adapters/next";
 
 export async function createContext({
   req,
   res,
-}) {
+}: CreateNextContextOptions): Promise<CreateNextContextOptions> {
   const authorization = req.headers["authorization"];
   if (!authorization) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -20,7 +20,7 @@ export async function createContext({
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  return {};
+  return { req, res };
 }
 export type Context = inferAsyncReturnType<typeof createContext>;
 export const t = initTRPC.context<Context>().create();
