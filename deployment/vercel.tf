@@ -6,6 +6,7 @@ resource "vercel_project" "pinger" {
 
   build_command  = "cd ../.. && npx turbo run build --filter=pinger"
   root_directory = "svc/pinger"
+  output_directory = "svc/pinger"
 
   environment = [
 
