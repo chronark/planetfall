@@ -1,0 +1,22 @@
+{
+  "name": "@planetfall/db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "prisma generate && tsc"
+  },
+  "keywords": [],
+  "author": "Andreas Thomas",
+  "license": "ISC",
+
+  "dependencies": {
+    "@prisma/client": "^4.3.1"
+  },
+  "devDependencies": {
+    "prisma": "^4.3.1",
+    "typescript": "^4.8.3",
+    "@planetfall/tsconfig": "workspace:*"
+  }
+}

@@ -1,0 +1,125 @@
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+enum Method {
+  GET
+  POST
+  PUT
+  DELETE
+}
+
+enum Platform {
+  AWS
+}
+
+model Region {
+  id         String    @id
+  platform   Platform
+  region     String
+  Endpoint   Endpoint? @relation(fields: [endpointId], references: [id])
+  endpointId String?
+  Check      Check[]
+}
+
+model Endpoint {
+  id     String @id
+  method Method
+
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Interval in milliseconds
+  interval      Int
+  active        Boolean
+  // Milliseconds
+  degradetAfter Int?
+  failedAfter   Int?
+  regions       Region[]
+  // json encoded map
+  headers       Json?
+  body          String?
+
+  StatusPage   StatusPage? @relation(fields: [statusPageId], references: [id])
+  statusPageId String?
+  checks        Check[]
+}
+
+model StatusPage {
+  id        String     @id
+  slug      String     @unique
+  name      String
+  endpoints Endpoint[]
+}
+
+model User {
+  id      String       @id
+  clerkId String       @unique
+  teams   Membership[]
+  @@index([clerkId])
+}
+
+model Team {
+  id String @id
+
+  name String @unique
+
+  quota Quota @relation(fields: [id], references: [teamId])
+
+  stripeCustomerId                String @unique
+  stripeCurrentBillingPeriodStart Int
+
+  members  Membership[]
+  endpoints Endpoint[]
+
+  @@index([name])
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  FINANCE
+  READ
+  READWRITE
+}
+
+model Membership {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  team   Team   @relation(fields: [teamId], references: [id])
+  teamId String
+  role   Role
+
+  @@id([userId, teamId])
+}
+
+model Check {
+  id         String   @id
+  endpoint   Endpoint @relation(fields: [endpointId], references: [id])
+  endpointId String
+  latency    Int
+  time       Int
+  region     Region   @relation(fields: [regionId], references: [id])
+  regionId   String
+
+  @@index([endpointId])
+}
+
+model Quota {
+  teamId    String @id
+  // Milliseconds
+  retention Int
+
+  team Team[]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "planetfall",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build"
+  },
+  "keywords": [],
+  "author": "Andreas Thomas",
+  "license": "ISC",
+  "packageManager": "pnpm@7.12.1",
+  "devDependencies": {
+    "@planetfall/eslint": "workspace:*",
+    "prettier": "^2.7.1",
+    "turbo": "^1.5.1"
+  },
+  "prisma": {
+    "schema": "pkg/db/prisma/schema.prisma"
+  }
+}
