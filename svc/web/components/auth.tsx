@@ -1,4 +1,4 @@
-import {  SignedIn, SignedOut, SignIn } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignIn } from "@clerk/nextjs";
 import React, { PropsWithChildren } from "react";
 
 export const WithAuth: React.FC<PropsWithChildren> = (

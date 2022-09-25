@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ClerkProvider>
       <Component {...pageProps} />
     </ClerkProvider>
-  )
+  );
 }
 
 export default MyApp;

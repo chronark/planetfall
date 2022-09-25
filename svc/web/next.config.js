@@ -12,9 +12,6 @@ const nextConfig = {
   experimental: {
     newNextLinkBehavior: true,
     scrollRestoration: true,
-    images: {
-      allowFutureImage: true,
-    },
   },
   images: {
     domains: ["images.clerk.dev"],
