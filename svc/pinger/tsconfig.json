@@ -5,7 +5,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@planetfall/svc/web/*": ["./*"]
+      "@planetfall/svc/web/*": ["./*"],
+      "@trpc/server/*": ["../../../node_modules/@trpc/server/*"]
     }
   }
 }

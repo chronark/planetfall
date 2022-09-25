@@ -10,13 +10,12 @@
   "keywords": [],
   "author": "Andreas Thomas",
   "license": "ISC",
-
   "dependencies": {
     "@prisma/client": "^4.3.1"
   },
   "devDependencies": {
+    "@planetfall/tsconfig": "workspace:0.0.0",
     "prisma": "^4.3.1",
-    "typescript": "^4.8.3",
-    "@planetfall/tsconfig": "workspace:*"
+    "typescript": "^4.8.3"
   }
 }

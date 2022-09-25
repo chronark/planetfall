@@ -1,6 +1,7 @@
 const withTM = require("next-transpile-modules")(
   [
     "@planetfall/db",
+    "@planetfall/pinger",
   ],
 );
 
@@ -14,6 +15,15 @@ const nextConfig = {
     images: {
       allowFutureImage: true,
     },
+  },
+  images: {
+    domains: ["images.clerk.dev"],
+  },
+
+  webpack: (config) => {
+    config.resolve.fallback = { fs: false };
+
+    return config;
   },
 };
 

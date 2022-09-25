@@ -1,6 +1,6 @@
-import { WithAuth } from "../../components/auth";
-import { Input, Output } from "../../../pinger/pages/api/v1/ping";
-import { Layout } from "../../components/app/layout/nav";
+import { WithAuth } from "../../../../components/auth";
+import { Input, Output } from "../../../../../pinger/pages/api/v1/ping";
+import { Layout } from "../../../../components/app/layout/nav";
 import { Field, Form, handleSubmit, useForm } from "components";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";

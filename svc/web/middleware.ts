@@ -23,7 +23,6 @@ export default function middleware(req: NextRequest) {
     .replace(`planetfall.io`, "")
     .replace(`localhost:${process.env.PORT ?? 3000}`, "").replace(/\.$/, "");
 
-  console.log({ currentHost, pathname: url.pathname });
   switch (currentHost) {
     case "":
       url.pathname = `/landing${url.pathname}`;
@@ -34,6 +33,5 @@ export default function middleware(req: NextRequest) {
     default:
       url.pathname = `/_sites/${currentHost}${url.pathname}`;
   }
-  console.log("[ MW ]", "redirecting to", url.href);
   return NextResponse.rewrite(url);
 }
