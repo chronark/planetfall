@@ -67,6 +67,33 @@ resource "vercel_project" "web" {
   
 }
 
+resource "vercel_dns_record" "clkmail"{
+  team_id = var.vercel_team_id
+  domain = "planetfall.io"
+  name   = "clkmail"
+  type   = "CNAME"
+  ttl    = 60
+  value  = "mail.n726fkhumtvm.clerk.services"
+}
+
+resource "vercel_dns_record" "clkmail"{
+  team_id = var.vercel_team_id
+  domain = "planetfall.io"
+  name   = "clk2._domainkey	"
+  type   = "CNAME"
+  ttl    = 60
+  value  = "dkim2.n726fkhumtvm.clerk.services"
+}
+
+resource "vercel_dns_record" "clkmail"{
+  team_id = var.vercel_team_id
+  domain = "planetfall.io"
+  name   = "clk._domainkey	"
+  type   = "CNAME"
+  ttl    = 60
+  value  = "dkim1.n726fkhumtvm.clerk.services"
+}
+
 resource "vercel_project_domain" "web"{
   project_id = vercel_project.web.id
   team_id = var.vercel_team_id
