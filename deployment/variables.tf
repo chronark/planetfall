@@ -19,6 +19,11 @@ variable "clerk_api_key" {
   sensitive = true
 }
 
+variable "databse_url" {
+  type      = string
+  sensitive = true
+}
+
 
 variable "vercel_regions" {
   type = set(string)
