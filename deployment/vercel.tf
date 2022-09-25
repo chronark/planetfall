@@ -88,12 +88,28 @@ resource "vercel_dns_record" "clkmail"{
 resource "vercel_dns_record" "clkmail"{
   team_id = var.vercel_team_id
   domain = "planetfall.io"
-  name   = "clk._domainkey	"
+  name   = "clk._domainkey"
   type   = "CNAME"
   ttl    = 60
   value  = "dkim1.n726fkhumtvm.clerk.services"
 }
 
+resource "vercel_dns_record" "clerk"{
+  team_id = var.vercel_team_id
+  domain = "planetfall.io"
+  name   = "clerk"
+  type   = "CNAME"
+  ttl    = 60
+  value  = "frontend-api.clerk.services"
+}
+resource "vercel_dns_record" "accounts"{
+  team_id = var.vercel_team_id
+  domain = "planetfall.io"
+  name   = "accounts	"
+  type   = "CNAME"
+  ttl    = 60
+  value  = "accounts.clerk.services"
+}
 resource "vercel_project_domain" "web"{
   project_id = vercel_project.web.id
   team_id = var.vercel_team_id
