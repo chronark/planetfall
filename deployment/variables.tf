@@ -19,7 +19,7 @@ variable "clerk_api_key" {
   sensitive = true
 }
 
-variable "databse_url" {
+variable "database_url" {
   type      = string
   sensitive = true
 }
