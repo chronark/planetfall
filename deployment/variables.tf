@@ -9,6 +9,10 @@ variable "vercel_token" {
   sensitive = true
 }
 
+variable "vercel_team_id" {
+  type      = string
+}
+
 variable "vercel_regions" {
   type = set(string)
   default = [

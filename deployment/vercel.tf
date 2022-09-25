@@ -1,6 +1,7 @@
 resource "vercel_project" "pinger" {
   for_each                   = var.vercel_regions
   name                       = "planetfall-pinger-${each.value}"
+  team_id = var.vercel_team_id
   serverless_function_region = each.value
   framework                  = "nextjs"
 
@@ -29,6 +30,7 @@ resource "vercel_project" "pinger" {
 
 data "vercel_project_directory" "root" {
   path = ".."
+  
 }
 
 resource "vercel_deployment" "pinger" {
@@ -37,6 +39,7 @@ resource "vercel_deployment" "pinger" {
   files       = data.vercel_project_directory.root.files
   path_prefix = data.vercel_project_directory.root.path
   production  = true
+  team_id = var.vercel_team_id
 }
 
 
