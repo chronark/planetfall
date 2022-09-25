@@ -39,9 +39,9 @@ export default async function handler(
           },
           include: {
             team: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
     if (user.teams.length !== 1) {
       throw new Error("Expected exactly one personal team");
@@ -57,15 +57,14 @@ export default async function handler(
       });
     }
 
-  
     console.log("Created user:", JSON.stringify(user, null, 2));
 
-  return res.status(200).end();
-} catch (err) {
-  console.error(err);
-  if (err instanceof z.ZodError) {
-    return res.status(400).send(err.message);
+    return res.status(200).end();
+  } catch (err) {
+    console.error(err);
+    if (err instanceof z.ZodError) {
+      return res.status(400).send(err.message);
+    }
+    return res.status(500).send((err as Error).message);
   }
-  return res.status(500).send((err as Error).message);
-}
 }

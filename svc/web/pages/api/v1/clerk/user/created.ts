@@ -42,7 +42,7 @@ export default async function handler(
                 name: input.body.data.username,
                 stripeCustomerId: `todo:${randomUUID()}`,
                 stripeCurrentBillingPeriodStart: 0,
-                retention: 24 * 60 * 60 * 1000
+                retention: 24 * 60 * 60 * 1000,
               },
             },
             role: "PERSONAL",

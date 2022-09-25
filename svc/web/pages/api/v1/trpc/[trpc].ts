@@ -1,4 +1,4 @@
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { NextApiHandler } from "next";
 import { z } from "zod";
@@ -11,24 +11,24 @@ const db = new PrismaClient();
 export const router = t.router({
   teams: t.procedure.input(z.object({
     clerkUserId: z.string(),
-  })).output(z.array(z.object({
-    id: z.string(),
-    name: z.string(),
-    stripeCustomerId: z.string(),
-    stripeCurrentBillingPeriodStart: z.number(),
-  }))).query(async ({ input, ctx }) => {
-    const teams = await db.team.findMany({
+  })).query(async ({ input, ctx }) => {
+    const user = await db.user.findUnique({
       where: {
-        members: {
-          some: {
-            user: {
-              clerkId: input.clerkUserId,
-            },
+        clerkId: input.clerkUserId,
+      },
+      include: {
+        teams: {
+          include: {
+            team: true,
           },
         },
       },
     });
-    return teams;
+    if (!user) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "user not found" });
+    }
+    console.log({ user });
+    return user.teams.map((membership) => membership.team);
   }),
 });
 

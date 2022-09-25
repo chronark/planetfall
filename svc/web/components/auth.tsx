@@ -10,7 +10,7 @@ export const WithAuth: React.FC<PropsWithChildren> = (
         {children}
       </SignedIn>
       <SignedOut>
-        <div className="w-screen h-screen flex items-center justify-center">
+        <div className="absolute inset-0 w-screen h-screen b backdrop-blur [@supports(backdrop-filter:blur(0))]:bg-white/20 flex items-center justify-center z-50">
           <SignIn />
         </div>
       </SignedOut>
