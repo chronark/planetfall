@@ -1,7 +1,7 @@
 resource "vercel_project" "pinger" {
   for_each                   = var.vercel_regions
   name                       = "planetfall-pinger-${each.value}"
-  team_id = var.vercel_team_id
+  team_id                    = var.vercel_team_id
   serverless_function_region = each.value
   framework                  = "nextjs"
 
@@ -20,6 +20,52 @@ resource "vercel_project" "pinger" {
   ]
 }
 
+
+
+resource "vercel_project" "web" {
+  name      = "planetfall"
+  team_id   = var.vercel_team_id
+  framework = "nextjs"
+
+
+  build_command  = "cd ../.. && npx turbo run build --filter=web"
+  root_directory = "svc/web"
+
+  git_repository = {
+    repo = "chronark/planetfall"
+    type = "github"
+  }
+
+  environment = [
+    {
+      key    = "PINGER_AUTH_TOKEN"
+      value  = var.auth_token
+      target = ["production", "preview"]
+
+    },
+    {
+      key    = "NEXT_PUBLIC_AXIOM_INGEST_ENDPOINT"
+      value  = "https://vercel-vitals.axiom.co/api/v1/send?configurationId=icfg_oPwbzTXCEWVftFAoGBeNQFKJ&projectId=b5766f87-cc3f-4925-9480-53e74b861789&type=web-vitals"
+      target = ["production"]
+    },
+    {
+      key    = "NEXT_PUBLIC_CLERK_FRONTEND_API"
+      value  = "clerk.planetfall.io"
+      target = ["production", "preview", "development"]
+    },
+    {
+      key    = "CLERK_API_KEY"
+      value  = var.clerk_api_key
+      target = ["production", "preview", "development"]
+    },
+    {
+      key   = "DATABASE_URL",
+      value = var.database_url,
+    target = ["production", "preview"] },
+
+  ]
+}
+
 # resource "vercel_project_domain" "pinger" {
 #   for_each   = vercel_project.pinger
 #   project_id = each.value.id
@@ -30,7 +76,7 @@ resource "vercel_project" "pinger" {
 
 # data "vercel_project_directory" "root" {
 #   path = ".."
-  
+
 # }
 
 # resource "vercel_deployment" "pinger" {

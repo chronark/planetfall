@@ -10,8 +10,15 @@ variable "vercel_token" {
 }
 
 variable "vercel_team_id" {
-  type      = string
+  type = string
 }
+
+
+variable "clerk_api_key" {
+  type      = string
+  sensitive = true
+}
+
 
 variable "vercel_regions" {
   type = set(string)
