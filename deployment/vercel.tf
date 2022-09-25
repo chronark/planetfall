@@ -64,8 +64,13 @@ resource "vercel_project" "web" {
     target = ["production", "preview"] },
 
   ]
+  
 }
 
+resource "vercel_project_domaon" "web"{
+  project_id = vercel_project.web.id
+  domain = "planetfall.io"
+}
 # resource "vercel_project_domain" "pinger" {
 #   for_each   = vercel_project.pinger
 #   project_id = each.value.id
