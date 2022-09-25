@@ -26,7 +26,7 @@ export class IdGenerator<TPrefixes extends string> {
    *
    * @returns xxxxxx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
    */
-  public id(prefix: TPrefixes): string {
+  public id = (prefix: TPrefixes): string => {
     return [
       this.prefixes[prefix],
       encodeBase58(Buffer.from(randomUUID().replace(/-/g, ""), "hex")),
