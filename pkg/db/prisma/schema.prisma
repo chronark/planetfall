@@ -53,7 +53,7 @@ model Endpoint {
 
   StatusPage   StatusPage? @relation(fields: [statusPageId], references: [id])
   statusPageId String?
-  checks        Check[]
+  checks       Check[]
 }
 
 model StatusPage {
@@ -67,6 +67,7 @@ model User {
   id      String       @id
   clerkId String       @unique
   teams   Membership[]
+
   @@index([clerkId])
 }
 
@@ -75,12 +76,13 @@ model Team {
 
   name String @unique
 
-  quota Quota @relation(fields: [id], references: [teamId])
-
   stripeCustomerId                String @unique
   stripeCurrentBillingPeriodStart Int
 
-  members  Membership[]
+  // milliseconds
+  retention Int
+
+  members   Membership[]
   endpoints Endpoint[]
 
   @@index([name])
@@ -115,12 +117,4 @@ model Check {
   regionId   String
 
   @@index([endpointId])
-}
-
-model Quota {
-  teamId    String @id
-  // Milliseconds
-  retention Int
-
-  team Team[]
 }

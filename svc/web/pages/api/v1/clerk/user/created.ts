@@ -28,6 +28,7 @@ export default async function handler(
   try {
     const input = validation.parse(req);
 
+    const teamId = newId("team");
     const user = await db.user.create({
       data: {
         id: newId("user"),
@@ -36,10 +37,11 @@ export default async function handler(
           create: {
             team: {
               create: {
-                id: newId("team"),
+                id: teamId,
                 name: input.body.data.username,
                 stripeCustomerId: Math.random().toString(),
                 stripeCurrentBillingPeriodStart: 0,
+                retention: 24 * 60 * 60 * 1000
               },
             },
             role: "PERSONAL",
