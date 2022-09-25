@@ -76,16 +76,16 @@ resource "vercel_dns_record" "clkmail"{
   value  = "mail.n726fkhumtvm.clerk.services"
 }
 
-resource "vercel_dns_record" "clkmail"{
+resource "vercel_dns_record" "clk2"{
   team_id = var.vercel_team_id
   domain = "planetfall.io"
-  name   = "clk2._domainkey	"
+  name   = "clk2._domainkey"
   type   = "CNAME"
   ttl    = 60
   value  = "dkim2.n726fkhumtvm.clerk.services"
 }
 
-resource "vercel_dns_record" "clkmail"{
+resource "vercel_dns_record" "clk"{
   team_id = var.vercel_team_id
   domain = "planetfall.io"
   name   = "clk._domainkey"
