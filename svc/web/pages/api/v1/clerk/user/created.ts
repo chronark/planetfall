@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import {z} from "zod"
+import { z } from "zod"
 
 
 const validation = z.object({
@@ -14,7 +14,9 @@ const validation = z.object({
     object: z.string().refine((v) => v === "event"),
     type: z.string().refine((v) => v === "user.created"),
   })
-  
+
+
+
 })
 
 
@@ -26,4 +28,7 @@ export default async function handler(
     headers: req.headers,
     body: req.body,
   }));
+
+  return res.status(200).end()
+
 }
