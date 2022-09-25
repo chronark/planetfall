@@ -6,6 +6,11 @@ resource "vercel_project" "pinger" {
   framework                  = "nextjs"
 
 
+  git_repository = {
+    repo = "chronark/planetfall"
+    type = "github"
+  }
+
   build_command  = "cd ../.. && npx turbo run build --filter=pinger"
   root_directory = "svc/pinger"
 
