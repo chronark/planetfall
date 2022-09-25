@@ -105,7 +105,7 @@ resource "vercel_dns_record" "clerk"{
 resource "vercel_dns_record" "accounts"{
   team_id = var.vercel_team_id
   domain = "planetfall.io"
-  name   = "accounts	"
+  name   = "accounts"
   type   = "CNAME"
   ttl    = 60
   value  = "accounts.clerk.services"
