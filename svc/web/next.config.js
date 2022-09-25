@@ -1,7 +1,7 @@
 const withTM = require("next-transpile-modules")(
   [
     "@planetfall/db",
-    "@planetfall/pinger",
+    "@planetfall/id",
   ],
 );
 

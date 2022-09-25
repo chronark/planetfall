@@ -1,0 +1,63 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn install
+
+PATH: 
+  /Users/andreasthomas/Downloads/google-cloud-sdk/bin:/Users/andreasthomas/Library/pnpm:/Library/Frameworks/Python.framework/Versions/3.10/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/andreasthomas/go/bin:/usr/local/go/bin:/Library/Apple/usr/bin:/Users/andreasthomas/Downloads/google-cloud-sdk/bin:/Users/andreasthomas/Library/pnpm:/Library/Frameworks/Python.framework/Versions/3.10/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/andreasthomas/.cargo/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  16.17.1
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@planetfall%2feslint: Not found
+      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:66145:18)
+      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:140890:22)
+      at Request.emit (node:events:513:28)
+      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141862:10)
+      at Request.emit (node:events:513:28)
+      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:627:28)
+      at IncomingMessage.emit (node:events:525:35)
+      at endReadableNT (node:internal/streams/readable:1358:12)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+npm manifest: 
+  {
+    "name": "planetfall",
+    "workspaces": [
+      "svc/*",
+      "pkg/*"
+    ],
+    "private":true,
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "dev": "turbo run dev",
+      "build": "turbo run build",
+      "format": "deno fmt"
+    },
+    "keywords": [],
+    "author": "Andreas Thomas",
+    "license": "ISC",
+    "packageManager": "pnpm@7.12.1",
+    "devDependencies": {
+      "@planetfall/eslint": "*",
+      "prettier": "^2.7.1",
+      "turbo": "^1.5.3"
+    },
+    "prisma": {
+      "schema": "pkg/db/prisma/schema.prisma"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

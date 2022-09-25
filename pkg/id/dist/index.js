@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 exports.newId = exports.IdGenerator = exports.encodeBase58 = void 0;
-var crypto_1 = require("crypto");
+var node_crypto_1 = require("node:crypto");
 var base_x_1 = __importDefault(require("base-x"));
 function encodeBase58(buf) {
     var alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
@@ -20,19 +20,20 @@ var IdGenerator = /** @class */ (function () {
      * @param prefixes - Relevant prefixes for your domain
      */
     function IdGenerator(prefixes) {
+        var _this = this;
+        /**
+         * Generate a new unique base58 encoded uuid with a defined prefix
+         *
+         * @returns xxxxxx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+         */
+        this.id = function (prefix) {
+            return [
+                _this.prefixes[prefix],
+                encodeBase58(Buffer.from((0, node_crypto_1.randomUUID)().replace(/-/g, ""), "hex")),
+            ].join("_");
+        };
         this.prefixes = prefixes;
     }
-    /**
-     * Generate a new unique base58 encoded uuid with a defined prefix
-     *
-     * @returns xxxxxx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-     */
-    IdGenerator.prototype.id = function (prefix) {
-        return [
-            this.prefixes[prefix],
-            encodeBase58(Buffer.from((0, crypto_1.randomUUID)().replace(/-/g, ""), "hex")),
-        ].join("_");
-    };
     return IdGenerator;
 }());
 exports.IdGenerator = IdGenerator;

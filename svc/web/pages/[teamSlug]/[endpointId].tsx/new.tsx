@@ -1,5 +1,4 @@
 import { WithAuth } from "components/auth";
-import { Input, Output } from "../../../../pinger/pages/api/v1/ping";
 import { Layout } from "components/app/layout/nav";
 import { Field, Form, handleSubmit, useForm } from "components";
 import { z } from "zod";
@@ -16,7 +15,7 @@ const formValidation = z.object({
 });
 
 async function onSubmit(data: z.infer<typeof formValidation>) {
-  const input: Input = {
+  const input = {
     headers: {
       "content-type": "application/json",
     },
@@ -34,7 +33,10 @@ async function onSubmit(data: z.infer<typeof formValidation>) {
     console.error("ERROR", err);
     throw err;
   });
-  const { latency, status } = (await res.json()) as Output;
+  const { latency, status } = (await res.json()) as {
+    latency: number;
+    status: number;
+  };
   console.log({ latency, status });
 }
 export default function IndexPage() {

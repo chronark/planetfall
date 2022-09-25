@@ -1,5 +1,10 @@
 {
   "name": "planetfall",
+  "workspaces": [
+    "svc/*",
+    "pkg/*"
+  ],
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,9 +16,8 @@
   "keywords": [],
   "author": "Andreas Thomas",
   "license": "ISC",
-  "packageManager": "pnpm@7.12.1",
   "devDependencies": {
-    "@planetfall/eslint": "workspace:0.0.0",
+    "@planetfall/eslint": "*",
     "prettier": "^2.7.1",
     "turbo": "^1.5.3"
   },

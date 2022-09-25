@@ -31,7 +31,7 @@ export class IdGenerator<TPrefixes extends string> {
       this.prefixes[prefix],
       encodeBase58(Buffer.from(randomUUID().replace(/-/g, ""), "hex")),
     ].join("_");
-  }
+  };
 }
 
 export const newId = new IdGenerator({
