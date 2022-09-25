@@ -28,19 +28,19 @@ resource "vercel_project" "pinger" {
 
 
 
-data "vercel_project_directory" "root" {
-  path = ".."
+# data "vercel_project_directory" "root" {
+#   path = ".."
   
-}
+# }
 
-resource "vercel_deployment" "pinger" {
-  for_each    = vercel_project.pinger
-  project_id  = each.value.id
-  files       = data.vercel_project_directory.root.files
-  path_prefix = data.vercel_project_directory.root.path
-  production  = true
-  team_id = var.vercel_team_id
-}
+# resource "vercel_deployment" "pinger" {
+#   for_each    = vercel_project.pinger
+#   project_id  = each.value.id
+#   files       = data.vercel_project_directory.root.files
+#   path_prefix = data.vercel_project_directory.root.path
+#   production  = true
+#   team_id = var.vercel_team_id
+# }
 
 
 
