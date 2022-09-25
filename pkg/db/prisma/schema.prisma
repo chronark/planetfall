@@ -87,6 +87,7 @@ model Team {
 }
 
 enum Role {
+  PERSONAL
   OWNER
   ADMIN
   FINANCE

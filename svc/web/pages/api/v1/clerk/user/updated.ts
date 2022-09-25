@@ -11,7 +11,7 @@ const validation = z.object({
       username: z.string(),
     }),
     object: z.string().refine((v) => v === "event"),
-    type: z.string().refine((v) => v === "user.created"),
+    type: z.string().refine((v) => v === "user.updated"),
   }),
 });
 
@@ -28,33 +28,44 @@ export default async function handler(
   try {
     const input = validation.parse(req);
 
-    const user = await db.user.create({
-      data: {
-        id: newId("user"),
+    const user = await db.user.findUniqueOrThrow({
+      where: {
         clerkId: input.body.data.id,
+      },
+      include: {
         teams: {
-          create: {
-            team: {
-              create: {
-                id: newId("team"),
-                name: input.body.data.username,
-                stripeCustomerId: Math.random().toString(),
-                stripeCurrentBillingPeriodStart: 0,
-              },
-            },
+          where: {
             role: "PERSONAL",
           },
-        },
-      },
+          include: {
+            team: true,
+          }
+        }
+      }
     });
+    if (user.teams.length !== 1) {
+      throw new Error("Expected exactly one personal team");
+    }
+    if (user.teams[0].team.name !== input.body.data.username) {
+      await db.team.update({
+        where: {
+          id: user.teams[0].team.id,
+        },
+        data: {
+          name: input.body.data.username,
+        },
+      });
+    }
+
+  
     console.log("Created user:", JSON.stringify(user, null, 2));
 
-    return res.status(200).end();
-  } catch (err) {
-    console.error(err);
-    if (err instanceof z.ZodError) {
-      return res.status(400).send(err.message);
-    }
-    return res.status(500).send((err as Error).message);
+  return res.status(200).end();
+} catch (err) {
+  console.error(err);
+  if (err instanceof z.ZodError) {
+    return res.status(400).send(err.message);
   }
+  return res.status(500).send((err as Error).message);
+}
 }
