@@ -38,7 +38,7 @@ export default async function handler(
               create: {
                 id: newId("team"),
                 name: input.body.data.username,
-                stripeCustomerId: crypto.randomUUID(),
+                stripeCustomerId: Math.random().toString(),
                 stripeCurrentBillingPeriodStart: 0,
               },
             },
