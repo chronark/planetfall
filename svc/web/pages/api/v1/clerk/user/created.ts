@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { PrismaClient } from "@planetfall/db";
-import { IdGenerator } from "@chronark/prefixed-id";
+import { newId } from "@planetfall/id";
 
 const validation = z.object({
   headers: z.object({}),
@@ -28,16 +28,15 @@ export default async function handler(
   try {
     const input = validation.parse(req);
 
-    const { id } = new IdGenerator({ user: "user", team: "team" });
     const user = await db.user.create({
       data: {
-        id: id("user"),
+        id: newId("user"),
         clerkId: input.body.data.id,
         teams: {
           create: {
             team: {
               create: {
-                id: id("team"),
+                id: newId("team"),
                 name: input.body.data.username,
                 stripeCustomerId: crypto.randomUUID(),
                 stripeCurrentBillingPeriodStart: 0,
@@ -48,7 +47,7 @@ export default async function handler(
         },
       },
     });
-    console.log("Created user:", JSON.stringify(user, null, 2))
+    console.log("Created user:", JSON.stringify(user, null, 2));
 
     return res.status(200).end();
   } catch (err) {

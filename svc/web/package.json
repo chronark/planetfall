@@ -9,13 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@chronark/prefixed-id": "^0.3.8",
     "@clerk/nextjs": "^4.3.0",
     "@fontsource/inter": "^4.5.12",
     "@headlessui/react": "^1.7.2",
     "@heroicons/react": "^2.0.11",
     "@hookform/resolvers": "^2.9.8",
-    "@planetfall/db": "workspace:1.0.0",
+    "@planetfall/db": "workspace:*",
+    "@planetfall/id": "workspace:*",
     "@planetfall/pinger": "workspace:*",
     "@radix-ui/react-hover-card": "^1.0.0",
     "@tailwindcss/forms": "^0.5.3",
