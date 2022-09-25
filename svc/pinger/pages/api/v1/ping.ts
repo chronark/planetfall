@@ -4,7 +4,9 @@ import Cors from "cors";
 
 const validation = z.object({
   headers: z.object({
-    "content-type": z.string().refine((v) => v.toLowerCase() === "application/json"),
+    "content-type": z.string().refine((v) =>
+      v.toLowerCase() === "application/json"
+    ),
   }),
   body: z.object({
     url: z.string().url(),

@@ -33,14 +33,14 @@ function classNames(...classes: unknown[]) {
 }
 
 export type LayoutProps = {
-  breadcrumbs: {
+  breadcrumbs?: {
     label: string;
     href: string;
   }[];
 };
 
 export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
-  { children, breadcrumbs },
+  { children, breadcrumbs = [] },
 ): JSX.Element => {
   const { user } = useUser();
   const { signOut } = useAuth();

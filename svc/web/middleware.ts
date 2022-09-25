@@ -25,11 +25,10 @@ export default function middleware(req: NextRequest) {
 
   switch (currentHost) {
     case "":
-      url.pathname = `/landing${url.pathname}`;
       break;
-    case "app":
-      url.pathname = `/app${url.pathname}`;
-      break;
+    // case "app":
+    //   url.pathname = `/app${url.pathname}`;
+    //   break;
     default:
       url.pathname = `/_sites/${currentHost}${url.pathname}`;
   }
