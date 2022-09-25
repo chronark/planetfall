@@ -69,6 +69,7 @@ resource "vercel_project" "web" {
 
 resource "vercel_project_domain" "web"{
   project_id = vercel_project.web.id
+  team_id = var.vercel_team_id
   domain = "planetfall.io"
 }
 # resource "vercel_project_domain" "pinger" {
