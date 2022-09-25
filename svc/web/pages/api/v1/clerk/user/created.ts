@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { PrismaClient } from "@planetfall/db";
 import { newId } from "@planetfall/id";
+import { randomUUID } from "crypto";
 
 const validation = z.object({
   headers: z.object({}),
@@ -39,7 +40,7 @@ export default async function handler(
               create: {
                 id: teamId,
                 name: input.body.data.username,
-                stripeCustomerId: Math.random().toString(),
+                stripeCustomerId: `todo:${randomUUID()}`,
                 stripeCurrentBillingPeriodStart: 0,
                 retention: 24 * 60 * 60 * 1000
               },
