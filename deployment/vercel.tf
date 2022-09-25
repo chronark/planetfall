@@ -1,6 +1,6 @@
 resource "vercel_project" "pinger" {
   for_each                   = var.vercel_regions
-  name                       = "planetfall-pinger-${each.value}"
+  name                       = "pinger-${each.value}"
   team_id                    = var.vercel_team_id
   serverless_function_region = each.value
   framework                  = "nextjs"
@@ -67,7 +67,7 @@ resource "vercel_project" "web" {
   
 }
 
-resource "vercel_project_domaon" "web"{
+resource "vercel_project_domain" "web"{
   project_id = vercel_project.web.id
   domain = "planetfall.io"
 }
