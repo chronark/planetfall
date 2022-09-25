@@ -1,24 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod"
-
+import { z } from "zod";
+import { PrismaClient } from "@planetfall/db";
+import { IdGenerator } from "@chronark/prefixed-id";
 
 const validation = z.object({
-  headers: z.object({
-
-  }),
+  headers: z.object({}),
   body: z.object({
     data: z.object({
       id: z.string(),
-      username: z.string()
+      username: z.string(),
     }),
     object: z.string().refine((v) => v === "event"),
     type: z.string().refine((v) => v === "user.created"),
-  })
+  }),
+});
 
-
-
-})
-
+const db = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,7 +25,37 @@ export default async function handler(
     headers: req.headers,
     body: req.body,
   }));
+  try {
+    const input = validation.parse(req);
 
-  return res.status(200).end()
+    const { id } = new IdGenerator({ user: "user", team: "team" });
+    const user = await db.user.create({
+      data: {
+        id: id("user"),
+        clerkId: input.body.data.id,
+        teams: {
+          create: {
+            team: {
+              create: {
+                id: id("team"),
+                name: input.body.data.username,
+                stripeCustomerId: crypto.randomUUID(),
+                stripeCurrentBillingPeriodStart: 0,
+              },
+            },
+            role: "OWNER",
+          },
+        },
+      },
+    });
+    console.log("Created user:", JSON.stringify(user, null, 2))
 
+    return res.status(200).end();
+  } catch (err) {
+    console.error(err);
+    if (err instanceof z.ZodError) {
+      return res.status(400).send(err.message);
+    }
+    return res.status(500).send((err as Error).message);
+  }
 }

@@ -1,7 +1,6 @@
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 
-
 /**
  * TODO: move this to edge function, when clerk is ready
  */
@@ -13,7 +12,6 @@ export default function Page() {
   }
   return (
     <>
-
     </>
   );
 }

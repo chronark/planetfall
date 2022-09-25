@@ -90,6 +90,7 @@ importers:
 
   svc/web:
     specifiers:
+      '@chronark/prefixed-id': ^0.3.8
       '@clerk/nextjs': ^4.3.0
       '@fontsource/inter': ^4.5.12
       '@headlessui/react': ^1.7.2
@@ -120,6 +121,7 @@ importers:
       typescript: 4.8.3
       zod: ^3.19.1
     dependencies:
+      '@chronark/prefixed-id': 0.3.8
       '@clerk/nextjs': 4.3.2_azq6kxkn3od7qdylwkyksrwopy
       '@fontsource/inter': 4.5.12
       '@headlessui/react': 1.7.2_biqbaboplfbrettd7655fr4n2y
@@ -183,6 +185,12 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.9
+    dev: false
+
+  /@chronark/prefixed-id/0.3.8:
+    resolution: {integrity: sha512-2OFlFLzDdZ6zVDgBT04F9V0xJylgbYbjqOBKgmXCpdb5+um3b3r4ze14Jlsw4SOVEEIRhYIwjEnDzb7FqCKASQ==}
+    dependencies:
+      base-x: 3.0.9
     dev: false
 
   /@clerk/backend-core/2.5.1:
@@ -1215,6 +1223,12 @@ packages:
 
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
+  /base-x/3.0.9:
+    resolution: {integrity: sha512-H7JU6iBHTal1gp56aKoaa//YUxEaAOUiydvrV/pILqIHXTtqxSkATOnDA2u+jZ/61sD+L/412+7kzXRtWukhpQ==}
+    dependencies:
+      safe-buffer: 5.2.1
+    dev: false
 
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chronark/prefixed-id": "^0.3.8",
     "@clerk/nextjs": "^4.3.0",
     "@fontsource/inter": "^4.5.12",
     "@headlessui/react": "^1.7.2",
