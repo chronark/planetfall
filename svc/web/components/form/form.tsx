@@ -1,6 +1,7 @@
 import { Text } from "../text";
-import React from "react";
+import React, { useState } from "react";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
+import { CubeTexture } from "three";
 
 export interface FormProps<T extends FieldValues> {
   ctx: UseFormReturn<T>;
@@ -25,7 +26,7 @@ export function Form<T extends FieldValues>({
       {formError
         ? (
           <div role="alert" className="pt-2 pb-4">
-            <Text color="text-error" size="sm">
+            <Text color="text-red-500" size="sm">
               <span className="font-semibold">Error:</span> {formError}
             </Text>
           </div>
@@ -34,22 +35,26 @@ export function Form<T extends FieldValues>({
     </FormProvider>
   );
 }
-
-export async function handleSubmit<T extends FieldValues>(
-  ctx: UseFormReturn<T>,
-  onSubmit: (values: T) => Promise<void>,
-  setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
-  setFormError: React.Dispatch<React.SetStateAction<string | null>>,
-): Promise<void> {
-  const values = ctx.getValues();
-  await ctx.handleSubmit(
+export async function handleSubmit<T extends FieldValues>(opts: {
+  ctx: UseFormReturn<T>;
+  submit: (values: T) => Promise<void>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setFormError: React.Dispatch<React.SetStateAction<string | null>>;
+  onSuccess?: () => void;
+}): Promise<void> {
+  const values = opts.ctx.getValues();
+  await opts.ctx.handleSubmit(
     async () => {
-      setSubmitting(true);
-      await onSubmit(values)
+      opts.setLoading(true);
+      await opts.submit(values).then(() => {
+        if (opts.onSuccess) {
+          opts.onSuccess();
+        }
+      })
         .catch((err) => {
-          setFormError(err.message ?? null);
+          opts.setFormError(err.message ?? null);
         })
-        .finally(() => setSubmitting(false));
+        .finally(() => opts.setLoading(false));
     },
     (err) => console.error("Form invalid", err),
   )();

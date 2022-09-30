@@ -3,6 +3,7 @@ import { z } from "zod";
 import { PrismaClient } from "@planetfall/db";
 import { newId } from "@planetfall/id";
 import { randomUUID } from "crypto";
+import slugify from "slugify";
 
 const validation = z.object({
   headers: z.object({}),
@@ -30,16 +31,19 @@ export default async function handler(
     const input = validation.parse(req);
 
     const teamId = newId("team");
+    const teamSlug = slugify(input.body.data.username, {
+      lower: true,
+    });
     const user = await db.user.create({
       data: {
-        id: newId("user"),
-        clerkId: input.body.data.id,
+        id: input.body.data.id,
         teams: {
           create: {
             team: {
               create: {
                 id: teamId,
                 name: input.body.data.username,
+                slug: teamSlug,
                 stripeCustomerId: `todo:${randomUUID()}`,
                 stripeCurrentBillingPeriodStart: 0,
                 retention: 24 * 60 * 60 * 1000,

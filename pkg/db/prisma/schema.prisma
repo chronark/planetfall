@@ -18,16 +18,7 @@ enum Method {
 }
 
 enum Platform {
-  AWS
-}
-
-model Region {
-  id         String    @id
-  platform   Platform
-  region     String
-  Endpoint   Endpoint? @relation(fields: [endpointId], references: [id])
-  endpointId String?
-  Check      Check[]
+  VERCEL
 }
 
 model Endpoint {
@@ -44,9 +35,9 @@ model Endpoint {
   interval      Int
   active        Boolean
   // Milliseconds
-  degradetAfter Int?
+  degradedAfter Int?
   failedAfter   Int?
-  regions       Region[]
+  regions       Json
   // json encoded map
   headers       Json?
   body          String?
@@ -64,17 +55,16 @@ model StatusPage {
 }
 
 model User {
-  id      String       @id
-  clerkId String       @unique
-  teams   Membership[]
-
-  @@index([clerkId])
+  // This id provided by clerk
+  id    String       @id
+  teams Membership[]
 }
 
 model Team {
   id String @id
 
-  name String @unique
+  name String
+  slug String @unique
 
   stripeCustomerId                String @unique
   stripeCurrentBillingPeriodStart Int
@@ -85,7 +75,7 @@ model Team {
   members   Membership[]
   endpoints Endpoint[]
 
-  @@index([name])
+  @@index([slug])
 }
 
 enum Role {
@@ -113,7 +103,7 @@ model Check {
   endpointId String
   latency    Int
   time       Int
-  region     Region   @relation(fields: [regionId], references: [id])
+  region     String
   regionId   String
 
   @@index([endpointId])

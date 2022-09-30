@@ -53,10 +53,10 @@ export const Features: React.FC = (): JSX.Element => {
       <div className="relative bg-white py-16 sm:py-24 lg:py-32">
         <div className="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
           {/* <h2 className="text-lg font-semibold text-primary-600"></h2> */}
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Gain insights into how your APIs perform
           </p>
-          <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
+          <p className="mx-auto mt-5 max-w-prose text-xl text-slate-500">
             Automated API monitoring and alerting for your APIs. Monitor the
             latency of your APIs from around the planet.
           </p>
@@ -74,10 +74,10 @@ export const Features: React.FC = (): JSX.Element => {
                           />
                         </span>
                       </div>
-                      <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">
+                      <h3 className="mt-8 text-lg font-medium tracking-tight text-slate-900">
                         {feature.title}
                       </h3>
-                      <p className="mt-5 text-base text-gray-500">
+                      <p className="mt-5 text-base text-slate-500">
                         {feature.description}
                       </p>
                     </div>

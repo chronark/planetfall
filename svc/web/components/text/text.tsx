@@ -55,14 +55,13 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
           "text-lg": size === "lg",
           "text-xl": size === "xl",
           "text-2xl": size === "2xl",
-          "text-gray-700": !color,
           "font-semibold": bold,
           "break-words": lineBreak,
           "font-mono": mono,
           "truncate text-ellipsis whitespace-nowrap": truncate,
         },
         align,
-        color,
+        color ?? "text-slate-700",
       )}
     >
       {children}

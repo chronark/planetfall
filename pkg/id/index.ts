@@ -37,4 +37,7 @@ export class IdGenerator<TPrefixes extends string> {
 export const newId = new IdGenerator({
   user: "user",
   team: "team",
+  endpoint: "ept",
+  page: "page",
+  test: "test",
 }).id;

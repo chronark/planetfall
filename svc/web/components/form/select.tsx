@@ -54,11 +54,11 @@ export const Select: React.FC<SelectProps> = ({
   }, [value, onChange]);
 
   return (
-    <div className="w-full text-gray-800">
+    <div className="w-full text-slate-800">
       <label
         htmlFor={name}
         className={cn(
-          "mb-1 block text-xs font-medium text-gray-700 uppercase",
+          "mb-1 block text-xs font-medium text-slate-700 uppercase",
           {
             "sr-only": hideLabel,
           },
@@ -85,9 +85,9 @@ export const Select: React.FC<SelectProps> = ({
           <div className="relative mt-1">
             <Listbox.Button
               className={cn(
-                "text-center h-10 w-full px-3 focus:shadow placeholder-gray-500 transition duration-500 border  rounded  focus:outline-none",
+                "text-center h-10 w-full px-3 focus:shadow placeholder-slate-500 transition duration-500 border  rounded  focus:outline-none",
                 {
-                  "animate-pulse bg-gray-50 text-opacity-0":
+                  "animate-pulse bg-slate-50 text-opacity-0":
                     options.length === 0,
                 },
               )}
@@ -95,7 +95,7 @@ export const Select: React.FC<SelectProps> = ({
               <Text>{watch(name)}</Text>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <ChevronUpDownIcon
-                  className="w-5 h-5 text-gray-400"
+                  className="w-5 h-5 text-slate-400"
                   aria-hidden="true"
                 />
               </span>
@@ -112,10 +112,10 @@ export const Select: React.FC<SelectProps> = ({
                     key={i}
                     className={({ active, selected }) =>
                       cn(
-                        "cursor-default select-none relative p-2 text-gray-800",
+                        "cursor-default select-none relative p-2 text-slate-800",
                         {
-                          "bg-gray-100": active,
-                          "bg-gray-900 text-gray-100 font-semibold": selected,
+                          "bg-slate-100": active,
+                          "bg-slate-900 text-slate-100 font-semibold": selected,
                         },
                       )}
                     value={option}

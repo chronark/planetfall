@@ -1,0 +1,23 @@
+{
+  "name": "@planetfall/scheduler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Andreas Thomas",
+  "license": "ISC",
+  "dependencies": {
+    "@planetfall/db": "*",
+    "kafkajs": "^2.2.0",
+    "zod": "^3.19.1"
+  },
+  "devDependencies": {
+    "@planetfall/tsconfig": "*",
+    "@types/node": "18.7.18",
+    "typescript": "^4.8.3"
+  }
+}

@@ -30,7 +30,7 @@ export default async function handler(
 
     const user = await db.user.findUniqueOrThrow({
       where: {
-        clerkId: input.body.data.id,
+        id: input.body.data.id,
       },
       include: {
         teams: {

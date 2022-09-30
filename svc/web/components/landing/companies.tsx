@@ -4,7 +4,7 @@ export const Companies: React.FC = (): JSX.Element => {
   return (
     <section>
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="py-6 border-b border-gray-800">
+        <div className="py-6 border-b border-slate-800">
           {/* Items */}
           <div className="max-w-sm md:max-w-5xl mx-auto grid gap-2 grid-cols-4 md:grid-cols-5">
             {/* Item */}
@@ -13,7 +13,7 @@ export const Companies: React.FC = (): JSX.Element => {
               data-aos="zoom-out"
             >
               <svg
-                className="max-w-full fill-gray-500"
+                className="max-w-full fill-slate-500"
                 width="124"
                 height="24"
                 viewBox="0 0 124 24"
@@ -29,7 +29,7 @@ export const Companies: React.FC = (): JSX.Element => {
               data-aos-delay="100"
             >
               <svg
-                className="max-w-full fill-gray-500"
+                className="max-w-full fill-slate-500"
                 width="83"
                 height="30"
                 viewBox="0 0 83 30"
@@ -45,7 +45,7 @@ export const Companies: React.FC = (): JSX.Element => {
               data-aos-delay="200"
             >
               <svg
-                className="max-w-full fill-gray-500"
+                className="max-w-full fill-slate-500"
                 width="125"
                 height="39"
                 viewBox="0 0 125 39"
@@ -61,7 +61,7 @@ export const Companies: React.FC = (): JSX.Element => {
               data-aos-delay="300"
             >
               <svg
-                className="max-w-full fill-gray-500"
+                className="max-w-full fill-slate-500"
                 width="113"
                 height="30"
                 viewBox="0 0 113 30"
@@ -77,7 +77,7 @@ export const Companies: React.FC = (): JSX.Element => {
               data-aos-delay="400"
             >
               <svg
-                className="max-w-full fill-gray-500"
+                className="max-w-full fill-slate-500"
                 width="109"
                 height="33"
                 viewBox="0 0 109 33"

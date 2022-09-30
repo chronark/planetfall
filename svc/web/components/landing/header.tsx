@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { ArrowLongRightIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { RedirectToSignIn, useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 export const Header: React.FC = (): JSX.Element => {
   let [isScrolled, setIsScrolled] = useState(false);
-  const router = useRouter();
-
+  const auth = useAuth();
   useEffect(() => {
     function onScroll() {
       setIsScrolled(window.scrollY > 0);
@@ -50,9 +49,9 @@ export const Header: React.FC = (): JSX.Element => {
               </li>
 
               <li>
-                <Link href="/auth/sign-in">
+                <Link href={auth.isSignedIn ? "/home" : "/auth/sign-in"}>
                   <div className="hover:cursor-pointer whitespace-nowrap md:px-4 md:py-3 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug transition duration-150 ease-in-out  md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  w-full shadow-sm group">
-                    Sign in
+                    {auth.isSignedIn ? "Dashboard" : "Sign in"}
                     <ArrowLongRightIcon className="hidden md:block w-6 h-6 group-hover:text-primary-500  group-hover:translate-x-1 transition-transform duration-150 ease-out ml-1" />
                   </div>
                 </Link>

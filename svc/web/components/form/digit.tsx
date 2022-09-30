@@ -53,9 +53,9 @@ export const Digit: React.FC<DigitInputProps> = (
           e.currentTarget.blur();
         }}
         className={classNames(
-          "appearance-none text-center h-12 md:h-14 w-12 md:w-14 px-3 text-xl font-medium focus:shadow placeholder-gray-500 transition duration-500 border  rounded  focus:outline-none",
+          "appearance-none text-center h-12 md:h-14 w-12 md:w-14 px-3 text-xl font-medium focus:shadow placeholder-slate-500 transition duration-500 border  rounded  focus:outline-none",
           {
-            "border-gray-200 focus:border-gray-700 focus:bg-gray-50": !error,
+            "border-slate-200 focus:border-slate-700 focus:bg-slate-50": !error,
             "appearance-none bg-transparent": isSubmitting,
             "bg-black text-white": hasValue && !error,
             "border-error focus:border-error-dark focus:bg-error-light bg-white text-error":

@@ -14,7 +14,7 @@ const nextConfig = {
     scrollRestoration: true,
   },
   images: {
-    domains: ["images.clerk.dev", "www.gravatar.com"],
+    domains: ["www.gravatar.com", "avatars.githubusercontent.com"],
   },
 
   webpack: (config) => {

@@ -1,5 +1,6 @@
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
+import { trpc } from "../lib/hooks/trpc";
 
 /**
  * TODO: move this to edge function, when clerk is ready
@@ -7,9 +8,12 @@ import { useRouter } from "next/router";
 export default function Page() {
   const { user } = useUser();
   const router = useRouter();
-  if (user?.username) {
-    router.push(`/${user.username}`);
+  const teams = trpc.team.list.useQuery();
+  const personalTeam = teams.data?.find((team) => team.role === "PERSONAL");
+  if (personalTeam) {
+    router.push(`/${personalTeam.team.slug}`);
   }
+
   return (
     <>
     </>

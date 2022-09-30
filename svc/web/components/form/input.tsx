@@ -1,4 +1,4 @@
-import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { Tooltip } from "components";
 import classNames from "classnames";
 import cn from "classnames";
@@ -61,11 +61,11 @@ export const Input: React.FC<InputProps> = ({
     }
   }, [defaultValue, name, setValue]);
   return (
-    <div className="w-full text-gray-800">
+    <div className="w-full text-slate-800 ">
       <label
         htmlFor={name}
         className={cn(
-          "flex items-center mb-1 gap-2 text-xs font-medium text-gray-700 uppercase",
+          "block text-sm font-semibold text-slate-700",
           {
             "sr-only": hideLabel,
           },
@@ -74,7 +74,7 @@ export const Input: React.FC<InputProps> = ({
         {label}
         {help ? <Tooltip side="bottom">{help}</Tooltip> : null}
       </label>
-      <div className="relative ">
+      <div className="relative mt-1">
         {iconLeft
           ? (
             <div className="absolute inset-y-0 left-0 flex items-center overflow-hidden rounded-l pointer-events-none">
@@ -92,16 +92,11 @@ export const Input: React.FC<InputProps> = ({
           placeholder={placeholder}
           autoFocus={autoFocus}
           className={classNames(
-            "h-10 w-full px-3 focus:shadow placeholder-gray-500 transition duration-500 border  rounded  focus:outline-none",
+            "h-10 w-full px-3 focus:shadow placeholder-slate-500 transition duration-500 border  rounded focus:outline-none",
             {
-              "text-left": textAlignment === "left",
-              "text-center": textAlignment === "center",
-              "text-right": textAlignment === "right",
-            },
-            {
-              "border-gray-200 focus:border-gray-700 focus:bg-gray-50": !error,
-              "border-error focus:border-error-dark focus:bg-error-light":
-                error,
+              "border-slate-200 focus:border-slate-700 focus:bg-slate-50":
+                !error,
+              "border-error focus:border-red-700 focus:bg-red-50": error,
               "appearance-none bg-transparent": isSubmitting,
             },
           )}
@@ -110,8 +105,8 @@ export const Input: React.FC<InputProps> = ({
 
       {error
         ? (
-          <div className="flex items-center pt-2 pb-4 space-x-1 text-sm text-error">
-            <ExclamationCircleIcon className="w-4 h-4" />
+          <div className="flex items-center pt-2 pb-4 space-x-1 text-sm text-red-500">
+            <ExclamationTriangleIcon className="w-4 h-4" />
             <p>
               <>
                 <span className="font-semibold">Error:</span> {error}

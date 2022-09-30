@@ -99,6 +99,10 @@ module.exports = {
         },
       },
     },
+    boxShadow: {
+      ambient: "0 35px 120px -10px rgba(53, 72, 200, 0.1)",
+      cta: "0 35px 120px -10px rgba(53, 72, 200, 0.1)",
+    },
   },
   plugins: [
     // eslint-disable-next-line global-require

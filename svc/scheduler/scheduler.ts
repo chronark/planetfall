@@ -1,0 +1,42 @@
+import { Endpoint, PrismaClient } from "@planetfall/db";
+
+export class Scheduler {
+  // Map of endpoint id -> clearInterval function
+  private clearIntervals: Record<string, () => void>;
+  private db: PrismaClient;
+
+  constructor() {
+    this.db = new PrismaClient();
+    this.clearIntervals = {};
+  }
+
+  public async addEndpoint(endpointId: string): Promise<void> {
+    const endpoint = await this.db.endpoint.findUnique({
+      where: { id: endpointId },
+    });
+    if (!endpoint) {
+      throw new Error(`endpoint not found: ${endpointId}`);
+    }
+    this.removeEndpoint(endpoint.id);
+    const intervalId = setInterval(
+      () => (this.testEndpoint(endpoint)),
+      endpoint.interval,
+    );
+    this.clearIntervals[endpoint.id] = () => clearInterval(intervalId);
+  }
+
+  public removeEndpoint(endpointId: string): void {
+    if (endpointId in this.clearIntervals) {
+      this.clearIntervals[endpointId]();
+    }
+  }
+
+  private async testEndpoint(endpoint: Endpoint): Promise<void> {
+    const results = await Promise.all(
+      (endpoint.regions as string[]).map((r) => {
+        const [platform, region] = r.split("::");
+        console.log({ region });
+      }),
+    );
+  }
+}
