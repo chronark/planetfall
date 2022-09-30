@@ -13,7 +13,7 @@ export class Events {
   constructor(scheduler: Scheduler) {
     this.scheduler = scheduler;
     this.kafka = new Kafka({
-      brokers: [process.env.KAFKA_CLUSTER!],
+      brokers: [process.env.KAFKA_BROKER!],
       sasl: {
         mechanism: "scram-sha-256",
         username: process.env.KAFKA_USERNAME!,
