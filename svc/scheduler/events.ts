@@ -11,13 +11,29 @@ export class Events {
   private kafka: Kafka;
 
   constructor(scheduler: Scheduler) {
+    const broker = process.env.KAFKA_BROKER
+    if (!broker){
+      throw new Error("KAFKA_BROKER is not defined")
+    }
+    const username = process.env.KAFKA_USERNAME
+    if (!username){
+      throw new Error("KAFKA_USERNAME is not defined")
+    }
+
+    const password = process.env.KAFKA_PASSWORD
+    if (!password){
+      throw new Error("KAFKA_PASSWORD is not defined")
+    }
+
+
+    
     this.scheduler = scheduler;
     this.kafka = new Kafka({
-      brokers: [process.env.KAFKA_BROKER!],
+      brokers: [broker],
       sasl: {
         mechanism: "scram-sha-256",
-        username: process.env.KAFKA_USERNAME!,
-        password: process.env.KAFKA_PASSWORD!,
+        username,
+        password,
       },
     });
   }
