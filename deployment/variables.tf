@@ -49,3 +49,11 @@ variable "vercel_regions" {
   ]
 }
 
+variable "upstash_email" {
+  type =string
+  sensitive = true
+}
+variable "upstash_api_key" {
+  type =string
+  sensitive = true
+}
