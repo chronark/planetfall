@@ -82,7 +82,6 @@ export default function Page() {
       regions,
     }: FormData,
   ) {
-    console.warn({ regions });
     setLoading(true);
     try {
       const res = await createEndpoint.mutateAsync({
@@ -99,7 +98,7 @@ export default function Page() {
         regions,
         teamSlug: router.query.teamSlug as string,
       });
-      router.push(`/teams/${router.query.teamSlug}/endpoints/${res.id}`);
+      router.push(`/${router.query.teamSlug}/endpoints/${res.id}`);
     } catch (err) {
       console.log(err);
       setError((err as Error).message);

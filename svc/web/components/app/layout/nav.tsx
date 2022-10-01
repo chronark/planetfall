@@ -66,10 +66,10 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
 
   return (
     <>
-      <Disclosure as="header" className="bg-white shadow">
+      <Disclosure as="header" className="bg-white shadow border-b">
         {({ open }) => (
           <>
-            <div className="mx-auto max-w-7xl px-2 sm:px-4  lg:px-8">
+            <div className="mx-auto container">
               <div className="relative flex h-16 justify-between">
                 <div className="relative z-10 flex px-2 lg:px-0">
                   <nav className="flex" aria-label="Breadcrumb">
@@ -254,7 +254,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                       item.href === router.asPath
                         ? "border-slate-900 text-slate-900"
                         : "text-slate-700 border-transparent hover:border-slate-500 hover:text-slate-900 ",
-                      "border-b-2  py-2 px-3 inline-flex duration-150 transition-all items-center text-sm font-medium",
+                      "border-b  py-2 px-3 inline-flex duration-150 transition-all items-center text-sm font-medium",
                     )}
                     aria-current={item.href === router.asPath
                       ? "page"
@@ -343,9 +343,8 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
         )}
       </Disclosure>
       <main className="mx-auto container mt-8 lg:mt-16">
-        {validTeam
-          ? children
-          : (
+        {!validTeam
+          ? (
             <div className="flex min-h-full flex-col bg-white pt-16 pb-12">
               <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col justify-center px-4 sm:px-6 lg:px-8">
                 <div className="py-16">
@@ -367,7 +366,8 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                 </div>
               </main>
             </div>
-          )}
+          )
+          : children}
       </main>
     </>
   );

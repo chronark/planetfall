@@ -111,9 +111,9 @@ enum Role {
 }
 
 model Membership {
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  team   Team   @relation(fields: [teamId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId String
   role   Role
 
@@ -122,7 +122,7 @@ model Membership {
 
 model Check {
   id         String   @id
-  endpoint   Endpoint @relation(fields: [endpointId], references: [id])
+  endpoint   Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
   endpointId String
   latency    Int
   time       DateTime

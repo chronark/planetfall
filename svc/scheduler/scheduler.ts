@@ -69,7 +69,7 @@ export class Scheduler {
     endpoint: Endpoint & { regions: Region[] },
   ): Promise<void> {
     try {
-      console.log("testing endpoint", JSON.stringify(endpoint, null, 2));
+      console.log("testing endpoint", endpoint.id);
 
       await Promise.all(endpoint.regions.map(async (region) => {
         // Date object in UTC timezone
@@ -116,7 +116,7 @@ export class Scheduler {
         });
       }));
     } catch (err) {
-      console.error((err as Error).message);
+      console.error(err);
     }
   }
 }

@@ -47,6 +47,7 @@ function main() {
             e = new events_1.Events(s);
             e.run();
             s.syncEndpoints();
+            setInterval(function () { return s.syncEndpoints(); }, 10 * 60 * 1000);
             return [2 /*return*/];
         });
     });

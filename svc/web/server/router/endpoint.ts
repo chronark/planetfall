@@ -63,7 +63,7 @@ export const endpointRouter = t.router({
     });
 
     const kafka = new Kafka({
-      url: "https://guided-mayfly-5226-eu1-rest-kafka.upstash.io",
+      url: "https://usable-snipe-5277-eu1-rest-kafka.upstash.io",
       username:
         "dXNhYmxlLXNuaXBlLTUyNzckgQzcA6IYQ332mfG8_U4caCkdWR-tgVvgXep9ACs",
       password:
@@ -75,6 +75,68 @@ export const endpointRouter = t.router({
     const r = await p.produce("endpoint.created", { endpointId: endpoint.id });
     console.log("Kafka response:", r);
     return endpoint;
+  }),
+  delete: t.procedure.input(z.object({
+    endpointId: z.string(),
+  })).mutation(async ({ input, ctx }) => {
+    if (!ctx.auth.userId) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    console.time("findUser");
+    const user = await ctx.db.user.findUnique({
+      where: {
+        id: ctx.auth.userId,
+      },
+      include: {
+        teams: {
+          include: {
+            team: {
+              include: {
+                endpoints: {
+                  where: {
+                    id: input.endpointId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!user) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "user not found" });
+    }
+    console.timeEnd("findUser");
+
+    if (
+      !user.teams.find((t) =>
+        t.team.endpoints.find((e) => e.id === input.endpointId)
+      )
+    ) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Endpoint not found" });
+    }
+    console.time("deleteEndpoint");
+    await ctx.db.endpoint.delete({
+      where: {
+        id: input.endpointId,
+      },
+    });
+    console.timeEnd("deleteEndpoint");
+
+    const kafka = new Kafka({
+      url: "https://usable-snipe-5277-eu1-rest-kafka.upstash.io",
+      username:
+        "dXNhYmxlLXNuaXBlLTUyNzckgQzcA6IYQ332mfG8_U4caCkdWR-tgVvgXep9ACs",
+      password:
+        "baAtrzV9P0xqkhmSSJlN9woFhKOOuYqeYc8L7E_l7pS4yBxDEWks06jfdNYkFPwSKq9A2A==",
+    });
+
+    const p = kafka.producer();
+
+    await p.produce("endpoint.deleted", {
+      endpointId: input.endpointId,
+    });
+    return;
   }),
   list: t.procedure.input(z.object({
     teamSlug: z.string(),
@@ -107,5 +169,49 @@ export const endpointRouter = t.router({
         teamId: team.id,
       },
     });
+  }),
+  get: t.procedure.input(z.object({
+    endpointId: z.string(),
+    since: z.number().int().optional(),
+  })).query(async ({ input, ctx }) => {
+    if (!ctx.auth.userId) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    const endpoint = await ctx.db.endpoint.findUnique({
+      where: {
+        id: input.endpointId,
+      },
+      include: {
+        checks: {
+          orderBy: {
+            time: "desc",
+          },
+          where: input.since
+            ? {
+              time: {
+                gte: new Date(input.since),
+              },
+            }
+            : undefined,
+        },
+        team: {
+          include: {
+            members: {
+              where: {
+                userId: ctx.auth.userId,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!endpoint) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Endpoint not found" });
+    }
+    return {
+      ...endpoint,
+      team: undefined,
+    };
   }),
 });

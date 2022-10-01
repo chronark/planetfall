@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/plots": "^1.2.2",
     "@clerk/nextjs": "^4.3.2",
     "@fontsource/inter": "^4.5.12",
     "@headlessui/react": "^1.7.2",
@@ -39,6 +40,7 @@
     "react-hook-form": "^7.36.1",
     "slugify": "^1.6.5",
     "stripe": "^10.11.0",
+    "superjson": "^1.10.0",
     "tailwindcss-radix": "^2.6.0",
     "zod": "^3.19.1"
   },

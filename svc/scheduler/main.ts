@@ -9,6 +9,7 @@ async function main() {
   e.run();
 
   s.syncEndpoints();
+  setInterval(() => s.syncEndpoints(), 10 * 60 * 1000);
 }
 
 main();
