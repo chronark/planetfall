@@ -39,3 +39,4 @@ resource "upstash_kafka_topic" "endpoint_deleted" {
 
 
 }
+
