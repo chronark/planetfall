@@ -52,18 +52,14 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
 
   const teams = trpc.team.list.useQuery();
 
-  console.log(router.asPath);
-
   const userNavigation: any[] = [];
 
   const navigation = [
     { name: "Endpoints", href: `/${activeTeamSlug}/endpoints` },
     { name: "Pages", href: `/${activeTeamSlug}/pages` },
   ];
-
-  const validTeam = teams.data &&
-    teams.data.map((t) => t.team.slug).includes(activeTeamSlug);
-
+  const invalidteam = teams.data && !teams.data.find((t) => t.team.slug === activeTeamSlug);
+console.log(router.asPath)
   return (
     <>
       <Disclosure as="header" className="bg-white shadow border-b">
@@ -82,7 +78,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                           Planetfall
                         </Link>
                       </li>
-                      {teamSelector && validTeam
+                      {teamSelector && !invalidteam
                         ? (
                           <>
                             <Divider />
@@ -251,7 +247,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                     key={item.name}
                     href={item.href}
                     className={classNames(
-                      item.href === router.asPath
+                      router.asPath.includes(item.href)
                         ? "border-slate-900 text-slate-900"
                         : "text-slate-700 border-transparent hover:border-slate-500 hover:text-slate-900 ",
                       "border-b  py-2 px-3 inline-flex duration-150 transition-all items-center text-sm font-medium",
@@ -343,7 +339,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
         )}
       </Disclosure>
       <main className="mx-auto container mt-8 lg:mt-16">
-        {!validTeam
+        {invalidteam
           ? (
             <div className="flex min-h-full flex-col bg-white pt-16 pb-12">
               <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col justify-center px-4 sm:px-6 lg:px-8">
@@ -369,6 +365,16 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
           )
           : children}
       </main>
+
+
+      <footer>
+        <div className="mx-auto container border-t mt-16 pt-16 flex justify-center">
+
+          <p className="mb-16 text-base text-slate-400">
+            &copy; {new Date().getUTCFullYear()} planetfall.io - All rights reserved.
+          </p>
+        </div>
+      </footer>
     </>
   );
 };

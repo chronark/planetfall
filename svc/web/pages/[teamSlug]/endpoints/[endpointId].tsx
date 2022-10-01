@@ -2,7 +2,7 @@ import { Layout } from "../../../components/app/layout/nav";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import { trpc } from "../../../lib/hooks/trpc";
-import { Line } from "@ant-design/plots";
+import { Area, Line } from "@ant-design/plots";
 
 import {
     Button,
@@ -11,102 +11,209 @@ import {
     CheckboxOptionType,
     Col,
     Divider,
-    List,
     message,
     PageHeader,
     Popconfirm,
     Row,
+    Segmented,
     Select,
+    Skeleton,
     Space,
+    Spin,
     Statistic,
     Switch,
-    Tag,
+    Table,
+    Tabs,
     Typography,
 } from "antd";
+import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
 import React, { useEffect, useMemo, useState } from "react";
 import { Check, Endpoint } from "@planetfall/db";
 import JSXStyle from "styled-jsx/style";
-import { Annotation, P } from "@antv/g2plot";
+import { Annotation } from "@antv/g2plot";
 import { usePercentile } from "@planetfall/svc/web/lib/hooks/percentile";
 import { useSessionStorage } from "@planetfall/svc/web/lib/hooks/storage";
 
-export const Item: React.FC<{ region: string; checks: Check[] }> = (
-    { region, checks },
+const RegionTab: React.FC<{ endpointId: string; regionId: string, regionName: string }> = (
+    { endpointId, regionId, regionName },
 ): JSX.Element => {
-    const ctx = trpc.useContext();
-    const deleteEndpoint = trpc.endpoint.delete.useMutation({
-        onSuccess: () => {
-            ctx.endpoint.list.invalidate();
-        },
+    const now = useMemo(() => Date.now(), []);
+    const [since, setSince] = useState(now - 60 * 60 * 1000);
+    const endpoint = trpc.endpoint.get.useQuery({ since, endpointId, regionId }, {
+        staleTime: 10000,
     });
+
+    console.log(endpoint.data?.checks.length);
+
+    const annotations: Annotation[] = [];
+    if (endpoint.data?.degradedAfter) {
+        annotations.push(
+            {
+                type: "regionFilter",
+                start: ["min", endpoint.data.degradedAfter],
+                end: ["max", "max"],
+                color: "#f59e0b",
+            },
+            {
+                type: "line",
+                text: {
+                    content: "Degraded",
+                },
+                start: ["min", endpoint.data.degradedAfter],
+                end: ["max", endpoint.data.degradedAfter],
+                style: {
+                    stroke: "#f59e0b",
+                    lineDash: [8, 8],
+                },
+            },
+        );
+    }
+    if (endpoint.data?.failedAfter) {
+        annotations.push(
+            {
+                type: "regionFilter",
+                start: ["min", endpoint.data.failedAfter],
+                end: ["max", "max"],
+                color: "#ef4444",
+            },
+            {
+                type: "line",
+                text: {
+                    content: "Failed",
+                },
+                start: ["min", endpoint.data.failedAfter],
+                end: ["max", endpoint.data.failedAfter],
+                style: {
+                    stroke: "#ef4444",
+                    lineDash: [8, 8],
+                },
+            },
+        );
+    }
+
+    const chart = useMemo(() => {
+        return (
+            <Line
+                data={(endpoint.data?.checks ?? []).sort((a, b) =>
+                    a.time.getTime() - b.time.getTime()
+                ).map((c) => ({
+                    time: c.time.toISOString(),
+                    latency: c.latency,
+                }))}
+                padding="auto"
+                xField="time"
+                yField="latency"
+                smooth
+                color="#3366FF"
+                autoFit={true}
+                legend={{
+                    position: "bottom",
+                }}
+                annotations={annotations}
+                yAxis={{
+                    title: { text: "Latency [ms]" },
+                    tickCount: 3,
+                }}
+                xAxis={{
+                    tickCount: 10,
+                    label: {
+                        formatter: (text) => new Date(text).toLocaleTimeString(),
+                    },
+                }}
+                tooltip={{
+                    title: (d) => new Date(d).toLocaleString(),
+
+                }}
+            />
+        );
+    }, [endpoint]);
+
+    const p50 = usePercentile(
+        0.50,
+        (endpoint.data?.checks ?? []).map((d) => d.latency),
+    );
+    const p95 = usePercentile(
+        0.95,
+        (endpoint.data?.checks ?? []).map((d) => d.latency),
+    );
+    const p99 = usePercentile(
+        0.99,
+        (endpoint.data?.checks ?? []).map((d) => d.latency),
+    );
     return (
-        <List.Item>
-            <PageHeader
-                style={{ width: "100%" }}
-                title={region}
-                // subTitle={endpoint.url}
-                extra={[
-                    <Popconfirm
-                        icon={null}
-                        key="delete"
-                        title={
-                            <>
-                                <Typography.Title level={4}>Delete Endpoint</Typography.Title>
-                                {/* <Typography.Paragraph>{endpoint.url}</Typography.Paragraph> */}
-                            </>
-                        }
-                        onConfirm={async () => {
-                            // await deleteEndpoint.mutateAsync({ endpointId: endpoint.id });
-                            message.success("Endpoint deleted");
+        <Space direction="vertical" style={{ width: "100%" }}>
+            <Typography.Title level={3}>
+                {regionName}
+            </Typography.Title>
+
+            <Row justify="end">
+                <Space size="large">
+                    <Col span={1 / 3}>
+                        <Typography.Text>
+                            p50: <Typography.Text strong>{p50}</Typography.Text> ms
+                        </Typography.Text>
+                    </Col>
+                    <Col span={1 / 3}>
+                        <Typography.Text>
+                            p95: <Typography.Text strong>{p95}</Typography.Text> ms
+                        </Typography.Text>
+                    </Col>
+
+                    <Col span={1 / 3}>
+                        <Typography.Text>
+                            p99: <Typography.Text strong>{p99}</Typography.Text> ms
+                        </Typography.Text>
+                    </Col>
+                    <Segmented
+                        value={since}
+                        options={[
+                            {
+                                label: "1m",
+                                value: now - 60 * 1000,
+                            },
+                            {
+                                label: "1h",
+                                value: now - 60 * 60 * 1000,
+                            },
+                            {
+                                label: "3h",
+                                value: now - 3 * 60 * 60 * 1000,
+                            },
+                            {
+                                label: "6h",
+                                value: now - 6 * 60 * 60 * 1000,
+                            },
+                            {
+                                label: "24h",
+                                value: now - 24 * 60 * 60 * 1000,
+                            },
+                        ]}
+                        onChange={(v) => {
+                            setSince(parseInt(v.toString()));
+                        }}
+                    />
+                    <Button
+                        disabled={!endpoint.isStale}
+                        icon={<ReloadOutlined />}
+                        loading={endpoint.isFetching || endpoint.isLoading}
+                        onClick={() => {
+                            endpoint.refetch();
                         }}
                     >
-                        <Button>Delete</Button>
-                    </Popconfirm>,
-                    <Button key="1" type="primary">
-                        Primary
-                    </Button>,
-                ]}
-            >
-            </PageHeader>
-            <div style={{ width: "100%", height: "10vh" }}>
-                <Line
-                    data={checks.map((c) => ({
-                        time: c.time.toISOString(),
-                        latency: c.latency,
-                    }))}
-                    xField="time"
-                    yField="latency"
-                    seriesField=""
-                    autoFit={true}
-                    yAxis={{
-                        title: { text: "Latency [ms]" },
-                        tickCount: 3,
-                    }}
-                    xAxis={{
-                        tickCount: 5,
-                        label: {
-                            formatter: (text) => new Date(text).toLocaleTimeString(),
-                        },
-                    }}
-                    tooltip={{
-                        title: (d) => new Date(d).toLocaleString(),
-                    }}
-                />
-            </div>
-        </List.Item>
+                    </Button>
+                </Space>
+            </Row>
+            {chart}
+        </Space>
     );
 };
 
-export default function EndpointPage() {
-    const { user } = useUser();
-
-    const router = useRouter();
-    const breadcrumbs = user?.username ? [] : [];
-    const teamSlug = router.query.teamSlug as string;
-    const endpointId = router.query.endpointId as string;
-    const endpoint = trpc.endpoint.get.useQuery({
-        endpointId,
-        since: new Date().getUTCDate() - 60 * 60 * 1000,
+const Main: React.FC<{ endpointId: string, teamSlug: string }> = ({ endpointId, teamSlug }): JSX.Element => {
+    const now = useMemo(() => Date.now(), []);
+    const [since, setSince] = useState(now - 60 * 60 * 1000);
+    console.log({ since, now });
+    const endpoint = trpc.endpoint.get.useQuery({ since, endpointId }, {
+        staleTime: 10000,
     });
 
     const annotations: Annotation[] = [];
@@ -133,7 +240,7 @@ export default function EndpointPage() {
             start: ["min", endpoint.data.degradedAfter],
             end: ["max", endpoint.data.degradedAfter],
             style: {
-                stroke: "#94a3b8",
+                stroke: "#f59e0b",
                 lineWidth: 1,
                 lineDash: [8, 8],
             },
@@ -143,18 +250,15 @@ export default function EndpointPage() {
             },
         });
     }
-    const regions = useMemo(
-        () =>
-            [...new Set(endpoint.data?.checks.map((c) => c.regionId) ?? [])].sort(),
-        [endpoint.data],
-    );
+
     const [selectedRegions, setSelectedRegions] = useSessionStorage<string[]>(
         `${endpointId}:displayedRegions`,
-        [],
+        endpoint.data?.regions.map(r => r.id) ?? [],
     );
     console.log({ selectedRegions });
 
     const data = useMemo(() => {
+        console.log("calculating data");
         return (endpoint.data?.checks ?? []).filter((c) =>
             selectedRegions.includes(c.regionId)
         ).sort((a, b) => a.time.getTime() - b.time.getTime()).map((c) => ({
@@ -167,65 +271,118 @@ export default function EndpointPage() {
     const p50 = usePercentile(0.50, data.map((d) => d.latency));
     const p95 = usePercentile(0.95, data.map((d) => d.latency));
     const p99 = usePercentile(0.99, data.map((d) => d.latency));
+    const chart = useMemo(() => (
+        <Line
+            data={data}
+            xField="time"
+            yField="latency"
+            seriesField="regionId"
+            autoFit={true}
+            smooth={true}
+            connectNulls={false}
+            legend={{
+                position: "bottom",
+            }}
+            yAxis={{
+                title: { text: "Latency [ms]" },
+                tickCount: 3,
+            }}
+            annotations={annotations}
+            xAxis={{
+                tickCount: 10,
+                label: {
+                    formatter: (text) => new Date(text).toLocaleTimeString(),
+                },
+            }}
+            tooltip={{
+                title: (d) => new Date(d).toLocaleString(),
+            }}
+        />
+    ), [data]);
 
-    return (
-        <Layout breadcrumbs={breadcrumbs}>
+    return <>
+        <Row justify="space-between">
+            <Col>
+                <Space direction="vertical">
+                    <Typography.Title level={1}>
+                        {endpoint.data?.name ?? endpoint.data?.url}
+                    </Typography.Title>
+                    <Typography.Link>{endpoint.data?.name ? endpoint.data?.url : null}</Typography.Link>
+                </Space>
+            </Col>
+            <Col>
+                <Space>
+                    <Button href={`/${teamSlug}/endpoints/new`}>
+                        Create new
+                    </Button>
+                    <Button
+                        type="primary"
+                        href={`/${teamSlug}/endpoints/${endpointId}/edit`}
+                    >
+                        Edit
+                    </Button>
+                </Space>
+            </Col>
+        </Row>
+        <Space direction="vertical" style={{ width: "100%" }}>
             <Row justify="end">
-                <Button type="primary" href={`/${teamSlug}/endpoints/new`}>
-                    Create new
-                </Button>
+                <Space size="large">
+                    <Col span={1 / 3}>
+                        <Typography.Text>
+                            p50: <Typography.Text strong>{p50}</Typography.Text> ms
+                        </Typography.Text>
+                    </Col>
+                    <Col span={1 / 3}>
+                        <Typography.Text>
+                            p95: <Typography.Text strong>{p95}</Typography.Text> ms
+                        </Typography.Text>
+                    </Col>
+
+                    <Col span={1 / 3}>
+                        <Typography.Text>
+                            p99: <Typography.Text strong>{p99}</Typography.Text> ms
+                        </Typography.Text>
+                    </Col>
+                    <Segmented
+                        value={since}
+                        options={[
+                            {
+                                label: "1m",
+                                value: now - 60 * 1000,
+                            },
+                            {
+                                label: "1h",
+                                value: now - 60 * 60 * 1000,
+                            },
+                            {
+                                label: "3h",
+                                value: now - 3 * 60 * 60 * 1000,
+                            },
+                            {
+                                label: "6h",
+                                value: now - 6 * 60 * 60 * 1000,
+                            },
+                            {
+                                label: "24h",
+                                value: now - 24 * 60 * 60 * 1000,
+                            },
+                        ]}
+                        onChange={(v) => {
+                            setSince(parseInt(v.toString()));
+                        }}
+                    />
+                    <Button
+                        disabled={!endpoint.isStale}
+                        icon={<ReloadOutlined />}
+                        loading={endpoint.isFetching || endpoint.isLoading}
+                        onClick={() => {
+                            endpoint.refetch();
+                        }}
+                    />
+                </Space>
             </Row>
-            <PageHeader
-                title={endpoint.data?.url}
-            >
-                <Row justify="end">
-                    <Space size="large">
-                        <Col span={1 / 3}>
-                            <Typography.Text>
-                                p50: <Typography.Text strong>{p50}</Typography.Text> ms
-                            </Typography.Text>
-                        </Col>
-                        <Col span={1 / 3}>
-                            <Typography.Text>
-                                p95: <Typography.Text strong>{p95}</Typography.Text> ms
-                            </Typography.Text>
-                        </Col>
 
-                        <Col span={1 / 3}>
-                            <Typography.Text>
-                                p95: <Typography.Text strong>{p95}</Typography.Text> ms
-                            </Typography.Text>
-                        </Col>
-                    </Space>
-                </Row>
-            </PageHeader>
-            <Line
-                data={data}
-                xField="time"
-                yField="latency"
-                seriesField="regionId"
-                autoFit={true}
-                smooth={true}
-                connectNulls={false}
-                legend={{
-                    position: "bottom",
-                }}
-                yAxis={{
-                    title: { text: "Latency [ms]" },
-                    tickCount: 3,
-                }}
-                annotations={annotations}
-                xAxis={{
-                    tickCount: 5,
-                    label: {
-                        formatter: (text) => new Date(text).toLocaleTimeString(),
-                    },
-                }}
-                tooltip={{
-                    title: (d) => new Date().toLocaleString(),
-                }}
-            />
-
+            {chart}
             <Typography.Title level={4}>Filter regions</Typography.Title>
 
             <Checkbox.Group
@@ -233,16 +390,52 @@ export default function EndpointPage() {
                 value={selectedRegions}
                 onChange={(v) => setSelectedRegions(v.map((x) => x.toString()))}
             >
-                <Row gutter={16} justify="center" >
-                    {regions.map((region) => (
-                        <Col key={region} span={4}>
-                            <Checkbox value={region}>
-                                {region.replace("VERCEL:", "").toUpperCase()}
+                <Row gutter={16} justify="center">
+                    {endpoint.data?.regions.map((region) => (
+                        <Col key={region.id} span={4}>
+                            <Checkbox value={region.id}>
+                                {region.name}
                             </Checkbox>
                         </Col>
                     ))}
                 </Row>
             </Checkbox.Group>
+        </Space>
+    </>
+
+}
+
+export default function EndpointPage() {
+    const { user } = useUser();
+    const router = useRouter();
+    const teamSlug = router.query.teamSlug as string;
+    const endpointId = router.query.endpointId as string;
+    const breadcrumbs =  [{
+        label: endpointId, href: `/${teamSlug}/endpoints/${endpointId}`
+    }];
+    const endpoint = trpc.endpoint.get.useQuery({ endpointId })
+
+
+    return (
+        <Layout breadcrumbs={breadcrumbs}>
+            <Space size={48} direction="vertical">
+                <Main endpointId={endpointId} teamSlug={teamSlug} />
+                <Divider />
+
+                <Typography.Title level={2}>Latency By Region</Typography.Title>
+                <Tabs
+                    tabPosition="left"
+                    style={{ height: "50vh" }}
+
+                    items={endpoint.data?.regions.map((region) => ({
+                        label: region.name,
+                        key: region.id,
+                        children: <div style={{ margin: "0 0 0 3rem" }}>
+                            <RegionTab endpointId={endpointId} regionId={region.id} regionName={region.name} />
+                        </div>
+                    }))}
+                />
+            </Space>
         </Layout>
     );
 }

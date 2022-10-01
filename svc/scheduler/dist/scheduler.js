@@ -35,6 +35,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 exports.__esModule = true;
 exports.Scheduler = void 0;
 var db_1 = require("@planetfall/db");
@@ -46,32 +57,51 @@ var Scheduler = /** @class */ (function () {
     }
     Scheduler.prototype.syncEndpoints = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var endpoints, wantIds, _i, _a, endpointId, _b, endpoints_1, endpoint;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var endpoints, wantIds, _a, _b, endpointId, endpoints_1, endpoints_1_1, endpoint;
+            var e_1, _c, e_2, _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0: return [4 /*yield*/, this.db.endpoint.findMany({
                             where: {
                                 active: true
                             }
                         })];
                     case 1:
-                        endpoints = _c.sent();
+                        endpoints = _e.sent();
                         wantIds = endpoints.reduce(function (acc, _a) {
                             var id = _a.id;
                             acc[id] = true;
                             return acc;
                         }, {});
-                        for (_i = 0, _a = Object.keys(this.clearIntervals); _i < _a.length; _i++) {
-                            endpointId = _a[_i];
-                            if (!wantIds[endpointId]) {
-                                this.removeEndpoint(endpointId);
+                        try {
+                            for (_a = __values(Object.keys(this.clearIntervals)), _b = _a.next(); !_b.done; _b = _a.next()) {
+                                endpointId = _b.value;
+                                if (!wantIds[endpointId]) {
+                                    this.removeEndpoint(endpointId);
+                                }
                             }
                         }
-                        for (_b = 0, endpoints_1 = endpoints; _b < endpoints_1.length; _b++) {
-                            endpoint = endpoints_1[_b];
-                            if (!(endpoint.id in this.clearIntervals)) {
-                                this.addEndpoint(endpoint.id);
+                        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                        finally {
+                            try {
+                                if (_b && !_b.done && (_c = _a["return"])) _c.call(_a);
                             }
+                            finally { if (e_1) throw e_1.error; }
+                        }
+                        try {
+                            for (endpoints_1 = __values(endpoints), endpoints_1_1 = endpoints_1.next(); !endpoints_1_1.done; endpoints_1_1 = endpoints_1.next()) {
+                                endpoint = endpoints_1_1.value;
+                                if (!(endpoint.id in this.clearIntervals)) {
+                                    this.addEndpoint(endpoint.id);
+                                }
+                            }
+                        }
+                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                        finally {
+                            try {
+                                if (endpoints_1_1 && !endpoints_1_1.done && (_d = endpoints_1["return"])) _d.call(endpoints_1);
+                            }
+                            finally { if (e_2) throw e_2.error; }
                         }
                         return [2 /*return*/];
                 }
