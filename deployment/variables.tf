@@ -47,6 +47,5 @@ variable "vercel_regions" {
     "sin1",
     "syd1",
   ]
-
 }
 
