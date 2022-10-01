@@ -72,7 +72,8 @@ export class Scheduler {
       console.log("testing endpoint", JSON.stringify(endpoint, null, 2));
 
       await Promise.all(endpoint.regions.map(async (region) => {
-        const time = Date.now();
+        // Date object in UTC timezone
+        const time = new Date(new Date().toUTCString());
         const res = await fetch(region.url, {
           method: "POST",
           headers: {

@@ -125,8 +125,8 @@ model Check {
   endpoint   Endpoint @relation(fields: [endpointId], references: [id])
   endpointId String
   latency    Int
-  time       Int
-  status Int
+  time       DateTime
+  status     Int
   region     Region   @relation(fields: [regionId], references: [id])
   regionId   String
 

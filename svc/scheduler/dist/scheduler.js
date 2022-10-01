@@ -127,7 +127,7 @@ var Scheduler = /** @class */ (function () {
                                 return __generator(this, function (_e) {
                                     switch (_e.label) {
                                         case 0:
-                                            time = Date.now();
+                                            time = new Date(new Date().toUTCString());
                                             return [4 /*yield*/, fetch(region.url, {
                                                     method: "POST",
                                                     headers: {

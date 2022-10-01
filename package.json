@@ -23,5 +23,6 @@
   },
   "prisma": {
     "schema": "pkg/db/prisma/schema.prisma"
-  }
+  },
+  "packageManager": "yarn@1.22.19"
 }

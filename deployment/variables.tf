@@ -28,9 +28,9 @@ variable "database_url" {
 variable "vercel_regions" {
   type = set(string)
   default = [
-    # "arn1",
-    # "bom1",
-    # "cdg1",
+    "arn1",
+    "bom1",
+    "cdg1",
     "cle1",
     # "cpt1",
     # "dub1",
