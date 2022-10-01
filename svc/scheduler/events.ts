@@ -12,21 +12,21 @@ export class Events {
 
   constructor(scheduler: Scheduler) {
     const broker = process.env.KAFKA_BROKER
-    if (!broker){
+    if (!broker) {
       throw new Error("KAFKA_BROKER is not defined")
     }
     const username = process.env.KAFKA_USERNAME
-    if (!username){
+    if (!username) {
       throw new Error("KAFKA_USERNAME is not defined")
     }
 
     const password = process.env.KAFKA_PASSWORD
-    if (!password){
+    if (!password) {
       throw new Error("KAFKA_PASSWORD is not defined")
     }
 
 
-    
+
     this.scheduler = scheduler;
     this.kafka = new Kafka({
       brokers: [broker],
@@ -40,7 +40,9 @@ export class Events {
 
   async run(): Promise<void> {
     const c = this.kafka.consumer({ groupId: "default" });
-    await c.connect();
+    await c.connect().catch(err => {
+      throw new Error(`unable to connect to kafka: ${(err as Error).message}`)
+    })
     await c.subscribe({ topic: "endpoint.created" });
     await c.run({
       eachMessage: async ({ topic, message }) => {
