@@ -1,0 +1,33 @@
+export const reservedTeams = [
+  "about",
+  "auth",
+  "blog",
+  "careers",
+  "chat",
+  "cli",
+  "docs",
+  "domains",
+  "github",
+  "gitlab",
+  "guides",
+  "integrations",
+  "legal",
+  "new",
+  "oss",
+  "pricing",
+  "security",
+  "support",
+  "terraform",
+  "tv",
+];
+
+export const reservedDomains = [
+  "auth",
+  "status",
+  "app",
+  "api",
+  "www",
+  "blog",
+  "help",
+  "roadmap",
+];
