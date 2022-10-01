@@ -68,7 +68,7 @@ export default async function handler(
     //   res.json({ error: "Unauthorized" })
     //   return
     // }
-
+    console.log("headers", JSON.stringify(req.headers, null, 2))
     console.info("body", req.body, "type", typeof req.body);
     input = validation.parse(req);
     console.info({ input });
