@@ -5,6 +5,8 @@ import superjson from "superjson";
 // The app's context - is generated for each incoming request
 export async function createContext(opts?: trpcNext.CreateNextContextOptions) {
   // @ts-ignore clerk withAuth will provide this
+  console.log("auth in ctx", opts?.req?.auth)
+  // @ts-ignore clerk withAuth will provide this
   const userId = opts?.req?.auth?.userId as string | undefined;
 
   return {
