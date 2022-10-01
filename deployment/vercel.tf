@@ -29,6 +29,7 @@ resource "vercel_project" "pinger" {
 resource "vercel_project_domain" "pinger" {
   for_each   = vercel_project.pinger
   project_id = each.value.id
+  team_id = var.vercel_team_id
   domain     = "planetfall-pinger-${each.value.serverless_function_region}.vercel.app"
 }
 
