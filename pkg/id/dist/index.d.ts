@@ -17,5 +17,5 @@ export declare class IdGenerator<TPrefixes extends string> {
      */
     id: (prefix: TPrefixes) => string;
 }
-export declare const newId: (prefix: "user" | "team" | "endpoint" | "page" | "test") => string;
+export declare const newId: (prefix: "user" | "team" | "endpoint" | "page" | "check") => string;
 //# sourceMappingURL=index.d.ts.map

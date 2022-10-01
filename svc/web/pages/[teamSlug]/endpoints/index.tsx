@@ -36,8 +36,6 @@ export default function EndpointsPage() {
             <PageHeader
               style={{ width: "100%" }}
               title={e.name}
-
-
               subTitle={e.url}
               extra={[
                 <Button key="2">Operation</Button>,
@@ -48,23 +46,22 @@ export default function EndpointsPage() {
             >
               <Row>
                 <Space>
-
-                <Statistic
-                  title="P50"
-                  suffix="ms"
-                  value={(Math.random() * 100).toFixed(0)}
+                  <Statistic
+                    title="P50"
+                    suffix="ms"
+                    value={(Math.random() * 100).toFixed(0)}
                   />
-                <Statistic
-                  title="P95"
-                  suffix="ms"
-                  value={(Math.random() * 100).toFixed(0)}
+                  <Statistic
+                    title="P95"
+                    suffix="ms"
+                    value={(Math.random() * 100).toFixed(0)}
                   />
-                <Statistic
-                  title="P99"
-                  suffix="ms"
-                  value={(Math.random() * 100).toFixed(0)}
+                  <Statistic
+                    title="P99"
+                    suffix="ms"
+                    value={(Math.random() * 100).toFixed(0)}
                   />
-                  </Space>
+                </Space>
               </Row>
             </PageHeader>
           </List.Item>

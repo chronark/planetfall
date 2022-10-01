@@ -136,7 +136,7 @@ export default function Page() {
               method: "POST",
               degradedAfter: 100,
               failedAfter: 250,
-              interval: 10000,
+              interval: 15,
               regions: [],
             }}
             onValuesChange={onRequiredTypeChange}
@@ -279,7 +279,7 @@ export default function Page() {
             </Typography.Paragraph>
 
             <Form.Item name="interval" label="Interval" required>
-              <InputNumber addonAfter="s" min={15} max={60*60} />
+              <InputNumber addonAfter="s" min={15} max={60 * 60} />
             </Form.Item>
 
             <Form.Item

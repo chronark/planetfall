@@ -5,13 +5,16 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "npx ts-node ./main.ts"
   },
   "keywords": [],
   "author": "Andreas Thomas",
   "license": "ISC",
   "dependencies": {
     "@planetfall/db": "*",
+    "@planetfall/id": "*",
+    "isomorphic-fetch": "^3.0.0",
     "kafkajs": "^2.2.0",
     "zod": "^3.19.1"
   },

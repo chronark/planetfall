@@ -1,4 +1,4 @@
-import {  httpLink } from "@trpc/client";
+import { httpLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import type { Router } from "server/router";
 

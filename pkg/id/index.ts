@@ -39,5 +39,5 @@ export const newId = new IdGenerator({
   team: "team",
   endpoint: "ept",
   page: "page",
-  test: "test",
+  check: "chk",
 }).id;

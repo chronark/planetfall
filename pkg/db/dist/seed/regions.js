@@ -42,125 +42,128 @@ var regions = [
         platform: client_1.Platform.VERCEL,
         region: "arn1",
         name: "Stockholm, Sweden",
-        url: "https://pinger-arn1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-arn1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "bom1",
         name: "Mumbai, India",
-        url: "https://pinger-bom1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-bom1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "cdg1",
         name: "Paris, France",
-        url: "https://pinger-cdg1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-cdg1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "cle1",
         name: "Cleveland, USA",
-        url: "https://pinger-cle1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-cle1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "cpt1",
         name: "Cape Town, South Africa",
-        url: "https://pinger-cpt1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-cpt1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "dub1",
         name: "Dublin, Ireland",
-        url: "https://pinger-dub1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-dub1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "fra1",
         name: "Frankfurt, Germany",
-        url: "https://pinger-fra1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-fra1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "gru1",
         name: "São Paulo, Brazil",
-        url: "https://pinger-gru1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-gru1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "hkg1",
         name: "Hong Kong",
-        url: "https://pinger-hkg1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-hkg1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "hnd1",
         name: "Tokyo, Japan",
-        url: "https://pinger-hnd1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-hnd1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "iad1",
         name: "Washington, D.C., USA",
-        url: "https://pinger-iad1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-iad1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "icn1",
         name: "Seoul, South Korea",
-        url: "https://pinger-icn1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-icn1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "kix1",
         name: "Osaka, Japan",
-        url: "https://pinger-kix1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-kix1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "lhr1",
         name: "London, United Kingdom",
-        url: "https://pinger-lhr1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-lhr1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "pdx1",
         name: "Portland, USA",
-        url: "https://pinger-pdx1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-pdx1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "sfo1",
         name: "San Francisco, USA",
-        url: "https://pinger-sfo1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-sfo1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "sin1",
         name: "Singapore",
-        url: "https://pinger-sin1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-sin1.vercel.app/api/v1/ping"
     },
     {
         platform: client_1.Platform.VERCEL,
         region: "syd1",
         name: "Sydney, Australia",
-        url: "https://pinger-syd1-planetfall.vercel.app/"
+        url: "https://planetfall-pinger-syd1.vercel.app/api/v1/ping"
     },
 ];
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, new client_1.PrismaClient().region.createMany({
-                        data: regions.map(function (r) { return ({
-                            id: [r.platform, r.region].join(":"),
-                            platform: r.platform,
-                            region: r.region,
-                            name: r.name,
-                            url: r.url
-                        }); })
-                    })];
+                case 0: return [4 /*yield*/, new client_1.PrismaClient().region.deleteMany()];
                 case 1:
+                    _a.sent();
+                    return [4 /*yield*/, new client_1.PrismaClient().region.createMany({
+                            data: regions.map(function (r) { return ({
+                                id: [r.platform, r.region].join(":"),
+                                platform: r.platform,
+                                region: r.region,
+                                name: r.name,
+                                url: r.url
+                            }); })
+                        })];
+                case 2:
                     _a.sent();
                     return [2 /*return*/];
             }

@@ -1,5 +1,6 @@
 import { Scheduler } from "./scheduler";
 import { Events } from "./events";
+import "isomorphic-fetch";
 
 async function main() {
   const s = new Scheduler();

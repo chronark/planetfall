@@ -30,6 +30,7 @@ model Region {
   url String @unique
 
   endpoints Endpoint[]
+  Check     Check[]
 
   @@unique([platform, region])
 }
@@ -125,7 +126,8 @@ model Check {
   endpointId String
   latency    Int
   time       Int
-  region     String
+  status Int
+  region     Region   @relation(fields: [regionId], references: [id])
   regionId   String
 
   @@index([endpointId])

@@ -329,6 +329,7 @@
   "version" "1.0.0"
   dependencies:
     "@planetfall/db" "*"
+    "@planetfall/id" "*"
     "kafkajs" "^2.2.0"
     "zod" "^3.19.1"
 

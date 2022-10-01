@@ -13,7 +13,7 @@ export const endpointRouter = t.router({
     degradedAfter: z.number().int().positive().optional(),
     failedAfter: z.number().int().positive(),
     teamSlug: z.string(),
-    interval: z.number().int().gte(1000).lte(30000),
+    interval: z.number().int().gte(1).lte(60 * 60),
     regions: z.array(z.string()),
   })).mutation(async ({ input, ctx }) => {
     if (!ctx.auth.userId) {
@@ -38,7 +38,7 @@ export const endpointRouter = t.router({
     if (!team) {
       throw new TRPCError({ code: "NOT_FOUND", message: "team not found" });
     }
-    console.log(JSON.stringify({ input }, null, 2))
+    console.log(JSON.stringify({ input }, null, 2));
 
     const endpoint = await ctx.db.endpoint.create({
       data: {
@@ -52,7 +52,7 @@ export const endpointRouter = t.router({
         degradedAfter: input.degradedAfter,
         failedAfter: input.failedAfter,
         regions: {
-          connect: input.regions.map(id => ({ id })),
+          connect: input.regions.map((id) => ({ id })),
         },
         team: {
           connect: {

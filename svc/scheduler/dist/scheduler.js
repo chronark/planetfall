@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.Scheduler = void 0;
 var db_1 = require("@planetfall/db");
+var id_1 = require("@planetfall/id");
 var Scheduler = /** @class */ (function () {
     function Scheduler() {
         this.db = new db_1.PrismaClient();
@@ -52,7 +53,10 @@ var Scheduler = /** @class */ (function () {
                     case 0:
                         console.log("adding new endpoint", endpointId);
                         return [4 /*yield*/, this.db.endpoint.findUnique({
-                                where: { id: endpointId }
+                                where: { id: endpointId },
+                                include: {
+                                    regions: true
+                                }
                             })];
                     case 1:
                         endpoint = _a.sent();
@@ -75,9 +79,73 @@ var Scheduler = /** @class */ (function () {
     };
     Scheduler.prototype.testEndpoint = function (endpoint) {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
-                console.log("testing endpoint", JSON.stringify(endpoint, null, 2));
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        console.log("testing endpoint", JSON.stringify(endpoint, null, 2));
+                        return [4 /*yield*/, Promise.all(endpoint.regions.map(function (region) { return __awaiter(_this, void 0, void 0, function () {
+                                var time, res, body, _a, status, latency;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0:
+                                            time = Date.now();
+                                            return [4 /*yield*/, fetch(region.url, {
+                                                    method: "POST",
+                                                    body: JSON.stringify({
+                                                        headers: {
+                                                            "Content-Type": "application/json"
+                                                        },
+                                                        body: {
+                                                            url: endpoint.url,
+                                                            method: endpoint.method,
+                                                            headers: endpoint.headers,
+                                                            body: endpoint.body
+                                                        }
+                                                    })
+                                                })];
+                                        case 1:
+                                            res = _b.sent();
+                                            if (!res.ok) {
+                                                console.error("unable to ping: ".concat(region.id, ": ").concat(res.status));
+                                                return [2 /*return*/];
+                                            }
+                                            return [4 /*yield*/, res.json()];
+                                        case 2:
+                                            body = _b.sent();
+                                            if ("error" in body) {
+                                                console.error(body.error);
+                                                return [2 /*return*/];
+                                            }
+                                            _a = body, status = _a.status, latency = _a.latency;
+                                            return [4 /*yield*/, this.db.check.create({
+                                                    data: {
+                                                        id: (0, id_1.newId)("check"),
+                                                        endpoint: {
+                                                            connect: {
+                                                                id: endpoint.id
+                                                            }
+                                                        },
+                                                        latency: latency,
+                                                        time: time,
+                                                        status: status,
+                                                        region: {
+                                                            connect: {
+                                                                id: region.id
+                                                            }
+                                                        }
+                                                    }
+                                                })];
+                                        case 3:
+                                            _b.sent();
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); }))];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     };
