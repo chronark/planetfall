@@ -31,7 +31,7 @@ variable "vercel_regions" {
     # "arn1",
     # "bom1",
     # "cdg1",
-     "cle1",
+    "cle1",
     # "cpt1",
     # "dub1",
     "fra1",
