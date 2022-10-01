@@ -45,8 +45,9 @@ export class Events {
     await c.connect().catch((err) => {
       throw new Error(`unable to connect to kafka: ${(err as Error).message}`);
     });
-    await c.subscribe({ topic: "endpoint.created" });
+    await c.subscribe({ topic: "endpoint.created", fromBeginning: false });
     await c.run({
+      autoCommit: true,
       eachMessage: async ({ topic, message }) => {
         const { endpointId } = validation.parse(
           JSON.parse(message.value!.toString()),

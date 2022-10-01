@@ -99,7 +99,7 @@ var Scheduler = /** @class */ (function () {
                         }
                         this.removeEndpoint(endpoint.id);
                         this.testEndpoint(endpoint);
-                        intervalId = setInterval(function () { return (_this.testEndpoint(endpoint)); }, endpoint.interval);
+                        intervalId = setInterval(function () { return (_this.testEndpoint(endpoint)); }, endpoint.interval * 1000);
                         this.clearIntervals[endpoint.id] = function () { return clearInterval(intervalId); };
                         return [2 /*return*/];
                 }
@@ -115,15 +115,17 @@ var Scheduler = /** @class */ (function () {
     };
     Scheduler.prototype.testEndpoint = function (endpoint) {
         return __awaiter(this, void 0, void 0, function () {
+            var err_1;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        _a.trys.push([0, 2, , 3]);
                         console.log("testing endpoint", JSON.stringify(endpoint, null, 2));
                         return [4 /*yield*/, Promise.all(endpoint.regions.map(function (region) { return __awaiter(_this, void 0, void 0, function () {
-                                var time, res, body, _a, status, latency;
-                                return __generator(this, function (_b) {
-                                    switch (_b.label) {
+                                var time, res, _a, _b, _c, _d, _e, body, _f, status, latency;
+                                return __generator(this, function (_g) {
+                                    switch (_g.label) {
                                         case 0:
                                             time = Date.now();
                                             return [4 /*yield*/, fetch(region.url, {
@@ -141,19 +143,17 @@ var Scheduler = /** @class */ (function () {
                                                     })
                                                 })];
                                         case 1:
-                                            res = _b.sent();
-                                            if (!res.ok) {
-                                                console.error("unable to ping: ".concat(region.id, ": ").concat(res.status));
-                                                return [2 /*return*/];
-                                            }
+                                            res = _g.sent();
+                                            if (!!res.ok) return [3 /*break*/, 3];
+                                            _a = Error.bind;
+                                            _c = (_b = "unable to ping: ".concat(region.id, ": ")).concat;
+                                            _e = (_d = JSON).stringify;
                                             return [4 /*yield*/, res.json()];
-                                        case 2:
-                                            body = _b.sent();
-                                            if ("error" in body) {
-                                                console.error(body.error);
-                                                return [2 /*return*/];
-                                            }
-                                            _a = body, status = _a.status, latency = _a.latency;
+                                        case 2: throw new (_a.apply(Error, [void 0, _c.apply(_b, [_e.apply(_d, [_g.sent(), null, 2])])]))();
+                                        case 3: return [4 /*yield*/, res.json()];
+                                        case 4:
+                                            body = _g.sent();
+                                            _f = body, status = _f.status, latency = _f.latency;
                                             return [4 /*yield*/, this.db.check.create({
                                                     data: {
                                                         id: (0, id_1.newId)("check"),
@@ -172,15 +172,20 @@ var Scheduler = /** @class */ (function () {
                                                         }
                                                     }
                                                 })];
-                                        case 3:
-                                            _b.sent();
+                                        case 5:
+                                            _g.sent();
                                             return [2 /*return*/];
                                     }
                                 });
                             }); }))];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_1 = _a.sent();
+                        console.error(err_1.message);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

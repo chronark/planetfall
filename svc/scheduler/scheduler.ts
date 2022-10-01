@@ -51,7 +51,7 @@ export class Scheduler {
     this.testEndpoint(endpoint);
     const intervalId = setInterval(
       () => (this.testEndpoint(endpoint)),
-      endpoint.interval,
+      endpoint.interval * 1000,
     );
     this.clearIntervals[endpoint.id] = () => clearInterval(intervalId);
   }
@@ -68,55 +68,58 @@ export class Scheduler {
   private async testEndpoint(
     endpoint: Endpoint & { regions: Region[] },
   ): Promise<void> {
-    console.log("testing endpoint", JSON.stringify(endpoint, null, 2));
+    try {
+      console.log("testing endpoint", JSON.stringify(endpoint, null, 2));
 
-    await Promise.all(endpoint.regions.map(async (region) => {
-      const time = Date.now();
-      const res = await fetch(region.url, {
-        method: "POST",
-        body: JSON.stringify({
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: {
-            url: endpoint.url,
-            method: endpoint.method,
-            headers: endpoint.headers,
-            body: endpoint.body,
-          },
-        }),
-      });
-      if (!res.ok) {
-        console.error(`unable to ping: ${region.id}: ${res.status}`);
-        return;
-      }
+      await Promise.all(endpoint.regions.map(async (region) => {
+        const time = Date.now();
+        const res = await fetch(region.url, {
+          method: "POST",
+          body: JSON.stringify({
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: {
+              url: endpoint.url,
+              method: endpoint.method,
+              headers: endpoint.headers,
+              body: endpoint.body,
+            },
+          }),
+        });
+        if (!res.ok) {
+          throw new Error(
+            `unable to ping: ${region.id}: ${
+              JSON.stringify(await res.json(), null, 2)
+            }`,
+          );
+        }
 
-      const body = await res.json();
-      if ("error" in body) {
-        console.error((body as { error: string }).error);
-        return;
-      }
+        const body = await res.json();
 
-      const { status, latency } = body as { status: number; latency: number };
+        const { status, latency } = body as { status: number; latency: number };
 
-      await this.db.check.create({
-        data: {
-          id: newId("check"),
-          endpoint: {
-            connect: {
-              id: endpoint.id,
+        await this.db.check.create({
+          data: {
+            id: newId("check"),
+            endpoint: {
+              connect: {
+                id: endpoint.id,
+              },
+            },
+            latency,
+            time,
+            status,
+            region: {
+              connect: {
+                id: region.id,
+              },
             },
           },
-          latency,
-          time,
-          status,
-          region: {
-            connect: {
-              id: region.id,
-            },
-          },
-        },
-      });
-    }));
+        });
+      }));
+    } catch (err) {
+      console.error((err as Error).message);
+    }
   }
 }

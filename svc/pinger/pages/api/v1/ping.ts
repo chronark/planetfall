@@ -4,9 +4,7 @@ import Cors from "cors";
 
 const validation = z.object({
   headers: z.object({
-    "content-type": z.string().refine((v) =>
-      v.toLowerCase() === "application/json"
-    ),
+    "content-type": z.enum(["application/json"])
   }),
   body: z.object({
     url: z.string().url(),
@@ -72,7 +70,7 @@ export default async function handler(
     // }
 
     console.info("body", req.body, "type", typeof req.body);
-    input = validation.parse(req.body);
+    input = validation.parse(req);
     console.info({ input });
   } catch (err) {
     console.error("validation error", err);

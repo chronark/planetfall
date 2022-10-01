@@ -80,10 +80,11 @@ var Events = /** @class */ (function () {
                             })];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, c.subscribe({ topic: "endpoint.created" })];
+                        return [4 /*yield*/, c.subscribe({ topic: "endpoint.created", fromBeginning: false })];
                     case 2:
                         _a.sent();
                         return [4 /*yield*/, c.run({
+                                autoCommit: true,
                                 eachMessage: function (_a) {
                                     var topic = _a.topic, message = _a.message;
                                     return __awaiter(_this, void 0, void 0, function () {
