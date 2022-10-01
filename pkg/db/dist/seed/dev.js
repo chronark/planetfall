@@ -36,51 +36,62 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.Scheduler = void 0;
-var db_1 = require("@planetfall/db");
-var Scheduler = /** @class */ (function () {
-    function Scheduler() {
-        this.db = new db_1.PrismaClient();
-        this.clearIntervals = {};
-    }
-    Scheduler.prototype.addEndpoint = function (endpointId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var endpoint, intervalId;
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log("adding new endpoint", endpointId);
-                        return [4 /*yield*/, this.db.endpoint.findUnique({
-                                where: { id: endpointId }
-                            })];
-                    case 1:
-                        endpoint = _a.sent();
-                        if (!endpoint) {
-                            throw new Error("endpoint not found: ".concat(endpointId));
-                        }
-                        this.removeEndpoint(endpoint.id);
-                        intervalId = setInterval(function () { return (_this.testEndpoint(endpoint)); }, endpoint.interval);
-                        this.clearIntervals[endpoint.id] = function () { return clearInterval(intervalId); };
-                        return [2 /*return*/];
-                }
-            });
+var client_1 = require("@prisma/client");
+function main() {
+    return __awaiter(this, void 0, void 0, function () {
+        var userId, db, team;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    userId = "user_2FGNbfMRU4joWXFqD03dzcaMEHI";
+                    db = new client_1.PrismaClient();
+                    return [4 /*yield*/, db.team.upsert({
+                            where: {
+                                id: "seed"
+                            },
+                            update: {},
+                            create: {
+                                id: "seed",
+                                stripeCustomerId: "abc",
+                                name: "chronark-local",
+                                slug: "chronark-local",
+                                retention: 10000,
+                                stripeCurrentBillingPeriodStart: 0
+                            }
+                        })];
+                case 1:
+                    team = _a.sent();
+                    return [4 /*yield*/, db.user.create({
+                            data: {
+                                id: userId,
+                                teams: {
+                                    connectOrCreate: {
+                                        where: {
+                                            userId_teamId: {
+                                                userId: userId,
+                                                teamId: team.id
+                                            }
+                                        },
+                                        create: {
+                                            team: {
+                                                connect: {
+                                                    id: team.id
+                                                }
+                                            },
+                                            role: "PERSONAL"
+                                        }
+                                    }
+                                }
+                            }
+                        })];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, db.$disconnect()];
+                case 3:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
         });
-    };
-    Scheduler.prototype.removeEndpoint = function (endpointId) {
-        console.log("removing endpoint", endpointId);
-        if (endpointId in this.clearIntervals) {
-            this.clearIntervals[endpointId]();
-        }
-    };
-    Scheduler.prototype.testEndpoint = function (endpoint) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                console.log("testing endpoint", JSON.stringify(endpoint, null, 2));
-                return [2 /*return*/];
-            });
-        });
-    };
-    return Scheduler;
-}());
-exports.Scheduler = Scheduler;
+    });
+}
+main();

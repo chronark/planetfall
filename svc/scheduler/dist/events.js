@@ -44,14 +44,27 @@ var validation = zod_1.z.object({
 });
 var Events = /** @class */ (function () {
     function Events(scheduler) {
+        // const broker = process.env.KAFKA_BROKER
+        // if (!broker) {
+        //   throw new Error("KAFKA_BROKER is not defined")
+        // }
+        // const username = process.env.KAFKA_USERNAME
+        // if (!username) {
+        //   throw new Error("KAFKA_USERNAME is not defined")
+        // }
+        // const password = process.env.KAFKA_PASSWORD
+        // if (!password) {
+        //   throw new Error("KAFKA_PASSWORD is not defined")
+        // }
         this.scheduler = scheduler;
         this.kafka = new kafkajs_1.Kafka({
-            brokers: [process.env.KAFKA_CLUSTER],
+            brokers: ["guided-mayfly-5226-eu1-kafka.upstash.io:9092"],
             sasl: {
                 mechanism: "scram-sha-256",
-                username: process.env.KAFKA_USERNAME,
-                password: process.env.KAFKA_PASSWORD
-            }
+                username: "Z3VpZGVkLW1heWZseS01MjI2JFR6xU2xMP72Fah6nc6tJmrvjjY_4liyvXx60z4",
+                password: "LS05fUMzOT6MD4L1n3kwRkOrAsQu-B_gtY11dLz6pNepoTORnU5Wvu5UhiDc1CEpFTi8sQ=="
+            },
+            ssl: true
         });
     }
     Events.prototype.run = function () {
@@ -62,7 +75,9 @@ var Events = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         c = this.kafka.consumer({ groupId: "default" });
-                        return [4 /*yield*/, c.connect()];
+                        return [4 /*yield*/, c.connect()["catch"](function (err) {
+                                throw new Error("unable to connect to kafka: ".concat(err.message));
+                            })];
                     case 1:
                         _a.sent();
                         return [4 /*yield*/, c.subscribe({ topic: "endpoint.created" })];

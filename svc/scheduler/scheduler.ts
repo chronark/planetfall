@@ -11,7 +11,7 @@ export class Scheduler {
   }
 
   public async addEndpoint(endpointId: string): Promise<void> {
-    console.log("adding new endpoint", endpointId)
+    console.log("adding new endpoint", endpointId);
     const endpoint = await this.db.endpoint.findUnique({
       where: { id: endpointId },
     });
@@ -27,7 +27,7 @@ export class Scheduler {
   }
 
   public removeEndpoint(endpointId: string): void {
-    console.log("removing endpoint", endpointId)
+    console.log("removing endpoint", endpointId);
 
     if (endpointId in this.clearIntervals) {
       this.clearIntervals[endpointId]();
@@ -35,12 +35,6 @@ export class Scheduler {
   }
 
   private async testEndpoint(endpoint: Endpoint): Promise<void> {
-    console.log("testing endpoint", endpoint.id)
-    const results = await Promise.all(
-      (endpoint.regions as string[]).map((r) => {
-        const [platform, region] = r.split("::");
-        console.log({ region });
-      }),
-    );
+    console.log("testing endpoint", JSON.stringify(endpoint, null, 2));
   }
 }

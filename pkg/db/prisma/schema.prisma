@@ -21,6 +21,28 @@ enum Platform {
   VERCEL
 }
 
+model Region {
+  id       String   @id
+  name     String
+  platform Platform
+  region   String
+
+  url String @unique
+
+  endpoints Endpoint[]
+
+  @@unique([platform, region])
+}
+
+// model Deployment {
+//   region Region @relation(fields: [platform, region], references: [platform, region])
+//   platform String
+//   region String
+
+//   Endpoint   Endpoint? @relation(fields: [endpointId], references: [id])
+//   endpointId String?
+// }
+
 model Endpoint {
   id     String @id
   method Method
@@ -37,7 +59,7 @@ model Endpoint {
   // Milliseconds
   degradedAfter Int?
   failedAfter   Int?
-  regions       Json
+  regions       Region[]
   // json encoded map
   headers       Json?
   body          String?

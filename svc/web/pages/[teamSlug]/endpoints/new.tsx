@@ -57,7 +57,7 @@ export default function Page() {
   const breadcrumbs = user?.username ? [] : [];
 
   const createEndpoint = trpc.endpoint.create.useMutation();
-  const regions = trpc.region.list.useQuery({});
+  const regions = trpc.region.list.useQuery();
   const [form] = Form.useForm<FormData>();
   const [requiredMark, setRequiredMarkType] = useState<RequiredMark>(
     "optional",

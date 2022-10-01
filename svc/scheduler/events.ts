@@ -25,29 +25,26 @@ export class Events {
     //   throw new Error("KAFKA_PASSWORD is not defined")
     // }
 
-
-
     this.scheduler = scheduler;
 
     this.kafka = new Kafka({
-      brokers: ['guided-mayfly-5226-eu1-kafka.upstash.io:9092'],
+      brokers: ["guided-mayfly-5226-eu1-kafka.upstash.io:9092"],
       sasl: {
-        mechanism: 'scram-sha-256',
-        username: 'Z3VpZGVkLW1heWZseS01MjI2JFR6xU2xMP72Fah6nc6tJmrvjjY_4liyvXx60z4',
-        password: 'LS05fUMzOT6MD4L1n3kwRkOrAsQu-B_gtY11dLz6pNepoTORnU5Wvu5UhiDc1CEpFTi8sQ==',
+        mechanism: "scram-sha-256",
+        username:
+          "Z3VpZGVkLW1heWZseS01MjI2JFR6xU2xMP72Fah6nc6tJmrvjjY_4liyvXx60z4",
+        password:
+          "LS05fUMzOT6MD4L1n3kwRkOrAsQu-B_gtY11dLz6pNepoTORnU5Wvu5UhiDc1CEpFTi8sQ==",
       },
       ssl: true,
-    })
-
-
-
+    });
   }
 
   async run(): Promise<void> {
     const c = this.kafka.consumer({ groupId: "default" });
-    await c.connect().catch(err => {
-      throw new Error(`unable to connect to kafka: ${(err as Error).message}`)
-    })
+    await c.connect().catch((err) => {
+      throw new Error(`unable to connect to kafka: ${(err as Error).message}`);
+    });
     await c.subscribe({ topic: "endpoint.created" });
     await c.run({
       eachMessage: async ({ topic, message }) => {
