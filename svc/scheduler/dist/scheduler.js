@@ -123,37 +123,34 @@ var Scheduler = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         console.log("testing endpoint", JSON.stringify(endpoint, null, 2));
                         return [4 /*yield*/, Promise.all(endpoint.regions.map(function (region) { return __awaiter(_this, void 0, void 0, function () {
-                                var time, res, _a, _b, _c, _d, _e, body, _f, status, latency;
-                                return __generator(this, function (_g) {
-                                    switch (_g.label) {
+                                var time, res, _a, _b, _c, body, _d, status, latency;
+                                return __generator(this, function (_e) {
+                                    switch (_e.label) {
                                         case 0:
                                             time = Date.now();
                                             return [4 /*yield*/, fetch(region.url, {
                                                     method: "POST",
+                                                    headers: {
+                                                        "Content-Type": "application/json"
+                                                    },
                                                     body: JSON.stringify({
-                                                        headers: {
-                                                            "Content-Type": "application/json"
-                                                        },
-                                                        body: {
-                                                            url: endpoint.url,
-                                                            method: endpoint.method,
-                                                            headers: endpoint.headers,
-                                                            body: endpoint.body
-                                                        }
+                                                        url: endpoint.url,
+                                                        method: endpoint.method,
+                                                        headers: endpoint.headers,
+                                                        body: endpoint.body
                                                     })
                                                 })];
                                         case 1:
-                                            res = _g.sent();
+                                            res = _e.sent();
                                             if (!!res.ok) return [3 /*break*/, 3];
                                             _a = Error.bind;
                                             _c = (_b = "unable to ping: ".concat(region.id, ": ")).concat;
-                                            _e = (_d = JSON).stringify;
-                                            return [4 /*yield*/, res.json()];
-                                        case 2: throw new (_a.apply(Error, [void 0, _c.apply(_b, [_e.apply(_d, [_g.sent(), null, 2])])]))();
+                                            return [4 /*yield*/, res.text()];
+                                        case 2: throw new (_a.apply(Error, [void 0, _c.apply(_b, [_e.sent()])]))();
                                         case 3: return [4 /*yield*/, res.json()];
                                         case 4:
-                                            body = _g.sent();
-                                            _f = body, status = _f.status, latency = _f.latency;
+                                            body = _e.sent();
+                                            _d = body, status = _d.status, latency = _d.latency;
                                             return [4 /*yield*/, this.db.check.create({
                                                     data: {
                                                         id: (0, id_1.newId)("check"),
@@ -173,7 +170,7 @@ var Scheduler = /** @class */ (function () {
                                                     }
                                                 })];
                                         case 5:
-                                            _g.sent();
+                                            _e.sent();
                                             return [2 /*return*/];
                                     }
                                 });

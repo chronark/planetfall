@@ -75,23 +75,19 @@ export class Scheduler {
         const time = Date.now();
         const res = await fetch(region.url, {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: {
-              url: endpoint.url,
-              method: endpoint.method,
-              headers: endpoint.headers,
-              body: endpoint.body,
-            },
+            url: endpoint.url,
+            method: endpoint.method,
+            headers: endpoint.headers,
+            body: endpoint.body,
           }),
         });
         if (!res.ok) {
           throw new Error(
-            `unable to ping: ${region.id}: ${
-              JSON.stringify(await res.json(), null, 2)
-            }`,
+            `unable to ping: ${region.id}: ${await res.text()}`,
           );
         }
 
