@@ -11,8 +11,8 @@ const validation = z.object({
     method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]),
     // milliseconds
     // timeout: z.number().int().gte(1000).lte(60000),
-    headers: z.record(z.string()).optional(),
-    body: z.string().optional(),
+    headers: z.record(z.string()).nullish(),
+    body: z.string().nullish(),
   }),
 });
 export type Input = z.infer<typeof validation>;

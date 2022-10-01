@@ -84,7 +84,7 @@ var Events = /** @class */ (function () {
                     case 2:
                         _a.sent();
                         return [4 /*yield*/, c.run({
-                                autoCommit: true,
+                                autoCommitThreshold: 10,
                                 eachMessage: function (_a) {
                                     var topic = _a.topic, message = _a.message;
                                     return __awaiter(_this, void 0, void 0, function () {

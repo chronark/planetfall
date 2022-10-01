@@ -47,7 +47,7 @@ export class Events {
     });
     await c.subscribe({ topic: "endpoint.created", fromBeginning: false });
     await c.run({
-      autoCommit: true,
+      autoCommitThreshold: 10,
       eachMessage: async ({ topic, message }) => {
         const { endpointId } = validation.parse(
           JSON.parse(message.value!.toString()),
