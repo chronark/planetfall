@@ -28,6 +28,7 @@
     "@trpc/next": "10.0.0-proxy-beta.7",
     "@trpc/react": "10.0.0-proxy-beta.7",
     "@trpc/server": "10.0.0-proxy-beta.7",
+    "@upstash/kafka": "^1.2.2",
     "antd": "^4.23.2",
     "classnames": "^2.3.2",
     "next": "12.3.1",

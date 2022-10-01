@@ -2,6 +2,7 @@ import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
 import { string, z } from "zod";
 import { t } from "../trpc";
+import { Kafka } from "@upstash/kafka"
 
 export const endpointRouter = t.router({
   create: t.procedure.input(z.object({
@@ -37,7 +38,7 @@ export const endpointRouter = t.router({
     if (!team) {
       throw new TRPCError({ code: "NOT_FOUND", message: "team not found" });
     }
-    return await ctx.db.endpoint.create({
+    const endpoint = await ctx.db.endpoint.create({
       data: {
         id: newId("endpoint"),
         url: input.url,
@@ -58,6 +59,19 @@ export const endpointRouter = t.router({
         },
       },
     });
+
+
+    const kafka = new Kafka({
+      url: "https://guided-mayfly-5226-eu1-rest-kafka.upstash.io",
+      username: "Z3VpZGVkLW1heWZseS01MjI2JFR6xU2xMP72Fah6nc6tJmrvjjY_4liyvXx60z4",
+      password: "LS05fUMzOT6MD4L1n3kwRkOrAsQu-B_gtY11dLz6pNepoTORnU5Wvu5UhiDc1CEpFTi8sQ==",
+    })
+
+    const p = kafka.producer()
+
+    const r = await p.produce("endpoint.create", { endpointId: endpoint.id })
+    console.log("Kafka response:", r)
+    return endpoint
   }),
   list: t.procedure.input(z.object({
     teamSlug: z.string(),

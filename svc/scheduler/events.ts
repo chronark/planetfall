@@ -31,7 +31,7 @@ export class Events {
     this.kafka = new Kafka({
       brokers: [broker],
       sasl: {
-        mechanism: "scram-sha-256",
+        mechanism: 'scram-sha-256',
         username,
         password,
       },
