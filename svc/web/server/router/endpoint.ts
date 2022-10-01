@@ -211,7 +211,7 @@ export const endpointRouter = t.router({
             },
           },
         },
-        regions: true
+        regions: true,
       },
     });
     if (!endpoint) {

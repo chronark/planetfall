@@ -58,8 +58,9 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
     { name: "Endpoints", href: `/${activeTeamSlug}/endpoints` },
     { name: "Pages", href: `/${activeTeamSlug}/pages` },
   ];
-  const invalidteam = teams.data && !teams.data.find((t) => t.team.slug === activeTeamSlug);
-console.log(router.asPath)
+  const invalidteam = teams.data &&
+    !teams.data.find((t) => t.team.slug === activeTeamSlug);
+  console.log(router.asPath);
   return (
     <>
       <Disclosure as="header" className="bg-white shadow border-b">
@@ -366,12 +367,11 @@ console.log(router.asPath)
           : children}
       </main>
 
-
       <footer>
         <div className="mx-auto container border-t mt-16 pt-16 flex justify-center">
-
           <p className="mb-16 text-base text-slate-400">
-            &copy; {new Date().getUTCFullYear()} planetfall.io - All rights reserved.
+            &copy; {new Date().getUTCFullYear()}{" "}
+            planetfall.io - All rights reserved.
           </p>
         </div>
       </footer>

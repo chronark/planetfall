@@ -2,7 +2,8 @@
   "name": "@planetfall/id",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.t.ts",
   "scripts": {
     "build": "tsc"
   },
