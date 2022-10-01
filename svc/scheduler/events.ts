@@ -11,31 +11,35 @@ export class Events {
   private kafka: Kafka;
 
   constructor(scheduler: Scheduler) {
-    const broker = process.env.KAFKA_BROKER
-    if (!broker) {
-      throw new Error("KAFKA_BROKER is not defined")
-    }
-    const username = process.env.KAFKA_USERNAME
-    if (!username) {
-      throw new Error("KAFKA_USERNAME is not defined")
-    }
+    // const broker = process.env.KAFKA_BROKER
+    // if (!broker) {
+    //   throw new Error("KAFKA_BROKER is not defined")
+    // }
+    // const username = process.env.KAFKA_USERNAME
+    // if (!username) {
+    //   throw new Error("KAFKA_USERNAME is not defined")
+    // }
 
-    const password = process.env.KAFKA_PASSWORD
-    if (!password) {
-      throw new Error("KAFKA_PASSWORD is not defined")
-    }
+    // const password = process.env.KAFKA_PASSWORD
+    // if (!password) {
+    //   throw new Error("KAFKA_PASSWORD is not defined")
+    // }
 
 
 
     this.scheduler = scheduler;
+
     this.kafka = new Kafka({
-      brokers: [broker],
+      brokers: ['relative-finch-9935-us1-kafka.upstash.io:9092'],
       sasl: {
         mechanism: 'scram-sha-256',
-        username,
-        password,
+        username: 'cmVsYXRpdmUtZmluY2gtOTkzNSTjw506Qqoc-N8tlcvs9M6UY0rXIo2eDXLO7sg',
+        password: 'RjsXb3k4XcVtBq3f0yhgGcg9W-k0d8L1EfjVt0YjQPk0CacC-mV0gkxkmcHhsktwVvyTsg==',
       },
-    });
+      ssl: true,
+    })
+
+
   }
 
   async run(): Promise<void> {
