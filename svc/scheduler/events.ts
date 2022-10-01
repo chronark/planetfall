@@ -30,14 +30,15 @@ export class Events {
     this.scheduler = scheduler;
 
     this.kafka = new Kafka({
-      brokers: ['relative-finch-9935-us1-kafka.upstash.io:9092'],
+      brokers: ['guided-mayfly-5226-eu1-kafka.upstash.io:9092'],
       sasl: {
         mechanism: 'scram-sha-256',
-        username: 'cmVsYXRpdmUtZmluY2gtOTkzNSTjw506Qqoc-N8tlcvs9M6UY0rXIo2eDXLO7sg',
-        password: 'RjsXb3k4XcVtBq3f0yhgGcg9W-k0d8L1EfjVt0YjQPk0CacC-mV0gkxkmcHhsktwVvyTsg==',
+        username: 'Z3VpZGVkLW1heWZseS01MjI2JFR6xU2xMP72Fah6nc6tJmrvjjY_4liyvXx60z4',
+        password: 'LS05fUMzOT6MD4L1n3kwRkOrAsQu-B_gtY11dLz6pNepoTORnU5Wvu5UhiDc1CEpFTi8sQ==',
       },
       ssl: true,
     })
+
 
 
   }
