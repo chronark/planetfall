@@ -87,7 +87,7 @@ export default async function handler(
   const start = Date.now();
   const { status } = await fetch(input.body.url, {
     method: input.body.method,
-    headers: input.body.headers,
+    headers: input.body.headers ?? undefined,
     body: input.body.body,
     // signal: abortController.signal,
   });
