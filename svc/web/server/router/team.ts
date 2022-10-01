@@ -3,6 +3,7 @@ import { t } from "../trpc";
 
 export const teamRouter = t.router({
   list: t.procedure.query(async ({ ctx }) => {
+    console.log({auth: ctx.auth})
     if (!ctx.auth.userId) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
