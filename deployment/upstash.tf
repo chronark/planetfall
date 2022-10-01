@@ -5,7 +5,7 @@ resource "upstash_kafka_cluster" "planetfall" {
 }
 
 resource "upstash_kafka_topic" "endpoint_created" {
-  cluster_id       = upstash_kafka_cluster.planetfall.id
+  cluster_id       = upstash_kafka_cluster.planetfall.cluster_id
   topic_name       = "endpoint.created"
   partitions       = 1
   cleanup_policy   = "delete"
@@ -17,7 +17,7 @@ resource "upstash_kafka_topic" "endpoint_created" {
 }
 
 resource "upstash_kafka_topic" "endpoint_updated" {
-  cluster_id       = upstash_kafka_cluster.planetfall.id
+  cluster_id       = upstash_kafka_cluster.planetfall.cluster_id
   topic_name       = "endpoint.updated"
   partitions       = 1
   cleanup_policy   = "delete"
@@ -29,7 +29,7 @@ resource "upstash_kafka_topic" "endpoint_updated" {
 }
 
 resource "upstash_kafka_topic" "endpoint_deleted" {
-  cluster_id       = upstash_kafka_cluster.planetfall.id
+  cluster_id       = upstash_kafka_cluster.planetfall.cluster_id
   topic_name       = "endpoint.deleted"
   partitions       = 1
   cleanup_policy   = "delete"
