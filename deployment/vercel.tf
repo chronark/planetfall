@@ -26,6 +26,15 @@ resource "vercel_project" "pinger" {
 }
 
 
+resource "vercel_project_domain" "pinger" {
+  for_each   = vercel_project.pinger
+  project_id = each.value.id
+  domain     = "planetfall-pinger-${each.value.serverless_function_region}.vercel.app"
+}
+
+
+
+
 
 resource "vercel_project" "web" {
   name      = "planetfall"
@@ -69,63 +78,57 @@ resource "vercel_project" "web" {
     target = ["production", "preview"] },
 
   ]
-  
+
 }
 
-resource "vercel_dns_record" "clkmail"{
+resource "vercel_dns_record" "clkmail" {
   team_id = var.vercel_team_id
-  domain = "planetfall.io"
-  name   = "clkmail"
-  type   = "CNAME"
-  ttl    = 60
-  value  = "mail.n726fkhumtvm.clerk.services"
+  domain  = "planetfall.io"
+  name    = "clkmail"
+  type    = "CNAME"
+  ttl     = 60
+  value   = "mail.n726fkhumtvm.clerk.services"
 }
 
-resource "vercel_dns_record" "clk2"{
+resource "vercel_dns_record" "clk2" {
   team_id = var.vercel_team_id
-  domain = "planetfall.io"
-  name   = "clk2._domainkey"
-  type   = "CNAME"
-  ttl    = 60
-  value  = "dkim2.n726fkhumtvm.clerk.services"
+  domain  = "planetfall.io"
+  name    = "clk2._domainkey"
+  type    = "CNAME"
+  ttl     = 60
+  value   = "dkim2.n726fkhumtvm.clerk.services"
 }
 
-resource "vercel_dns_record" "clk"{
+resource "vercel_dns_record" "clk" {
   team_id = var.vercel_team_id
-  domain = "planetfall.io"
-  name   = "clk._domainkey"
-  type   = "CNAME"
-  ttl    = 60
-  value  = "dkim1.n726fkhumtvm.clerk.services"
+  domain  = "planetfall.io"
+  name    = "clk._domainkey"
+  type    = "CNAME"
+  ttl     = 60
+  value   = "dkim1.n726fkhumtvm.clerk.services"
 }
 
-resource "vercel_dns_record" "clerk"{
+resource "vercel_dns_record" "clerk" {
   team_id = var.vercel_team_id
-  domain = "planetfall.io"
-  name   = "clerk"
-  type   = "CNAME"
-  ttl    = 60
-  value  = "frontend-api.clerk.services"
+  domain  = "planetfall.io"
+  name    = "clerk"
+  type    = "CNAME"
+  ttl     = 60
+  value   = "frontend-api.clerk.services"
 }
-resource "vercel_dns_record" "accounts"{
+resource "vercel_dns_record" "accounts" {
   team_id = var.vercel_team_id
-  domain = "planetfall.io"
-  name   = "accounts"
-  type   = "CNAME"
-  ttl    = 60
-  value  = "accounts.clerk.services"
+  domain  = "planetfall.io"
+  name    = "accounts"
+  type    = "CNAME"
+  ttl     = 60
+  value   = "accounts.clerk.services"
 }
-resource "vercel_project_domain" "web"{
+resource "vercel_project_domain" "web" {
   project_id = vercel_project.web.id
-  team_id = var.vercel_team_id
-  domain = "planetfall.io"
+  team_id    = var.vercel_team_id
+  domain     = "planetfall.io"
 }
-# resource "vercel_project_domain" "pinger" {
-#   for_each   = vercel_project.pinger
-#   project_id = each.value.id
-#   domain     = "planetfall-pinger-${each.value.serverless_function_region}.vercel.app"
-# }
-
 
 
 # data "vercel_project_directory" "root" {

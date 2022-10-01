@@ -38,19 +38,21 @@ export const endpointRouter = t.router({
     if (!team) {
       throw new TRPCError({ code: "NOT_FOUND", message: "team not found" });
     }
+    console.log(JSON.stringify({ input }, null, 2))
+
     const endpoint = await ctx.db.endpoint.create({
       data: {
         id: newId("endpoint"),
         url: input.url,
+        body: input.body,
+        headers: input.headers,
         active: true,
         method: input.method,
         interval: input.interval,
         degradedAfter: input.degradedAfter,
         failedAfter: input.failedAfter,
         regions: {
-          connect: input.regions.map((id) => ({
-            id,
-          })),
+          connect: input.regions.map(id => ({ id })),
         },
         team: {
           connect: {

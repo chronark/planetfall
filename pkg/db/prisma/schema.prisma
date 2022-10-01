@@ -44,9 +44,9 @@ model Region {
 // }
 
 model Endpoint {
-  id     String @id
-  method Method
-
+  id        String   @id
+  method    Method
+  name      String?
   team      Team     @relation(fields: [teamId], references: [id])
   teamId    String
   url       String

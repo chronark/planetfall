@@ -1,4 +1,4 @@
-import { httpBatchLink } from "@trpc/client";
+import {  httpLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import type { Router } from "server/router";
 
@@ -19,7 +19,7 @@ export const trpc = createTRPCNext<Router>({
   config({ ctx }) {
     return {
       links: [
-        httpBatchLink({
+        httpLink({
           /**
            * If you want to use SSR, you need to use the server's full URL
            * @link https://trpc.io/docs/ssr

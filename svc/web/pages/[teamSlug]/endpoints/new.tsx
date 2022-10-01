@@ -279,7 +279,7 @@ export default function Page() {
             </Typography.Paragraph>
 
             <Form.Item name="interval" label="Interval" required>
-              <InputNumber addonAfter="ms" min={1} max={10000} />
+              <InputNumber addonAfter="s" min={15} max={60*60} />
             </Form.Item>
 
             <Form.Item

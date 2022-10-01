@@ -10,6 +10,7 @@ import {
   List,
   PageHeader,
   Row,
+  Space,
   Statistic,
   Switch,
   Tag,
@@ -34,15 +35,10 @@ export default function EndpointsPage() {
           <List.Item>
             <PageHeader
               style={{ width: "100%" }}
-              title="Title"
-              tags={
-                <Switch
-                  defaultChecked={e.active}
-                  onChange={async (checked) => {}}
-                  unCheckedChildren="Disabled"
-                />
-              }
-              subTitle="This is a subtitle"
+              title={e.name}
+
+
+              subTitle={e.url}
               extra={[
                 <Button key="2">Operation</Button>,
                 <Button key="1" type="primary">
@@ -51,21 +47,24 @@ export default function EndpointsPage() {
               ]}
             >
               <Row>
+                <Space>
+
                 <Statistic
                   title="P50"
                   suffix="ms"
                   value={(Math.random() * 100).toFixed(0)}
-                />
+                  />
                 <Statistic
                   title="P95"
                   suffix="ms"
                   value={(Math.random() * 100).toFixed(0)}
-                />
+                  />
                 <Statistic
                   title="P99"
                   suffix="ms"
                   value={(Math.random() * 100).toFixed(0)}
-                />
+                  />
+                  </Space>
               </Row>
             </PageHeader>
           </List.Item>

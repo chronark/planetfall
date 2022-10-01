@@ -71,9 +71,6 @@
 //     }
 //   },
 
-//   batching: {
-//     enabled: true,
-//   },
 // });
 
 // export default trpcNext.createNextApiHandler(handler);
