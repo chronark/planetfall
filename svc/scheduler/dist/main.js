@@ -46,6 +46,7 @@ function main() {
             s = new scheduler_1.Scheduler();
             e = new events_1.Events(s);
             e.run();
+            s.syncEndpoints();
             return [2 /*return*/];
         });
     });

@@ -44,6 +44,40 @@ var Scheduler = /** @class */ (function () {
         this.db = new db_1.PrismaClient();
         this.clearIntervals = {};
     }
+    Scheduler.prototype.syncEndpoints = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var endpoints, wantIds, _i, _a, endpointId, _b, endpoints_1, endpoint;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0: return [4 /*yield*/, this.db.endpoint.findMany({
+                            where: {
+                                active: true
+                            }
+                        })];
+                    case 1:
+                        endpoints = _c.sent();
+                        wantIds = endpoints.reduce(function (acc, _a) {
+                            var id = _a.id;
+                            acc[id] = true;
+                            return acc;
+                        }, {});
+                        for (_i = 0, _a = Object.keys(this.clearIntervals); _i < _a.length; _i++) {
+                            endpointId = _a[_i];
+                            if (!wantIds[endpointId]) {
+                                this.removeEndpoint(endpointId);
+                            }
+                        }
+                        for (_b = 0, endpoints_1 = endpoints; _b < endpoints_1.length; _b++) {
+                            endpoint = endpoints_1[_b];
+                            if (!(endpoint.id in this.clearIntervals)) {
+                                this.addEndpoint(endpoint.id);
+                            }
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     Scheduler.prototype.addEndpoint = function (endpointId) {
         return __awaiter(this, void 0, void 0, function () {
             var endpoint, intervalId;
@@ -64,6 +98,7 @@ var Scheduler = /** @class */ (function () {
                             throw new Error("endpoint not found: ".concat(endpointId));
                         }
                         this.removeEndpoint(endpoint.id);
+                        this.testEndpoint(endpoint);
                         intervalId = setInterval(function () { return (_this.testEndpoint(endpoint)); }, endpoint.interval);
                         this.clearIntervals[endpoint.id] = function () { return clearInterval(intervalId); };
                         return [2 /*return*/];
@@ -75,6 +110,7 @@ var Scheduler = /** @class */ (function () {
         console.log("removing endpoint", endpointId);
         if (endpointId in this.clearIntervals) {
             this.clearIntervals[endpointId]();
+            delete this.clearIntervals[endpointId];
         }
     };
     Scheduler.prototype.testEndpoint = function (endpoint) {

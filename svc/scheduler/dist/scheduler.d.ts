@@ -2,6 +2,7 @@ export declare class Scheduler {
     private clearIntervals;
     private db;
     constructor();
+    syncEndpoints(): Promise<void>;
     addEndpoint(endpointId: string): Promise<void>;
     removeEndpoint(endpointId: string): void;
     private testEndpoint;

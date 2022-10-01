@@ -330,6 +330,7 @@
   dependencies:
     "@planetfall/db" "*"
     "@planetfall/id" "*"
+    "isomorphic-fetch" "^3.0.0"
     "kafkajs" "^2.2.0"
     "zod" "^3.19.1"
 

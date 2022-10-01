@@ -7,6 +7,8 @@ async function main() {
   const e = new Events(s);
 
   e.run();
+
+  s.syncEndpoints();
 }
 
 main();
