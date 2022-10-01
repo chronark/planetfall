@@ -4,7 +4,7 @@ resource "upstash_kafka_cluster" "planetfall" {
   multizone    = "false"
 }
 
-resource "upstash_kafka_topic" "endpoint.created" {
+resource "upstash_kafka_topic" "endpoint_created" {
   topic_name       = "endpoint.created"
   partitions       = 1
   cleanup_policy   = "delete"
@@ -15,7 +15,7 @@ resource "upstash_kafka_topic" "endpoint.created" {
 
 }
 
-resource "upstash_kafka_topic" "endpoint.updated" {
+resource "upstash_kafka_topic" "endpoint_updated" {
   topic_name       = "endpoint.updated"
   partitions       = 1
   cleanup_policy   = "delete"
@@ -26,7 +26,7 @@ resource "upstash_kafka_topic" "endpoint.updated" {
 
 }
 
-resource "upstash_kafka_topic" "endpoint.deleted" {
+resource "upstash_kafka_topic" "endpoint_deleted" {
   topic_name       = "endpoint.deleted"
   partitions       = 1
   cleanup_policy   = "delete"
