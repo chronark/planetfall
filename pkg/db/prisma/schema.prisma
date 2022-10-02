@@ -16,7 +16,7 @@ enum Action {
 }
 
 model Token {
-  id    String @id
+  id        String @id
   tokenHash String @unique
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -78,19 +78,17 @@ model Endpoint {
   headers       Json?
   body          String?
 
-  StatusPage   StatusPage? @relation(fields: [statusPageId], references: [id])
-  statusPageId String?
-  checks       Check[]
+  statusPages StatusPage[]
+  checks      Check[]
 }
 
 model VerificationRequest {
   // usually email
   identifier String
-  otp        String 
+  otp        String
   expires    DateTime
 
   createdAt DateTime @default(now())
-  
 
   @@unique([identifier, otp])
 }
@@ -106,11 +104,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  id            String    @id
-  name          String
-  email         String @unique
-  image         String?
-  tokens        Token[]
+  id     String  @id
+  name   String
+  email  String  @unique
+  image  String?
+  tokens Token[]
 
   teams Membership[]
 }
