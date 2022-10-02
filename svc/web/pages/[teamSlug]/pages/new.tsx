@@ -58,9 +58,9 @@ export default function Page() {
     "optional",
   );
 
-  
-  const protocol = process.env.NEXT_PUBLIC_VERCEL ? "https" : "http"
-  const host = process.env.NEXT_PUBLIC_VERCEL ? "planetfall.io" : "localhost:3000"
+
+  const protocol = process.env.NEXT_PUBLIC_VERCEL_ENV ? "https" : "http"
+  const host = process.env.NEXT_PUBLIC_VERCEL_ENV ? "planetfall.io" : "localhost:3000"
   const onRequiredTypeChange = (
     { requiredMarkValue }: { requiredMarkValue: RequiredMark },
   ) => {
