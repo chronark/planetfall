@@ -35,7 +35,9 @@ export const Item: React.FC<{ endpointId: string }> = (
       ctx.endpoint.list.invalidate();
     },
   });
-  const since = useMemo(() => Date.now() - 10 * 60 * 1000, [new Date().getMinutes()]);
+  const since = useMemo(() => Date.now() - 10 * 60 * 1000, [
+    new Date().getMinutes(),
+  ]);
   const endpoint = trpc.endpoint.get.useQuery({ endpointId, since });
 
   const p50 = usePercentile(
