@@ -3,27 +3,30 @@ import "tailwindcss/tailwind.css";
 import { trpc } from "lib/hooks/trpc";
 import PlausibleProvider from "next-plausible";
 import "styles/ant.css";
-import { SessionProvider, SessionProviderProps } from "next-auth/react";
 
 import { ConfigProvider } from "antd";
+import { useRouter } from "next/router";
 
 function MyApp(
-  { Component, pageProps: { session, ...pageProps } }: AppProps<
-    { session: SessionProviderProps["session"] }
-  >,
+  { Component, pageProps }: AppProps,
 ) {
   ConfigProvider.config({
     theme: {
       primaryColor: "#0f172a", // tailwind-slate-900
     },
   });
-
+  const router = useRouter();
+  const publicPages = [
+    "/",
+    "/pricing",
+    "/auth/sign-in",
+    "/auth/sign-up",
+    "/auth/sign-out",
+  ];
   return (
     <PlausibleProvider domain="planetfall.io">
       <ConfigProvider>
-        <SessionProvider session={session}>
-          <Component {...pageProps} />
-        </SessionProvider>
+        <Component {...pageProps} />
       </ConfigProvider>
     </PlausibleProvider>
   );

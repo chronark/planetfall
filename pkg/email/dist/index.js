@@ -125,22 +125,41 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
   }
 };
 exports.__esModule = true;
-var scheduler_1 = require("./scheduler");
-var events_1 = require("./events");
-require("isomorphic-fetch");
-function main() {
-  return __awaiter(this, void 0, void 0, function () {
-    var s, e;
-    return __generator(this, function (_a) {
-      s = new scheduler_1.Scheduler();
-      e = new events_1.Events(s);
-      e.run();
-      s.syncEndpoints();
-      setInterval(function () {
-        return s.syncEndpoints();
-      }, 10 * 60 * 1000);
-      return [2 /*return*/];
+exports.Email = void 0;
+var mail_1 = require("@sendgrid/mail");
+var Email = /** @class */ (function () {
+  function Email() {
+    this.client = new mail_1.MailService();
+    var apikey = process.env.SENDGRID_API_KEY;
+    if (!apikey) {
+      throw new Error("SENDGRID_API_KEY not found");
+    }
+    this.client.setApiKey(apikey);
+  }
+  Email.prototype.sendOTP = function (email, otp) {
+    return __awaiter(this, void 0, void 0, function () {
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            return [
+              4, /*yield*/
+              this.client.send({
+                to: email,
+                from: "info@planetfall.io",
+                subject: "Planetfall Sign In",
+                templateId: "d-28daad5179b544daa9b72c20d64c81e0",
+                dynamicTemplateData: {
+                  otp: otp,
+                },
+              }),
+            ];
+          case 1:
+            _a.sent();
+            return [2 /*return*/];
+        }
+      });
     });
-  });
-}
-main();
+  };
+  return Email;
+}());
+exports.Email = Email;

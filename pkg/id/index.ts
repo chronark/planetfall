@@ -40,4 +40,5 @@ export const newId = new IdGenerator({
   endpoint: "ept",
   page: "page",
   check: "chk",
+  token: "tkn",
 }).id;

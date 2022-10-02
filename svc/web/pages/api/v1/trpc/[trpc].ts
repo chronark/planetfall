@@ -1,13 +1,17 @@
+import { withSessionRoute } from "@planetfall/auth";
 import * as trpcNext from "@trpc/server/adapters/next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { router } from "server/router";
 import { createContext } from "server/trpc";
-import { withAuth } from "@clerk/nextjs/api";
-// export API handler
-export default withAuth(trpcNext.createNextApiHandler({
+
+const handler = trpcNext.createNextApiHandler({
   router,
   createContext,
-  onError: ({ error, req }) => {
-    console.log(JSON.stringify(req.body, null, 2));
-    console.error(`TRPC: [${error.code}]: ${error.message}`);
+  onError: ({ error, req, path }) => {
+    console.error(`TRPC: [${path}] [${error.code}]: ${error.message}`);
   },
-}) as any);
+});
+
+export default withSessionRoute((req, res) => {
+  return handler(req, res);
+});

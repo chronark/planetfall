@@ -11,10 +11,10 @@ import {
 } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useAuth, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { trpc } from "@planetfall/svc/web/lib/hooks/trpc";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
+import { useAuth } from "components/auth";
 
 function classNames(...classes: unknown[]) {
   return classes.filter(Boolean).join(" ");
@@ -45,8 +45,7 @@ export type LayoutProps = {
 export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
   { children, breadcrumbs = [], teamSelector = true },
 ): JSX.Element => {
-  const { user } = useUser();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const router = useRouter();
   const activeTeamSlug = router.query.teamSlug as string;
 
@@ -60,7 +59,6 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
   ];
   const invalidteam = teams.data &&
     !teams.data.find((t) => t.team.slug === activeTeamSlug);
-  console.log(router.asPath);
   return (
     <>
       <Disclosure as="header" className="bg-white shadow border-b">
@@ -189,7 +187,8 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                         <span className="sr-only">Open user menu</span>
                         <Image
                           className="h-8 w-8 rounded-full"
-                          src={user?.profileImageUrl ?? ""}
+                          src={user?.image ??
+                            `https://ui-avatars.com/api/?size=32&name=${user?.name}`}
                           alt=""
                           width={32}
                           height={32}
@@ -293,7 +292,8 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                   <div className="flex-shrink-0">
                     <Image
                       className="h-10 w-10 rounded-full"
-                      src={user?.profileImageUrl ?? ""}
+                      src={user?.image ??
+                        `https://ui-avatars.com/api/?size=32&name=${user?.name}`}
                       alt=""
                       width={32}
                       height={32}
@@ -301,10 +301,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium text-slate-800">
-                      {user?.username}
-                    </div>
-                    <div className="text-sm font-medium text-slate-500">
-                      {user?.emailAddresses[0].emailAddress}
+                      {user?.name}
                     </div>
                   </div>
                   <button
@@ -368,8 +365,8 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
       </main>
 
       <footer>
-        <div className="mx-auto container border-t mt-16 pt-16 flex justify-center">
-          <p className="mb-16 text-base text-slate-400">
+        <div className=" border-t mt-16 pt-16">
+          <p className="mx-auto container mb-16 text-base text-center text-slate-400">
             &copy; {new Date().getUTCFullYear()}{" "}
             planetfall.io - All rights reserved.
           </p>

@@ -17,27 +17,27 @@ function getBaseUrl() {
 }
 
 export const trpc = createTRPCNext<Router>({
-  config({ ctx }) {
-    return {
-      transformer: superjson,
-      links: [
-        httpLink({
-          /**
-           * If you want to use SSR, you need to use the server's full URL
-           * @link https://trpc.io/docs/ssr
-           */
-          url: `${getBaseUrl()}/api/v1/trpc`,
-        }),
-      ],
-      /**
-       * @link https://react-query-v3.tanstack.com/reference/QueryClient
-       */
-      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
-    };
-  },
+  config: () => ({
+    transformer: superjson,
+    links: [
+      httpLink({
+        /**
+         * If you want to use SSR, you need to use the server's full URL
+         * @link https://trpc.io/docs/ssr
+         */
+        url: `/api/v1/trpc`,
+        fetch: (url, options) =>
+          fetch(url, { ...options, credentials: "include" }),
+      }),
+    ],
+    /**
+     * @link https://react-query-v3.tanstack.com/reference/QueryClient
+     */
+    // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+  }),
   /**
    * @link https://trpc.io/docs/ssr
    */
-  ssr: true,
+  ssr: false,
 });
 // => { useQuery: ..., useMutation: ...}

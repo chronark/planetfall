@@ -16,12 +16,12 @@ export const endpointRouter = t.router({
     interval: z.number().int().gte(1).lte(60 * 60),
     regions: z.array(z.string()),
   })).mutation(async ({ input, ctx }) => {
-    if (!ctx.session?.user?.id) {
+    if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     const user = await ctx.db.user.findUnique({
       where: {
-        id: ctx.session?.user?.id,
+        id: ctx.req.session.user.id,
       },
       include: {
         teams: {
@@ -38,7 +38,6 @@ export const endpointRouter = t.router({
     if (!team) {
       throw new TRPCError({ code: "NOT_FOUND", message: "team not found" });
     }
-    console.log(JSON.stringify({ input }, null, 2));
 
     const endpoint = await ctx.db.endpoint.create({
       data: {
@@ -72,20 +71,89 @@ export const endpointRouter = t.router({
 
     const p = kafka.producer();
 
-    const r = await p.produce("endpoint.created", { endpointId: endpoint.id });
-    console.log("Kafka response:", r);
+    await p.produce("endpoint.created", { endpointId: endpoint.id });
+    return endpoint;
+  }),
+  update: t.procedure.input(z.object({
+    endpointId: z.string(),
+    method: z.enum(["POST", "GET", "PUT", "DELETE"]).optional(),
+    url: z.string().url().optional(),
+    headers: z.record(z.string()).optional(),
+    body: z.string().optional(),
+    degradedAfter: z.number().int().positive().optional(),
+    failedAfter: z.number().int().positive().optional(),
+    teamSlug: z.string(),
+    interval: z.number().int().gte(1).lte(60 * 60).optional(),
+    regions: z.array(z.string()).optional(),
+  })).mutation(async ({ input, ctx }) => {
+    if (!ctx.req.session?.user?.id) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    const user = await ctx.db.user.findUnique({
+      where: {
+        id: ctx.req.session.user.id,
+      },
+      include: {
+        teams: {
+          include: {
+            team: true,
+          },
+        },
+      },
+    });
+    if (!user) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "user not found" });
+    }
+    const team = user.teams.find((t) => t.team.name === input.teamSlug)?.team;
+    if (!team) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "team not found" });
+    }
+
+    const endpoint = await ctx.db.endpoint.update({
+      where: {
+        id: input.endpointId,
+      },
+      data: {
+        id: newId("endpoint"),
+        url: input.url,
+        body: input.body,
+        headers: input.headers,
+        active: true,
+        method: input.method,
+        interval: input.interval,
+        degradedAfter: input.degradedAfter,
+        failedAfter: input.failedAfter,
+        regions: input.regions
+          ? {
+            connect: input.regions.map((id) => ({ id })),
+          }
+          : undefined,
+      },
+    });
+
+    const kafka = new Kafka({
+      url: "https://usable-snipe-5277-eu1-rest-kafka.upstash.io",
+      username:
+        "dXNhYmxlLXNuaXBlLTUyNzckgQzcA6IYQ332mfG8_U4caCkdWR-tgVvgXep9ACs",
+      password:
+        "baAtrzV9P0xqkhmSSJlN9woFhKOOuYqeYc8L7E_l7pS4yBxDEWks06jfdNYkFPwSKq9A2A==",
+    });
+
+    const p = kafka.producer();
+
+    await p.produce("endpoint.updated", { endpointId: endpoint.id });
     return endpoint;
   }),
   delete: t.procedure.input(z.object({
     endpointId: z.string(),
   })).mutation(async ({ input, ctx }) => {
-    if (!ctx.session?.user?.id) {
+    if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     console.time("findUser");
     const user = await ctx.db.user.findUnique({
       where: {
-        id: ctx.session?.user?.id,
+        id: ctx.req.session?.user?.id,
       },
       include: {
         teams: {
@@ -141,12 +209,12 @@ export const endpointRouter = t.router({
   list: t.procedure.input(z.object({
     teamSlug: z.string(),
   })).query(async ({ input, ctx }) => {
-    if (!ctx.session?.user?.id) {
+    if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     const user = await ctx.db.user.findUnique({
       where: {
-        id: ctx.session?.user?.id,
+        id: ctx.req.session?.user?.id,
       },
       include: {
         teams: {
@@ -175,7 +243,7 @@ export const endpointRouter = t.router({
     since: z.number().int().optional(),
     regionId: z.string().optional(),
   })).query(async ({ input, ctx }) => {
-    if (!ctx.session?.user?.id) {
+    if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
 
@@ -206,7 +274,7 @@ export const endpointRouter = t.router({
           include: {
             members: {
               where: {
-                userId: ctx.session?.user?.id,
+                userId: ctx.req.session?.user?.id,
               },
             },
           },

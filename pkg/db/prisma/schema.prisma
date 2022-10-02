@@ -17,7 +17,7 @@ enum Action {
 
 model Token {
   id    String @id
-  token String @unique
+  tokenHash String @unique
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
@@ -86,12 +86,16 @@ model Endpoint {
   checks       Check[]
 }
 
-model VerificationToken {
+model VerificationRequest {
+  // usually email
   identifier String
-  token      String   @unique
+  otp        String 
   expires    DateTime
 
-  @@unique([identifier, token])
+  createdAt DateTime @default(now())
+  
+
+  @@unique([identifier, otp])
 }
 
 model StatusPage {
@@ -106,9 +110,8 @@ model User {
   updatedAt DateTime @updatedAt
 
   id            String    @id
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
+  name          String
+  email         String @unique
   image         String?
   tokens        Token[]
 

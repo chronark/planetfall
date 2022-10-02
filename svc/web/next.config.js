@@ -14,7 +14,11 @@ const nextConfig = {
     scrollRestoration: true,
   },
   images: {
-    domains: ["www.gravatar.com", "avatars.githubusercontent.com"],
+    domains: [
+      "www.gravatar.com",
+      "avatars.githubusercontent.com",
+      "ui-avatars.com",
+    ],
   },
 
   webpack: (config) => {

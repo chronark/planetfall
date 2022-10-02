@@ -76,7 +76,7 @@ resource "vercel_project" "web" {
 resource "vercel_dns_record" "sendgrid_url9477" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
-  name    = "url9477.planetfall.io"
+  name    = "url9477"
   type    = "CNAME"
   ttl     = 60
   value   = "sendgrid.net"

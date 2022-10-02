@@ -1,5 +1,5 @@
 import { Layout } from "../../../components/app/layout/nav";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "components/auth";
 import { useRouter } from "next/router";
 import { trpc } from "../../../lib/hooks/trpc";
 import { ArrowRightOutlined } from "@ant-design/icons";
@@ -149,10 +149,10 @@ export const Item: React.FC<{ endpointId: string }> = (
 };
 
 export default function EndpointsPage() {
-  const { user } = useUser();
+  const { user } = useAuth();
 
   const router = useRouter();
-  const breadcrumbs = user?.username ? [] : [];
+  const breadcrumbs = user?.name ? [] : [];
   const teamSlug = router.query.teamSlug as string;
   const endpoints = trpc.endpoint.list.useQuery({
     teamSlug,

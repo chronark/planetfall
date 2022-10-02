@@ -125,68 +125,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
   }
 };
 exports.__esModule = true;
-var client_1 = require("@prisma/client");
-function main() {
+exports.storeSession =
+  exports.withSessionSsr =
+  exports.withSessionRoute =
+  exports.options =
+    void 0;
+var next_1 = require("iron-session/next");
+exports.options = {
+  cookieName: process.env.VERCEL ? "planetfall_auth" : "planetfall_auth_local",
+  password: process.env.IRON_SECRET,
+  cookieOptions: {
+    secure: !!process.env.VERCEL,
+  },
+};
+function withSessionRoute(handler) {
+  return (0, next_1.withIronSessionApiRoute)(handler, exports.options);
+}
+exports.withSessionRoute = withSessionRoute;
+// Theses types are compatible with InferGetStaticPropsType https://nextjs.org/docs/basic-features/data-fetching#typescript-use-getstaticprops
+function withSessionSsr(handler) {
+  return (0, next_1.withIronSessionSsr)(handler, exports.options);
+}
+exports.withSessionSsr = withSessionSsr;
+function storeSession() {
   return __awaiter(this, void 0, void 0, function () {
-    var userId, db, team;
     return __generator(this, function (_a) {
-      switch (_a.label) {
-        case 0:
-          userId = "user_2FGNbfMRU4joWXFqD03dzcaMEHI";
-          db = new client_1.PrismaClient();
-          return [
-            4, /*yield*/
-            db.team.upsert({
-              where: {
-                id: "seed",
-              },
-              update: {},
-              create: {
-                id: "seed",
-                stripeCustomerId: "abc",
-                name: "chronark-local",
-                slug: "chronark-local",
-                retention: 10000,
-                stripeCurrentBillingPeriodStart: 0,
-              },
-            }),
-          ];
-        case 1:
-          team = _a.sent();
-          return [
-            4, /*yield*/
-            db.user.create({
-              data: {
-                id: userId,
-                teams: {
-                  connectOrCreate: {
-                    where: {
-                      userId_teamId: {
-                        userId: userId,
-                        teamId: team.id,
-                      },
-                    },
-                    create: {
-                      team: {
-                        connect: {
-                          id: team.id,
-                        },
-                      },
-                      role: "PERSONAL",
-                    },
-                  },
-                },
-              },
-            }),
-          ];
-        case 2:
-          _a.sent();
-          return [4, /*yield*/ db.$disconnect()];
-        case 3:
-          _a.sent();
-          return [2 /*return*/];
-      }
+      return [2 /*return*/];
     });
   });
 }
-main();
+exports.storeSession = storeSession;

@@ -1,7 +1,7 @@
-import { Layout } from "../../../components/app/layout/nav";
-import { useUser } from "@clerk/nextjs";
+import { Layout } from "../../../../components/app/layout/nav";
+import { useAuth } from "components/auth";
 import { useRouter } from "next/router";
-import { trpc } from "../../../lib/hooks/trpc";
+import { trpc } from "../../../../lib/hooks/trpc";
 import { Area, Line } from "@ant-design/plots";
 
 import {
@@ -33,6 +33,7 @@ import JSXStyle from "styled-jsx/style";
 import { Annotation } from "@antv/g2plot";
 import { usePercentile } from "@planetfall/svc/web/lib/hooks/percentile";
 import { useSessionStorage } from "@planetfall/svc/web/lib/hooks/storage";
+import { CubeTexture } from "three";
 
 const RegionTab: React.FC<
   { endpointId: string; regionId: string; regionName: string }
@@ -40,12 +41,11 @@ const RegionTab: React.FC<
   { endpointId, regionId, regionName },
 ): JSX.Element => {
   const now = useMemo(() => Date.now(), []);
+  const ctx = trpc.useContext();
   const [since, setSince] = useState(now - 60 * 60 * 1000);
   const endpoint = trpc.endpoint.get.useQuery({ since, endpointId, regionId }, {
     staleTime: 10000,
   });
-
-  console.log(endpoint.data?.checks.length);
 
   const annotations: Annotation[] = [];
   if (endpoint.data?.degradedAfter) {
@@ -198,7 +198,7 @@ const RegionTab: React.FC<
             icon={<ReloadOutlined />}
             loading={endpoint.isFetching || endpoint.isLoading}
             onClick={() => {
-              endpoint.refetch();
+              ctx.endpoint.get.invalidate();
             }}
           >
           </Button>
@@ -213,8 +213,8 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   { endpointId, teamSlug },
 ): JSX.Element => {
   const now = useMemo(() => Date.now(), []);
+  const ctx = trpc.useContext();
   const [since, setSince] = useState(now - 60 * 60 * 1000);
-  console.log({ since, now });
   const endpoint = trpc.endpoint.get.useQuery({ since, endpointId }, {
     staleTime: 10000,
   });
@@ -258,16 +258,19 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
     `${endpointId}:displayedRegions`,
     endpoint.data?.regions.map((r) => r.id) ?? [],
   );
-  console.log({ selectedRegions });
+  useEffect(() => {
+    if (selectedRegions.length === 0 && endpoint.data) {
+      setSelectedRegions(endpoint.data.regions.map((r) => r.id));
+    }
+  }, [endpoint.data]);
 
   const data = useMemo(() => {
-    console.log("calculating data");
-    return (endpoint.data?.checks ?? []).filter((c) =>
-      selectedRegions.includes(c.regionId)
-    ).sort((a, b) => a.time.getTime() - b.time.getTime()).map((c) => ({
+    return (endpoint.data?.checks ?? []).sort((a, b) =>
+      a.time.getTime() - b.time.getTime()
+    ).map((c) => ({
       time: c.time.toISOString(),
       latency: c.latency,
-      regionId: c.regionId.replace("VERCEL:", "").toUpperCase(),
+      regionId: endpoint.data?.regions.find((r) => r.id === c.regionId)?.name,
     }));
   }, [endpoint.data, selectedRegions]);
 
@@ -382,37 +385,19 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
               icon={<ReloadOutlined />}
               loading={endpoint.isFetching || endpoint.isLoading}
               onClick={() => {
-                endpoint.refetch();
+                ctx.endpoint.get.invalidate();
               }}
             />
           </Space>
         </Row>
-
         {chart}
-        <Typography.Title level={4}>Filter regions</Typography.Title>
-
-        <Checkbox.Group
-          style={{ width: "100%" }}
-          value={selectedRegions}
-          onChange={(v) => setSelectedRegions(v.map((x) => x.toString()))}
-        >
-          <Row gutter={16} justify="center">
-            {endpoint.data?.regions.map((region) => (
-              <Col key={region.id} span={4}>
-                <Checkbox value={region.id}>
-                  {region.name}
-                </Checkbox>
-              </Col>
-            ))}
-          </Row>
-        </Checkbox.Group>
       </Space>
     </>
   );
 };
 
 export default function EndpointPage() {
-  const { user } = useUser();
+  const { user } = useAuth();
   const router = useRouter();
   const teamSlug = router.query.teamSlug as string;
   const endpointId = router.query.endpointId as string;
@@ -432,7 +417,7 @@ export default function EndpointPage() {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <Space size={48} direction="vertical">
+      <Space size={48} direction="vertical" style={{ width: "100%" }}>
         <Main endpointId={endpointId} teamSlug={teamSlug} />
         <Divider />
 

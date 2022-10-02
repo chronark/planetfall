@@ -3,13 +3,12 @@ import { t } from "../trpc";
 
 export const teamRouter = t.router({
   list: t.procedure.query(async ({ ctx }) => {
-    console.log({ auth: ctx.session?.user?.id });
-    if (!ctx.session?.user?.id) {
+    if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     const user = await ctx.db.user.findUnique({
       where: {
-        id: ctx.session?.user?.id,
+        id: ctx.req.session?.user?.id,
       },
       include: {
         teams: {

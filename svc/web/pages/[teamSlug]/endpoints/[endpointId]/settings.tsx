@@ -38,6 +38,7 @@ import TextArea from "antd/lib/input/TextArea";
 const gutter = 16;
 
 type FormData = {
+  name?: string;
   url: string;
   method: "POST" | "GET" | "PUT" | "DELETE";
   headers?: { key: string; value: string }[];
@@ -52,10 +53,20 @@ type RequiredMark = boolean | "optional";
 export default function Page() {
   const { user } = useAuth();
   const router = useRouter();
+  const teamSlug = router.query.teamSlug as string;
+  const endpointId = router.query.endpointId as string;
+  console.log({ endpointId });
+  const endpoint = trpc.endpoint.get.useQuery({ endpointId: endpointId }, {
+    enabled: !!endpointId,
+  });
 
-  const breadcrumbs = user?.name ? [] : [];
+  // const endpoint = trpc.endpoint.get.useQuery({ endpointId, since: Date.now() });
 
-  const createEndpoint = trpc.endpoint.create.useMutation();
+  const breadcrumbs = [
+    { label: endpointId, href: `/${teamSlug}/${endpointId}` },
+    { label: "edit", href: `/${teamSlug}/${endpointId}/settings` },
+  ];
+  const updateEndpoint = trpc.endpoint.update.useMutation();
   const regions = trpc.region.list.useQuery();
   const [form] = Form.useForm<FormData>();
   const [requiredMark, setRequiredMarkType] = useState<RequiredMark>(
@@ -83,14 +94,17 @@ export default function Page() {
   ) {
     setLoading(true);
     try {
-      const res = await createEndpoint.mutateAsync({
+      const res = await updateEndpoint.mutateAsync({
+        endpointId,
         method,
         url,
         body,
-        headers: headers?.reduce((acc, { key, value }) => {
-          acc[key] = value;
-          return acc;
-        }, {} as Record<string, string>),
+        headers: headers
+          ? headers?.reduce((acc, { key, value }) => {
+            acc[key] = value;
+            return acc;
+          }, {} as Record<string, string>)
+          : undefined,
         degradedAfter,
         failedAfter,
         interval,
@@ -109,20 +123,14 @@ export default function Page() {
     <Layout breadcrumbs={breadcrumbs}>
       <div>
         <Card
-          title="New Endpoint"
-          extra="Create a new API and start tracking its latency"
+          title="Edit Endpoint"
+          extra="Reconfigure this endpoint"
         >
           <Form
             onFinish={submit}
             form={form}
             layout="horizontal"
-            initialValues={{
-              method: "POST",
-              degradedAfter: 100,
-              failedAfter: 250,
-              interval: 15,
-              regions: [],
-            }}
+            initialValues={endpoint.data}
             onValuesChange={onRequiredTypeChange}
             requiredMark={requiredMark}
           >
