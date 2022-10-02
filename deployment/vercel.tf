@@ -108,7 +108,7 @@ resource "vercel_dns_record" "sendgrid_s1_domainkey" {
   ttl     = 60
   value   = "s1.domainkey.u29341690.wl191.sendgrid.net"
 }
-resource "vercel_dns_record" "sendgrid_s1_domainkey" {
+resource "vercel_dns_record" "sendgrid_s2_domainkey" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
   name    = "s2._domainkey"
