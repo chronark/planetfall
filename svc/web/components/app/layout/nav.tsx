@@ -69,7 +69,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                 <div className="relative z-10 flex px-2 lg:px-0">
                   <nav className="flex" aria-label="Breadcrumb">
                     <ol role="list" className="flex items-center space-x-4">
-                      <li>
+                      <li key="home">
                         <Link
                           href="/"
                           className="text-slate-900 font-bold hover:text-slate-800"

@@ -13,7 +13,7 @@ export class Email {
   }
 
   public async sendOTP(email: string, otp: string): Promise<void> {
-    await this.client.send({
+    const res = await this.client.send({
       to: email,
       from: "info@planetfall.io",
       subject: "Planetfall Sign In",
@@ -22,5 +22,8 @@ export class Email {
         otp,
       },
     });
+    if (res[0].statusCode > 300) {
+      console.error("unable to send email:", res[0].statusCode);
+    }
   }
 }

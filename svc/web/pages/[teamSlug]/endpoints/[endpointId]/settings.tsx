@@ -1,5 +1,5 @@
-import { Fragment, useState } from "react";
 import { Layout } from "components/app/layout/nav";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Transition } from "@headlessui/react";
 import classNames from "classnames";
@@ -56,19 +56,46 @@ export default function Page() {
   const teamSlug = router.query.teamSlug as string;
   const endpointId = router.query.endpointId as string;
   console.log({ endpointId });
-  const endpoint = trpc.endpoint.get.useQuery({ endpointId: endpointId }, {
+  const since = useMemo(() => Date.now(), [new Date().getMinutes()]);
+  const [form] = Form.useForm<FormData>();
+
+  const endpoint = trpc.endpoint.get.useQuery({ endpointId, since }, {
     enabled: !!endpointId,
+    refetchInterval: false,
+    refetchOnReconnect: false,
   });
+  useEffect(() => {
+    if (endpoint.data) {
+      form.resetFields();
+      form.setFieldsValue({
+        method: endpoint.data.method,
+        url: endpoint.data.url,
+        "headers": Object.entries(endpoint.data.headers ?? {}).map((
+          [key, value],
+        ) => ({ key, value })),
+        body: endpoint.data.body ?? undefined,
+        degradedAfter: endpoint.data.degradedAfter ?? undefined,
+        failedAfter: endpoint.data.failedAfter ?? undefined,
+        interval: endpoint.data.interval ?? undefined,
+        regions: endpoint.data.regions as string[] ?? [],
+      });
+    }
+  }, [endpoint.data]);
 
   // const endpoint = trpc.endpoint.get.useQuery({ endpointId, since: Date.now() });
 
   const breadcrumbs = [
-    { label: endpointId, href: `/${teamSlug}/${endpointId}` },
-    { label: "edit", href: `/${teamSlug}/${endpointId}/settings` },
+    {
+      label: endpoint.data?.name ?? endpoint.data?.url ?? endpointId,
+      href: `/${teamSlug}/endpoints/${endpointId}`,
+    },
+    {
+      label: "Settings",
+      href: `/${teamSlug}/endpoints/${endpointId}/settings`,
+    },
   ];
   const updateEndpoint = trpc.endpoint.update.useMutation();
   const regions = trpc.region.list.useQuery();
-  const [form] = Form.useForm<FormData>();
   const [requiredMark, setRequiredMarkType] = useState<RequiredMark>(
     "optional",
   );
@@ -111,6 +138,7 @@ export default function Page() {
         regions,
         teamSlug: router.query.teamSlug as string,
       });
+
       router.push(`/${router.query.teamSlug}/endpoints/${res.id}`);
     } catch (err) {
       console.error(err);
@@ -130,7 +158,6 @@ export default function Page() {
             onFinish={submit}
             form={form}
             layout="horizontal"
-            initialValues={endpoint.data}
             onValuesChange={onRequiredTypeChange}
             requiredMark={requiredMark}
           >
@@ -298,16 +325,19 @@ export default function Page() {
             <Space />
             <Divider />
             <Space />
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={loading}
-              onClick={() => {
-                form.submit();
-              }}
-            >
-              Create
-            </Button>
+            <Row justify="end">
+              <Button
+                type="primary"
+                size="large"
+                htmlType="button"
+                loading={loading}
+                onClick={() => {
+                  form.submit();
+                }}
+              >
+                Update
+              </Button>
+            </Row>
           </Form>
         </Card>
       </div>

@@ -1,11 +1,5 @@
 import { useRouter } from "next/router";
-import React, {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect } from "react";
 import { trpc } from "../../lib/hooks/trpc";
 
 export type User = {
@@ -29,8 +23,7 @@ export function useAuth({
     }
 
     if (
-      // If redirectTo is set, redirect if the user was not found.
-      !me.data || me.data.expires <= Date.now() || !me.data.userId
+      me.isError || !me.data || me.data.expires <= Date.now() || !me.data.userId
     ) {
       router.push(redirectTo);
     }

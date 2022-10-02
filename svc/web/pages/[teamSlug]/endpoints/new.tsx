@@ -292,7 +292,7 @@ export default function Page() {
             <Space />
             <Button
               type="primary"
-              htmlType="submit"
+              htmlType="button"
               loading={loading}
               onClick={() => {
                 form.submit();

@@ -57,6 +57,7 @@ export class Events {
             await this.scheduler.addEndpoint(endpointId);
             break;
           case "endpoint.updated":
+            this.scheduler.removeEndpoint(endpointId);
             await this.scheduler.addEndpoint(endpointId);
             break;
           case "endpoint.deleted":

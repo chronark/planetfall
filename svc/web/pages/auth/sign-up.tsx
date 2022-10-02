@@ -8,8 +8,8 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<"email" | "otp">("email");
   const [form] = Form.useForm<{ email: string; name: string; otp: string }>();
-  const createOTP = trpc.auth.createOTP.useMutation();
-  const signUp = trpc.auth.signUp.useMutation();
+  const requestSignUp = trpc.auth.requestSignUp.useMutation();
+  const verifySignUp = trpc.auth.verifySignUp.useMutation();
 
   return (
     <div className="absolute inset-0 w-screen h-screen flex items-center justify-center">
@@ -18,10 +18,14 @@ export default function Page() {
           onFinish={async ({ email, name, otp }) => {
             setLoading(true);
             if (step === "email") {
-              await createOTP.mutateAsync({ email });
+              console.log("Requesting OTP");
+              const { redirect } = await requestSignUp.mutateAsync({ email });
+              if (redirect) {
+                router.push(redirect);
+              }
               setStep("otp");
             } else {
-              const { redirect } = await signUp.mutateAsync({
+              const { redirect } = await verifySignUp.mutateAsync({
                 identifier: email,
                 name,
                 otp,

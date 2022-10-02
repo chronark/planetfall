@@ -6,9 +6,15 @@ import { Email } from "@planetfall/email";
 import { newId } from "@planetfall/id";
 import slugify from "slugify";
 export const authRouter = t.router({
-  createOTP: t.procedure.input(z.object({
+  requestSignUp: t.procedure.input(z.object({
     email: z.string().email(),
   })).mutation(async ({ input, ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { email: input.email },
+    });
+    if (user) {
+      return { redirect: "/auth/sign-in" };
+    }
     const otp = crypto.randomInt(999999).toString().padStart(6, "0");
     await ctx.db.verificationRequest.create({
       data: {
@@ -17,8 +23,30 @@ export const authRouter = t.router({
         expires: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
       },
     });
-
+    console.log("Sending OTP to", input.email);
     await new Email().sendOTP(input.email, otp);
+    return {};
+  }),
+  requestSignIn: t.procedure.input(z.object({
+    email: z.string().email(),
+  })).mutation(async ({ input, ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { email: input.email },
+    });
+    if (!user) {
+      return { redirect: "/auth/sign-up" };
+    }
+    const otp = crypto.randomInt(999999).toString().padStart(6, "0");
+    await ctx.db.verificationRequest.create({
+      data: {
+        identifier: input.email,
+        otp,
+        expires: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+      },
+    });
+    console.log("Sending OTP to", input.email);
+    await new Email().sendOTP(input.email, otp);
+    return {};
   }),
   signOut: t.procedure.mutation(async ({ ctx }) => {
     if (!ctx.req.session.user?.id || !ctx.req.session.user.token) {
@@ -56,7 +84,7 @@ export const authRouter = t.router({
       image: user.image,
     };
   }),
-  signIn: t.procedure.input(z.object({
+  verifySignIn: t.procedure.input(z.object({
     identifier: z.string(),
     otp: z.string(),
   })).mutation(async ({ input, ctx }) => {
@@ -130,7 +158,7 @@ export const authRouter = t.router({
       redirect: `/${user.teams[0].team.slug}`,
     };
   }),
-  signUp: t.procedure.input(z.object({
+  verifySignUp: t.procedure.input(z.object({
     identifier: z.string(),
     name: z.string(),
     otp: z.string(),
@@ -161,7 +189,7 @@ export const authRouter = t.router({
     if (req.expires.getTime() < Date.now()) {
       throw new TRPCError({ code: "UNAUTHORIZED", message: "otp expired" });
     }
-    const slug = slugify(input.name);
+    const slug = slugify(input.name, { lower: true });
     const user = await ctx.db.user.create({
       data: {
         id: newId("user"),

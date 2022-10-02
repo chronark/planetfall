@@ -8,8 +8,8 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<"email" | "otp">("email");
   const [form] = Form.useForm<{ email: string; otp: string }>();
-  const createOTP = trpc.auth.createOTP.useMutation();
-  const signIn = trpc.auth.signIn.useMutation();
+  const requestSignIn = trpc.auth.requestSignIn.useMutation();
+  const verifySignIn = trpc.auth.verifySignIn.useMutation();
 
   // useEffect(()=>{
   //   fetch("/api/x")
@@ -17,15 +17,19 @@ export default function Page() {
 
   return (
     <div className="absolute inset-0 w-screen h-screen flex items-center justify-center">
-      <Card title="Sign Up">
+      <Card title="Sign In">
         <Form
           onFinish={async ({ email, otp }) => {
             setLoading(true);
             if (step === "email") {
-              await createOTP.mutateAsync({ email });
+              const { redirect } = await requestSignIn.mutateAsync({ email });
+              if (redirect) {
+                router.push(redirect);
+                return;
+              }
               setStep("otp");
             } else {
-              const { redirect } = await signIn.mutateAsync({
+              const { redirect } = await verifySignIn.mutateAsync({
                 identifier: email,
                 otp,
               });

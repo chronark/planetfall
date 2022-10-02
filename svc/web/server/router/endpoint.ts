@@ -50,9 +50,7 @@ export const endpointRouter = t.router({
         interval: input.interval,
         degradedAfter: input.degradedAfter,
         failedAfter: input.failedAfter,
-        regions: {
-          connect: input.regions.map((id) => ({ id })),
-        },
+        regions: input.regions,
         team: {
           connect: {
             id: team.id,
@@ -109,12 +107,13 @@ export const endpointRouter = t.router({
       throw new TRPCError({ code: "NOT_FOUND", message: "team not found" });
     }
 
+    console.error({ input });
+
     const endpoint = await ctx.db.endpoint.update({
       where: {
         id: input.endpointId,
       },
       data: {
-        id: newId("endpoint"),
         url: input.url,
         body: input.body,
         headers: input.headers,
@@ -123,13 +122,10 @@ export const endpointRouter = t.router({
         interval: input.interval,
         degradedAfter: input.degradedAfter,
         failedAfter: input.failedAfter,
-        regions: input.regions
-          ? {
-            connect: input.regions.map((id) => ({ id })),
-          }
-          : undefined,
+        regions: input.regions,
       },
     });
+    console.log("Updated endpoint", endpoint);
 
     const kafka = new Kafka({
       url: "https://usable-snipe-5277-eu1-rest-kafka.upstash.io",
@@ -279,7 +275,6 @@ export const endpointRouter = t.router({
             },
           },
         },
-        regions: true,
       },
     });
     if (!endpoint) {
