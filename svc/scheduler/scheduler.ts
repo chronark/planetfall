@@ -1,7 +1,5 @@
 import { Endpoint, PrismaClient, Region } from "@planetfall/db";
 import { newId } from "@planetfall/id";
-import { errorMonitor } from "events";
-import { string } from "zod";
 export class Scheduler {
   // Map of endpoint id -> clearInterval function
   private clearIntervals: Record<string, () => void>;
