@@ -63,16 +63,7 @@ resource "vercel_project" "web" {
       value  = "https://vercel-vitals.axiom.co/api/v1/send?configurationId=icfg_oPwbzTXCEWVftFAoGBeNQFKJ&projectId=b5766f87-cc3f-4925-9480-53e74b861789&type=web-vitals"
       target = ["production"]
     },
-    {
-      key    = "NEXT_PUBLIC_CLERK_FRONTEND_API"
-      value  = "clerk.planetfall.io"
-      target = ["production", "preview", "development"]
-    },
-    {
-      key    = "CLERK_API_KEY"
-      value  = var.clerk_api_key
-      target = ["production", "preview", "development"]
-    },
+    
     {
       key   = "DATABASE_URL",
       value = var.database_url,
@@ -82,49 +73,50 @@ resource "vercel_project" "web" {
 
 }
 
-resource "vercel_dns_record" "clkmail" {
+resource "vercel_dns_record" "url9477" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
-  name    = "clkmail"
+  name    = "url9477"
   type    = "CNAME"
   ttl     = 60
-  value   = "mail.n726fkhumtvm.clerk.services"
+  value   = "sendgrid.net"
 }
 
-resource "vercel_dns_record" "clk2" {
+resource "vercel_dns_record" "29341690" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
-  name    = "clk2._domainkey"
+  name    = "29341690"
   type    = "CNAME"
   ttl     = 60
-  value   = "dkim2.n726fkhumtvm.clerk.services"
+  value   = "sendgrid.net"
 }
 
-resource "vercel_dns_record" "clk" {
+resource "vercel_dns_record" "em4520" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
-  name    = "clk._domainkey"
+  name    = "em4520"
   type    = "CNAME"
   ttl     = 60
-  value   = "dkim1.n726fkhumtvm.clerk.services"
+  value   = "u29341690.wl191.sendgrid.net"
 }
 
-resource "vercel_dns_record" "clerk" {
+resource "vercel_dns_record" "s1_domainkey" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
-  name    = "clerk"
+  name    = "s1._domainkey"
   type    = "CNAME"
   ttl     = 60
-  value   = "frontend-api.clerk.services"
+  value   = "s1.domainkey.u29341690.wl191.sendgrid.net"
 }
-resource "vercel_dns_record" "accounts" {
+resource "vercel_dns_record" "s1_domainkey" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
-  name    = "accounts"
+  name    = "s2._domainkey"
   type    = "CNAME"
   ttl     = 60
-  value   = "accounts.clerk.services"
+  value   = "s2.domainkey.u29341690.wl191.sendgrid.net"
 }
+
 resource "vercel_project_domain" "web" {
   project_id = vercel_project.web.id
   team_id    = var.vercel_team_id

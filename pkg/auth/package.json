@@ -1,0 +1,20 @@
+{
+  "name": "@planetfall/auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Andreas Thomas",
+  "license": "ISC",
+  "devDependencies": {
+    "@planetfall/tsconfig": "*",
+    "typescript": "^4.8.3"
+  },
+  "dependencies": {
+    "iron-session": "^6.2.1"
+  }
+}

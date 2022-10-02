@@ -16,12 +16,12 @@ export const endpointRouter = t.router({
     interval: z.number().int().gte(1).lte(60 * 60),
     regions: z.array(z.string()),
   })).mutation(async ({ input, ctx }) => {
-    if (!ctx.auth.userId) {
+    if (!ctx.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     const user = await ctx.db.user.findUnique({
       where: {
-        id: ctx.auth.userId,
+        id: ctx.session?.user?.id,
       },
       include: {
         teams: {
@@ -79,13 +79,13 @@ export const endpointRouter = t.router({
   delete: t.procedure.input(z.object({
     endpointId: z.string(),
   })).mutation(async ({ input, ctx }) => {
-    if (!ctx.auth.userId) {
+    if (!ctx.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     console.time("findUser");
     const user = await ctx.db.user.findUnique({
       where: {
-        id: ctx.auth.userId,
+        id: ctx.session?.user?.id,
       },
       include: {
         teams: {
@@ -141,12 +141,12 @@ export const endpointRouter = t.router({
   list: t.procedure.input(z.object({
     teamSlug: z.string(),
   })).query(async ({ input, ctx }) => {
-    if (!ctx.auth.userId) {
+    if (!ctx.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     const user = await ctx.db.user.findUnique({
       where: {
-        id: ctx.auth.userId,
+        id: ctx.session?.user?.id,
       },
       include: {
         teams: {
@@ -175,7 +175,7 @@ export const endpointRouter = t.router({
     since: z.number().int().optional(),
     regionId: z.string().optional(),
   })).query(async ({ input, ctx }) => {
-    if (!ctx.auth.userId) {
+    if (!ctx.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
 
@@ -206,7 +206,7 @@ export const endpointRouter = t.router({
           include: {
             members: {
               where: {
-                userId: ctx.auth.userId,
+                userId: ctx.session?.user?.id,
               },
             },
           },

@@ -10,6 +10,22 @@ generator client {
   previewFeatures = ["referentialIntegrity"]
 }
 
+enum Action {
+  READ
+  WRITE
+}
+
+model Token {
+  id    String @id
+  token String @unique
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  expires DateTime
+
+  endpoints Action?
+}
+
 enum Method {
   GET
   POST
@@ -70,6 +86,14 @@ model Endpoint {
   checks       Check[]
 }
 
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model StatusPage {
   id        String     @id
   slug      String     @unique
@@ -78,8 +102,16 @@ model StatusPage {
 }
 
 model User {
-  // This id provided by clerk
-  id    String       @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  id            String    @id
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  tokens        Token[]
+
   teams Membership[]
 }
 
