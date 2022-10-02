@@ -58,6 +58,9 @@ export default function Page() {
     "optional",
   );
 
+  
+  const protocol = process.env.NEXT_PUBLIC_VERCEL ? "https" : "http"
+  const host = process.env.NEXT_PUBLIC_VERCEL ? "planetfall.io" : "localhost:3000"
   const onRequiredTypeChange = (
     { requiredMarkValue }: { requiredMarkValue: RequiredMark },
   ) => {
@@ -79,7 +82,8 @@ export default function Page() {
         endpointIds,
         teamSlug: router.query.teamSlug as string,
       });
-      router.push(`/${router.query.teamSlug}/pages/${res.id}`);
+
+      router.push(`${protocol}://${res.id}.${host}`);
     } catch (err) {
       console.error(err);
       message.error((err as Error).message);
