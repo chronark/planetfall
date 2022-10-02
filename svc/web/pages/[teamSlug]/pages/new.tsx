@@ -35,17 +35,12 @@ import {
 import { InformationCircleIcon, MinusIcon } from "@heroicons/react/24/solid";
 import { Option } from "antd/lib/mentions";
 import TextArea from "antd/lib/input/TextArea";
+import slugify from "slugify";
 const gutter = 16;
 
 type FormData = {
-  url: string;
-  method: "POST" | "GET" | "PUT" | "DELETE";
-  headers?: { key: string; value: string }[];
-  body?: string;
-  degradedAfter?: number;
-  failedAfter: number;
-  interval: number;
-  regions: string[];
+  name: string;
+  endpointIds: string[];
 };
 type RequiredMark = boolean | "optional";
 
@@ -54,9 +49,10 @@ export default function Page() {
   const router = useRouter();
 
   const breadcrumbs = user?.name ? [] : [];
+  const teamSlug = router.query.teamSlug as string;
 
   const createPage = trpc.page.create.useMutation();
-  const endpoints = trpc.region.list.useQuery();
+  const endpoints = trpc.endpoint.list.useQuery({ teamSlug });
   const [form] = Form.useForm<FormData>();
   const [requiredMark, setRequiredMarkType] = useState<RequiredMark>(
     "optional",
@@ -71,33 +67,19 @@ export default function Page() {
 
   async function submit(
     {
-      url,
-      method,
-      headers,
-      body,
-      degradedAfter,
-      failedAfter,
-      interval,
-      regions,
+      name,
+      endpointIds,
     }: FormData,
   ) {
     setLoading(true);
     try {
-      const res = await createEndpoint.mutateAsync({
-        method,
-        url,
-        body,
-        headers: headers?.reduce((acc, { key, value }) => {
-          acc[key] = value;
-          return acc;
-        }, {} as Record<string, string>),
-        degradedAfter,
-        failedAfter,
-        interval,
-        regions,
+      const res = await createPage.mutateAsync({
+        name,
+        slug: slugify(name, { lower: true, replacement: "_" }),
+        endpointIds,
         teamSlug: router.query.teamSlug as string,
       });
-      router.push(`/${router.query.teamSlug}/endpoints/${res.id}`);
+      router.push(`/${router.query.teamSlug}/pages/${res.id}`);
     } catch (err) {
       console.error(err);
       message.error((err as Error).message);
@@ -109,178 +91,41 @@ export default function Page() {
     <Layout breadcrumbs={breadcrumbs}>
       <div>
         <Card
-          title="New Endpoint"
-          extra="Create a new API and start tracking its latency"
+          title="New Status Page"
+          extra="Create a new public status page"
         >
           <Form
             onFinish={submit}
             form={form}
-            layout="horizontal"
-            initialValues={{
-              method: "POST",
-              degradedAfter: 100,
-              failedAfter: 250,
-              interval: 15,
-              regions: [],
-            }}
+            layout="vertical"
             onValuesChange={onRequiredTypeChange}
             requiredMark={requiredMark}
           >
-            <Typography.Title level={3}>URL</Typography.Title>
+            <Space style={{ width: "100%" }}>
+              <Form.Item
+                name="name"
+                label="Name"
+                rules={[{ required: true }]}
+              >
+                <Input
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </Space>
+            <Divider />
 
             <Form.Item
-              name="url"
-              rules={[{ required: true, type: "url" }]}
-            >
-              <Input
-                addonBefore={
-                  <Form.Item name="method" noStyle>
-                    <Select style={{ width: "auto" }}>
-                      <Option value="POST">POST</Option>
-                      <Option value="GET">GET</Option>
-                      <Option value="PUT">PUT</Option>
-                      <Option value="DELETE">DELETE</Option>
-                    </Select>
-                  </Form.Item>
-                }
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
-            <Space />
-            <Divider />
-            <Space />
-
-            <Form.List name="headers">
-              {(fields, { add, remove }) => (
-                <>
-                  <Row justify="space-between">
-                    <Typography.Title level={3}>HTTP Headers</Typography.Title>
-                    <Button
-                      type="dashed"
-                      icon={<PlusOutlined />}
-                      onClick={() => add()}
-                    >
-                    </Button>
-                  </Row>
-
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Row key={key} gutter={gutter} justify="space-between">
-                      <Col flex="auto">
-                        <Row gutter={gutter}>
-                          <Col
-                            style={{ display: "inline-block", width: "50%" }}
-                          >
-                            <Form.Item
-                              {...restField}
-                              name={[name, "key"]}
-                              rules={[{
-                                required: true,
-                                message: "Missing header key",
-                              }]}
-                            >
-                              <Input placeholder="Key" />
-                            </Form.Item>
-                          </Col>
-                          <Col
-                            style={{ display: "inline-block", width: "50%" }}
-                          >
-                            <Form.Item
-                              {...restField}
-                              name={[name, "value"]}
-                              rules={[{
-                                required: true,
-                                message: "Missing header value",
-                              }]}
-                            >
-                              <Input placeholder="Value" />
-                            </Form.Item>
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col style={{}}>
-                        <Button
-                          type="link"
-                          icon={<MinusIcon />}
-                          onClick={() =>
-                            remove(name)}
-                        />
-                      </Col>
-                    </Row>
-                  ))}
-                </>
-              )}
-            </Form.List>
-            <Space />
-            <Divider />
-            <Space />
-            <Typography.Title level={3}>Request Body</Typography.Title>
-            <Typography.Paragraph>
-              Make sure to add the correct <Tag>Content-Type</Tag>{" "}
-              header when using a request body.
-            </Typography.Paragraph>
-
-            <Form.Item name="body">
-              <TextArea allowClear rows={5} />
-            </Form.Item>
-            <Space />
-            <Divider />
-            <Space />
-            <Typography.Title level={3}>Health Checks</Typography.Title>
-            <Typography.Paragraph>
-              Set thresholds for your API response times.
-            </Typography.Paragraph>
-
-            <Row gutter={gutter}>
-              <Col flex="auto">
-                <Form.Item
-                  name="degradedAfter"
-                  label="Degraded"
-                  required
-                  tooltip="After this time the request is considered degraded."
-                >
-                  <InputNumber addonAfter="ms" min={1} max={10000} />
-                </Form.Item>
-              </Col>
-              <Col>
-                <Form.Item
-                  name="failedAfter"
-                  label="Failed"
-                  required
-                  tooltip="After this time the request is considered failed."
-                >
-                  <InputNumber addonAfter="ms" min={1} max={10000} />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Space />
-            <Divider />
-            <Space />
-            <Typography.Title level={3}>Interval and Regions</Typography.Title>
-            <Typography.Paragraph>
-              How frequently should we fetch your API? And where should we fetch
-              it from?
-            </Typography.Paragraph>
-
-            <Form.Item name="interval" label="Interval" required>
-              <InputNumber addonAfter="s" min={15} max={60 * 60} />
-            </Form.Item>
-
-            <Form.Item
-              name="regions"
+              name="endpointIds"
               required
-              label="Regions"
+              label="Endpoints"
             >
-              {
-                /* <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-                Check all
-              </Checkbox> */
-              }
               <Checkbox.Group style={{ width: "100%" }}>
                 <Row>
-                  {regions.data?.map((region) => (
-                    <Col key={region.id} span={8}>
-                      <Checkbox value={region.id}>{region.name}</Checkbox>
+                  {endpoints.data?.map((endpoint) => (
+                    <Col key={endpoint.id} span={8}>
+                      <Checkbox value={endpoint.id}>
+                        {endpoint.name ?? endpoint.url}
+                      </Checkbox>
                     </Col>
                   ))}
                 </Row>

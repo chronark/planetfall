@@ -98,6 +98,8 @@ model StatusPage {
   slug      String     @unique
   name      String
   endpoints Endpoint[]
+  team      Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId    String
 }
 
 model User {
@@ -125,8 +127,9 @@ model Team {
   // milliseconds
   retention Int
 
-  members   Membership[]
-  endpoints Endpoint[]
+  members     Membership[]
+  endpoints   Endpoint[]
+  statusPages StatusPage[]
 
   @@index([slug])
 }

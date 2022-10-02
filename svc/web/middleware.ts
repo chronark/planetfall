@@ -26,11 +26,14 @@ export default function middleware(req: NextRequest) {
   switch (currentHost) {
     case "":
       break;
-    // case "app":
-    //   url.pathname = `/app${url.pathname}`;
-    //   break;
+    //  case "app":
+    //    url.pathname = `/app${url.pathname}`;
+    //    break;
     default:
-      url.pathname = `/_sites/${currentHost}${url.pathname}`;
+      url.pathname = `/_statuspages/${currentHost}/${url.pathname}`.replace(
+        /\/$/,
+        "",
+      );
   }
   return NextResponse.rewrite(url);
 }

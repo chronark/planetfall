@@ -3,10 +3,12 @@ import { teamRouter } from "./team";
 import { endpointRouter } from "./endpoint";
 import { regionRouter } from "./region";
 import { authRouter } from "./auth";
+import { pageRouter } from "./page";
 
 export const router = t.router({
   team: teamRouter,
   endpoint: endpointRouter,
+  page: pageRouter,
   region: regionRouter,
   auth: authRouter,
 });
