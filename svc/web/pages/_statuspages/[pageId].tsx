@@ -14,7 +14,7 @@ import JSXStyle from "styled-jsx/style";
 import superjson from "superjson";
 import { SuperJSONResult } from "superjson/dist/types";
 import { usePercentile } from "../../lib/hooks/percentile";
-import { Heatmap, Line } from "@ant-design/plots";
+import { Area, Heatmap, Line, TinyArea } from "@ant-design/plots";
 
 export const Chart: React.FC<{ checks: Check[] }> = (
   { checks },
@@ -109,6 +109,7 @@ const Endpoint: React.FC<
               <Stat label="p99" value={Math.round(p99)} />
             </div>
           </div>
+
           <Chart
             checks={endpoint.checks.slice(0, 60).map((c) => ({
               ...c,
@@ -161,11 +162,11 @@ const Region: React.FC<
               <Stat label="p99" value={Math.round(p99)} />
             </div>
           </div>
-          <Chart
-            checks={checks.slice(0, 60).map((c) => ({
-              ...c,
-              regionId: regionName,
-            }))}
+          <TinyArea
+            height={60}
+            smooth={true}
+            autoFit={false}
+            data={checks.map((c) => c.latency)}
           />
         </div>
       </div>
@@ -173,24 +174,6 @@ const Region: React.FC<
   );
 };
 
-// const Row: React.FC<{ endpoint: EndpointType & { checks: Check[] }, regions: RegionType[] }> = (
-//     { endpoint, regions },
-// ): JSX.Element => {
-//     const checksByRegion = endpoint.checks.reduce((acc, c) => {
-//         if (!(c.regionId in acc)) {
-//             acc[c.regionId] = [];
-//         }
-//         acc[c.regionId].push(c);
-//         return acc;
-//     }, {} as Record<string, Check[]>);
-
-//     return (
-//         <div>
-
-//             {Object.entries(checksByRegion).map(([regionId, checks]) => <Region key={regionId} regionId={regionId} regionName={regions.find(r => r.id === regionId)?.name ?? ""} checks={checks} />)}
-
-//         </div>);
-// };
 const Row: React.FC<
   { endpoint: EndpointType & { checks: Check[] }; regions: RegionType[] }
 > = (
@@ -206,38 +189,14 @@ const Row: React.FC<
 
   return (
     <div>
-      <Line
-        data={(endpoint.checks ?? []).sort((a, b) =>
-          a.time.getTime() - b.time.getTime()
-        ).map((c) => ({
-          time: c.time.toISOString(),
-          latency: c.latency,
-          regionId: regions.find((r) => r.id === c.regionId)?.name ??
-            c.regionId,
-        }))}
-        padding="auto"
-        xField="time"
-        yField="latency"
-        seriesField="regionId"
-        smooth
-        autoFit={true}
-        legend={{
-          position: "bottom",
-        }}
-        yAxis={{
-          title: { text: "Latency [ms]" },
-          tickCount: 3,
-        }}
-        xAxis={{
-          tickCount: 10,
-          label: {
-            formatter: (text) => new Date(text).toLocaleTimeString(),
-          },
-        }}
-        tooltip={{
-          title: (d) => new Date(d).toLocaleString(),
-        }}
-      />
+      {Object.entries(checksByRegion).map(([regionId, checks]) => (
+        <Region
+          key={regionId}
+          regionId={regionId}
+          regionName={regions.find((r) => r.id === regionId)?.name ?? ""}
+          checks={checks}
+        />
+      ))}
     </div>
   );
 };
