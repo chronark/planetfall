@@ -73,7 +73,7 @@ resource "vercel_project" "web" {
 
 }
 
-resource "vercel_dns_record" "url9477" {
+resource "vercel_dns_record" "sendgrid_url9477" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
   name    = "url9477"
@@ -82,7 +82,7 @@ resource "vercel_dns_record" "url9477" {
   value   = "sendgrid.net"
 }
 
-resource "vercel_dns_record" "29341690" {
+resource "vercel_dns_record" "sendgrid_29341690" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
   name    = "29341690"
@@ -91,7 +91,7 @@ resource "vercel_dns_record" "29341690" {
   value   = "sendgrid.net"
 }
 
-resource "vercel_dns_record" "em4520" {
+resource "vercel_dns_record" "sendgrid_em4520" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
   name    = "em4520"
@@ -100,7 +100,7 @@ resource "vercel_dns_record" "em4520" {
   value   = "u29341690.wl191.sendgrid.net"
 }
 
-resource "vercel_dns_record" "s1_domainkey" {
+resource "vercel_dns_record" "sendgrid_s1_domainkey" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
   name    = "s1._domainkey"
@@ -108,7 +108,7 @@ resource "vercel_dns_record" "s1_domainkey" {
   ttl     = 60
   value   = "s1.domainkey.u29341690.wl191.sendgrid.net"
 }
-resource "vercel_dns_record" "s1_domainkey" {
+resource "vercel_dns_record" "sendgrid_s1_domainkey" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"
   name    = "s2._domainkey"
