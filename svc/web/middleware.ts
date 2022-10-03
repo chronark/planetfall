@@ -35,6 +35,6 @@ export default function middleware(req: NextRequest) {
         "",
       );
   }
-  console.log("Edge redirect to ->", url.href)
+  console.log("Edge redirect to ->", url.href);
   return NextResponse.rewrite(url);
 }

@@ -14,7 +14,7 @@ import { ConfigProvider } from "antd";
 import { useRouter } from "next/router";
 
 function MyApp(
-  { Component, pageProps }: AppProps
+  { Component, pageProps }: AppProps,
 ) {
   ConfigProvider.config({
     theme: {
@@ -28,7 +28,7 @@ function MyApp(
     "/auth/sign-in",
     "/auth/sign-up",
     "/auth/sign-out",
-    "/_statuspages/[pageId]"
+    "/_statuspages/[pageId]",
   ];
   const isPublicPage = publicPages.includes(router.pathname);
   return (

@@ -19,7 +19,7 @@ function getBaseUrl() {
 export const trpc = createTRPCNext<Router>({
   config: () => ({
     transformer: superjson,
-    
+
     links: [
       httpLink({
         /**

@@ -16,61 +16,6 @@ import { SuperJSONResult } from "superjson/dist/types";
 import { usePercentile } from "../../lib/hooks/percentile";
 import { Area, Heatmap, Line, TinyArea } from "@ant-design/plots";
 
-export const Chart: React.FC<{ checks: Check[] }> = (
-  { checks },
-): JSX.Element => {
-  // localMax is the maximum of all displayed data points
-  const localMax = Math.max(...checks.map((x) => x.latency));
-  return (
-    <div className="flex space-x-px h-10 items-end">
-      {checks.map(({ time, latency, regionId }, i) => {
-        const height = latency >= 0
-          ? Math.max(10, Math.min(100, (latency / localMax) * 100))
-          : 100;
-        const cn = classNames(
-          "flex-1 h-full rounded-sm hover:opacity-80 hover:scale-y-125 transition-all duration-300",
-          {
-            "bg-slate-200": latency < 0,
-            "bg-rose-400": latency > 300,
-            " bg-amber-300": latency <= 300 && latency > 100,
-            " bg-emerald-400": latency >= 0 && latency <= 100,
-          },
-        );
-        return (
-          <Popover
-            key={i}
-            content={time.getTime() > 0
-              ? (
-                <>
-                  <div className="overflow-hidden rounded-sm bg-white px-4 py-5 shadow sm:p-6">
-                    <dt className="truncate text-sm font-medium text-slate-500">
-                      {time.toLocaleString()}
-                    </dt>
-                    <dd className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
-                      {latency} ms
-                    </dd>
-                    <dd className="mt-1 text-sm font-medium text-slate-500">
-                      from <span className="font-semibold">{regionId}</span>
-                    </dd>
-                  </div>
-                </>
-              )
-              : null}
-          >
-            <div
-              key={i}
-              className={cn}
-              style={{
-                height: `${height}%`,
-              }}
-            >
-            </div>
-          </Popover>
-        );
-      })}
-    </div>
-  );
-};
 
 const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
   return (
@@ -83,129 +28,77 @@ const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
   );
 };
 
-const Endpoint: React.FC<
-  { endpoint: EndpointType & { checks: Check[] }; regions: RegionType[] }
-> = ({ endpoint, regions }): JSX.Element => {
-  const values = endpoint.checks.slice(60).map((c) => c.latency);
-  const min = useMemo(() => Math.min(...values), values);
-  const max = useMemo(() => Math.max(...values), values);
-  const p50 = usePercentile(0.5, values);
-  const p95 = usePercentile(0.95, values);
-  const p99 = usePercentile(0.99, values);
-
-  return (
-    <div>
-      <div className="flex items-center py-5 px-4 sm:py-8 sm:px-0">
-        <div className="min-w-0 items-center w-full space-y-4">
-          <div className="flex items-start md:items-center flex-col md:flex-row justify-between w-full space-y-2 md:space-y-0 md:space-x-4">
-            <span className="flex flex-1 items-center space-x-4 font-medium px-4  text-xl text-slate-900 sm:truncate sm:text-2xl">
-              {endpoint.name ?? endpoint.url}
-            </span>
-            <div className="flex flex-1 gap-2 sm:gap-4 xl:gap-6 justify-between flex-wrap md:flex-nowrap">
-              <Stat label="min" value={Math.round(min)} />
-              <Stat label="max" value={Math.round(max)} />
-              <Stat label="p50" value={Math.round(p50)} />
-              <Stat label="p95" value={Math.round(p95)} />
-              <Stat label="p99" value={Math.round(p99)} />
-            </div>
-          </div>
-
-          <Chart
-            checks={endpoint.checks.slice(0, 60).map((c) => ({
-              ...c,
-              regionId: regions.find((r) => r.id === c.regionId)?.name ?? "",
-            }))}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Region: React.FC<
-  { regionId: string; checks: Check[]; regionName: string }
-> = ({ regionId, regionName, checks }): JSX.Element => {
-  const values = useMemo(() => checks.slice(0, 60).map((c) => c.latency), [
-    checks,
-  ]);
-  const min = useMemo(() => Math.min(...values), values);
-  const max = useMemo(() => Math.max(...values), values);
-  const p50 = usePercentile(0.5, values);
-  const p95 = usePercentile(0.95, values);
-  const p99 = usePercentile(0.99, values);
-  console.log(Math.random())
-  return (
-    <div>
-      <div className="flex items-center py-5 px-4 sm:py-8 sm:px-0">
-        <div className="min-w-0 items-center w-full space-y-4">
-          <div className="flex items-start md:items-center flex-col md:flex-row justify-between w-full space-y-2 md:space-y-0 md:space-x-4">
-            <h3 className="flex flex-1 items-center space-x-4">
-              <span
-                className={classNames(
-                  "font-medium px-4 py-1 text-xl text-slate-900 sm:truncate",
-                  {
-                    "border-slate-200": p95 <= 0,
-                    "border-rose-400": p95 > 300,
-                    " border-amber-300": p95 <= 300 && p95 > 100,
-                    " border-emerald-400": p95 >= 0 && p95 <= 100,
-                  },
-                )}
-              >
-                {regionName}
-              </span>
-            </h3>{" "}
-            <div className="flex flex-1 gap-2 sm:gap-4 xl:gap-6 justify-between flex-wrap md:flex-nowrap">
-              <Stat label="min" value={Math.round(min)} />
-              <Stat label="max" value={Math.round(max)} />
-              <Stat label="p50" value={Math.round(p50)} />
-              <Stat label="p95" value={Math.round(p95)} />
-              <Stat label="p99" value={Math.round(p99)} />
-            </div>
-          </div>
-          <TinyArea
-            height={60}
-            smooth={true}
-            autoFit={false}
-            data={checks.map((c) => c.latency)}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const Row: React.FC<
-  { endpoint: EndpointType & { checks: Check[] }; regions: RegionType[] }
+  { endpoint: EndpointType & { checks: Check[] } }
 > = (
-  { endpoint, regions },
+  { endpoint },
 ): JSX.Element => {
-  const checksByRegion = endpoint.checks.reduce((acc, c) => {
-    if (!(c.regionId in acc)) {
-      acc[c.regionId] = [];
-    }
-    acc[c.regionId].push(c);
-    return acc;
-  }, {} as Record<string, Check[]>);
+    const values = useMemo(() => endpoint.checks.map((c) => c.latency), [
+      endpoint.checks,
+    ]);
+    const min = useMemo(() => Math.min(...values), values);
+    const max = useMemo(() => Math.max(...values), values);
+    const p50 = usePercentile(0.5, values);
+    const p95 = usePercentile(0.95, values);
+    const p99 = usePercentile(0.99, values);
 
-  return (
-    <div className="max-w-2xl">
-      {Object.entries(checksByRegion).map(([regionId, checks]) => (
-        <Region
-          key={regionId}
-          regionId={regionId}
-          regionName={regions.find((r) => r.id === regionId)?.name ?? ""}
-          checks={checks}
-        />
-      ))}
-    </div>
-  );
-};
+    return (
+      <li className="border-t sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded my-16  hover:border-primary-500 duration-1000">
+        <div className="flex-col gap-2 lg:flex-row items-start border-b border-slate-200  px-4 py-5 sm:px-6 flex justify-between md:items-center">
+          <div className="lg:w-1/2">
+            <span className="text-lg font-medium leading-6 text-slate-900">{endpoint.name ?? endpoint.url}</span>
+          </div>
+          <div className="lg:w-1/2 flex gap-2 sm:gap-4 xl:gap-6 justify-between flex-wrap md:flex-nowrap">
+            <Stat label="min" value={Math.round(min)} />
+            <Stat label="max" value={Math.round(max)} />
+            <Stat label="p50" value={Math.round(p50)} />
+            <Stat label="p95" value={Math.round(p95)} />
+            <Stat label="p99" value={Math.round(p99)} />
+          </div>
+        </div>
+
+        <div className="px-4 pt-10 pb-5 sm:px-6" >
+
+          <Line
+            style={{ height: "100px" }}
+            data={endpoint.checks.map(c => ({ ...c, time: c.time.toLocaleString() }))}
+            xField="time"
+            yField="latency"
+            seriesField="regionId"
+            autoFit={true}
+            smooth={true}
+            legend={{
+              position: "bottom",
+            }}
+            yAxis={{
+              // title: { text: "Latency [ms]" },
+              tickCount: 0
+
+
+            }}
+            xAxis={{
+              tickCount: 5,
+              label: {
+                formatter: (text) => new Date(text).toLocaleTimeString(),
+              },
+            }}
+            tooltip={{
+              title: (d) => new Date(d).toLocaleString(),
+            }}
+          />
+        </div>
+
+
+      </li>
+    );
+  };
 export default function Page(
-  { data, regions }: { data: SuperJSONResult; regions: RegionType[] },
+  { data }: { data: SuperJSONResult },
 ) {
   const page = superjson.deserialize<
     StatusPage & { endpoints: (EndpointType & { checks: Check[] })[] }
   >(data);
+
 
   return (
     <div>
@@ -216,27 +109,18 @@ export default function Page(
           </h1>
         </div>
       </header>
-      <main className="container mx-auto py-32">
-        <Collapse
-          ghost
-          expandIconPosition="end"
-          expandIcon={(p) => (
-            <ChevronDownIcon
-              className={`w-8 h-8 transform-all duration-150 ${
-                p.isActive ? "rotate-90" : ""
-              }`}
-            />
-          )}
-        >
+      <main className="container mx-auto md:py-16 lg:py-24 xl:py-32">
+        <ol className="sm:px-4">
+
           {page.endpoints.map((endpoint) => (
-            <Collapse.Panel
-              key={endpoint.id}
-              header={<Endpoint endpoint={endpoint} regions={regions} />}
-            >
-              <Row endpoint={endpoint} regions={regions} />
-            </Collapse.Panel>
+
+            <Row key={endpoint.id} endpoint={endpoint} />
+
+
           ))}
-        </Collapse>
+        </ol>
+
+
       </main>
       <footer>
         <div className="border-t pt-16">
@@ -259,7 +143,7 @@ export function getStaticPaths() {
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {
   const pageId = ctx.params?.pageId;
-  console.log("Getting static props for page", pageId)
+  console.log("Getting static props for page", pageId);
   if (!pageId || Array.isArray(pageId)) {
     throw new Error("pageId should be string");
   }
@@ -292,11 +176,18 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
     throw new Error("page not found");
   }
 
+  const regions = await db.region.findMany()
+  const regionIdToName = regions.reduce((acc, region) => {
+    acc[region.id] = region.name
+    return acc
+  }, {} as Record<string, string>)
+  for (const endpoint of page.endpoints) {
+    endpoint.checks = endpoint.checks.map(c => ({ ...c, regionId: regionIdToName[c.regionId] }))
+  }
 
   return {
     props: {
       data: superjson.serialize(page),
-      regions: await db.region.findMany(),
     },
     revalidate: 60,
   };

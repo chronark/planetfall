@@ -9,6 +9,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        ambient: "0 35px 120px -10px rgba(51, 102, 255, 0.03)",
+        cta: "0 35px 120px -10px rgba(51, 102, 255, 0.1)",
+      },
       colors: {
         primary: {
           "100": "#D6E4FF",
@@ -99,10 +103,7 @@ module.exports = {
         },
       },
     },
-    boxShadow: {
-      ambient: "0 35px 120px -10px rgba(53, 72, 200, 0.1)",
-      cta: "0 35px 120px -10px rgba(53, 72, 200, 0.1)",
-    },
+
   },
   plugins: [
     // eslint-disable-next-line global-require
