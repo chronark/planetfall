@@ -28,15 +28,14 @@ export default function middleware(req: NextRequest) {
 
 
   console.log("Edge current subdomain:", subdomain)
-  switch (subdomain) {
-    case "":
-      break;
-    //  case "app":
-    //    url.pathname = `/app${url.pathname}`;
-    //    break;
-    default:
-      url.pathname = `/_statuspages/${subdomain}`
+
+  if (subdomain === "") {
+    return NextResponse.next()
   }
+  
+  url.pathname = `/_statuspages/${subdomain}`
   console.log("Edge redirect to ->", url.href);
   return NextResponse.rewrite(url);
+
+
 }
