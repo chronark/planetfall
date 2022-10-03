@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import React, { createContext, PropsWithChildren, useEffect } from "react";
 import { trpc } from "../../lib/hooks/trpc";
+import type { User } from "@planetfall/db";
 
 export type User = {
   id: string;
@@ -10,24 +11,51 @@ export type User = {
   image?: string | null;
 };
 
-export function useAuth({
-  redirectTo = "/auth/sign-in",
-} = {}) {
-  const me = trpc.auth.me.useQuery();
-  const signOut = trpc.auth.signOut.useMutation().mutateAsync;
+const ERR_AUTHPROVIDER_INIT = new Error("Please wrap your app with the AuthProvider")
+
+export type Session = {
+  userId: string,
+  signedIn: true
+} | {
+  userId?: never
+  signedIn: false
+}
+
+const Context = createContext<{
+  user?: User,
+  session: Session,
+  signOut: () => Promise<void>
+}>({
+  user: undefined,
+  session: { signedIn: false },
+  signOut: async () => { throw ERR_AUTHPROVIDER_INIT },
+})
+
+
+export const AuthProvider: React.FC<PropsWithChildren<{ session?: Session, user?: User }>> = ({ children, session, user }): JSX.Element => {
+  return <Context.Provider value={{ session, user }}>{children}</Context.Provider>;
+}
+
+
+
+
+
+
+export function useAuth({ redirectTo = "/auth/sign-in" }) {
 
   const router = useRouter();
-  useEffect(() => {
-    if (me.isLoading || me.isFetching) {
-      return;
-    }
+  const session = trpc.auth.session.useQuery({} as any, { initialData: { signedIn: false } });
 
-    if (
-      me.isError || !me.data || me.data.expires <= Date.now() || !me.data.userId
-    ) {
-      router.push(redirectTo);
-    }
-  }, [me.data, me.isFetching, me.isLoading, redirectTo]);
+  if (typeof session.data?.signedIn === "boolean" && !session.data.signedIn) {
+    router.push(redirectTo);
+  }
 
-  return { user: me.data, signOut };
+  const user = trpc.auth.user.useQuery(
+    { userId: session.data!.userId! },
+    { enabled: session.data?.signedIn },
+  )
+
+  const signOut = trpc.auth.signOut.useMutation().mutateAsync;
+
+  return { user: user.data, session: session.data, signOut };
 }

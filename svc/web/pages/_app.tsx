@@ -3,12 +3,12 @@ import "tailwindcss/tailwind.css";
 import { trpc } from "lib/hooks/trpc";
 import PlausibleProvider from "next-plausible";
 import "styles/ant.css";
-
+import { AuthProvider } from "../components/auth";
 import { ConfigProvider } from "antd";
 import { useRouter } from "next/router";
 
 function MyApp(
-  { Component, pageProps }: AppProps,
+  { Component, pageProps: { auth, ...pageProps } }: AppProps<{ auth: any }>,
 ) {
   ConfigProvider.config({
     theme: {
@@ -26,7 +26,10 @@ function MyApp(
   return (
     <PlausibleProvider domain="planetfall.io">
       <ConfigProvider>
-        <Component {...pageProps} />
+        <AuthProvider {...auth}>
+
+          <Component {...pageProps} />
+        </AuthProvider>
       </ConfigProvider>
     </PlausibleProvider>
   );

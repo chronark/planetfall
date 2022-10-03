@@ -63,25 +63,54 @@ export const authRouter = t.router({
     });
     ctx.req.session.destroy();
   }),
-  me: t.procedure.query(async ({ ctx }) => {
-    if (!ctx.req.session.user?.id || !ctx.req.session.user.token) {
+  user: t.procedure.input(z.object({ userId: z.string() })).query(async ({ input, ctx }) => {
+    if (!ctx.req.session.user?.id || ctx.req.session.user.id !== input.userId) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
 
+    if (ctx.req.session.user.expires <= Date.now()) {
+      ctx.req.session.destroy()
+      return {
+        signedIn: false
+      }
+    }
+
+
     const user = await ctx.db.user.findUnique({
       where: {
-        id: ctx.req.session.user.id,
+        id: ctx.req.session.user.id
       },
+      include: {
+        teams: {
+          include: {
+            team: true
+          }
+        }
+      }
     });
     if (!user) {
       throw new TRPCError({ code: "NOT_FOUND" });
     }
+    return user;
+  }),
+  session: t.procedure.query(async ({ ctx }) => {
+    if (!ctx.req.session.user?.id || !ctx.req.session.user.token) {
+      return {
+        signedIn: false
+      }
+    }
+
+    if (ctx.req.session.user.expires <= Date.now()) {
+      ctx.req.session.destroy()
+      return {
+        signedIn: false
+      }
+    }
+
+
     return {
       userId: ctx.req.session.user.id,
-      token: ctx.req.session.user.token,
-      expires: ctx.req.session.user.expires,
-      name: user.name,
-      image: user.image,
+      signedIn: true
     };
   }),
   verifySignIn: t.procedure.input(z.object({
