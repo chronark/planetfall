@@ -13,22 +13,22 @@ export default function middleware(req: NextRequest) {
 
   console.log()
 
-  let currentHost = hostname
-    .replace(`.localhost:3000`, "")
-    .replace(`.planetfall.io`, "")
-  if (process.env.VERCEL_URL) {
-    currentHost = currentHost.replace(`.${process.env.VERCEL_URL}`, "")
-  }
+  const subdomain = hostname
+    .replace(`localhost:3000`, "")
+    .replace(`planetfall.io`, "")
+    .replace(process.env.VERCEL_URL ?? "", "")
+    .replace(/\.$/, "")
 
-  console.log("Edge current host:", currentHost)
-  switch (currentHost) {
+
+  console.log("Edge current subdomain:", subdomain)
+  switch (subdomain) {
     case "":
       break;
     //  case "app":
     //    url.pathname = `/app${url.pathname}`;
     //    break;
     default:
-      url.pathname = `/_statuspages/${currentHost}`.replace(
+      url.pathname = `/_statuspages/${subdomain}`.replace(
         /\/$/,
         "",
       );
