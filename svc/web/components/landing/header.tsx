@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { ArrowLongRightIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useAuth } from "../auth";
+import { useSession, useUser } from "../auth";
 
 export const Header: React.FC = (): JSX.Element => {
   let [isScrolled, setIsScrolled] = useState(false);
-  const { user, signOut } = useAuth();
+  const { session } = useSession();
   useEffect(() => {
     function onScroll() {
       setIsScrolled(window.scrollY > 0);
@@ -49,9 +49,9 @@ export const Header: React.FC = (): JSX.Element => {
               </li>
 
               <li>
-                <Link href={user ? "/home" : "/auth/sign-in"}>
+                <Link href={session.signedIn ? "/home" : "/auth/sign-in"}>
                   <div className="hover:cursor-pointer whitespace-nowrap md:px-4 md:py-3 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug transition duration-150 ease-in-out  md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  w-full shadow-sm group">
-                    {user ? "Dashboard" : "Sign in"}
+                    {session.signedIn ? "Dashboard" : "Sign in"}
                     <ArrowLongRightIcon className="hidden md:block w-6 h-6 group-hover:text-primary-500  group-hover:translate-x-1 transition-transform duration-150 ease-out ml-1" />
                   </div>
                 </Link>

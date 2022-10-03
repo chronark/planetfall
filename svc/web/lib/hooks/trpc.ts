@@ -19,6 +19,7 @@ function getBaseUrl() {
 export const trpc = createTRPCNext<Router>({
   config: () => ({
     transformer: superjson,
+    
     links: [
       httpLink({
         /**
@@ -33,7 +34,7 @@ export const trpc = createTRPCNext<Router>({
     /**
      * @link https://react-query-v3.tanstack.com/reference/QueryClient
      */
-    // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+    queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
   }),
   /**
    * @link https://trpc.io/docs/ssr

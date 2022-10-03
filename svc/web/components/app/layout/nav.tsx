@@ -14,7 +14,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { trpc } from "@planetfall/svc/web/lib/hooks/trpc";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
-import { useAuth } from "components/auth";
+import { useSession, useUser } from "components/auth";
 
 function classNames(...classes: unknown[]) {
   return classes.filter(Boolean).join(" ");
@@ -45,7 +45,8 @@ export type LayoutProps = {
 export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
   { children, breadcrumbs = [], teamSelector = true },
 ): JSX.Element => {
-  const { user, signOut } = useAuth();
+  const { signOut } = useSession();
+  const { user } = useUser();
   const router = useRouter();
   const activeTeamSlug = router.query.teamSlug as string;
 

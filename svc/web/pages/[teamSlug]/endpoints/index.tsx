@@ -1,5 +1,5 @@
 import { Layout } from "../../../components/app/layout/nav";
-import { useAuth } from "components/auth";
+import { useSession, useUser } from "components/auth";
 import { useRouter } from "next/router";
 import { trpc } from "../../../lib/hooks/trpc";
 import { ArrowRightOutlined } from "@ant-design/icons";
@@ -27,6 +27,7 @@ import { usePercentile } from "@planetfall/svc/web/lib/hooks/percentile";
 export const Item: React.FC<{ endpointId: string }> = (
   { endpointId },
 ): JSX.Element => {
+  useSession();
   const router = useRouter();
   const teamSlug = router.query.teamSlug as string;
   const ctx = trpc.useContext();
@@ -151,7 +152,7 @@ export const Item: React.FC<{ endpointId: string }> = (
 };
 
 export default function EndpointsPage() {
-  const { user } = useAuth();
+  const { user } = useUser();
 
   const router = useRouter();
   const breadcrumbs = user?.name ? [] : [];

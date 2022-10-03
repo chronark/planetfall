@@ -133,7 +133,7 @@ const Region: React.FC<
   const p50 = usePercentile(0.5, values);
   const p95 = usePercentile(0.95, values);
   const p99 = usePercentile(0.99, values);
-
+  console.log(Math.random())
   return (
     <div>
       <div className="flex items-center py-5 px-4 sm:py-8 sm:px-0">
@@ -188,7 +188,7 @@ const Row: React.FC<
   }, {} as Record<string, Check[]>);
 
   return (
-    <div>
+    <div className="max-w-2xl">
       {Object.entries(checksByRegion).map(([regionId, checks]) => (
         <Region
           key={regionId}
@@ -259,6 +259,7 @@ export function getStaticPaths() {
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {
   const pageId = ctx.params?.pageId;
+  console.log("Getting static props for page", pageId)
   if (!pageId || Array.isArray(pageId)) {
     throw new Error("pageId should be string");
   }
@@ -290,6 +291,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
   if (!page) {
     throw new Error("page not found");
   }
+
 
   return {
     props: {
