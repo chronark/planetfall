@@ -11,13 +11,16 @@ export default function middleware(req: NextRequest) {
   // Get hostname of request (e.g. planetfall.io, demo.localhost:3000)
   const hostname = req.headers.get("host") || "planetfall.io";
 
-  const currentHost =
-    process.env.NODE_ENV === "production" && process.env.VERCEL === "1"
-      ? hostname
-        .replace(`.planetfall.io`, "")
-      : hostname.replace(`.localhost:3000`, "");
+  console.log()
 
-      console.log("Edge current host:", currentHost)
+  let currentHost = hostname
+    .replace(`.localhost:3000`, "")
+    .replace(`.planetfall.io`, "")
+  if (process.env.VERCEL_URL) {
+    currentHost = currentHost.replace(`.${process.env.VERCEL_URL}`, "")
+  }
+
+  console.log("Edge current host:", currentHost)
   switch (currentHost) {
     case "":
       break;
