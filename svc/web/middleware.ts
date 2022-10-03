@@ -25,7 +25,7 @@ export default function middleware(req: NextRequest) {
     //    url.pathname = `/app${url.pathname}`;
     //    break;
     default:
-      url.pathname = `/_statuspages/${currentHost}/${url.pathname}`.replace(
+      url.pathname = `/_statuspages/${currentHost}`.replace(
         /\/$/,
         "",
       );
