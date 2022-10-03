@@ -1,12 +1,13 @@
 import { useRouter } from "next/router";
-import { useAuth } from "../components/auth/auth";
+import { useSession, useUser } from "components/auth";
 import slugify from "slugify";
 
 /**
  * TODO: move this to edge function, when clerk is ready
  */
 export default function Page() {
-  const { user } = useAuth();
+  useSession();
+  const { user } = useUser();
   const router = useRouter();
 
   if (user) {

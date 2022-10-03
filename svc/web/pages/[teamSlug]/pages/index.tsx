@@ -1,5 +1,5 @@
 import { Layout } from "../../../components/app/layout/nav";
-import { useAuth } from "components/auth";
+import { useSession, useUser } from "components/auth";
 import { useRouter } from "next/router";
 import { trpc } from "../../../lib/hooks/trpc";
 import { ArrowRightOutlined } from "@ant-design/icons";
@@ -39,7 +39,10 @@ export const Item: React.FC<{ pageId: string }> = (
     new Date().getMinutes(),
   ]);
   const page = trpc.page.get.useQuery({ pageId });
-
+  const protocol = process.env.NEXT_PUBLIC_VERCEL_ENV ? "https" : "http";
+  const host = process.env.NEXT_PUBLIC_VERCEL_ENV
+    ? "planetfall.io"
+    : "localhost:3000";
   return (
     <List.Item>
       <PageHeader
@@ -68,7 +71,7 @@ export const Item: React.FC<{ pageId: string }> = (
           <Button
             key="goto"
             type="primary"
-            href={`/${teamSlug}/pages/${pageId}`}
+            href={`${protocol}://${page.data?.id}.${host}           `}
           >
             View
           </Button>,
@@ -80,7 +83,8 @@ export const Item: React.FC<{ pageId: string }> = (
 };
 
 export default function Pagespage() {
-  const { user } = useAuth();
+  useSession();
+  const { user } = useUser();
 
   const router = useRouter();
   const breadcrumbs = user?.name ? [] : [];

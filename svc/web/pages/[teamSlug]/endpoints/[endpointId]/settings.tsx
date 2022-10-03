@@ -9,7 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@planetfall/svc/web/lib/hooks/trpc";
 import { useRouter } from "next/router";
-import { useAuth } from "components/auth";
+import { useSession, useUser } from "components/auth";
 import { Heading } from "@planetfall/svc/web/components/heading";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
 import {
@@ -51,7 +51,7 @@ type FormData = {
 type RequiredMark = boolean | "optional";
 
 export default function Page() {
-  const { user } = useAuth();
+  useSession();
   const router = useRouter();
   const teamSlug = router.query.teamSlug as string;
   const endpointId = router.query.endpointId as string;

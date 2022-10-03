@@ -1,33 +1,98 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import JSXStyle from "styled-jsx/style";
 import { trpc } from "../../lib/hooks/trpc";
+import type { Membership, Team, User as PUser } from "@planetfall/db";
 
-export type User = {
-  id: string;
-  token: string;
-  expires: number;
-  name: string;
-  image?: string | null;
+export type User = PUser & { teams: (Membership & { team: Team })[] };
+
+export type Session = {
+  userId?: string;
+  signedIn: boolean;
+  loading: boolean;
 };
 
-export function useAuth({
-  redirectTo = "/auth/sign-in",
-} = {}) {
-  const me = trpc.auth.me.useQuery();
+const Context = createContext<{
+  session: Session;
+  user: User | null;
+}>({
+  session: { signedIn: false, loading: true },
+  user: null,
+});
+
+export type AuthProviderProps = {
+  session?: Session;
+};
+export const AuthProvider: React.FC<PropsWithChildren> = (
+  { children },
+): JSX.Element => {
+  const [session, setSession] = useState({ signedIn: false, loading: true });
+
+  const [user, setUser] = useState<User | null>(null);
+  const ctx = trpc.useContext();
+  useEffect(() => {
+    const run = async () => {
+      const s = await ctx.auth.session.fetch();
+      setSession({ ...s, loading: false });
+      if (s.userId) {
+        const u = await ctx.auth.user.fetch({ userId: s.userId });
+        setUser(u);
+      }
+    };
+
+    run();
+  }, [ctx.auth.session, ctx.auth.user]);
+  return (
+    <Context.Provider value={{ session, user }}>
+      {children}
+    </Context.Provider>
+  );
+};
+
+export function useSession() {
+  const ctx = useContext(Context);
+
   const signOut = trpc.auth.signOut.useMutation().mutateAsync;
 
+  return { session: ctx.session, signOut };
+}
+
+export function useUser() {
+  const ctx = useContext(Context);
+  const { data: user, ...meta } = trpc.auth.user.useQuery(
+    { userId: ctx.session.userId! },
+    { enabled: ctx.session.signedIn },
+  );
+
+  return { user, ...meta };
+}
+
+export const SignedIn: React.FC<PropsWithChildren> = (
+  { children },
+): JSX.Element | null => {
+  const { session } = useSession();
+  return session.signedIn ? <>{children}</> : null;
+};
+
+export const SignedOut: React.FC<PropsWithChildren> = (
+  { children },
+): JSX.Element | null => {
+  const { session } = useSession();
+  return session.signedIn ? null : <>{children}</>;
+};
+export const RedirectToSignIn: React.FC<PropsWithChildren> = (): null => {
+  const { session } = useSession();
   const router = useRouter();
   useEffect(() => {
-    if (me.isLoading || me.isFetching) {
-      return;
+    if (!session.signedIn && !session.loading) {
+      router.push("/auth/sign-in");
     }
-
-    if (
-      me.isError || !me.data || me.data.expires <= Date.now() || !me.data.userId
-    ) {
-      router.push(redirectTo);
-    }
-  }, [me.data, me.isFetching, me.isLoading, redirectTo]);
-
-  return { user: me.data, signOut };
-}
+  }, [router]);
+  return null;
+};

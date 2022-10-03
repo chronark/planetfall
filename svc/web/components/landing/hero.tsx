@@ -88,7 +88,7 @@ export const Hero: React.FC = (): JSX.Element => {
             </p>
             <div className="mt-10 max-w-xs mx-auto sm:max-w-none sm:inline-flex sm:justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <div>
-                <Link href="/signup">
+                <Link href="/auth/sign-in">
                   <div className="hover:cursor-pointer px-4 hover:px-6 hover:shadow-lg transition-all py-3 font-medium inline-flex items-center justify-center border border-slate-900 rounded leading-snug duration-300 ease-in-out  bg-slate-900 text-slate-50 hover:bg-slate-50 hover:text-slate-900  w-full shadow-sm group">
                     Get Started for free
                   </div>
