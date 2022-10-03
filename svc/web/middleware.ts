@@ -10,7 +10,7 @@ export const config = {
          * 4. /examples (inside /public)
          * 5. all root files inside /public (e.g. /favicon.ico)
          */
-    "/((?!api|_next|fonts|examples|app|[\\w-]+\\.\\w+).*)",
+    "/((?!api|_next|fonts|examples|[\\w-]+\\.\\w+).*)",
   ],
 };
 
@@ -19,9 +19,11 @@ export default function middleware(req: NextRequest) {
   // Get hostname of request (e.g. planetfall.io, demo.localhost:3000)
   const hostname = req.headers.get("host") || "planetfall.io";
 
-  const currentHost = hostname
-    .replace(`planetfall.io`, "")
-    .replace(`localhost:${process.env.PORT ?? 3000}`, "").replace(/\.$/, "");
+  const currentHost =
+    process.env.NODE_ENV === "production" && process.env.VERCEL === "1"
+      ? hostname
+          .replace(`.planetfall.io`, "")
+      : hostname.replace(`.localhost:3000`, "");
 
   switch (currentHost) {
     case "":
