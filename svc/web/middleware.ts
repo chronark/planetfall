@@ -11,7 +11,7 @@ export default function middleware(req: NextRequest) {
   // Get hostname of request (e.g. planetfall.io, demo.localhost:3000)
   const hostname = req.headers.get("host") || "planetfall.io";
 
-  console.log()
+  console.log("Edge hostname", hostname)
 
   const subdomain = hostname
     .replace(`localhost:3000`, "")
@@ -28,10 +28,7 @@ export default function middleware(req: NextRequest) {
     //    url.pathname = `/app${url.pathname}`;
     //    break;
     default:
-      url.pathname = `/_statuspages/${subdomain}`.replace(
-        /\/$/,
-        "",
-      );
+      url.pathname = `/_statuspages/${subdomain}`
   }
   console.log("Edge redirect to ->", url.href);
   return NextResponse.rewrite(url);
