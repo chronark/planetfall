@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = (
     };
 
     run();
-  }, [ctx.auth.session, ctx.auth.user]);
+  }, []);
   return (
     <Context.Provider value={{ session, user }}>
       {children}
