@@ -101,16 +101,37 @@ export default async function webhookHandler(
       case "customer.subscription.deleted":
         const subscription = event.data.object as Stripe.Subscription;
         console.log("subscription deleted", subscription);
-        await db.team.update({
+
+        const team = await db.team.findUnique({
           where: {
             stripeCustomerId: subscription.customer.toString(),
           },
-          data: {
-            plan: "FREE",
-            maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
-            retention: DEFAULT_QUOTA.FREE.retention,
-          },
         });
+        if (!team) {
+          throw new Error("team does not exist");
+        }
+        if (team.personal) {
+          await db.team.update({
+            where: {
+              stripeCustomerId: subscription.customer.toString(),
+            },
+            data: {
+              plan: "FREE",
+              maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
+              retention: DEFAULT_QUOTA.FREE.retention,
+            },
+          });
+        } else {
+          await db.team.update({
+            where: {
+              stripeCustomerId: subscription.customer.toString(),
+            },
+            data: {
+              plan: "DISABLED",
+            },
+          });
+        }
+
         break;
       default:
         event;

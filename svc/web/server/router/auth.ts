@@ -152,9 +152,6 @@ export const authRouter = t.router({
       },
       include: {
         teams: {
-          where: {
-            role: "PERSONAL",
-          },
           include: {
             team: true,
           },
@@ -186,7 +183,7 @@ export const authRouter = t.router({
     };
     await ctx.req.session.save();
     return {
-      redirect: `/${user.teams[0].team.slug}`,
+      redirect: `/${user.teams.find((t) => t.team.personal)?.team.slug}`,
     };
   }),
   verifySignUp: t.procedure.input(z.object({
@@ -238,10 +235,11 @@ export const authRouter = t.router({
         name: input.name,
         teams: {
           create: {
-            role: "PERSONAL",
+            role: "OWNER",
             team: {
               create: {
                 id: newId("team"),
+                personal: true,
                 plan: "FREE",
                 name: input.name,
                 slug,

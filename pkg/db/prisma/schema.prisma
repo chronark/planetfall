@@ -116,7 +116,8 @@ model User {
 }
 
 enum Plan {
-  FREE
+  DISABLED // teams can not be free and are therefore disabled
+  FREE // only possible for personal teams
   PRO
   ENTERPRISE
 }
@@ -125,8 +126,10 @@ model Team {
   id   String @id
   plan Plan
 
-  name String
-  slug String @unique
+// Personal teams must not have any other members and are the only teams available for FREE tier
+  personal Boolean
+  name     String
+  slug     String  @unique
 
   stripeCustomerId                String    @unique
   stripeSubscriptionId            String?   @unique
@@ -147,7 +150,6 @@ model Team {
 }
 
 enum Role {
-  PERSONAL
   OWNER
   ADMIN
   FINANCE

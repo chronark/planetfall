@@ -5,17 +5,17 @@ export type Quota = {
   maxMonthlyRequests: number | null;
 };
 
-export const DEFAULT_QUOTA: Record<Plan, Quota> = {
+export const DEFAULT_QUOTA: Record<"FREE" | "PRO" | "ENTERPRISE", Quota> = {
   [Plan.FREE]: {
-    retention: 24 * 60 * 60 * 1000, // 1 day
+    retention: 1, // 1 day
     maxMonthlyRequests: 100_000,
   },
   [Plan.PRO]: {
-    retention: 7 * 24 * 60 * 60 * 1000, // 1 week
+    retention: 7, // 1 week
     maxMonthlyRequests: null,
   },
   [Plan.ENTERPRISE]: {
-    retention: 90 * 24 * 60 * 60 * 1000, // 30 days
+    retention: 90, // 30 days
     maxMonthlyRequests: null,
   },
 };
