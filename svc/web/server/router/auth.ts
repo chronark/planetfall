@@ -5,6 +5,8 @@ import { TRPCError } from "@trpc/server";
 import { Email } from "@planetfall/email";
 import { newId } from "@planetfall/id";
 import slugify from "slugify";
+import { Stripe } from "stripe";
+import { DEFAULT_QUOTA } from "../../plans";
 export const authRouter = t.router({
   requestSignUp: t.procedure.input(z.object({
     email: z.string().email(),
@@ -89,7 +91,7 @@ export const authRouter = t.router({
         },
       });
       if (!user) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new TRPCError({ code: "NOT_FOUND", message: "user not found" });
       }
       return user;
     },
@@ -218,6 +220,16 @@ export const authRouter = t.router({
     if (req.expires.getTime() < Date.now()) {
       throw new TRPCError({ code: "UNAUTHORIZED", message: "otp expired" });
     }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      typescript: true,
+      apiVersion: "2022-08-01",
+    });
+    const customer = await stripe.customers.create({
+      email: input.identifier,
+      name: input.name,
+    });
+
     const slug = slugify(input.name, { lower: true });
     const user = await ctx.db.user.create({
       data: {
@@ -230,11 +242,12 @@ export const authRouter = t.router({
             team: {
               create: {
                 id: newId("team"),
+                plan: "FREE",
                 name: input.name,
                 slug,
-                stripeCurrentBillingPeriodStart: 0,
-                stripeCustomerId: crypto.randomUUID(),
-                retention: 24 * 60 * 60 * 1000,
+                stripeCustomerId: customer.id,
+                retention: DEFAULT_QUOTA.FREE.retention,
+                maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
               },
             },
           },

@@ -1,5 +1,5 @@
-import React, { Fragment, PropsWithChildren } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import React, { Fragment, PropsWithChildren, useEffect, useState } from "react";
+import { Disclosure, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -13,8 +13,19 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import { trpc } from "@planetfall/svc/web/lib/hooks/trpc";
-import * as Dropdown from "@radix-ui/react-dropdown-menu";
 import { useSession, useUser } from "components/auth";
+import {
+  Button,
+  Dropdown,
+  Form,
+  Input,
+  Menu,
+  message,
+  Modal,
+  Space,
+  Typography,
+} from "antd";
+import { router } from "@planetfall/svc/web/server/router";
 
 function classNames(...classes: unknown[]) {
   return classes.filter(Boolean).join(" ");
@@ -31,6 +42,63 @@ const Divider: React.FC = () => {
     >
       <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
     </svg>
+  );
+};
+
+const CreateNewTeam: React.FC = (): JSX.Element => {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+
+  const createTeam = trpc.team.create.useMutation();
+  useEffect(() => {
+    if (createTeam.error) {
+      message.error(createTeam.error.message);
+    }
+  }, [createTeam.error]);
+
+  const [form] = Form.useForm<{ name: string }>();
+
+  return (
+    <>
+      <Button type="link" onClick={() => setOpen(true)}>Create new team</Button>
+      <Modal
+        title="Create Team"
+        open={open}
+        okText="Create"
+        onOk={async () => {
+          const { name } = await form.validateFields();
+          const team = await createTeam.mutateAsync({ name });
+          router.push(`/${team.slug}`);
+        }}
+        confirmLoading={createTeam.isLoading}
+        onCancel={() => {
+          setOpen(false);
+        }}
+      >
+        <Form
+          form={form}
+          requiredMark="optional"
+          layout="vertical"
+        >
+          <Space direction="vertical" size={32}>
+            <Typography.Text style={{ alignItems: "center" }}>
+              Create a new team to collaborate with others. Each team is
+              isolated from each other and has separate billing.
+            </Typography.Text>
+            <Form.Item
+              label="Name"
+              name="name"
+              required
+              rules={[{ required: true, min: 4 }]}
+            >
+              <Input
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+          </Space>
+        </Form>
+      </Modal>
+    </>
   );
 };
 
@@ -60,6 +128,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
   ];
   const invalidteam = teams.data &&
     !teams.data.find((t) => t.team.slug === activeTeamSlug);
+
   return (
     <>
       <Disclosure as="header" className="bg-white shadow border-b">
@@ -83,7 +152,53 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                           <>
                             <Divider />
                             <li>
-                              <Dropdown.Root>
+                              <Dropdown
+                                trigger={["click", "hover"]}
+                                overlay={
+                                  <Menu
+                                    items={[
+                                      { type: "group", label: "Personal" },
+                                      ...(teams.data ?? []).filter((t) =>
+                                        t.role === "PERSONAL"
+                                      ).map((t) => ({
+                                        label: (
+                                          <Link href={`/${t.team.slug}`}>
+                                            <Button type="link">
+                                              {t.team.name}
+                                            </Button>
+                                          </Link>
+                                        ),
+                                        key: t.teamId,
+                                      })),
+                                      { type: "group", label: "Teams" },
+                                      ...(teams.data ?? []).filter((t) =>
+                                        t.role !== "PERSONAL"
+                                      ).map((t) => ({
+                                        label: (
+                                          <Link href={`/${t.team.slug}`}>
+                                            {t.team.name}
+                                          </Link>
+                                        ),
+                                        key: t.teamId,
+                                      })),
+                                      { type: "divider" },
+                                      {
+                                        label: <CreateNewTeam />,
+                                        key: "create-new",
+                                      },
+                                    ]}
+                                  />
+                                }
+                              >
+                                <div className="flex items-center px-2 py-1 gap-2 text-slate-500 hover:text-slate-700">
+                                  <span className="text-sm font-medium">
+                                    {activeTeamSlug}
+                                  </span>
+                                  <ChevronUpDownIcon className="w-4 h-4" />
+                                </div>
+                              </Dropdown>
+                              {
+                                /* <Dropdown.Root>
                                 <Dropdown.Trigger className="flex items-center px-2 py-1 gap-2 text-slate-500 hover:text-slate-700">
                                   <span className="text-sm font-medium">
                                     {activeTeamSlug}
@@ -118,9 +233,17 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                                         </Link>
                                       </Dropdown.Item>
                                     ))}
+                                    <Dropdown.Item key="new-team" className={classNames(
+                                          "flex cursor-default select-none items-center rounded-md px-2 py-2 text-xs outline-none",
+                                          "text-slate-400 focus:bg-slate-50 dark:text-slate-500 dark:focus:bg-slate-900",
+                                        )}>
+                                         Create new team
+
+                                    </Dropdown.Item>
                                   </Dropdown.Content>
                                 </Dropdown.Portal>
-                              </Dropdown.Root>
+                              </Dropdown.Root> */
+                              }
                             </li>
                           </>
                         )
@@ -182,7 +305,8 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                   </button>
 
                   {/* Profile dropdown */}
-                  <Menu as="div" className="relative ml-4 flex-shrink-0">
+                  {
+                    /* <Menu as="div" className="relative ml-4 flex-shrink-0">
                     <div>
                       <Menu.Button className="flex rounded-full bg-white focus:outline-none ">
                         <span className="sr-only">Open user menu</span>
@@ -236,7 +360,8 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                         </Menu.Item>
                       </Menu.Items>
                     </Transition>
-                  </Menu>
+                  </Menu> */
+                  }
                 </div>
               </div>
               <nav
@@ -337,7 +462,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
           </>
         )}
       </Disclosure>
-      <main className="mx-auto container mt-8 lg:mt-16">
+      <main className="mx-auto container my-8 lg:my-16">
         {invalidteam
           ? (
             <div className="flex min-h-full flex-col bg-white pt-16 pb-12">
@@ -366,8 +491,8 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
       </main>
 
       <footer>
-        <div className=" border-t mt-16 pt-16">
-          <p className="mx-auto container mb-16 text-base text-center text-slate-400">
+        <div className="border-t mt-16 py-16">
+          <p className="mx-auto container text-base text-center text-slate-400">
             &copy; {new Date().getUTCFullYear()}{" "}
             planetfall.io - All rights reserved.
           </p>

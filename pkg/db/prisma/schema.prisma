@@ -115,21 +115,33 @@ model User {
   teams Membership[]
 }
 
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
 model Team {
-  id String @id
+  id   String @id
+  plan Plan
 
   name String
   slug String @unique
 
-  stripeCustomerId                String @unique
-  stripeCurrentBillingPeriodStart Int
-
-  // milliseconds
-  retention Int
+  stripeCustomerId                String    @unique
+  stripeSubscriptionId            String?   @unique
+  stripeCurrentBillingPeriodStart DateTime?
 
   members     Membership[]
   endpoints   Endpoint[]
   statusPages StatusPage[]
+
+  // QUOTA DEFINITIONS 
+  // How long checks are stored
+  retention Int // [days]
+
+  // How many checks may be done per month
+  maxMonthlyRequests Int?
 
   @@index([slug])
 }

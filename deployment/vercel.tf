@@ -15,13 +15,30 @@ resource "vercel_project" "pinger" {
   root_directory = "svc/pinger"
 
   environment = [
-
     {
       key    = "AUTH_TOKEN"
       value  = var.auth_token
       target = ["production", "preview"]
 
-    }
+    },
+    {
+      key    = "STRIPE_PUBLISHABLE_KEY"
+      value  = var.stripe_publishable_key
+      target = ["production"]
+    },
+    {
+      key    = "STRIPE_SECRET_KEY"
+      value  = var.stripe_secret_key
+      target = ["production"]
+    },
+    {
+      key    = "STRIPE_WEBHOOK_SECRET"
+      value  = var.stripe_webhook_secret
+      target = ["production"]
+    },
+
+
+
   ]
 }
 
@@ -29,7 +46,7 @@ resource "vercel_project" "pinger" {
 resource "vercel_project_domain" "pinger" {
   for_each   = vercel_project.pinger
   project_id = each.value.id
-  team_id = var.vercel_team_id
+  team_id    = var.vercel_team_id
   domain     = "planetfall-pinger-${each.value.serverless_function_region}.vercel.app"
 }
 
@@ -63,7 +80,7 @@ resource "vercel_project" "web" {
       value  = "https://vercel-vitals.axiom.co/api/v1/send?configurationId=icfg_oPwbzTXCEWVftFAoGBeNQFKJ&projectId=b5766f87-cc3f-4925-9480-53e74b861789&type=web-vitals"
       target = ["production"]
     },
-    
+
     {
       key   = "DATABASE_URL",
       value = var.database_url,
@@ -125,7 +142,7 @@ resource "vercel_project_domain" "web" {
   domain     = "planetfall.io"
 }
 
-resource "vercel_project_domain" "fallthrough" {
+resource "vercel_project_domain" "wildcard" {
   project_id = vercel_project.web.id
   team_id    = var.vercel_team_id
   domain     = "*.planetfall.io"

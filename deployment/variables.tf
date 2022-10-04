@@ -13,12 +13,6 @@ variable "vercel_team_id" {
   type = string
 }
 
-
-variable "clerk_api_key" {
-  type      = string
-  sensitive = true
-}
-
 variable "database_url" {
   type      = string
   sensitive = true
@@ -57,3 +51,21 @@ variable "upstash_api_key" {
   type =string
   sensitive = true
 }
+
+variable "stripe_webhook_secret"{
+  type=string
+  sensitive = true
+}
+
+
+variable "stripe_secret_key"{
+  type=string
+  sensitive = true
+}
+
+
+variable "stripe_publishable_key" {
+  type=string
+}
+
+

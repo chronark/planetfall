@@ -45,9 +45,10 @@ const RegionTab: React.FC<
   const now = useMemo(() => Date.now(), [new Date().getMinutes()]);
   const ctx = trpc.useContext();
   const [since, setSince] = useState(now - 60 * 60 * 1000);
-  const endpoint = trpc.endpoint.get.useQuery({ since, endpointId, regionId }, {
+  const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
     staleTime: 10000,
   });
+  const checks = trpc.check.list.useQuery({ endpointId, since, regionId });
 
   const annotations: Annotation[] = [];
   if (endpoint.data?.degradedAfter) {
@@ -97,16 +98,19 @@ const RegionTab: React.FC<
 
   const p50 = usePercentile(
     0.50,
-    (endpoint.data?.checks ?? []).map((d) => d.latency),
+    (checks.data ?? []).map((d) => d.latency),
   );
   const p95 = usePercentile(
     0.95,
-    (endpoint.data?.checks ?? []).map((d) => d.latency),
+    (checks.data ?? []).map((d) => d.latency),
   );
   const p99 = usePercentile(
     0.99,
-    (endpoint.data?.checks ?? []).map((d) => d.latency),
+    (checks.data ?? []).map((d) => d.latency),
   );
+
+  console.log("data", JSON.stringify(checks.data, null, 2));
+
   return (
     <Space direction="vertical" style={{ width: "100%" }}>
       <Typography.Title level={3}>
@@ -175,10 +179,8 @@ const RegionTab: React.FC<
         </Space>
       </Row>
       <Line
-        data={(endpoint.data?.checks ?? []).sort((a, b) =>
-          a.time.getTime() - b.time.getTime()
-        ).map((c) => ({
-          time: c.time.toISOString(),
+        data={(checks.data ?? []).map((c) => ({
+          time: c.time.toLocaleString(),
           latency: c.latency,
         }))}
         padding="auto"
@@ -217,8 +219,11 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   const ctx = trpc.useContext();
   const [since, setSince] = useState(now - 60 * 60 * 1000);
   const deleteEndpoint = trpc.endpoint.delete.useMutation();
-  const endpoint = trpc.endpoint.get.useQuery({ since, endpointId }, {
+  const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
     staleTime: 10000,
+  });
+  const checks = trpc.check.list.useQuery({ since, endpointId }, {
+    enabled: !!endpointId,
   });
   const regions = trpc.region.list.useQuery();
 
@@ -258,14 +263,12 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   }
 
   const data = useMemo(() => {
-    return (endpoint.data?.checks ?? []).sort((a, b) =>
-      a.time.getTime() - b.time.getTime()
-    ).map((c) => ({
-      time: c.time.toISOString(),
+    return (checks.data ?? []).map((c) => ({
+      time: c.time.toLocaleString(),
       latency: c.latency,
       regionId: regions.data?.find((r) => r.id === c.regionId)?.name,
     }));
-  }, [endpoint.data]);
+  }, [checks.data]);
 
   const p50 = usePercentile(0.50, data.map((d) => d.latency));
   const p95 = usePercentile(0.95, data.map((d) => d.latency));
@@ -426,7 +429,11 @@ export default function EndpointPage() {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <Space size={48} direction="vertical" style={{ width: "100%" }}>
+      <Space
+        size={48}
+        direction="vertical"
+        style={{ width: "100%", marginBottom: 100 }}
+      >
         <Main endpointId={endpointId} teamSlug={teamSlug} />
         <Divider />
 

@@ -28,7 +28,7 @@ function MyApp(
     "/auth/sign-in",
     "/auth/sign-up",
     "/auth/sign-out",
-    "/_statuspages/[pageId]",
+    "/_statuspages/[slug]",
   ];
   const isPublicPage = publicPages.includes(router.pathname);
   return (

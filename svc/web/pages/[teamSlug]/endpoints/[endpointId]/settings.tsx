@@ -56,10 +56,9 @@ export default function Page() {
   const teamSlug = router.query.teamSlug as string;
   const endpointId = router.query.endpointId as string;
   console.log({ endpointId });
-  const since = useMemo(() => Date.now(), [new Date().getMinutes()]);
   const [form] = Form.useForm<FormData>();
 
-  const endpoint = trpc.endpoint.get.useQuery({ endpointId, since }, {
+  const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
     enabled: !!endpointId,
     refetchInterval: false,
     refetchOnReconnect: false,
@@ -81,8 +80,6 @@ export default function Page() {
       });
     }
   }, [endpoint.data]);
-
-  // const endpoint = trpc.endpoint.get.useQuery({ endpointId, since: Date.now() });
 
   const breadcrumbs = [
     {

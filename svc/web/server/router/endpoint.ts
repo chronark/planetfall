@@ -236,23 +236,9 @@ export const endpointRouter = t.router({
   }),
   get: t.procedure.input(z.object({
     endpointId: z.string(),
-    since: z.number().int().optional(),
-    regionId: z.string().optional(),
   })).query(async ({ input, ctx }) => {
     if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
-    }
-
-    const checkWhere = {};
-    if (input.since) {
-      // @ts-ignore
-      checkWhere["time"] = {
-        gte: new Date(input.since),
-      };
-    }
-    if (input.regionId) {
-      // @ts-ignore
-      checkWhere["regionId"] = input.regionId;
     }
 
     const endpoint = await ctx.db.endpoint.findUnique({
@@ -260,12 +246,6 @@ export const endpointRouter = t.router({
         id: input.endpointId,
       },
       include: {
-        checks: {
-          orderBy: {
-            time: "desc",
-          },
-          where: checkWhere,
-        },
         team: {
           include: {
             members: {

@@ -12,30 +12,26 @@ export const config = {
   ],
 };
 
-
 export default function middleware(req: NextRequest) {
   const url = req.nextUrl;
   // Get hostname of request (e.g. planetfall.io, demo.localhost:3000)
   const hostname = req.headers.get("host") || "planetfall.io";
 
-  console.log("Edge hostname", hostname)
+  console.log("Edge hostname", hostname);
 
   const subdomain = hostname
     .replace(`localhost:3000`, "")
     .replace(`planetfall.io`, "")
     .replace(process.env.VERCEL_URL ?? "", "")
-    .replace(/\.$/, "")
+    .replace(/\.$/, "");
 
-
-  console.log("Edge current subdomain:", subdomain)
+  console.log("Edge current subdomain:", subdomain);
 
   if (subdomain === "") {
-    return NextResponse.next()
+    return NextResponse.next();
   }
-  
-  url.pathname = `/_statuspages/${subdomain}`
-  console.log("Edge redirect to ->", url.href);
+
+  url.pathname = `/_statuspages/${subdomain}`;
+  console.log("Edge rewriting to ->", url.href);
   return NextResponse.rewrite(url);
-
-
 }

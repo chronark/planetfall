@@ -39,19 +39,20 @@ export const Item: React.FC<{ endpointId: string }> = (
   const since = useMemo(() => Date.now() - 10 * 60 * 1000, [
     new Date().getMinutes(),
   ]);
-  const endpoint = trpc.endpoint.get.useQuery({ endpointId, since });
+  const endpoint = trpc.endpoint.get.useQuery({ endpointId });
+  const checks = trpc.check.list.useQuery({ endpointId, since });
 
   const p50 = usePercentile(
     0.5,
-    (endpoint.data?.checks ?? []).map((c) => c.latency),
+    (checks.data ?? []).map((c) => c.latency),
   );
   const p95 = usePercentile(
     0.95,
-    (endpoint.data?.checks ?? []).map((c) => c.latency),
+    (checks.data ?? []).map((c) => c.latency),
   );
   const p99 = usePercentile(
     0.99,
-    (endpoint.data?.checks ?? []).map((c) => c.latency),
+    (checks.data ?? []).map((c) => c.latency),
   );
   return (
     <List.Item>
