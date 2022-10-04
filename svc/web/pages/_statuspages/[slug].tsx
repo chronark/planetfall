@@ -81,7 +81,6 @@ const Row: React.FC<
           seriesField="region"
           autoFit={true}
           smooth={true}
-          color="#3366FF"
           legend={{
             position: "bottom",
           }}
