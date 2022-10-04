@@ -76,3 +76,9 @@ variable "iron_session_secret" {
   type      = string
   sensitive = true
 }
+
+
+variable "sendgrid_api_key" {
+  type      = string
+  sensitive = true
+}
