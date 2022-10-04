@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { Button, Card, Form, Input, Typography } from "antd";
+import { useEffect, useState } from "react";
+import { Button, Card, Form, Input, message, Typography } from "antd";
 import { trpc } from "../../lib/hooks/trpc";
+import { useSession } from "../../components/auth";
 
 export default function Page() {
   const router = useRouter();
@@ -10,6 +11,25 @@ export default function Page() {
   const [form] = Form.useForm<{ email: string; name: string; otp: string }>();
   const requestSignUp = trpc.auth.requestSignUp.useMutation();
   const verifySignUp = trpc.auth.verifySignUp.useMutation();
+
+  useEffect(() => {
+    if (requestSignUp.error) {
+      message.error(requestSignUp.error.message);
+    }
+  }, [requestSignUp.error]);
+
+  useEffect(() => {
+    if (verifySignUp.error) {
+      message.error(verifySignUp.error.message);
+    }
+  }, [verifySignUp.error]);
+
+  const { session } = useSession();
+  useEffect(() => {
+    if (session.signedIn) {
+      router.push("/home");
+    }
+  }, [session.signedIn]);
 
   return (
     <div className="absolute inset-0 w-screen h-screen flex items-center justify-center">
@@ -30,7 +50,7 @@ export default function Page() {
                 name,
                 otp,
               });
-              router.push(redirect);
+              router.push("/home");
             }
             setLoading(false);
           }}

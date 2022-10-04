@@ -1,6 +1,5 @@
 import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
-import { randomUUID } from "crypto";
 import { env } from "process";
 import slugify from "slugify";
 import Stripe from "stripe";
@@ -39,6 +38,12 @@ export const teamRouter = t.router({
       trial_period_days: 14,
       items: [{ price: process.env.STRIPE_PLAN_PRO_PRICE_ID }],
     });
+    if (!subscription) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "unable to create subscription",
+      });
+    }
 
     return await ctx.db.team.create({
       data: {
@@ -47,8 +52,12 @@ export const teamRouter = t.router({
         plan: "PRO",
         name: input.name,
         slug: slugify(input.name, { lower: true, replacement: "_" }),
-        stripeCustomerId: randomUUID(),
+        stripeCustomerId: customer.id,
+        stripeSubscriptionId: subscription.id,
         stripeCurrentBillingPeriodStart: new Date(subscription.created * 1000),
+        stripeTrialExpires: subscription.trial_end
+          ? new Date(subscription.trial_end * 1000)
+          : null,
         retention: DEFAULT_QUOTA.FREE.retention,
         maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
         members: {

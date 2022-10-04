@@ -5,6 +5,7 @@ import { regionRouter } from "./region";
 import { authRouter } from "./auth";
 import { pageRouter } from "./page";
 import { checkRouter } from "./check";
+import { billingRouter } from "./billing";
 
 export const router = t.router({
   team: teamRouter,
@@ -13,6 +14,7 @@ export const router = t.router({
   region: regionRouter,
   auth: authRouter,
   check: checkRouter,
+  billing: billingRouter,
 });
 
 // export type definition of API

@@ -47,6 +47,7 @@ const RegionTab: React.FC<
   const [since, setSince] = useState(now - 60 * 60 * 1000);
   const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
     staleTime: 10000,
+    enabled: !!endpointId,
   });
   const checks = trpc.check.list.useQuery({ endpointId, since, regionId });
 

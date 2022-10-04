@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Button, Card, Form, Input, message, Typography } from "antd";
 import { trpc } from "../../lib/hooks/trpc";
+import { useSession } from "../../components/auth";
 
 export default function Page() {
   const router = useRouter();
@@ -23,6 +24,13 @@ export default function Page() {
     }
   }, [verifySignIn.error]);
 
+  const { session } = useSession();
+  useEffect(() => {
+    if (session.signedIn) {
+      router.push("/home");
+    }
+  }, [session.signedIn]);
+
   return (
     <div className="absolute inset-0 w-screen h-screen flex items-center justify-center">
       <Card title="Sign In">
@@ -41,7 +49,8 @@ export default function Page() {
                 identifier: email,
                 otp,
               });
-              router.push(redirect);
+
+              router.push("/home");
             }
             setLoading(false);
           }}

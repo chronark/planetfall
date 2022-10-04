@@ -125,6 +125,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
   const navigation = [
     { name: "Endpoints", href: `/${activeTeamSlug}/endpoints` },
     { name: "Pages", href: `/${activeTeamSlug}/pages` },
+    { name: "Settings", href: `/${activeTeamSlug}/settings` },
   ];
   const invalidteam = teams.data &&
     !teams.data.find((t) => t.team.slug === activeTeamSlug);
@@ -172,7 +173,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                                       })),
                                       { type: "group", label: "Teams" },
                                       ...(teams.data ?? []).filter((t) =>
-                                        t.team.personal
+                                        !t.team.personal
                                       ).map((t) => ({
                                         label: (
                                           <Link href={`/${t.team.slug}`}>

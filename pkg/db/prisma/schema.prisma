@@ -126,7 +126,7 @@ model Team {
   id   String @id
   plan Plan
 
-// Personal teams must not have any other members and are the only teams available for FREE tier
+  // Personal teams must not have any other members and are the only teams available for FREE tier
   personal Boolean
   name     String
   slug     String  @unique
@@ -134,6 +134,8 @@ model Team {
   stripeCustomerId                String    @unique
   stripeSubscriptionId            String?   @unique
   stripeCurrentBillingPeriodStart DateTime?
+  stripeCurrentBillingPeriodEnd   DateTime?
+  stripeTrialExpires              DateTime?
 
   members     Membership[]
   endpoints   Endpoint[]

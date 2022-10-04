@@ -67,9 +67,14 @@ export default async function webhookHandler(
           data: {
             plan: "PRO",
             stripeSubscriptionId: newSubscription.id,
-            stripeCurrentBillingPeriodStart: new Date(),
             retention: DEFAULT_QUOTA.PRO.retention,
             maxMonthlyRequests: DEFAULT_QUOTA.PRO.maxMonthlyRequests,
+            stripeCurrentBillingPeriodStart: new Date(
+              newSubscription.current_period_start * 1000,
+            ),
+            stripeCurrentBillingPeriodEnd: new Date(
+              newSubscription.current_period_end * 1000,
+            ),
           },
         });
         break;
@@ -118,6 +123,7 @@ export default async function webhookHandler(
             data: {
               plan: "FREE",
               maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
+              stripeSubscriptionId: null,
               retention: DEFAULT_QUOTA.FREE.retention,
             },
           });
@@ -128,6 +134,7 @@ export default async function webhookHandler(
             },
             data: {
               plan: "DISABLED",
+              stripeSubscriptionId: null,
             },
           });
         }
