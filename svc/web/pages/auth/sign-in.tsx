@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Button, Card, Form, Input, Typography } from "antd";
+import { Button, Card, Form, Input, message, Typography } from "antd";
 import { trpc } from "../../lib/hooks/trpc";
 
 export default function Page() {
@@ -11,9 +11,17 @@ export default function Page() {
   const requestSignIn = trpc.auth.requestSignIn.useMutation();
   const verifySignIn = trpc.auth.verifySignIn.useMutation();
 
-  // useEffect(()=>{
-  //   fetch("/api/x")
-  // },[])
+   useEffect(()=>{
+    if (requestSignIn.error){
+      message.error(requestSignIn.error.message)
+    }
+   },[requestSignIn.error])
+
+   useEffect(()=>{
+    if (verifySignIn.error){
+      message.error(verifySignIn.error.message)
+    }
+   },[verifySignIn.error])
 
   return (
     <div className="absolute inset-0 w-screen h-screen flex items-center justify-center">
