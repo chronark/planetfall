@@ -21,31 +21,6 @@ resource "vercel_project" "pinger" {
       target = ["production", "preview"]
 
     },
-    {
-      key    = "STRIPE_PUBLISHABLE_KEY"
-      value  = var.stripe_publishable_key
-      target = ["production"]
-    },
-    {
-      key    = "STRIPE_SECRET_KEY"
-      value  = var.stripe_secret_key
-      target = ["production"]
-    },
-    {
-      key    = "STRIPE_WEBHOOK_SECRET"
-      value  = var.stripe_webhook_secret
-      target = ["production"]
-    },
-    {
-      key    = "STRIPE_PLAN_PRO_PRICE_ID"
-      value  = var.stripe_plan_pro_price_id
-      target = ["production"]
-    },
-    {
-      key    = "IRON_SESSION_SECRET"
-      value  = var.iron_session_secret
-      target = ["production"]
-    },
 
 
 
@@ -96,6 +71,32 @@ resource "vercel_project" "web" {
       value = var.database_url,
     target = ["production", "preview"] },
 
+
+    {
+      key    = "STRIPE_PUBLISHABLE_KEY"
+      value  = var.stripe_publishable_key
+      target = ["production"]
+    },
+    {
+      key    = "STRIPE_SECRET_KEY"
+      value  = var.stripe_secret_key
+      target = ["production"]
+    },
+    {
+      key    = "STRIPE_WEBHOOK_SECRET"
+      value  = var.stripe_webhook_secret
+      target = ["production"]
+    },
+    {
+      key    = "STRIPE_PLAN_PRO_PRICE_ID"
+      value  = var.stripe_plan_pro_price_id
+      target = ["production"]
+    },
+    {
+      key    = "IRON_SESSION_SECRET"
+      value  = var.iron_session_secret
+      target = ["production"]
+    },
   ]
 
 }
