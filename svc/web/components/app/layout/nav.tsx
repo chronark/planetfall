@@ -197,6 +197,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                                   <ChevronUpDownIcon className="w-4 h-4" />
                                 </div>
                               </Dropdown>
+
                               {
                                 /* <Dropdown.Root>
                                 <Dropdown.Trigger className="flex items-center px-2 py-1 gap-2 text-slate-500 hover:text-slate-700">
@@ -305,6 +306,38 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                   </button>
 
                   {/* Profile dropdown */}
+                  <Dropdown
+                    trigger={["click"]}
+                    overlay={
+                      <Menu
+                        items={[
+                          {
+                            label: (
+                              <Button
+                                type="link"
+                                onClick={() => signOut()}
+                              >
+                                Sign Out
+                              </Button>
+                            ),
+                            key: "sign.out",
+                          },
+                        ]}
+                      />
+                    }
+                  >
+                    <div className="flex rounded-full bg-white focus:outline-none ">
+                      <span className="sr-only">Open user menu</span>
+                      <Image
+                        className="h-8 w-8 rounded-full"
+                        src={user?.image ??
+                          `https://ui-avatars.com/api/?size=32&name=${user?.name}`}
+                        alt=""
+                        width={32}
+                        height={32}
+                      />
+                    </div>
+                  </Dropdown>
                   {
                     /* <Menu as="div" className="relative ml-4 flex-shrink-0">
                     <div>

@@ -11,17 +11,17 @@ export default function Page() {
   const requestSignIn = trpc.auth.requestSignIn.useMutation();
   const verifySignIn = trpc.auth.verifySignIn.useMutation();
 
-   useEffect(()=>{
-    if (requestSignIn.error){
-      message.error(requestSignIn.error.message)
+  useEffect(() => {
+    if (requestSignIn.error) {
+      message.error(requestSignIn.error.message);
     }
-   },[requestSignIn.error])
+  }, [requestSignIn.error]);
 
-   useEffect(()=>{
-    if (verifySignIn.error){
-      message.error(verifySignIn.error.message)
+  useEffect(() => {
+    if (verifySignIn.error) {
+      message.error(verifySignIn.error.message);
     }
-   },[verifySignIn.error])
+  }, [verifySignIn.error]);
 
   return (
     <div className="absolute inset-0 w-screen h-screen flex items-center justify-center">
