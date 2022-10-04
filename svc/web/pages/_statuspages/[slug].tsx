@@ -39,69 +39,70 @@ const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
 };
 
 const Row: React.FC<
-  { endpoint: PageProps["endpoints"][0] }
+  {
+    endpoint: PageProps["endpoints"][0]
+    charts: number
+  }
 > = (
-  { endpoint },
+  { endpoint, charts },
 ): JSX.Element => {
-  const values = useMemo(() => endpoint.checks.map((c) => c.latency), [
-    endpoint.checks,
-  ]);
-  const min = useMemo(() => Math.min(...values), values);
-  const max = useMemo(() => Math.max(...values), values);
-  const p50 = usePercentile(0.5, values);
-  const p95 = usePercentile(0.95, values);
-  const p99 = usePercentile(0.99, values);
+    const values = useMemo(() => endpoint.checks.map((c) => c.latency), [
+      endpoint.checks,
+    ]);
+    const min = useMemo(() => Math.min(...values), values);
+    const max = useMemo(() => Math.max(...values), values);
+    const p50 = usePercentile(0.5, values);
+    const p95 = usePercentile(0.95, values);
+    const p99 = usePercentile(0.99, values);
 
-  return (
-    <li className="border-t sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded my-16  hover:border-primary-500 duration-1000">
-      <div className="flex-col gap-2 lg:flex-row items-start border-b border-slate-200  px-4 py-5 sm:px-6 flex justify-between md:items-center">
-        <div className="lg:w-1/2">
-          <span className="text-lg font-medium leading-6 text-slate-900">
-            {endpoint.name ?? endpoint.url}
-          </span>
+    return (
+      <li className="border-t sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded my-16  hover:border-primary-500 duration-1000">
+        <div className="flex-col gap-2 lg:flex-row items-start border-b border-slate-200  px-4 py-5 sm:px-6 flex justify-between md:items-center">
+          <div className="lg:w-1/2">
+            <span className="text-lg font-medium leading-6 text-slate-900">
+              {endpoint.name ?? endpoint.url}
+            </span>
+          </div>
+          <div className="lg:w-1/2 flex gap-2 sm:gap-4 xl:gap-6 justify-between flex-wrap md:flex-nowrap">
+            <Stat label="min" value={Math.round(min)} />
+            <Stat label="max" value={Math.round(max)} />
+            <Stat label="p50" value={Math.round(p50)} />
+            <Stat label="p95" value={Math.round(p95)} />
+            <Stat label="p99" value={Math.round(p99)} />
+          </div>
         </div>
-        <div className="lg:w-1/2 flex gap-2 sm:gap-4 xl:gap-6 justify-between flex-wrap md:flex-nowrap">
-          <Stat label="min" value={Math.round(min)} />
-          <Stat label="max" value={Math.round(max)} />
-          <Stat label="p50" value={Math.round(p50)} />
-          <Stat label="p95" value={Math.round(p95)} />
-          <Stat label="p99" value={Math.round(p99)} />
-        </div>
-      </div>
 
-      <div className="px-4 pt-10 pb-5 sm:px-6">
-        <Line
-          style={{ height: "100px" }}
-          data={endpoint.checks.map((c) => ({
-            ...c,
-            time: new Date(c.time).toLocaleString(),
-          }))}
-          xField="time"
-          yField="latency"
-          seriesField="region"
-          autoFit={true}
-          smooth={true}
-          legend={{
-            position: "bottom",
-          }}
-          yAxis={{
-            // title: { text: "Latency [ms]" },
-            tickCount: 0,
-          }}
-          xAxis={{
-            tickCount: 5,
-            label: {
-              formatter: (text) => new Date(text).toLocaleTimeString(),
-            },
-          }}
-          tooltip={{
-            title: (d) => new Date(d).toLocaleString(),
-          }}
-        />
-      </div>
-    </li>
-  );
-};
+        <div className="px-4 pt-10 pb-5 sm:px-6">
+          <Line
+            style={{ height: charts > 3 ? "100px" : "150px" }}
+            data={endpoint.checks.map((c) => ({
+              ...c,
+              time: new Date(c.time).toLocaleString(),
+            }))}
+            xField="time"
+            yField="latency"
+            seriesField="region"
+            autoFit={true}
+            smooth={true}
+            legend={{
+              position: "bottom",
+            }}
+
+            yAxis={false}
+            xAxis={{
+              tickCount: 5,
+              label: {
+                formatter: (text) => new Date(text).toLocaleTimeString(),
+              },
+            }}
+            tooltip={{
+              title: (d) => new Date(d).toLocaleString(),
+            }}
+          />
+        </div>
+      </li>
+    );
+  };
 export default function Page(
   { data }: { data?: PageProps },
 ) {
@@ -143,7 +144,7 @@ export default function Page(
       <main className="container mx-auto md:py-16 ">
         <ol className="sm:px-4">
           {data.endpoints.map((endpoint) => (
-            <Row key={endpoint.url} endpoint={endpoint} />
+            <Row key={endpoint.url} endpoint={endpoint} charts={data.endpoints.length ?? 0} />
           ))}
         </ol>
       </main>
