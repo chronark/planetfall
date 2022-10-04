@@ -68,4 +68,6 @@ variable "stripe_publishable_key" {
   type=string
 }
 
-
+variable "stripe_plan_pro_price_id" {
+  type=string
+}

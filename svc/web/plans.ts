@@ -19,5 +19,3 @@ export const DEFAULT_QUOTA: Record<Plan, Quota> = {
     maxMonthlyRequests: null,
   },
 };
-
-export const STRIPE_PLAN_PRO_PRICE_ID = "price_1LpCUaKIlgKKsiL6137CrJhx";

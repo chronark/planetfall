@@ -36,6 +36,11 @@ resource "vercel_project" "pinger" {
       value  = var.stripe_webhook_secret
       target = ["production"]
     },
+    {
+      key    = "STRIPE_PLAN_PRO_PRICE_ID"
+      value  = var.stripe_plan_pro_price_id
+      target = ["production"]
+    },
 
 
 

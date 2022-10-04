@@ -6,7 +6,7 @@ import slugify from "slugify";
 import Stripe from "stripe";
 import { z } from "zod";
 import Input from "../../components/form/input";
-import { DEFAULT_QUOTA, STRIPE_PLAN_PRO_PRICE_ID } from "../../plans";
+import { DEFAULT_QUOTA } from "../../plans";
 import { t } from "../trpc";
 
 export const teamRouter = t.router({
@@ -37,7 +37,7 @@ export const teamRouter = t.router({
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
       trial_period_days: 14,
-      items: [{ price: STRIPE_PLAN_PRO_PRICE_ID }],
+      items: [{ price: process.env.STRIPE_PLAN_PRO_PRICE_ID }],
     });
 
     return await ctx.db.team.create({
