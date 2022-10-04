@@ -32,42 +32,47 @@ variable "vercel_regions" {
     "gru1",
     "hkg1",
     "hnd1",
-     "iad1",
-     "icn1",
-     "kix1",
-     "lhr1",
-     "pdx1",
-     "sfo1",
-     "sin1",
-     "syd1",
+    "iad1",
+    "icn1",
+    "kix1",
+    "lhr1",
+    "pdx1",
+    "sfo1",
+    "sin1",
+    "syd1",
   ]
 }
 
 variable "upstash_email" {
-  type =string
+  type      = string
   sensitive = true
 }
 variable "upstash_api_key" {
-  type =string
+  type      = string
   sensitive = true
 }
 
-variable "stripe_webhook_secret"{
-  type=string
+variable "stripe_webhook_secret" {
+  type      = string
   sensitive = true
 }
 
 
-variable "stripe_secret_key"{
-  type=string
+variable "stripe_secret_key" {
+  type      = string
   sensitive = true
 }
 
 
 variable "stripe_publishable_key" {
-  type=string
+  type = string
 }
 
 variable "stripe_plan_pro_price_id" {
-  type=string
+  type = string
+}
+
+variable "iron_session_secret" {
+  type      = string
+  sensitive = true
 }

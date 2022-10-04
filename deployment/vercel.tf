@@ -41,6 +41,11 @@ resource "vercel_project" "pinger" {
       value  = var.stripe_plan_pro_price_id
       target = ["production"]
     },
+    {
+      key    = "IRON_SESSION_SECRET"
+      value  = var.iron_session_secret
+      target = ["production"]
+    },
 
 
 
