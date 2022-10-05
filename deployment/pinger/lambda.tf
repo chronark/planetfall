@@ -12,13 +12,16 @@ variable "region" {
   type = string
 }
 
-variable "environment"{
-  type = string
+variable "environment" {
+  type        = string
   description = "production or preview"
 }
 
-variable "zip"{
-  type = string
+variable "zip" {
+  type        = object({
+    path = string
+    hash = string
+  })
   description = "path to the lambda zip path"
 }
 
@@ -26,15 +29,16 @@ variable "zip"{
 
 
 resource "aws_lambda_function" "pinger" {
-  function_name = "pinger-${var.region}-${var.environment}"
-  description = "Proxy latency checks from a specific region"
-  publish = true
-  filename      = var.zip
+  function_name    = "pinger-${var.region}-${var.environment}"
+  description      = "Proxy latency checks from a specific region"
+  publish          = true
+  filename         = var.zip.path
+  source_code_hash = var.zip.hash
 
   handler = "index.handler"
   runtime = "nodejs16.x"
   timeout = 30
-  
+
 
 
 
