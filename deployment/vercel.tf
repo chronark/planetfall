@@ -1,39 +1,39 @@
-resource "vercel_project" "pinger" {
-  for_each                   = var.vercel_regions
-  name                       = "pinger-${each.value}"
-  team_id                    = var.vercel_team_id
-  serverless_function_region = each.value
-  framework                  = "nextjs"
+# resource "vercel_project" "pinger" {
+#   for_each                   = var.vercel_regions
+#   name                       = "pinger-${each.value}"
+#   team_id                    = var.vercel_team_id
+#   serverless_function_region = each.value
+#   framework                  = "nextjs"
 
 
-  git_repository = {
-    repo = "chronark/planetfall"
-    type = "github"
-  }
+#   git_repository = {
+#     repo = "chronark/planetfall"
+#     type = "github"
+#   }
 
-  build_command  = "cd ../.. && npx turbo run build --filter=pinger"
-  root_directory = "svc/pinger"
+#   build_command  = "cd ../.. && npx turbo run build --filter=pinger"
+#   root_directory = "svc/pinger"
 
-  environment = [
-    {
-      key    = "AUTH_TOKEN"
-      value  = var.auth_token
-      target = ["production", "preview"]
+#   environment = [
+#     {
+#       key    = "AUTH_TOKEN"
+#       value  = var.auth_token
+#       target = ["production", "preview"]
 
-    },
-
-
-
-  ]
-}
+#     },
 
 
-resource "vercel_project_domain" "pinger" {
-  for_each   = vercel_project.pinger
-  project_id = each.value.id
-  team_id    = var.vercel_team_id
-  domain     = "planetfall-pinger-${each.value.serverless_function_region}.vercel.app"
-}
+
+#   ]
+# }
+
+
+# resource "vercel_project_domain" "pinger" {
+#   for_each   = vercel_project.pinger
+#   project_id = each.value.id
+#   team_id    = var.vercel_team_id
+#   domain     = "planetfall-pinger-${each.value.serverless_function_region}.vercel.app"
+# }
 
 
 
