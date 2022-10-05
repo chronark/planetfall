@@ -18,12 +18,6 @@ resource "aws_ecs_task_definition" "scheduler" {
       "name" : "scheduler",
       "image" : aws_ecr_repository.scheduler.repository_url,
       "essential" : true,
-      "portMappings" : [
-        {
-          "containerPort" : 3000,
-          "hostPort" : 3000
-        }
-      ],
       environment: [
         {
           name: "DATABASE_URL",
@@ -69,6 +63,11 @@ resource "aws_ecs_service" "scheduler" {
   task_definition = aws_ecs_task_definition.scheduler.arn
   launch_type     = "FARGATE"
   desired_count   = 1
+  force_new_deployment = true
+  deployment_circuit_breaker {
+    enable = true
+    rollback = true
+  }
 
   network_configuration {
     subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}", "${aws_default_subnet.default_subnet_c.id}"]
