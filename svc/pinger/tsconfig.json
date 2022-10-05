@@ -1,12 +1,8 @@
 {
-  "extends": "@planetfall/tsconfig/nextjs.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"],
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@planetfall/tsconfig/base.json",
+  "exclude": ["dist"],
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@planetfall/svc/web/*": ["./*"],
-      "@trpc/server/*": ["../../../node_modules/@trpc/server/*"]
-    }
+    "outDir": "dist"
   }
 }

@@ -8,6 +8,10 @@ terraform {
       source  = "upstash/upstash"
       version = "1.1.5"
     }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "4.33.0"
+    }
   }
 }
 
@@ -22,6 +26,4 @@ provider "upstash" {
 provider "vercel" {
   api_token = var.vercel_token
 }
-
-
 
