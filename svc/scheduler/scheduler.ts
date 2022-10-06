@@ -6,35 +6,67 @@ export class Scheduler {
   private clearIntervals: Record<string, () => void>;
   private db: PrismaClient;
   private updatedAt: number = 0;
-  private logger: Logger
+  private logger: Logger;
 
   constructor({ logger }: { logger: Logger }) {
     this.db = new PrismaClient();
     this.clearIntervals = {};
-    this.logger = logger
+    this.logger = logger;
   }
 
   public async syncEndpoints(): Promise<void> {
-    this.logger.info("Syncing endpoints")
-    const now = Date.now();
-    const endpoints = await this.db.endpoint.findMany({
+    this.logger.info("Syncing endpoints");
+    const now = new Date();
+
+    const want: Record<string, Endpoint> = {};
+
+    const teams = await this.db.team.findMany({
       where: {
-        active: true,
+        plan: {
+          notIn: ["DISABLED"]
+        }
+      },
+      include: {
+        endpoints: true,
       },
     });
 
-    const wantIds = endpoints.reduce((acc, { id }) => {
-      acc[id] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
+    for (const t of teams) {
+      if (t.maxMonthlyRequests) {
+        const since = t.stripeCurrentBillingPeriodStart ??
+          new Date(now.getUTCFullYear(), now.getUTCMonth());
+        const usage = await this.db.check.count({
+          where: {
+            time: {
+              gte: since,
+            },
+            endpoint: {
+              teamId: t.id,
+            },
+          },
+        });
+        if (usage > t.maxMonthlyRequests) {
+          this.logger.info("team has exceeded monthly requests", {
+            teamId: t.id,
+            maxMonthlyRequests: t.maxMonthlyRequests,
+            since,
+            usage,
+          });
+          break;
+        }
+      }
+      for (const e of t.endpoints) {
+        want[e.id] = e;
+      }
+    }
 
     for (const endpointId of Object.keys(this.clearIntervals)) {
-      if (!wantIds[endpointId]) {
+      if (!want[endpointId]) {
         this.removeEndpoint(endpointId);
       }
     }
 
-    for (const endpoint of endpoints) {
+    for (const endpoint of Object.values(want)) {
       if (endpoint.id in this.clearIntervals) {
         // if it was updated since the last time
         if (endpoint.updatedAt.getTime() > this.updatedAt) {
@@ -46,7 +78,7 @@ export class Scheduler {
       }
     }
 
-    this.updatedAt = now;
+    this.updatedAt = now.getTime();
   }
 
   public async addEndpoint(endpointId: string): Promise<void> {
@@ -88,7 +120,10 @@ export class Scheduler {
         if (!region) {
           throw new Error(`region not found: ${regionId}`);
         }
-        this.logger.info("testing endpoint", {endpointId:endpoint.id,regionId: region.id});
+        this.logger.info("testing endpoint", {
+          endpointId: endpoint.id,
+          regionId: region.id,
+        });
 
         // Date object in UTC timezone
         const time = new Date(new Date().toUTCString());

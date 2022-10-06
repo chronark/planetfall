@@ -4,7 +4,7 @@ import Illustration from "../../public/landing/pricing-illustration.svg";
 import Link from "next/link";
 import { CheckIcon, MinusIcon } from "@heroicons/react/24/solid";
 
-type Tier = "Free" | "Pro" | "Enterprise";
+type Tier = "Personal" | "Pro" | "Enterprise";
 
 const tiers: {
   name: Tier;
@@ -14,12 +14,13 @@ const tiers: {
   cta: string;
 }[] = [
   {
-    name: "Free",
+    name: "Personal",
     href: "#",
     monthlyPrice: 0,
-    description: "No Credit Card required",
-    cta: "Start for free",
+    description: "Pay only for what you use",
+    cta: "No credit card requried",
   },
+
   {
     name: "Pro",
     href: "#",
@@ -47,16 +48,23 @@ const sections: {
     features: [
       {
         name: "Included requests",
-        tiers: { Free: "100k", Pro: "1 million", Enterprise: "Custom" },
+        tiers: { Personal: "100k", Pro: "1 million", Enterprise: "Custom" },
       },
       {
         name: "Additional requests",
-        tiers: { Free: false, Pro: "$10 / million", Enterprise: "Custom" },
+        tiers: {
+          Personal: "$1 / 100,000",
+          Pro: "$1 / 100,000",
+          Enterprise: "Custom",
+        },
       },
-      { name: "Teams", tiers: { Free: false, Pro: true, Enterprise: true } },
+      {
+        name: "Teams",
+        tiers: { Personal: false, Pro: true, Enterprise: true },
+      },
       {
         name: "Integrated Domains",
-        tiers: { Free: false, Pro: true, Enterprise: true },
+        tiers: { Personal: false, Pro: true, Enterprise: true },
       },
     ],
   },
@@ -65,15 +73,15 @@ const sections: {
     features: [
       {
         name: "Number of endpoints",
-        tiers: { Free: "5", Pro: "100", Enterprise: "∞" },
+        tiers: { Personal: "5", Pro: "100", Enterprise: "∞" },
       },
       {
         name: "Minimum Frequency",
-        tiers: { Free: "10s", Pro: "1s", Enterprise: "1s" },
+        tiers: { Personal: "10s", Pro: "1s", Enterprise: "1s" },
       },
       {
         name: "Timeout",
-        tiers: { Free: "5s", Pro: "30s", Enterprise: "Custom" },
+        tiers: { Personal: "5s", Pro: "30s", Enterprise: "Custom" },
       },
     ],
   },
@@ -82,23 +90,29 @@ const sections: {
     features: [
       {
         name: "Data Retention",
-        tiers: { Free: "24h", Pro: "7 days", Enterprise: "90 days" },
+        tiers: { Personal: "24h", Pro: "7 days", Enterprise: "90 days" },
       },
       {
         name: "Audit Logs",
-        tiers: { Free: false, Pro: false, Enterprise: true },
+        tiers: { Personal: false, Pro: false, Enterprise: true },
       },
     ],
   },
   {
     name: "Alerts",
     features: [
-      { name: "Webhooks", tiers: { Free: true, Pro: true, Enterprise: true } },
-      { name: "Slack", tiers: { Free: true, Pro: true, Enterprise: true } },
-      { name: "Email", tiers: { Free: false, Pro: true, Enterprise: true } },
+      {
+        name: "Webhooks",
+        tiers: { Personal: true, Pro: true, Enterprise: true },
+      },
+      { name: "Slack", tiers: { Personal: true, Pro: true, Enterprise: true } },
+      {
+        name: "Email",
+        tiers: { Personal: false, Pro: true, Enterprise: true },
+      },
       {
         name: "Opsgenie",
-        tiers: { Free: false, Pro: false, Enterprise: true },
+        tiers: { Personal: false, Pro: false, Enterprise: true },
       },
     ],
   },
@@ -116,7 +130,7 @@ export const Pricing: React.FC = (): JSX.Element => {
             Transparent pricing
           </p>
           <p className="mx-auto mt-5 max-w-prose text-xl text-slate-500">
-            Start for free, then upgrade as you grow.
+            Start for Personal, then upgrade as you grow.
           </p>
         </div>
         <div className="mt-12">
@@ -130,7 +144,7 @@ export const Pricing: React.FC = (): JSX.Element => {
                       {tier.name}
                     </h2>
                     <p className="mt-4">
-                      {tier.monthlyPrice >= 0
+                      {tier.monthlyPrice > 0
                         ? (
                           <>
                             <span className="text-4xl font-bold tracking-tight text-slate-900">

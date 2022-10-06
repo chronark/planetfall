@@ -115,13 +115,12 @@ export default async function webhookHandler(
         if (!team) {
           throw new Error("team does not exist");
         }
-        if (team.personal) {
+        if (team.plan === "PERSONAL") {
           await db.team.update({
             where: {
               stripeCustomerId: subscription.customer.toString(),
             },
             data: {
-              plan: "FREE",
               maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
               stripeSubscriptionId: null,
               retention: DEFAULT_QUOTA.FREE.retention,

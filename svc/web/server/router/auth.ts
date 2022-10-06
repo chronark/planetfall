@@ -183,7 +183,9 @@ export const authRouter = t.router({
     };
     await ctx.req.session.save();
     return {
-      redirect: `/${user.teams.find((t) => t.team.personal)?.team.slug}`,
+      redirect: `/${
+        user.teams.find((t) => t.team.plan === "PERSONAL")?.team.slug
+      }`,
     };
   }),
   verifySignUp: t.procedure.input(z.object({
@@ -226,6 +228,10 @@ export const authRouter = t.router({
       email: input.identifier,
       name: input.name,
     });
+    const subscription = await stripe.subscriptions.create({
+      customer: customer.id,
+      items: [{ price: process.env.STRIPE_PLAN_PERSONAL_PRICE_ID }],
+    });
 
     const slug = slugify(input.name, { lower: true });
     const user = await ctx.db.user.create({
@@ -239,13 +245,19 @@ export const authRouter = t.router({
             team: {
               create: {
                 id: newId("team"),
-                personal: true,
-                plan: "FREE",
+                plan: "PERSONAL",
                 name: input.name,
                 slug,
                 stripeCustomerId: customer.id,
-                retention: DEFAULT_QUOTA.FREE.retention,
-                maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
+                stripeSubscriptionId: subscription.id,
+                stripeCurrentBillingPeriodStart: new Date(
+                  subscription.current_period_start * 1000,
+                ),
+                stripeCurrentBillingPeriodEnd: new Date(
+                  subscription.current_period_end * 1000,
+                ),
+                retention: DEFAULT_QUOTA.PERSONAL.retention,
+                maxMonthlyRequests: DEFAULT_QUOTA.PERSONAL.maxMonthlyRequests,
               },
             },
           },

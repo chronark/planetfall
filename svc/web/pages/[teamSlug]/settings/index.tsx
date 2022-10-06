@@ -66,7 +66,7 @@ export default function SettingsPage() {
               disabled={!team.data}
               onClick={handleCheckout}
             >
-              {team.data?.stripeTrialExpires || team.data?.plan === "FREE"
+              {team.data?.stripeTrialExpires || team.data?.plan === "PERSONAL"
                 ? "Upgrade to PRO"
                 : "Change Plan"}
             </Button>,
@@ -95,8 +95,8 @@ export default function SettingsPage() {
                 <dd className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
                   {`${usage.data?.usage.toLocaleString()}
                   ${
-                    team.data?.plan === "FREE"
-                      ? `/ ${DEFAULT_QUOTA.FREE.maxMonthlyRequests?.toLocaleString()}`
+                    team.data?.plan === "PERSONAL"
+                      ? `/ ${DEFAULT_QUOTA.PERSONAL.maxMonthlyRequests?.toLocaleString()}`
                       : ""
                   }`}
                 </dd>

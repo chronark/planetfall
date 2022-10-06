@@ -48,18 +48,22 @@ export const teamRouter = t.router({
     return await ctx.db.team.create({
       data: {
         id: newId("team"),
-        personal: false,
         plan: "PRO",
         name: input.name,
         slug: slugify(input.name, { lower: true, replacement: "_" }),
         stripeCustomerId: customer.id,
         stripeSubscriptionId: subscription.id,
-        stripeCurrentBillingPeriodStart: new Date(subscription.created * 1000),
+        stripeCurrentBillingPeriodStart: new Date(
+          subscription.current_period_start * 1000,
+        ),
+        stripeCurrentBillingPeriodEnd: new Date(
+          subscription.current_period_end * 1000,
+        ),
         stripeTrialExpires: subscription.trial_end
           ? new Date(subscription.trial_end * 1000)
           : null,
-        retention: DEFAULT_QUOTA.FREE.retention,
-        maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
+        retention: DEFAULT_QUOTA.PRO.retention,
+        maxMonthlyRequests: DEFAULT_QUOTA.PRO.maxMonthlyRequests,
         members: {
           create: {
             user: {

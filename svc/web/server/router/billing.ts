@@ -22,10 +22,13 @@ export const billingRouter = t.router({
     if (!team) {
       throw new TRPCError({ code: "NOT_FOUND", message: "team not found" });
     }
+    const now = new Date();
+    const startOfMonth = new Date(now.getUTCFullYear(), now.getUTCMonth());
+
     const usage = await ctx.db.check.count({
       where: {
         time: {
-          gte: team.stripeCurrentBillingPeriodStart ?? undefined,
+          gte: team.stripeCurrentBillingPeriodStart ?? startOfMonth,
         },
         endpoint: {
           teamId: input.teamId,

@@ -118,8 +118,9 @@ model User {
 
 enum Plan {
   DISABLED // teams can not be free and are therefore disabled
-  FREE // only possible for personal teams
-  PRO
+  FREE // only when a user removes their subscription
+  PERSONAL // No flat fee, just pay as you go
+  PRO // With teams and other goodies, with flat fee + payg
   ENTERPRISE
 }
 
@@ -127,13 +128,11 @@ model Team {
   id   String @id
   plan Plan
 
-  // Personal teams must not have any other members and are the only teams available for FREE tier
-  personal Boolean
-  name     String
-  slug     String  @unique
+  name String
+  slug String @unique
 
   stripeCustomerId                String    @unique
-  stripeSubscriptionId            String?   @unique
+  stripeSubscriptionId            String?    @unique
   stripeCurrentBillingPeriodStart DateTime?
   stripeCurrentBillingPeriodEnd   DateTime?
   stripeTrialExpires              DateTime?

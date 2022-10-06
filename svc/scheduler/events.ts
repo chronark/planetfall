@@ -10,9 +10,9 @@ const validation = z.object({
 export class Events {
   private scheduler: Scheduler;
   private kafka: Kafka;
-  private logger: Logger
+  private logger: Logger;
 
-  constructor({ scheduler, logger }: { scheduler: Scheduler, logger: Logger }) {
+  constructor({ scheduler, logger }: { scheduler: Scheduler; logger: Logger }) {
     // const broker = process.env.KAFKA_BROKER
     // if (!broker) {
     //   throw new Error("KAFKA_BROKER is not defined")
@@ -27,7 +27,6 @@ export class Events {
     //   throw new Error("KAFKA_PASSWORD is not defined")
     // }
     this.logger = logger;
-
 
     this.scheduler = scheduler;
 

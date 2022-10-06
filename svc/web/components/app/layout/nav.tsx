@@ -160,7 +160,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                                     items={[
                                       { type: "group", label: "Personal" },
                                       ...(teams.data ?? []).filter((t) =>
-                                        t.team.personal
+                                        t.team.plan === "PERSONAL"
                                       ).map((t) => ({
                                         label: (
                                           <Link href={`/${t.team.slug}`}>
@@ -173,7 +173,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                                       })),
                                       { type: "group", label: "Teams" },
                                       ...(teams.data ?? []).filter((t) =>
-                                        !t.team.personal
+                                        t.team.plan !== "PERSONAL"
                                       ).map((t) => ({
                                         label: (
                                           <Link href={`/${t.team.slug}`}>
