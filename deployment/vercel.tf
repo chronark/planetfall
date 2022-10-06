@@ -97,6 +97,11 @@ resource "vercel_project" "web" {
       value  = var.stripe_plan_pro_price_id
       target = ["production"]
     },
+     {
+      key    = "STRIPE_PLAN_PERSONAL_PRICE_ID"
+      value  = var.stripe_plan_personal_price_id
+      target = ["production"]
+    },
     {
       key    = "IRON_SESSION_SECRET"
       value  = var.iron_session_secret

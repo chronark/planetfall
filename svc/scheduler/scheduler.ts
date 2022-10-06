@@ -23,8 +23,8 @@ export class Scheduler {
     const teams = await this.db.team.findMany({
       where: {
         plan: {
-          notIn: ["DISABLED"]
-        }
+          notIn: ["DISABLED"],
+        },
       },
       include: {
         endpoints: true,

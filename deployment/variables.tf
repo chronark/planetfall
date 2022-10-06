@@ -49,6 +49,10 @@ variable "stripe_plan_pro_price_id" {
   type = string
 }
 
+variable "stripe_plan_personal_price_id" {
+  type = string
+}
+
 variable "iron_session_secret" {
   type      = string
   sensitive = true

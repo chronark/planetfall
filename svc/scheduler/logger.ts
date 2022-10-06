@@ -9,8 +9,8 @@ export interface Logger {
 export function newLogger(opts?: { dataset: string }): Logger {
   const logger = new tslog.Logger();
   logger.setSettings({
-    colorizePrettyLogs: false
-  })
+    colorizePrettyLogs: false,
+  });
 
   if (opts?.dataset) {
     const token = process.env.AXIOM_TOKEN;
