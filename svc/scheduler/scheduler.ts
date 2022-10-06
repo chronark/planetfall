@@ -1,17 +1,21 @@
 import { Endpoint, PrismaClient, Region } from "@planetfall/db";
 import { newId } from "@planetfall/id";
+import { Logger } from "./logger";
 export class Scheduler {
   // Map of endpoint id -> clearInterval function
   private clearIntervals: Record<string, () => void>;
   private db: PrismaClient;
   private updatedAt: number = 0;
+  private logger: Logger
 
-  constructor() {
+  constructor({ logger }: { logger: Logger }) {
     this.db = new PrismaClient();
     this.clearIntervals = {};
+    this.logger = logger
   }
 
   public async syncEndpoints(): Promise<void> {
+    this.logger.info("Syncing endpoints")
     const now = Date.now();
     const endpoints = await this.db.endpoint.findMany({
       where: {
@@ -46,7 +50,7 @@ export class Scheduler {
   }
 
   public async addEndpoint(endpointId: string): Promise<void> {
-    console.log("adding new endpoint", endpointId);
+    this.logger.info("adding new endpoint", { endpointId });
     const endpoint = await this.db.endpoint.findUnique({
       where: { id: endpointId },
     });
@@ -63,7 +67,7 @@ export class Scheduler {
   }
 
   public removeEndpoint(endpointId: string): void {
-    console.log("removing endpoint", endpointId);
+    this.logger.info("removing endpoint", { endpointId });
 
     if (endpointId in this.clearIntervals) {
       this.clearIntervals[endpointId]();
@@ -75,7 +79,7 @@ export class Scheduler {
     endpoint: Endpoint,
   ): Promise<void> {
     try {
-      console.log("testing endpoint", endpoint.id);
+      this.logger.info("testing endpoint", { endpointId: endpoint.id });
 
       await Promise.all((endpoint.regions as string[]).map(async (regionId) => {
         const region = await this.db.region.findUnique({
@@ -84,7 +88,7 @@ export class Scheduler {
         if (!region) {
           throw new Error(`region not found: ${regionId}`);
         }
-        console.log("testing endpoint", endpoint.id, "from", region.id);
+        this.logger.info("testing endpoint", {endpointId:endpoint.id,regionId: region.id});
 
         // Date object in UTC timezone
         const time = new Date(new Date().toUTCString());
@@ -123,7 +127,7 @@ export class Scheduler {
         });
       }));
     } catch (err) {
-      console.error(err);
+      this.logger.error((err as Error).message);
     }
   }
 }
