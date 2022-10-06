@@ -185,7 +185,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                                       { type: "divider" },
                                       {
                                         label: <CreateNewTeam />,
-                                        key: "create-new",
+                                        key: "createnew",
                                       },
                                     ]}
                                   />
