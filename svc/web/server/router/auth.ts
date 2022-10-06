@@ -183,9 +183,7 @@ export const authRouter = t.router({
     };
     await ctx.req.session.save();
     return {
-      redirect: `/${
-        user.teams.find((t) => t.team.plan === "PERSONAL")?.team.slug
-      }`,
+      redirect: `/${user.teams.find((t) => t.team.personal)?.team.slug}`,
     };
   }),
   verifySignUp: t.procedure.input(z.object({
@@ -245,6 +243,7 @@ export const authRouter = t.router({
             team: {
               create: {
                 id: newId("team"),
+                personal: true,
                 plan: "PERSONAL",
                 name: input.name,
                 slug,

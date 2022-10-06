@@ -51,6 +51,7 @@ export const Item: React.FC<{ pageId: string }> = (
         subTitle={page.data?.slug}
         extra={[
           <Popconfirm
+            disabled={!page.data}
             icon={null}
             key="delete"
             title={
@@ -69,9 +70,10 @@ export const Item: React.FC<{ pageId: string }> = (
             <Button>Delete</Button>
           </Popconfirm>,
           <Button
+            disabled={!page.data}
             key="goto"
             type="primary"
-            href={`${protocol}://${page.data?.id}.${host}           `}
+            href={`${protocol}://${page.data?.slug}.${host}           `}
           >
             View
           </Button>,

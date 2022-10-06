@@ -48,8 +48,14 @@ const RegionTab: React.FC<
   const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
     enabled: !!endpointId,
   });
+
   const checks = trpc.check.list.useQuery({ endpointId, since, regionId }, {
-    refetchInterval: endpoint.data?.interval ?? undefined,
+    staleTime: endpoint.data?.interval
+      ? endpoint.data.interval * 1000
+      : undefined,
+    refetchInterval: endpoint.data?.interval
+      ? endpoint.data.interval * 1000
+      : undefined,
   });
 
   const annotations: Annotation[] = [];
@@ -226,6 +232,12 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   });
   const checks = trpc.check.list.useQuery({ since, endpointId }, {
     enabled: !!endpointId,
+    staleTime: endpoint.data?.interval
+      ? endpoint.data.interval * 1000
+      : undefined,
+    refetchInterval: endpoint.data?.interval
+      ? endpoint.data.interval * 1000
+      : undefined,
   });
   const regions = trpc.region.list.useQuery();
 

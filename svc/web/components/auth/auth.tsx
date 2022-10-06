@@ -9,6 +9,7 @@ import React, {
 import JSXStyle from "styled-jsx/style";
 import { trpc } from "../../lib/hooks/trpc";
 import type { Membership, Team, User as PUser } from "@planetfall/db";
+import { resolveSoa } from "dns";
 
 export type User = PUser & { teams: (Membership & { team: Team })[] };
 
@@ -20,10 +21,8 @@ export type Session = {
 
 const Context = createContext<{
   session: Session;
-  user: User | null;
 }>({
   session: { signedIn: false, loading: true },
-  user: null,
 });
 
 export type AuthProviderProps = {
@@ -32,24 +31,42 @@ export type AuthProviderProps = {
 export const AuthProvider: React.FC<PropsWithChildren> = (
   { children },
 ): JSX.Element => {
-  const [session, setSession] = useState({ signedIn: false, loading: true });
+  const [session, setSession] = useState<Session>({
+    signedIn: false,
+    loading: true,
+  });
 
-  const [user, setUser] = useState<User | null>(null);
   const ctx = trpc.useContext();
   useEffect(() => {
     const run = async () => {
-      const s = await ctx.auth.session.fetch();
-      setSession({ ...s, loading: false });
-      if (s.userId) {
-        const u = await ctx.auth.user.fetch({ userId: s.userId });
-        setUser(u);
+      const res = await fetch("/api/v1/auth/session");
+      if (!res.ok) {
+        return;
+      }
+      const json = await res.json() as {
+        session: {
+          user: { id: string; token: string; expries: number };
+        } | null;
+      };
+      console.log({ json });
+      if (json.session) {
+        setSession({
+          userId: json.session.user.id,
+          signedIn: true,
+          loading: false,
+        });
+        if (json.session.user.id) {
+          ctx.auth.user.prefetch({ userId: json.session.user.id });
+        }
+      } else {
+        setSession({ signedIn: false, loading: false });
       }
     };
 
     run();
   }, []);
   return (
-    <Context.Provider value={{ session, user }}>
+    <Context.Provider value={{ session }}>
       {children}
     </Context.Provider>
   );
@@ -65,6 +82,7 @@ export function useSession() {
 
 export function useUser() {
   const ctx = useContext(Context);
+  console.log("session", ctx.session);
   const { data: user, ...meta } = trpc.auth.user.useQuery(
     { userId: ctx.session.userId! },
     { enabled: ctx.session.signedIn },

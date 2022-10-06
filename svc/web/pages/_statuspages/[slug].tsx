@@ -10,9 +10,6 @@ import { Collapse, Popover } from "antd";
 import classNames from "classnames";
 import { GetStaticPropsContext } from "next";
 import React, { useEffect, useMemo, useState } from "react";
-import JSXStyle from "styled-jsx/style";
-import superjson from "superjson";
-import { SuperJSONResult } from "superjson/dist/types";
 import { usePercentile } from "../../lib/hooks/percentile";
 import { Area, Heatmap, Line, TinyArea } from "@ant-design/plots";
 import Link from "next/link";
@@ -97,6 +94,9 @@ const Row: React.FC<
           tooltip={{
             title: (d) => new Date(d).toLocaleString(),
           }}
+          lineStyle={{
+            lineWidth: 1.5,
+          }}
         />
       </div>
     </li>
@@ -135,7 +135,7 @@ export default function Page(
         )}
       >
         <div className="flex items-center justify-center w-full">
-          <h1 className="text-4xl font-bold pt-4 tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
             {data.name}
           </h1>
         </div>

@@ -3,6 +3,8 @@ import "tailwindcss/tailwind.css";
 import { trpc } from "lib/hooks/trpc";
 import PlausibleProvider from "next-plausible";
 import "styles/ant.css";
+import { PolarisVizProvider } from "@shopify/polaris-viz";
+
 import {
   AuthProvider,
   RedirectToSignIn,
@@ -10,6 +12,7 @@ import {
   SignedIn,
   SignedOut,
 } from "../components/auth";
+import "@shopify/polaris-viz/build/esm/styles.css";
 import { ConfigProvider } from "antd";
 import { useRouter } from "next/router";
 

@@ -127,12 +127,13 @@ enum Plan {
 model Team {
   id   String @id
   plan Plan
+  personal Boolean
 
   name String
   slug String @unique
 
   stripeCustomerId                String    @unique
-  stripeSubscriptionId            String?    @unique
+  stripeSubscriptionId            String?   @unique
   stripeCurrentBillingPeriodStart DateTime?
   stripeCurrentBillingPeriodEnd   DateTime?
   stripeTrialExpires              DateTime?

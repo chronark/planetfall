@@ -48,6 +48,7 @@ export const teamRouter = t.router({
     return await ctx.db.team.create({
       data: {
         id: newId("team"),
+        personal: false,
         plan: "PRO",
         name: input.name,
         slug: slugify(input.name, { lower: true, replacement: "_" }),

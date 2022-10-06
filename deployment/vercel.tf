@@ -47,6 +47,7 @@ resource "vercel_project" "web" {
 
   build_command  = "cd ../.. && npx turbo run build --filter=web"
   root_directory = "svc/web"
+  serverless_function_region = "iad1"
 
   git_repository = {
     repo = "chronark/planetfall"
@@ -187,3 +188,17 @@ resource "vercel_project_domain" "wildcard" {
 
 
 
+
+
+data "vercel_project_directory" "planetfall" {
+  path = "../"
+}
+
+resource "vercel_deployment" "prod" {
+  project_id  = vercel_project.web.id
+  team_id = var.vercel_team_id
+  files       = data.vercel_project_directory.planetfall.files
+  path_prefix = data.vercel_project_directory.planetfall.path
+  production  = true
+
+}
