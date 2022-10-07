@@ -173,7 +173,7 @@ export default function EndpointsPage() {
             </button> */
             }
             <Link
-              href=""
+              href={`/${teamSlug}/endpoints/new`}
               className="transition-all hover:cursor-pointer whitespace-nowrap md:px-4 py-2 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
             >
               Create new endpoint
