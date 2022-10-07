@@ -27,7 +27,6 @@ import {
 } from "antd";
 import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
 import React, { useEffect, useMemo, useState } from "react";
-import { Check, Endpoint } from "@planetfall/db";
 import JSXStyle from "styled-jsx/style";
 import { Annotation } from "@antv/g2plot";
 import { usePercentile } from "@planetfall/svc/web/lib/hooks/percentile";
