@@ -14,7 +14,7 @@ export const endpointRouter = t.router({
     body: z.string().optional(),
     degradedAfter: z.number().int().positive().optional(),
     teamSlug: z.string(),
-    interval: z.number().int().gte(1000).lte(60 * 60*1000),
+    interval: z.number().int().gte(1000).lte(60 * 60 * 1000),
     regions: z.array(z.string()),
     distribution: z.enum([Distribution.ALL, Distribution.RANDOM]),
   })).mutation(async ({ input, ctx }) => {
