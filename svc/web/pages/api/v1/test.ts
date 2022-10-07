@@ -1,21 +1,8 @@
 import type { NextRequest } from "next/server";
-import { z } from "zod";
 
-const validation = z.object({
-  success: z.number().min(0).max(1),
-});
-
-export default async (req: NextRequest) => {
+export default async (_req: NextRequest) => {
   try {
-    const v = validation.safeParse(req.body);
-    if (!v.success) {
-      console.error(v.error.message, "got:", req.body);
-      return new Response(
-        v.error.message,
-        { status: 400 },
-      );
-    }
-    if (Math.random() <= v.data.success) {
+    if (Math.random() <= 0.9) {
       return new Response(JSON.stringify({ ok: true }), { status: 200 });
     } else {
       return new Response(

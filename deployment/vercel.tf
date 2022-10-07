@@ -47,7 +47,7 @@ resource "vercel_project" "web" {
 
   build_command  = "cd ../.. && npx turbo run build --filter=web"
   root_directory = "svc/web"
-  serverless_function_region = "iad1"
+  serverless_function_region = "fra1"
 
   git_repository = {
     repo = "chronark/planetfall"

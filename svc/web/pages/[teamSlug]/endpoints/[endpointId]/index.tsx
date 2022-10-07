@@ -553,7 +553,9 @@ export default function EndpointPage() {
     label: endpointId,
     href: `/${teamSlug}/endpoints/${endpointId}`,
   }]);
-  const endpoint = trpc.endpoint.get.useQuery({ endpointId });
+  const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
+    enabled: !!endpointId,
+  });
   const regions = trpc.region.list.useQuery();
   useEffect(() => {
     if (endpoint.data) {

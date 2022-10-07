@@ -47,9 +47,13 @@ export async function handler(
     // }, v.data.body.timeout);
 
     const start = Date.now();
+    console.log("Sending body: ", v.data.body);
     const { status } = await fetch(v.data.url, {
       method: v.data.method,
-      headers: v.data.headers ?? undefined,
+      headers: {
+        "User-Agent": "planetfall.io",
+        ...v.data.headers,
+      },
       body: v.data.body,
       // signal: abortController.signal,
     });
