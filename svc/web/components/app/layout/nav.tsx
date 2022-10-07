@@ -129,7 +129,6 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
   ];
   const invalidteam = teams.data &&
     !teams.data.find((t) => t.team.slug === activeTeamSlug);
-  console.log({ teams });
   return (
     <div className="relative min-h-screen">
       <Disclosure as="header" className="bg-white shadow border-b">
@@ -219,7 +218,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                                       "bg-white dark:bg-slate-800",
                                     )}
                                   >
-                                    {teams.data?.map((team) => (
+                                    {teams.data?.maπ((team) => (
                                       <Dropdown.Item
                                         key={team.teamId}
                                         className={classNames(

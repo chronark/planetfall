@@ -18,7 +18,7 @@ const tiers: {
     href: "#",
     monthlyPrice: 0,
     description: "Pay only for what you use",
-    cta: "No credit card requried",
+    cta: "Start for free",
   },
 
   {
@@ -53,8 +53,8 @@ const sections: {
       {
         name: "Additional requests",
         tiers: {
-          Personal: "$1 / 100,000",
-          Pro: "$1 / 100,000",
+          Personal: "$1 / 10,000",
+          Pro: "$1 / 10,000",
           Enterprise: "Custom",
         },
       },
@@ -81,7 +81,7 @@ const sections: {
       },
       {
         name: "Timeout",
-        tiers: { Personal: "5s", Pro: "30s", Enterprise: "Custom" },
+        tiers: { Personal: "5s", Pro: "10s", Enterprise: "Custom" },
       },
     ],
   },

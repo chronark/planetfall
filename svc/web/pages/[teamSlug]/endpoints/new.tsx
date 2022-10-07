@@ -35,66 +35,65 @@ import {
 import { InformationCircleIcon, MinusIcon } from "@heroicons/react/24/solid";
 import { Option } from "antd/lib/mentions";
 import TextArea from "antd/lib/input/TextArea";
+import { useForm, useWatch } from "react-hook-form";
+import { Loading } from "@planetfall/svc/web/components/loading";
+import Link from "next/link";
 const gutter = 16;
 
 type FormData = {
+  name: string;
   url: string;
   method: "POST" | "GET" | "PUT" | "DELETE";
-  headers?: { key: string; value: string }[];
+  headers?: string;
   body?: string;
   degradedAfter?: number;
-  failedAfter: number;
   interval: number;
+  distribution: "ALL" | "RANDOM";
   regions: string[];
 };
-type RequiredMark = boolean | "optional";
 
 export default function Page() {
   const { user } = useUser();
   const router = useRouter();
-
+  const teamSlug = router.query.teamSlug as string;
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    setError,
+    getValues,
+    watch,
+  } = useForm<
+    FormData
+  >({ reValidateMode: "onSubmit" });
   const breadcrumbs = user?.name ? [] : [];
+
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
 
   const createEndpoint = trpc.endpoint.create.useMutation();
   const regions = trpc.region.list.useQuery();
-  const [form] = Form.useForm<FormData>();
-  const [requiredMark, setRequiredMarkType] = useState<RequiredMark>(
-    "optional",
-  );
 
-  const onRequiredTypeChange = (
-    { requiredMarkValue }: { requiredMarkValue: RequiredMark },
-  ) => {
-    setRequiredMarkType(requiredMarkValue);
-  };
   const [loading, setLoading] = useState(false);
 
   async function submit(
-    {
-      url,
-      method,
-      headers,
-      body,
-      degradedAfter,
-      failedAfter,
-      interval,
-      regions,
-    }: FormData,
+    data: FormData,
   ) {
+    if (selectedRegions.length === 0) {
+      setError("regions", { message: "Select at least 1 region" });
+    }
     setLoading(true);
     try {
+      console.log({ ...data, selectedRegions });
       const res = await createEndpoint.mutateAsync({
-        method,
-        url,
-        body,
-        headers: headers?.reduce((acc, { key, value }) => {
-          acc[key] = value;
-          return acc;
-        }, {} as Record<string, string>),
-        degradedAfter,
-        failedAfter,
-        interval,
-        regions,
+        name: data.name,
+        method: data.method,
+        url: data.url,
+        body: data.body,
+        headers: data.headers ? JSON.parse(data.headers) : undefined,
+        degradedAfter: data.degradedAfter || undefined,
+        interval: data.interval * 1000,
+        regions: selectedRegions,
+        distribution: data.distribution,
         teamSlug: router.query.teamSlug as string,
       });
       router.push(`/${router.query.teamSlug}/endpoints/${res.id}`);
@@ -105,204 +104,404 @@ export default function Page() {
       setLoading(false);
     }
   }
+
+  const formValues = watch();
+  const monthlyRequests =
+    (formValues.distribution === "ALL" ? selectedRegions.length : 1) * 30 * 24 *
+      60 * 60 / formValues.interval || 0;
+
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <div>
-        <Card
-          title="New Endpoint"
-          extra="Create a new API and start tracking its latency"
-        >
-          <Form
-            onFinish={submit}
-            form={form}
-            layout="horizontal"
-            initialValues={{
-              method: "POST",
-              degradedAfter: 100,
-              failedAfter: 250,
-              interval: 15,
-              regions: [],
-            }}
-            onValuesChange={onRequiredTypeChange}
-            requiredMark={requiredMark}
-          >
-            <Typography.Title level={3}>URL</Typography.Title>
+      <form className="space-y-8 divide-y divide-slate-200">
+        <div className="space-y-8  sm:space-y-5 lg:space-y-24">
+          <div className="space-y-6 sm:space-y-5">
+            <div>
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Name
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+                Enter a name to make it easier to find this endpoint later
+              </p>
+            </div>
 
-            <Form.Item
-              name="url"
-              rules={[{ required: true, type: "url" }]}
-            >
-              <Input
-                addonBefore={
-                  <Form.Item name="method" noStyle>
-                    <Select style={{ width: "auto" }}>
-                      <Option value="POST">POST</Option>
-                      <Option value="GET">GET</Option>
-                      <Option value="PUT">PUT</Option>
-                      <Option value="DELETE">DELETE</Option>
-                    </Select>
-                  </Form.Item>
-                }
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
-            <Space />
-            <Divider />
-            <Space />
+            <div className="space-y-6 sm:space-y-5">
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                >
+                  Name
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <div className="max-w-lg">
+                    <input
+                      type="text"
+                      {...register("name", {
+                        required: true,
+                      })}
+                      placeholder="My API"
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3  w-full ${
+                        errors.url ? "border-red-500" : "border-slate-700"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    />
+                  </div>
+                  {errors.name
+                    ? (
+                      <p className="mt-2 text-sm text-red-500">
+                        {errors.name.message || "A Name is required"}
+                      </p>
+                    )
+                    : null}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-6 sm:space-y-5">
+            <div>
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                URL
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+                Enter the url of your endpoint and select a HTTP method
+              </p>
+            </div>
 
-            <Form.List name="headers">
-              {(fields, { add, remove }) => (
-                <>
-                  <Row justify="space-between">
-                    <Typography.Title level={3}>HTTP Headers</Typography.Title>
-                    <Button
-                      type="dashed"
-                      icon={<PlusOutlined />}
-                      onClick={() => add()}
+            <div className="space-y-6 sm:space-y-5">
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <label
+                  htmlFor="method"
+                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                >
+                  Method
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <div className="max-w-lg">
+                    <select
+                      {...register("method", { required: true })}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     >
-                    </Button>
-                  </Row>
-
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Row key={key} gutter={gutter} justify="space-between">
-                      <Col flex="auto">
-                        <Row gutter={gutter}>
-                          <Col
-                            style={{ display: "inline-block", width: "50%" }}
-                          >
-                            <Form.Item
-                              {...restField}
-                              name={[name, "key"]}
-                              rules={[{
-                                required: true,
-                                message: "Missing header key",
-                              }]}
-                            >
-                              <Input placeholder="Key" />
-                            </Form.Item>
-                          </Col>
-                          <Col
-                            style={{ display: "inline-block", width: "50%" }}
-                          >
-                            <Form.Item
-                              {...restField}
-                              name={[name, "value"]}
-                              rules={[{
-                                required: true,
-                                message: "Missing header value",
-                              }]}
-                            >
-                              <Input placeholder="Value" />
-                            </Form.Item>
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col style={{}}>
-                        <Button
-                          type="link"
-                          icon={<MinusIcon />}
-                          onClick={() =>
-                            remove(name)}
-                        />
-                      </Col>
-                    </Row>
-                  ))}
-                </>
-              )}
-            </Form.List>
-            <Space />
-            <Divider />
-            <Space />
-            <Typography.Title level={3}>Request Body</Typography.Title>
-            <Typography.Paragraph>
-              Make sure to add the correct <Tag>Content-Type</Tag>{" "}
-              header when using a request body.
-            </Typography.Paragraph>
-
-            <Form.Item name="body">
-              <TextArea allowClear rows={5} />
-            </Form.Item>
-            <Space />
-            <Divider />
-            <Space />
-            <Typography.Title level={3}>Health Checks</Typography.Title>
-            <Typography.Paragraph>
-              Set thresholds for your API response times.
-            </Typography.Paragraph>
-
-            <Row gutter={gutter}>
-              <Col flex="auto">
-                <Form.Item
-                  name="degradedAfter"
-                  label="Degraded"
-                  required
-                  tooltip="After this time the request is considered degraded."
+                      <option value="POST">POST</option>
+                      <option value="GET">GET</option>
+                      <option value="PUT">PUT</option>
+                      <option value="DELETE">DELETE</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <label
+                  htmlFor="url"
+                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
-                  <InputNumber addonAfter="ms" min={1} max={10000} />
-                </Form.Item>
-              </Col>
-              <Col>
-                <Form.Item
-                  name="failedAfter"
-                  label="Failed"
-                  required
-                  tooltip="After this time the request is considered failed."
+                  URL
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <div className="max-w-lg">
+                    <input
+                      type="text"
+                      {...register("url", {
+                        required: true,
+                        validate: (v) => z.string().url().safeParse(v).success,
+                      })}
+                      placeholder="https://example.com"
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3  w-full ${
+                        errors.url ? "border-red-500" : "border-slate-700"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    />
+                  </div>
+                  {errors.url
+                    ? (
+                      <p className="mt-2 text-sm text-red-500">
+                        {errors.url.message || "A URL is required"}
+                      </p>
+                    )
+                    : null}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6 pt-8 sm:space-y-5 sm:pt-10">
+            <div>
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Request
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+                Configure what is being sent to your API
+              </p>
+            </div>
+
+            <div className="space-y-6 sm:space-y-5">
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <label
+                  htmlFor="body"
+                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
-                  <InputNumber addonAfter="ms" min={1} max={10000} />
-                </Form.Item>
-              </Col>
-            </Row>
+                  Body
+                </label>
+                <div className="mt-1 max-w-lg sm:col-span-2 sm:mt-0">
+                  <textarea
+                    rows={3}
+                    {...register("body")}
+                    className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3  w-full ${
+                      errors.body ? "border-red-500" : "border-slate-700"
+                    } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    defaultValue={""}
+                  />
+                </div>
+              </div>
 
-            <Space />
-            <Divider />
-            <Space />
-            <Typography.Title level={3}>Interval and Regions</Typography.Title>
-            <Typography.Paragraph>
-              How frequently should we fetch your API? And where should we fetch
-              it from?
-            </Typography.Paragraph>
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <label
+                  htmlFor="last-name"
+                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                >
+                  Headers
+                </label>
+                <div className="mt-1 max-w-lg sm:col-span-2 sm:mt-0">
+                  <textarea
+                    rows={3}
+                    {...register("headers", {
+                      validate: (v) => v ? JSON.parse(v) : true,
+                    })}
+                    placeholder={`{\n  "Authorization": "Bearer XXX"\n}`}
+                    className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3  w-full ${
+                      errors.headers ? "border-red-500" : "border-slate-700"
+                    } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    defaultValue={""}
+                  />
+                  {errors.headers
+                    ? (
+                      <p className="mt-2 text-sm text-red-500">
+                        {errors.headers.message || "Headers are invalid"}
+                      </p>
+                    )
+                    : null}
+                  <p className="mt-2 text-sm text-slate-500">
+                    Headers can be configured using JSON notation
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-            <Form.Item name="interval" label="Interval" required>
-              <InputNumber addonAfter="s" min={15} max={60 * 60} />
-            </Form.Item>
+          <div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
+            <div>
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Assertions
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+                Define validations and latency thresholds
+              </p>
+            </div>
+            <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <div className="pr-16">
+                  <label
+                    htmlFor="last-name"
+                    className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
+                  >
+                    Degraded After
+                  </label>
+                  <p className="mt-1 max-w-2xl text-sm font-normal text-slate-500">
+                    After this time the API is considered degraded and alerts
+                    can be sent.
+                  </p>
+                </div>
+                <div className="mt-1 max-w-lg flex sm:col-span-2 sm:mt-0">
+                  <div className="group relative flex flex-grow items-stretch focus-within:z-10">
+                    <input
+                      type="number"
+                      {...register("degradedAfter", {
+                        valueAsNumber: true,
+                        min: 1,
+                      })}
+                      placeholder="600"
+                      className="block w-full rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:py-3  border-slate-900 border border-r-0 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none "
+                    />
+                  </div>
+                  <div className="relative -ml-px inline-flex items-center space-x-2 rounded-r border border-l-0 border-slate-900 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 ">
+                    <span>ms</span>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <div className="pr-16">
+                  <label
+                    htmlFor="response-body"
+                    className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
+                  >
+                    Response body validation
+                  </label>
+                </div>
+                <p className="bg-sky-50 border rounded border-primary-500 px-4 py-2">
+                  Coming soon
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
+            <div>
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Regions
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+                Select the regions from where we should call your API. We will
+                either call your API from all regions in parallel, or one region
+                at a time.
+              </p>
+            </div>
+            <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
+              <div className="pt-6 sm:pt-5">
+                <div role="group" aria-labelledby="label-email">
+                  <div className="sm:grid sm:items-baseline sm:gap-4">
+                    <div className="mt-4 sm:col-span-2 sm:mt-0">
+                      <fieldset className="w-full gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4  lg:grid-cols-6">
+                        {regions.data?.map((r) => (
+                          <button
+                            type="button"
+                            key={r.id}
+                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${
+                              selectedRegions.includes(r.id)
+                                ? "border-slate-900 bg-slate-50"
+                                : "border-slate-300"
+                            }`}
+                            onClick={() => {
+                              if (selectedRegions.includes(r.id)) {
+                                setSelectedRegions(
+                                  selectedRegions.filter((id) => id !== r.id),
+                                );
+                              } else {
+                                setSelectedRegions([...selectedRegions, r.id]);
+                              }
+                            }}
+                          >
+                            {r.name}
+                          </button>
+                        ))}
+                      </fieldset>
+                      {errors.regions
+                        ? (
+                          <p className="mt-2 text-sm text-red-500">
+                            {errors.regions.message ||
+                              "Select at least one region"}
+                          </p>
+                        )
+                        : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
+            <div>
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Interval
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+                How frequently should we call your API
+              </p>
+            </div>
+            <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <div className="pr-16">
+                  <label
+                    htmlFor="last-name"
+                    className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
+                  >
+                    Interval
+                  </label>
+                </div>
+                <div className="mt-1 max-w-lg flex sm:col-span-2 sm:mt-0">
+                  <div className="group relative flex flex-grow items-stretch focus-within:z-10">
+                    <input
+                      type="number"
+                      {...register("interval", {
+                        valueAsNumber: true,
+                        min: 1,
+                      })}
+                      defaultValue={15}
+                      className="block w-full rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:py-3  border-slate-900 border border-r-0 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none "
+                    />
+                  </div>
+                  <div className="relative -ml-px inline-flex items-center space-x-2 rounded-r border border-l-0 border-slate-900 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 ">
+                    <span>s</span>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <label
+                  htmlFor="distribution"
+                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                >
+                  Distribution
+                  <p className="mt-1 max-w-2xl text-sm font-normal text-slate-500">
+                    Choose whether we should send a request from every selected
+                    region at once, or only from one.
+                  </p>
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <div className="max-w-lg">
+                    <select
+                      {...register("distribution", { required: true })}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      defaultValue="ALL"
+                    >
+                      <option value="RANDOM">Round Robin</option>
+                      <option value="ALL">All</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
+            <div>
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Summary
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+              </p>
+            </div>
+            <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <div className="pr-16">
+                  <label
+                    htmlFor="last-name"
+                    className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
+                  >
+                    Expected monthly requests
+                  </label>
+                </div>
+                <div className="mt-1 max-w-lg flex sm:col-span-2 sm:mt-0">
+                  <div className=" block cursor-not-allowed w-full rounded transition-all  md:px-4 md:py-3  border-slate-900 border duration-300 ease-in-out focus:outline-none ">
+                    {monthlyRequests.toLocaleString()}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            <Form.Item
-              name="regions"
-              required
-              label="Regions"
+        <div className="pt-5">
+          <div className="flex justify-end gap-8">
+            <Link
+              href={`/${teamSlug}/endpoints`}
+              className="transition-all hover:cursor-pointer whitespace-nowrap md:px-4 py-2 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug duration-300 ease-in-out   text-slate-900 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group "
             >
-              {
-                /* <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-                Check all
-              </Checkbox> */
-              }
-              <Checkbox.Group style={{ width: "100%" }}>
-                <Row>
-                  {regions.data?.map((region) => (
-                    <Col key={region.id} span={8}>
-                      <Checkbox value={region.id}>{region.name}</Checkbox>
-                    </Col>
-                  ))}
-                </Row>
-              </Checkbox.Group>
-            </Form.Item>
-
-            <Space />
-            <Divider />
-            <Space />
-            <Button
-              type="primary"
-              htmlType="button"
-              loading={loading}
-              onClick={() => {
-                form.submit();
-              }}
+              Cancel
+            </Link>
+            <button
+              type="button"
+              onClick={handleSubmit(submit)}
+              className="transition-all hover:cursor-pointer whitespace-nowrap md:px-4 py-2 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
             >
-              Create
-            </Button>
-          </Form>
-        </Card>
-      </div>
+              {loading ? <Loading /> : "Create"}
+            </button>
+          </div>
+        </div>
+      </form>
     </Layout>
   );
 }

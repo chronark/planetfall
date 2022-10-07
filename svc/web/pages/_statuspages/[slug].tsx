@@ -20,7 +20,7 @@ export type PageProps = {
   endpoints: {
     name: string | null;
     url: string;
-    checks: { time: number; latency: number; region: string }[];
+    checks: { time: number; latency: number | null; region: string }[];
   }[];
 };
 
@@ -43,9 +43,16 @@ const Row: React.FC<
 > = (
   { endpoint, charts },
 ): JSX.Element => {
-  const values = useMemo(() => endpoint.checks.map((c) => c.latency), [
-    endpoint.checks,
-  ]);
+  const values = useMemo(
+    () =>
+      endpoint.checks.filter((c) => typeof c.latency === "number").map((c) =>
+        c.latency
+      ) as number[],
+    [
+      endpoint.checks,
+    ],
+  );
+
   const min = useMemo(() => Math.min(...values), values);
   const max = useMemo(() => Math.max(...values), values);
   const p50 = usePercentile(0.5, values);
@@ -105,8 +112,6 @@ const Row: React.FC<
 export default function Page(
   { data }: { data?: PageProps },
 ) {
-  console.log({ data });
-
   let [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -175,7 +180,6 @@ export function getStaticPaths() {
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {
   const slug = ctx.params?.slug;
-  console.log("Getting static props for page", slug);
   if (!slug || Array.isArray(slug)) {
     return {
       props: {},

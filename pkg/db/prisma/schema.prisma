@@ -58,11 +58,19 @@ model Region {
 //   endpointId String?
 // }
 
+enum Distribution {
+  // Each check triggers 1 random region
+  RANDOM
+
+  // Each check triggers all selected regions
+  ALL
+}
+
 model Endpoint {
   id        String   @id
   method    Method
   name      String?
-  team      Team     @relation(fields: [teamId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
   url       String
   createdAt DateTime @default(now())
@@ -73,14 +81,80 @@ model Endpoint {
   active        Boolean
   // Milliseconds
   degradedAfter Int?
-  failedAfter   Int?
-  regions       Json
+
+  // Timeout after which we cancel the request
+  // This counts as a failed request
+  timeout      Int?
+  distribution Distribution
+  // string[] of region Ids
+  regions      Json
   // json encoded map
-  headers       Json?
-  body          String?
+  headers      Json?
+  body         String?
+
+  statusAssertions  StatusAssertion[]
+  headerAssertions  HeaderAssertion[]
+  latencyAssertions LatencyAssertion[]
 
   statusPages StatusPage[]
   checks      Check[]
+}
+
+enum StatusComparison {
+  EQ
+  NEQ
+  GT
+  GTE
+  LT
+  LTE
+}
+
+model StatusAssertion {
+  endpoint   Endpoint         @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  endpointId String
+  comparison StatusComparison
+  target     Int
+
+  @@id([endpointId, comparison, target])
+}
+
+enum HeaderComparison {
+  EQ
+  NEQ
+  GT
+  GTE
+  LT
+  LTE
+  CONTAINS
+  NOT_CONTAINS
+  EMPTY
+  NOT_EMPTY
+}
+
+model HeaderAssertion {
+  endpoint   Endpoint         @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  endpointId String
+  comparison HeaderComparison
+  key        String
+  target     String
+
+  @@id([endpointId, comparison, key, target])
+}
+
+enum LatencyComparison {
+  GT
+  GTE
+  LT
+  LTE
+}
+
+model LatencyAssertion {
+  endpoint   Endpoint          @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  endpointId String
+  comparison LatencyComparison
+  target     Int
+
+  @@id([endpointId, comparison, target])
 }
 
 model VerificationRequest {
@@ -125,8 +199,8 @@ enum Plan {
 }
 
 model Team {
-  id   String @id
-  plan Plan
+  id       String  @id
+  plan     Plan
   personal Boolean
 
   name String
@@ -174,10 +248,19 @@ model Check {
   id         String   @id
   endpoint   Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
   endpointId String
-  latency    Int
+  latency    Int?
   time       DateTime
-  status     Int
-  regionId   String
+
+  // Populated if there is an error, like assertion error or timeout
+  error  String?
+  // The HTTP response status
+  status Int?
+  // Raw http response body
+  body   String?
+
+  // http response headers as {key: value} object
+  headers  Json?
+  regionId String
 
   @@index([endpointId])
 }

@@ -8,6 +8,14 @@
 
  FROM node:18 as installer
  WORKDIR /planetfall
+
+ARG version
+ENV PLANETFALL_VERSION ${version}
+
+
+ARG build
+ENV PLANETFALL_BUILD ${build}
+
  COPY .gitignore .gitignore
  COPY --from=builder /planetfall/out/json/ .
  COPY --from=builder /planetfall/out/yarn.lock ./yarn.lock

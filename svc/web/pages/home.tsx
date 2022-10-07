@@ -12,7 +12,7 @@ export default function Page() {
   const router = useRouter();
 
   if (user) {
-    // router.push(`/${slugify(user?.name, { lower: true })}`);
+    router.push(`/${slugify(user?.name, { lower: true })}`);
   }
 
   return (

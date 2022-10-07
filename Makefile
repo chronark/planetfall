@@ -1,7 +1,13 @@
+
+VERSION := $(shell git describe --tags --always)
+BUILDTIME := $(shell date -u '+%Y%m%d')
+
 deploy-scheduler:
 	aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 750095769533.dkr.ecr.us-east-1.amazonaws.com
 	docker build \
 		-t planetfall/scheduler:latest \
+		--build-arg version=${VERSION} \
+		--build-arg build=${BUILDTIME} \
 		-f=svc/scheduler/Dockerfile \
 		--platform=linux/amd64 \
 		.

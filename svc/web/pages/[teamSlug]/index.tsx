@@ -21,7 +21,6 @@ export default function Teampage() {
   // router.push(router.asPath + "/endpoints");
   const team = trpc.team.get.useQuery({ teamSlug }, { enabled: !!teamSlug });
 
-  console.log(JSON.stringify(team.data, null, 2));
   return (
     <Layout breadcrumbs={[]}>
       <Space direction="vertical" size={32} style={{ width: "100%" }}>

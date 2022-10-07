@@ -26,6 +26,8 @@ export function newLogger(opts?: { dataset: string }): Logger {
         fileName: log.fileName,
         functionName: log.functionName,
         level: log.logLevel,
+        version: process.env.PLANETFALL_VERSION,
+        build: process.env.PLANETFALL_BUILD,
         message: log.argumentsArray[0],
         ...(log.argumentsArray.length > 1 && log.argumentsArray[1]
           ? log.argumentsArray[1]

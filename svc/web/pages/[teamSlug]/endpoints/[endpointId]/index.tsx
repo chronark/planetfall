@@ -22,7 +22,6 @@ import {
   Spin,
   Statistic,
   Switch,
-  Table,
   Tabs,
   Typography,
 } from "antd";
@@ -81,43 +80,27 @@ const RegionTab: React.FC<
       },
     );
   }
-  if (endpoint.data?.failedAfter) {
-    annotations.push(
-      {
-        type: "regionFilter",
-        start: ["min", endpoint.data.failedAfter],
-        end: ["max", "max"],
-        color: "#ef4444",
-      },
-      {
-        type: "line",
-        text: {
-          content: "Failed",
-        },
-        start: ["min", endpoint.data.failedAfter],
-        end: ["max", endpoint.data.failedAfter],
-        style: {
-          stroke: "#ef4444",
-          lineDash: [8, 8],
-        },
-      },
-    );
-  }
+
+  const latencies = useMemo(
+    () =>
+      (checks.data ?? []).filter((c) => typeof c.latency === "number").map(
+        (c) => c.latency,
+      ) as number[],
+    [checks.data],
+  );
 
   const p50 = usePercentile(
     0.50,
-    (checks.data ?? []).map((d) => d.latency),
+    latencies,
   );
   const p95 = usePercentile(
     0.95,
-    (checks.data ?? []).map((d) => d.latency),
+    latencies,
   );
   const p99 = usePercentile(
     0.99,
-    (checks.data ?? []).map((d) => d.latency),
+    latencies,
   );
-
-  console.log("data", JSON.stringify(checks.data, null, 2));
 
   return (
     <Space direction="vertical" style={{ width: "100%" }}>
@@ -242,22 +225,6 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   const regions = trpc.region.list.useQuery();
 
   const annotations: Annotation[] = [];
-  if (endpoint.data?.failedAfter) {
-    annotations.push({
-      type: "line",
-      start: ["min", endpoint.data.failedAfter],
-      end: ["max", endpoint.data.failedAfter],
-      style: {
-        stroke: "#ef4444",
-        lineWidth: 1.5,
-        lineDash: [8, 8],
-      },
-      text: {
-        offsetY: -4,
-        content: "Failed",
-      },
-    });
-  }
 
   if (endpoint.data?.degradedAfter) {
     annotations.push({
@@ -284,9 +251,27 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
     }));
   }, [checks.data]);
 
-  const p50 = usePercentile(0.50, data.map((d) => d.latency));
-  const p95 = usePercentile(0.95, data.map((d) => d.latency));
-  const p99 = usePercentile(0.99, data.map((d) => d.latency));
+  const latencies = useMemo(
+    () =>
+      (checks.data ?? []).filter((c) => typeof c.latency === "number").map(
+        (c) => c.latency,
+      ) as number[],
+    [checks.data],
+  );
+
+  const p50 = usePercentile(
+    0.50,
+    latencies,
+  );
+  const p95 = usePercentile(
+    0.95,
+    latencies,
+  );
+  const p99 = usePercentile(
+    0.99,
+    latencies,
+  );
+
   return (
     <>
       <Row justify="space-between">

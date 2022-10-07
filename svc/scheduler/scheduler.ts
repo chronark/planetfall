@@ -93,7 +93,7 @@ export class Scheduler {
     this.testEndpoint(endpoint);
     const intervalId = setInterval(
       () => (this.testEndpoint(endpoint)),
-      endpoint.interval * 1000,
+      endpoint.interval,
     );
     this.clearIntervals[endpoint.id] = () => clearInterval(intervalId);
   }

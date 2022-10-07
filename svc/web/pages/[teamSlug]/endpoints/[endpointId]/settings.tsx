@@ -44,7 +44,6 @@ type FormData = {
   headers?: { key: string; value: string }[];
   body?: string;
   degradedAfter?: number;
-  failedAfter: number;
   interval: number;
   regions: string[];
 };
@@ -55,7 +54,6 @@ export default function Page() {
   const router = useRouter();
   const teamSlug = router.query.teamSlug as string;
   const endpointId = router.query.endpointId as string;
-  console.log({ endpointId });
   const [form] = Form.useForm<FormData>();
 
   const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
@@ -74,7 +72,6 @@ export default function Page() {
         ) => ({ key, value })),
         body: endpoint.data.body ?? undefined,
         degradedAfter: endpoint.data.degradedAfter ?? undefined,
-        failedAfter: endpoint.data.failedAfter ?? undefined,
         interval: endpoint.data.interval ?? undefined,
         regions: endpoint.data.regions as string[] ?? [],
       });
@@ -111,7 +108,6 @@ export default function Page() {
       headers,
       body,
       degradedAfter,
-      failedAfter,
       interval,
       regions,
     }: FormData,
@@ -130,7 +126,6 @@ export default function Page() {
           }, {} as Record<string, string>)
           : undefined,
         degradedAfter,
-        failedAfter,
         interval,
         regions,
         teamSlug: router.query.teamSlug as string,
@@ -269,16 +264,6 @@ export default function Page() {
                   label="Degraded"
                   required
                   tooltip="After this time the request is considered degraded."
-                >
-                  <InputNumber addonAfter="ms" min={1} max={10000} />
-                </Form.Item>
-              </Col>
-              <Col>
-                <Form.Item
-                  name="failedAfter"
-                  label="Failed"
-                  required
-                  tooltip="After this time the request is considered failed."
                 >
                   <InputNumber addonAfter="ms" min={1} max={10000} />
                 </Form.Item>

@@ -48,7 +48,6 @@ export const AuthProvider: React.FC<PropsWithChildren> = (
           user: { id: string; token: string; expries: number };
         } | null;
       };
-      console.log({ json });
       if (json.session) {
         setSession({
           userId: json.session.user.id,
@@ -82,7 +81,6 @@ export function useSession() {
 
 export function useUser() {
   const ctx = useContext(Context);
-  console.log("session", ctx.session);
   const { data: user, ...meta } = trpc.auth.user.useQuery(
     { userId: ctx.session.userId! },
     { enabled: ctx.session.signedIn },

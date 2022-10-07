@@ -3,18 +3,20 @@ import { TRPCError } from "@trpc/server";
 import { string, z } from "zod";
 import { t } from "../trpc";
 import { Kafka } from "@upstash/kafka";
+import { Distribution } from "@planetfall/db";
 
 export const endpointRouter = t.router({
   create: t.procedure.input(z.object({
+    name: z.string(),
     method: z.enum(["POST", "GET", "PUT", "DELETE"]),
     url: z.string().url(),
     headers: z.record(z.string()).optional(),
     body: z.string().optional(),
     degradedAfter: z.number().int().positive().optional(),
-    failedAfter: z.number().int().positive(),
     teamSlug: z.string(),
     interval: z.number().int().gte(1).lte(60 * 60),
     regions: z.array(z.string()),
+    distribution: z.enum([Distribution.ALL, Distribution.RANDOM]),
   })).mutation(async ({ input, ctx }) => {
     if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -42,6 +44,7 @@ export const endpointRouter = t.router({
     const endpoint = await ctx.db.endpoint.create({
       data: {
         id: newId("endpoint"),
+        name: input.name,
         url: input.url,
         body: input.body,
         headers: input.headers,
@@ -49,7 +52,7 @@ export const endpointRouter = t.router({
         method: input.method,
         interval: input.interval,
         degradedAfter: input.degradedAfter,
-        failedAfter: input.failedAfter,
+        distribution: input.distribution,
         regions: input.regions,
         team: {
           connect: {
@@ -79,7 +82,6 @@ export const endpointRouter = t.router({
     headers: z.record(z.string()).optional(),
     body: z.string().optional(),
     degradedAfter: z.number().int().positive().optional(),
-    failedAfter: z.number().int().positive().optional(),
     teamSlug: z.string(),
     interval: z.number().int().gte(1).lte(60 * 60).optional(),
     regions: z.array(z.string()).optional(),
@@ -121,11 +123,9 @@ export const endpointRouter = t.router({
         method: input.method,
         interval: input.interval,
         degradedAfter: input.degradedAfter,
-        failedAfter: input.failedAfter,
         regions: input.regions,
       },
     });
-    console.log("Updated endpoint", endpoint);
 
     const kafka = new Kafka({
       url: "https://usable-snipe-5277-eu1-rest-kafka.upstash.io",

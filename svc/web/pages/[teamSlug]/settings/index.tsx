@@ -29,8 +29,6 @@ export default function SettingsPage() {
   const usage = trpc.billing.usage.useQuery({ teamId: team.data?.id ?? "" }, {
     enabled: !!team.data?.id,
   });
-  console.log({ usage: usage.data });
-  console.log(JSON.stringify(team.data, null, 2));
 
   const protocol = process.env.NEXT_PUBLIC_VERCEL_ENV ? "https" : "http";
   const host = process.env.NEXT_PUBLIC_VERCEL_ENV
