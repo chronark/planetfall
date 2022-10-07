@@ -85,7 +85,7 @@ export default function Page() {
         teamSlug: router.query.teamSlug as string,
       });
 
-      router.push(`${protocol}://${res.id}.${host}`);
+      router.push(`${protocol}://${res.slug}.${host}`);
     } catch (err) {
       console.error(err);
       message.error((err as Error).message);

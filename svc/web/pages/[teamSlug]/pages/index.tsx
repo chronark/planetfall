@@ -36,7 +36,7 @@ export const Item: React.FC<{ pageId: string }> = (
     },
   });
   const since = useMemo(() => Date.now() - 10 * 60 * 1000, []);
-  const page = trpc.page.get.useQuery({ pageId });
+  const page = trpc.page.get.useQuery({ pageId }, { enabled: !!pageId });
   const protocol = process.env.NEXT_PUBLIC_VERCEL_ENV ? "https" : "http";
   const host = process.env.NEXT_PUBLIC_VERCEL_ENV
     ? "planetfall.io"

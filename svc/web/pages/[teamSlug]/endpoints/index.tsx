@@ -105,29 +105,26 @@ export const Item: React.FC<{ endpointId: string; i: number }> = (
         </span>
       </td>
       <td
-        className={`whitespace-nowrap px-3 py-4 text-sm ${
-          endpoint.data?.degradedAfter && p50 >= endpoint.data.degradedAfter
+        className={`whitespace-nowrap px-3 py-4 text-sm ${endpoint.data?.degradedAfter && p50 >= endpoint.data.degradedAfter
             ? "text-red-500"
             : "text-slate-500"
-        }`}
+          }`}
       >
         {p50.toLocaleString()} <span className="text-slate-500">ms</span>
       </td>
       <td
-        className={`whitespace-nowrap px-3 py-4 text-sm ${
-          endpoint.data?.degradedAfter && p95 >= endpoint.data.degradedAfter
+        className={`whitespace-nowrap px-3 py-4 text-sm ${endpoint.data?.degradedAfter && p95 >= endpoint.data.degradedAfter
             ? "text-red-500"
             : "text-slate-500"
-        }`}
+          }`}
       >
         {p95.toLocaleString()} <span className="text-slate-500">ms</span>
       </td>
       <td
-        className={`whitespace-nowrap px-3 py-4 text-sm ${
-          endpoint.data?.degradedAfter && p99 >= endpoint.data.degradedAfter
+        className={`whitespace-nowrap px-3 py-4 text-sm ${endpoint.data?.degradedAfter && p99 >= endpoint.data.degradedAfter
             ? "text-red-500"
             : "text-slate-500"
-        }`}
+          }`}
       >
         {p99.toLocaleString()} <span className="text-slate-500">ms</span>
       </td>
@@ -151,7 +148,7 @@ export default function EndpointsPage() {
   const teamSlug = router.query.teamSlug as string;
   const endpoints = trpc.endpoint.list.useQuery({
     teamSlug,
-  });
+  }, { enabled: !!teamSlug });
   return (
     <Layout breadcrumbs={breadcrumbs}>
       <div>

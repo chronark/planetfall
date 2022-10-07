@@ -150,6 +150,12 @@ export class Scheduler {
 
         const { status, latency } = body as { status: number; latency: number };
 
+        let error: string | undefined = undefined;
+
+        if (status !== 200) {
+          error = "status code was not 200";
+        }
+
         await this.db.check.create({
           data: {
             id: newId("check"),
@@ -158,6 +164,7 @@ export class Scheduler {
             time,
             status,
             regionId,
+            error,
           },
         });
       }));

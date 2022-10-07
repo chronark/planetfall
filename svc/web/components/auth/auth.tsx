@@ -10,6 +10,7 @@ import JSXStyle from "styled-jsx/style";
 import { trpc } from "../../lib/hooks/trpc";
 import type { Membership, Team, User as PUser } from "@planetfall/db";
 import { resolveSoa } from "dns";
+import { useSessionStorage } from "../../lib/hooks/storage";
 
 export type User = PUser & { teams: (Membership & { team: Team })[] };
 
@@ -83,7 +84,9 @@ export function useUser() {
   const ctx = useContext(Context);
   const { data: user, ...meta } = trpc.auth.user.useQuery(
     { userId: ctx.session.userId! },
-    { enabled: ctx.session.signedIn },
+    {
+      enabled: ctx.session.signedIn,
+    },
   );
 
   return { user, ...meta };
