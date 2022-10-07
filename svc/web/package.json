@@ -28,6 +28,7 @@
     "@tanstack/query-sync-storage-persister": "^4.9.0",
     "@tanstack/react-query": "^4.6.0",
     "@tanstack/react-query-persist-client": "^4.9.0",
+    "@tanstack/react-table": "^8.5.15",
     "@trpc/client": "10.0.0-proxy-beta.7",
     "@trpc/next": "10.0.0-proxy-beta.7",
     "@trpc/react": "10.0.0-proxy-beta.7",
