@@ -11,7 +11,3 @@ const handler = trpcNext.createNextApiHandler({
     console.error(`TRPC: [${path}] [${error.code}]: ${error.message}`);
   },
 });
-
-export default withSessionRoute((req, res) => {
-  return handler(req, res);
-});
