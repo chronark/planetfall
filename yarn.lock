@@ -959,18 +959,6 @@
     "@tanstack/query-core" "4.10.1"
     use-sync-external-store "^1.2.0"
 
-"@tanstack/react-table@^8.5.15":
-  version "8.5.15"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.5.15.tgz#8179d24d7fdf909799a517e8897501c44e51284d"
-  integrity sha512-9rSvhIFeMpfXksFgQNTWnVoJbkae/U8CkHnHYGWAIB/O0Ca51IKap0Rjp5WkIUVBWxJ7Wfl2y13oY+aWcyM6Rg==
-  dependencies:
-    "@tanstack/table-core" "8.5.15"
-
-"@tanstack/table-core@8.5.15":
-  version "8.5.15"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.5.15.tgz#e1e674135cd6c36f29a1562a2b846f824861149b"
-  integrity sha512-k+BcCOAYD610Cij6p1BPyEqjMQjZIdAnVDoIUKVnA/tfHbF4JlDP7pKAftXPBxyyX5Z1yQPurPnOdEY007Snyg==
-
 "@trpc/client@10.0.0-proxy-beta.7":
   version "10.0.0-proxy-beta.7"
   resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.0.0-proxy-beta.7.tgz#1f55b3accc79b71058794b74f03de7a4dc522f18"
@@ -3179,7 +3167,7 @@ next-transpile-modules@^9.0.0:
     enhanced-resolve "^5.7.0"
     escalade "^3.1.1"
 
-next@12.3.1:
+next@12.3.1, next@latest:
   version "12.3.1"
   resolved "https://registry.yarnpkg.com/next/-/next-12.3.1.tgz#127b825ad2207faf869b33393ec8c75fe61e50f1"
   integrity sha512-l7bvmSeIwX5lp07WtIiP9u2ytZMv7jIeB8iacR28PuUEFG5j0HGAPnMqyG5kbZNBG2H7tRsrQ4HCjuMOPnANZw==
