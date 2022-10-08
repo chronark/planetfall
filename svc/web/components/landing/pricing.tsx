@@ -130,7 +130,7 @@ export const Pricing: React.FC = (): JSX.Element => {
             Transparent pricing
           </p>
           <p className="mx-auto mt-5 max-w-prose text-xl text-slate-500">
-            Start for Personal, then upgrade as you grow.
+            Start for free, then upgrade as you grow.
           </p>
         </div>
         <div className="mt-12">
