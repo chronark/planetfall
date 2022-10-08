@@ -333,8 +333,10 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                       <span className="sr-only">Open user menu</span>
                       <Image
                         className="h-8 w-8 rounded-full"
-                        src={user ? user?.image ??
-                          `https://ui-avatars.com/api/?size=32&name=${user?.name}` : ""}
+                        src={user
+                          ? user?.image ??
+                            `https://ui-avatars.com/api/?size=32&name=${user?.name}`
+                          : ""}
                         alt=""
                         width={32}
                         height={32}

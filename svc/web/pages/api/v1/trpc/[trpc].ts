@@ -13,8 +13,8 @@ const handler = trpcNext.createNextApiHandler({
 });
 
 export default withSessionRoute((req, res) => {
-  console.time(req.url?.split("?")[0])
+  console.time(req.url?.split("?")[0]);
   const x = handler(req, res);
-  console.timeEnd(req.url?.split("?")[0])
-  return x
+  console.timeEnd(req.url?.split("?")[0]);
+  return x;
 });

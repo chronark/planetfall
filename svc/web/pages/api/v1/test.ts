@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 
 export default async (_req: NextRequest) => {
   try {
-    if (Math.random() <= 0.6) {
+    if (Math.random() <= 0.8) {
       return new Response(JSON.stringify({ ok: true }), { status: 200 });
     } else {
       return new Response(

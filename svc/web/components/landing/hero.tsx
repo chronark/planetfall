@@ -79,8 +79,8 @@ export const Hero: React.FC = (): JSX.Element => {
         <div className="pt-32 md:pt-40">
           {/* Hero content */}
           <div className="mx-auto text-center">
-            <h1 className="text-6xl font-extrabold lg:whitespace-nowrap">
-              Planet-wide Latency Analysis
+            <h1 className="text-6xl font-extrabold lg:whitespace-nowrap tracking-wider">
+              Planet-wide Service and Latency Analysis
             </h1>
             <p className="text-xl text-slate-500 mt-6">
               Track, measure and share the latency and performance of your APIs

@@ -38,7 +38,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["Inter", ...defaultTheme.fontFamily.sans],
+        sans: ["PangeaAfrikan-Regular", ...defaultTheme.fontFamily.sans],
       },
       fontSize: {
         xs: ["0.75rem", { lineHeight: "1.5" }],

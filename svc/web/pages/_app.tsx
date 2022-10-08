@@ -3,6 +3,7 @@ import "tailwindcss/tailwind.css";
 import { trpc } from "lib/hooks/trpc";
 import PlausibleProvider from "next-plausible";
 import "styles/ant.css";
+import "public/fonts/css/pangea.css";
 
 import {
   AuthProvider,
