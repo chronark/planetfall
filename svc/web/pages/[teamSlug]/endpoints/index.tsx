@@ -12,7 +12,6 @@ import {
   Empty,
   List,
   message,
-  PageHeader,
   Popconfirm,
   Row,
   Space,
@@ -30,7 +29,8 @@ import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 import { checkServerIdentity } from "node:tls";
 import { checkIsManualRevalidate } from "next/dist/server/api-utils";
-import { mkdirSync } from "node:fs";
+import { PageHeader } from "components";
+import { ButtonStyle } from "@planetfall/svc/web/components/button";
 
 export const Item: React.FC<{ endpointId: string; i: number }> = (
   { endpointId, i },
@@ -154,95 +154,80 @@ export default function EndpointsPage() {
   }, { enabled: !!teamSlug });
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <div>
-        <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-          <div className="sm:flex-auto">
-            <h1 className="text-xl font-semibold text-slate-900">Endpoints</h1>
-            <p className="mt-2 text-sm text-slate-700">
-              A list of all your endpoints and their performance over the last
-              24h.
-            </p>
-          </div>
-          <div className="mt-3 flex sm:mt-0 sm:ml-4">
-            {
-              /* <button
-              type="button"
-              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Share
-            </button> */
-            }
-            <Link
-              href={`/${teamSlug}/endpoints/new`}
-              className="transition-all hover:cursor-pointer whitespace-nowrap md:px-4 py-2 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
-            >
-              Create new endpoint
-            </Link>
-          </div>
-        </div>
+      <PageHeader
+        title="Endpoints"
+        description=" A list of all your endpoints and their performance over the last 24h."
+        actions={[
+          <Button
+            href={`/${teamSlug}/endpoints/new`}
+            className="transition-all hover:cursor-pointer whitespace-nowrap md:px-4 py-2 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
+          >
+            Create new
+          </Button>,
+        ]}
+      />
 
-        <div className="mt-8 flex flex-col">
-          <div className="">
-            <div className="inline-block min-w-full py-2 align-middle">
-              <div className="rounded">
-                <table
-                  className="min-w-full border-separate"
-                  style={{ borderSpacing: 0 }}
-                >
-                  <thead className="">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="sticky top-0 bg-white z-10 rounded-l border-l border-t border-b border-slate-400  py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-slate-900 sm:pl-6 lg:pl-8"
-                      >
-                        Endpoint
-                      </th>
-                      <th
-                        scope="col"
-                        className="sticky top-0 bg-white z-10  border-t border-b border-slate-400 hidden  px-3 py-3.5 text-left text-sm font-semibold text-slate-900 sm:table-cell"
-                      >
-                        Interval
-                      </th>
-                      <th
-                        scope="col"
-                        className="sticky top-0 bg-white z-10  border-t border-b border-slate-400 hidden  px-3 py-3.5 text-left text-sm font-semibold text-slate-900 lg:table-cell"
-                      >
-                        Availability
-                      </th>
+      <div className="mt-8 flex flex-col">
+        <div className="">
+          <div className="inline-block min-w-full py-2 align-middle">
+            <div className="rounded">
+              <table
+                className="min-w-full border-separate"
+                style={{ borderSpacing: 0 }}
+              >
+                <thead className="">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="sticky top-0 bg-white z-10 rounded-l border-l border-t border-b border-slate-400  py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-slate-900 sm:pl-6 lg:pl-8"
+                    >
+                      Endpoint
+                    </th>
+                    <th
+                      scope="col"
+                      className="sticky top-0 bg-white z-10  border-t border-b border-slate-400 hidden  px-3 py-3.5 text-left text-sm font-semibold text-slate-900 sm:table-cell"
+                    >
+                      Interval
+                    </th>
+                    <th
+                      scope="col"
+                      className="sticky top-0 bg-white z-10  border-t border-b border-slate-400 hidden  px-3 py-3.5 text-left text-sm font-semibold text-slate-900 lg:table-cell"
+                    >
+                      Availability
+                    </th>
 
-                      <th
-                        scope="col"
-                        className="sticky top-0 bg-white z-10  border-t border-b border-slate-400  px-3 py-3.5 text-left text-sm font-semibold text-slate-900"
-                      >
-                        P50
-                      </th>
-                      <th
-                        scope="col"
-                        className="sticky top-0 bg-white z-10  border-t border-b border-slate-400  px-3 py-3.5 text-left text-sm font-semibold text-slate-900"
-                      >
-                        P95
-                      </th>
-                      <th
-                        scope="col"
-                        className="sticky top-0 bg-white z-10  border-t border-b border-slate-400  px-3 py-3.5 text-left text-sm font-semibold text-slate-900"
-                      >
-                        P99
-                      </th>
-                      <th
-                        scope="col"
-                        className="sticky top-0 bg-white z-10 rounded-r border-r border-t border-b border-slate-400  py-3.5 pr-4 pl-3 sm:pr-6 lg:pr-8"
-                      >
-                        <span className="sr-only">Edit</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white">
-                    {endpoints.data?.map((e, i) => (
-                      <Item key={e.id} endpointId={e.id} i={i} />
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    <th
+                      scope="col"
+                      className="sticky top-0 bg-white z-10  border-t border-b border-slate-400  px-3 py-3.5 text-left text-sm font-semibold text-slate-900"
+                    >
+                      P50
+                    </th>
+                    <th
+                      scope="col"
+                      className="sticky top-0 bg-white z-10  border-t border-b border-slate-400  px-3 py-3.5 text-left text-sm font-semibold text-slate-900"
+                    >
+                      P95
+                    </th>
+                    <th
+                      scope="col"
+                      className="sticky top-0 bg-white z-10  border-t border-b border-slate-400  px-3 py-3.5 text-left text-sm font-semibold text-slate-900"
+                    >
+                      P99
+                    </th>
+                    <th
+                      scope="col"
+                      className="sticky top-0 bg-white z-10 rounded-r border-r border-t border-b border-slate-400  py-3.5 pr-4 pl-3 sm:pr-6 lg:pr-8"
+                    >
+                      <span className="sr-only">Edit</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white">
+                  {endpoints.data?.map((e, i) => (
+                    <Item key={e.id} endpointId={e.id} i={i} />
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { Platform, Prisma, PrismaClient } from "@prisma/client";
+import { Platform, PrismaClient } from "@prisma/client";
 
 const regions = [
   {

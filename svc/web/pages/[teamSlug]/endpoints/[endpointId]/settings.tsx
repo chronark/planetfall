@@ -12,9 +12,9 @@ import { useRouter } from "next/router";
 import { useSession, useUser } from "components/auth";
 import { Heading } from "@planetfall/svc/web/components/heading";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
+import { Button } from "components";
 import {
   Alert,
-  Button,
   Card,
   Checkbox,
   Col,
@@ -23,30 +23,24 @@ import {
   Input,
   InputNumber,
   message,
+  notification,
   Radio,
   Row,
   Select,
   Slider,
   Space,
   Steps,
+  Tabs,
   Tag,
   Typography,
 } from "antd";
 import { InformationCircleIcon, MinusIcon } from "@heroicons/react/24/solid";
 import { Option } from "antd/lib/mentions";
 import TextArea from "antd/lib/input/TextArea";
-const gutter = 16;
+import { PageHeader } from "@planetfall/svc/web/components";
+import { useForm } from "react-hook-form";
+import { request } from "node:http";
 
-type FormData = {
-  name?: string;
-  url: string;
-  method: "POST" | "GET" | "PUT" | "DELETE";
-  headers?: { key: string; value: string }[];
-  body?: string;
-  degradedAfter?: number;
-  interval: number;
-  regions: string[];
-};
 type RequiredMark = boolean | "optional";
 
 export default function Page() {
@@ -54,29 +48,12 @@ export default function Page() {
   const router = useRouter();
   const teamSlug = router.query.teamSlug as string;
   const endpointId = router.query.endpointId as string;
-  const [form] = Form.useForm<FormData>();
 
   const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
     enabled: !!endpointId,
-    refetchInterval: false,
-    refetchOnReconnect: false,
   });
-  useEffect(() => {
-    if (endpoint.data) {
-      form.resetFields();
-      form.setFieldsValue({
-        method: endpoint.data.method,
-        url: endpoint.data.url,
-        "headers": Object.entries(endpoint.data.headers ?? {}).map((
-          [key, value],
-        ) => ({ key, value })),
-        body: endpoint.data.body ?? undefined,
-        degradedAfter: endpoint.data.degradedAfter ?? undefined,
-        interval: endpoint.data.interval ?? undefined,
-        regions: endpoint.data.regions as string[] ?? [],
-      });
-    }
-  }, [endpoint.data]);
+
+  console.log(endpoint.data);
 
   const breadcrumbs = [
     {
@@ -88,240 +65,552 @@ export default function Page() {
       href: `/${teamSlug}/endpoints/${endpointId}/settings`,
     },
   ];
-  const updateEndpoint = trpc.endpoint.update.useMutation();
+  const ctx = trpc.useContext();
+  const updateEndpoint = trpc.endpoint.update.useMutation({
+    onSettled: () => {
+      ctx.endpoint.get.invalidate({ endpointId });
+      ctx.endpoint.list.invalidate();
+    },
+  });
   const regions = trpc.region.list.useQuery();
-  const [requiredMark, setRequiredMarkType] = useState<RequiredMark>(
-    "optional",
+
+  const [selectedRegions, setSelectedRegions] = useState(
+    endpoint.data?.regions ? endpoint.data.regions as string[] : [],
   );
-
-  const onRequiredTypeChange = (
-    { requiredMarkValue }: { requiredMarkValue: RequiredMark },
-  ) => {
-    setRequiredMarkType(requiredMarkValue);
-  };
-  const [loading, setLoading] = useState(false);
-
-  async function submit(
-    {
-      url,
-      method,
-      headers,
-      body,
-      degradedAfter,
-      interval,
-      regions,
-    }: FormData,
-  ) {
-    setLoading(true);
-    try {
-      const res = await updateEndpoint.mutateAsync({
-        endpointId,
-        method,
-        url,
-        body,
-        headers: headers
-          ? headers?.reduce((acc, { key, value }) => {
-            acc[key] = value;
-            return acc;
-          }, {} as Record<string, string>)
-          : undefined,
-        degradedAfter,
-        interval,
-        regions,
-        teamSlug: router.query.teamSlug as string,
-      });
-
-      router.push(`/${router.query.teamSlug}/endpoints/${res.id}`);
-    } catch (err) {
-      console.error(err);
-      message.error((err as Error).message);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (endpoint.data) {
+      setSelectedRegions(endpoint.data.regions as string[]);
     }
-  }
+  }, [endpoint.data?.regions]);
+
+  const nameForm = useForm<{ name: string }>();
+  const urlForm = useForm<
+    { url: string; method: "POST" | "GET" | "PUT" | "DELETE" }
+  >();
+  const requestForm = useForm<{ body: string; headers: string }>();
+  const intervalForm = useForm<
+    { interval: number; distribution: "ALL" | "RANDOM" }
+  >();
+
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <div>
-        <Card
-          title="Edit Endpoint"
-          extra="Reconfigure this endpoint"
-        >
-          <Form
-            onFinish={submit}
-            form={form}
-            layout="horizontal"
-            onValuesChange={onRequiredTypeChange}
-            requiredMark={requiredMark}
+      <PageHeader
+        title="Endpoint Settings"
+        description="Edit your endpoint's settings"
+        actions={[
+          <Button
+            href={`/${teamSlug}/endpoints/${endpointId}`}
           >
-            <Typography.Title level={3}>URL</Typography.Title>
+            Cancel
+          </Button>,
+        ]}
+      />
 
-            <Form.Item
-              name="url"
-              rules={[{ required: true, type: "url" }]}
-            >
-              <Input
-                addonBefore={
-                  <Form.Item name="method" noStyle>
-                    <Select style={{ width: "auto" }}>
-                      <Option value="POST">POST</Option>
-                      <Option value="GET">GET</Option>
-                      <Option value="PUT">PUT</Option>
-                      <Option value="DELETE">DELETE</Option>
-                    </Select>
-                  </Form.Item>
-                }
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
-            <Space />
-            <Divider />
-            <Space />
-
-            <Form.List name="headers">
-              {(fields, { add, remove }) => (
-                <>
-                  <Row justify="space-between">
-                    <Typography.Title level={3}>HTTP Headers</Typography.Title>
-                    <Button
-                      type="dashed"
-                      icon={<PlusOutlined />}
-                      onClick={() => add()}
+      <div>
+        <div className="md:grid md:grid-cols-3 md:gap-6">
+          <div className="md:col-span-1">
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                General
+              </h3>
+              <p className="mt-1 text-sm text-slate-600">
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 md:col-span-2 md:mt-0">
+            <form>
+              <div className="border sm:overflow-hidden sm:rounded">
+                <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                  <div className="">
+                    <label
+                      htmlFor="company-website"
+                      className="block text-sm font-medium text-slate-700"
                     >
-                    </Button>
-                  </Row>
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      {...nameForm.register("name", {
+                        required: true,
+                      })}
+                      defaultValue={endpoint.data?.name ?? ""}
+                      placeholder="My API"
+                      className={`w-full transition-all  focus:bg-slate-50 md:px-4 md:py-3  ${
+                        nameForm.formState.errors.name
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:border`}
+                    />
 
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Row key={key} gutter={gutter} justify="space-between">
-                      <Col flex="auto">
-                        <Row gutter={gutter}>
-                          <Col
-                            style={{ display: "inline-block", width: "50%" }}
-                          >
-                            <Form.Item
-                              {...restField}
-                              name={[name, "key"]}
-                              rules={[{
-                                required: true,
-                                message: "Missing header key",
-                              }]}
-                            >
-                              <Input placeholder="Key" />
-                            </Form.Item>
-                          </Col>
-                          <Col
-                            style={{ display: "inline-block", width: "50%" }}
-                          >
-                            <Form.Item
-                              {...restField}
-                              name={[name, "value"]}
-                              rules={[{
-                                required: true,
-                                message: "Missing header value",
-                              }]}
-                            >
-                              <Input placeholder="Value" />
-                            </Form.Item>
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col style={{}}>
-                        <Button
-                          type="link"
-                          icon={<MinusIcon />}
-                          onClick={() =>
-                            remove(name)}
+                    {nameForm.formState.errors.name
+                      ? (
+                        <p className="mt-2 text-sm text-red-500">
+                          {nameForm.formState.errors.name.message ||
+                            "A Name is required"}
+                        </p>
+                      )
+                      : null}
+                  </div>
+                </div>
+                <div className="border-t border-slate-200 px-4 py-3 text-right sm:px-6">
+                  <Button
+                    type="secondary"
+                    onClick={nameForm.handleSubmit(async ({ name }) => {
+                      await updateEndpoint.mutateAsync({
+                        endpointId,
+                        teamSlug,
+                        name,
+                      })
+                        .then(() =>
+                          notification.success({ message: `Name updated` })
+                        )
+                        .catch((err) => {
+                          notification.error({
+                            message: (err as Error).message,
+                          });
+                        });
+                    })}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden sm:block" aria-hidden="true">
+        <div className="py-5 md:py-8">
+          <div className="border-t border-slate-200" />
+        </div>
+      </div>
+
+      <div className="mt-10 sm:mt-0">
+        <div className="md:grid md:grid-cols-3 md:gap-6">
+          <div className="md:col-span-1">
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                URL
+              </h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Change the URL or HTTP method.
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 md:col-span-2 md:mt-0">
+            <form>
+              <div className="border sm:overflow-hidden sm:rounded">
+                <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                  <div className="">
+                    <label
+                      htmlFor="company-website"
+                      className="block text-sm font-medium text-slate-700"
+                    >
+                      Method
+                    </label>
+                    <select
+                      {...urlForm.register("method", { required: true })}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3 w-full border-slate-300 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    >
+                      <option value="POST">POST</option>
+                      <option value="GET">GET</option>
+                      <option value="PUT">PUT</option>
+                      <option value="DELETE">DELETE</option>
+                    </select>
+
+                    {urlForm.formState.errors.method
+                      ? (
+                        <p className="mt-2 text-sm text-red-500">
+                          {urlForm.formState.errors.method.message ||
+                            "A Method is required"}
+                        </p>
+                      )
+                      : null}
+                  </div>
+
+                  <div className="">
+                    <label
+                      htmlFor="company-website"
+                      className="block text-sm font-medium text-slate-700"
+                    >
+                      Url
+                    </label>
+                    <input
+                      type="text"
+                      {...urlForm.register("url", {
+                        required: true,
+                      })}
+                      defaultValue={endpoint.data?.url ?? ""}
+                      className={`w-full transition-all  focus:bg-slate-50 md:px-4 md:py-3  ${
+                        urlForm.formState.errors.url
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:border`}
+                    />
+
+                    {urlForm.formState.errors.url
+                      ? (
+                        <p className="mt-2 text-sm text-red-500">
+                          {urlForm.formState.errors.url.message ||
+                            "A URL is required"}
+                        </p>
+                      )
+                      : null}
+                  </div>
+                </div>
+                <div className="border-t border-slate-200 px-4 py-3 text-right sm:px-6">
+                  <Button
+                    type="secondary"
+                    onClick={urlForm.handleSubmit(async ({ url, method }) => {
+                      await updateEndpoint.mutateAsync({
+                        endpointId,
+                        teamSlug,
+                        url,
+                        method,
+                      })
+                        .then(() =>
+                          notification.success({ message: `Endpoint updated` })
+                        )
+                        .catch((err) => {
+                          notification.error({
+                            message: (err as Error).message,
+                          });
+                        });
+                    })}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div className="hidden sm:block" aria-hidden="true">
+        <div className="py-5 md:py-8">
+          <div className="border-t border-slate-200" />
+        </div>
+      </div>
+      <div className="mt-10 sm:mt-0">
+        <div className="md:grid md:grid-cols-3 md:gap-6">
+          <div className="md:col-span-1">
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Request
+              </h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Change the request body and headers.
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 md:col-span-2 md:mt-0">
+            <form>
+              <div className="border sm:overflow-hidden sm:rounded">
+                <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                  <div className="">
+                    <label
+                      htmlFor="company-website"
+                      className="block text-sm font-medium text-slate-700"
+                    >
+                      Headers
+                    </label>
+                    <textarea
+                      {...requestForm.register("headers")}
+                      rows={5}
+                      defaultValue={endpoint.data?.headers
+                        ? JSON.stringify(endpoint.data.headers, null, 2)
+                        : undefined}
+                      className={`font-mono w-full transition-all  focus:bg-slate-50 md:px-4 md:py-3  ${
+                        requestForm.formState.errors.headers
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:border`}
+                    />
+
+                    {requestForm.formState.errors.headers
+                      ? (
+                        <p className="mt-2 text-sm text-red-500">
+                          {requestForm.formState.errors.headers.message ||
+                            "Invalid headers"}
+                        </p>
+                      )
+                      : null}
+                  </div>
+
+                  <div className="">
+                    <label
+                      htmlFor="company-website"
+                      className="block text-sm font-medium text-slate-700"
+                    >
+                      Body
+                    </label>
+                    <textarea
+                      {...requestForm.register("body")}
+                      rows={5}
+                      defaultValue={endpoint.data?.body ?? undefined}
+                      className={`font-mono w-full transition-all  focus:bg-slate-50 md:px-4 md:py-3  ${
+                        requestForm.formState.errors.body
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:border`}
+                    />
+
+                    {requestForm.formState.errors.body
+                      ? (
+                        <p className="mt-2 text-sm text-red-500">
+                          {requestForm.formState.errors.body.message ||
+                            "The body is invalid"}
+                        </p>
+                      )
+                      : null}
+                  </div>
+                </div>
+                <div className="border-t border-slate-200 px-4 py-3 text-right sm:px-6">
+                  <Button
+                    type="secondary"
+                    onClick={requestForm.handleSubmit(
+                      async ({ headers, body }) => {
+                        await updateEndpoint.mutateAsync({
+                          endpointId,
+                          teamSlug,
+                          headers: headers ? JSON.parse(headers) : undefined,
+                          body,
+                        }).then(() =>
+                          notification.success({ message: `Endpoint updated` })
+                        )
+                          .catch((err) => {
+                            notification.error({
+                              message: (err as Error).message,
+                            });
+                          });
+                      },
+                    )}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div className="hidden sm:block" aria-hidden="true">
+        <div className="py-5 md:py-8">
+          <div className="border-t border-slate-200" />
+        </div>
+      </div>
+      <div className="mt-10 sm:mt-0">
+        <div className="md:grid md:grid-cols-3 md:gap-6">
+          <div className="md:col-span-1">
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Assertions
+              </h3>
+              {/* <p className="mt-1 text-sm text-slate-600">Change the request body and headers.</p> */}
+            </div>
+          </div>
+          <div className="mt-5 md:col-span-2 md:mt-0">
+            <form>
+              <div className="border sm:overflow-hidden sm:rounded py-4 px-4">
+                Coming soon
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div className="hidden sm:block" aria-hidden="true">
+        <div className="py-5 md:py-8">
+          <div className="border-t border-slate-200" />
+        </div>
+      </div>
+      <div className="mt-10 sm:mt-0">
+        <div className="md:grid md:grid-cols-3 md:gap-6">
+          <div className="md:col-span-1">
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Regions
+              </h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Select the regions where checks will run
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 md:col-span-2 md:mt-0">
+            <form>
+              <div className="border sm:overflow-hidden sm:rounded">
+                <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                  <div className="">
+                    <fieldset className="w-full gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4">
+                      {regions.data?.map((r) => (
+                        <button
+                          type="button"
+                          key={r.id}
+                          className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${
+                            selectedRegions.includes(r.id)
+                              ? "border-slate-900 bg-slate-50"
+                              : "border-slate-300"
+                          }`}
+                          onClick={() => {
+                            if (selectedRegions.includes(r.id)) {
+                              setSelectedRegions(
+                                selectedRegions.filter((id) => id !== r.id),
+                              );
+                            } else {
+                              setSelectedRegions([...selectedRegions, r.id]);
+                            }
+                          }}
+                        >
+                          {r.name}
+                        </button>
+                      ))}
+                    </fieldset>
+
+                    {selectedRegions.length === 0
+                      ? (
+                        <p className="mt-2 text-sm text-red-500">
+                          Select at least 1 region
+                        </p>
+                      )
+                      : null}
+                  </div>
+                </div>
+                <div className="border-t border-slate-200 px-4 py-3 text-right sm:px-6">
+                  <Button
+                    type="secondary"
+                    onClick={async () => {
+                      await updateEndpoint.mutateAsync({
+                        endpointId,
+                        teamSlug,
+                        regions: selectedRegions,
+                      }).then(() =>
+                        notification.success({ message: `Endpoint updated` })
+                      )
+                        .catch((err) => {
+                          notification.error({
+                            message: (err as Error).message,
+                          });
+                        });
+                    }}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden sm:block" aria-hidden="true">
+        <div className="py-5 md:py-8">
+          <div className="border-t border-slate-200" />
+        </div>
+      </div>
+      <div>
+        <div className="md:grid md:grid-cols-3 md:gap-6">
+          <div className="md:col-span-1">
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Interval
+              </h3>
+              <p className="mt-1 text-sm text-slate-600">
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 md:col-span-2 md:mt-0">
+            <form>
+              <div className="border sm:overflow-hidden sm:rounded">
+                <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                  <div className="">
+                    <label
+                      htmlFor="company-website"
+                      className="block text-sm font-medium text-slate-700"
+                    >
+                      Interval
+                    </label>
+                    <div className="mt-1 flex sm:col-span-2 sm:mt-0">
+                      <div className="group relative flex flex-grow items-stretch focus-within:z-10">
+                        <input
+                          type="number"
+                          {...intervalForm.register("interval", {
+                            valueAsNumber: true,
+                            min: 1,
+                          })}
+                          defaultValue={endpoint.data
+                            ? endpoint.data?.interval / 1000
+                            : undefined}
+                          className="block w-full rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:py-3  border-slate-900 border border-r-0 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none "
                         />
-                      </Col>
-                    </Row>
-                  ))}
-                </>
-              )}
-            </Form.List>
-            <Space />
-            <Divider />
-            <Space />
-            <Typography.Title level={3}>Request Body</Typography.Title>
-            <Typography.Paragraph>
-              Make sure to add the correct <Tag>Content-Type</Tag>{" "}
-              header when using a request body.
-            </Typography.Paragraph>
+                      </div>
+                      <div className="relative -ml-px inline-flex items-center space-x-2 rounded-r border border-l-0 border-slate-900 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 ">
+                        <span>s</span>
+                      </div>
+                    </div>
 
-            <Form.Item name="body">
-              <TextArea allowClear rows={5} />
-            </Form.Item>
-            <Space />
-            <Divider />
-            <Space />
-            <Typography.Title level={3}>Health Checks</Typography.Title>
-            <Typography.Paragraph>
-              Set thresholds for your API response times.
-            </Typography.Paragraph>
+                    {intervalForm.formState.errors.interval
+                      ? (
+                        <p className="mt-2 text-sm text-red-500">
+                          {intervalForm.formState.errors.interval.message ||
+                            "Interval is invalid"}
+                        </p>
+                      )
+                      : null}
+                  </div>
+                  <div className="">
+                    <label
+                      htmlFor="company-website"
+                      className="block text-sm font-medium text-slate-700"
+                    >
+                      Distribution
+                    </label>
+                    <select
+                      {...intervalForm.register("distribution")}
+                      defaultValue={endpoint.data?.distribution}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3 w-full border-slate-300 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    >
+                      <option value="ALL">All</option>
+                      <option value="RANDOM">Round Robin</option>
+                    </select>
 
-            <Row gutter={gutter}>
-              <Col flex="auto">
-                <Form.Item
-                  name="degradedAfter"
-                  label="Degraded"
-                  required
-                  tooltip="After this time the request is considered degraded."
-                >
-                  <InputNumber addonAfter="ms" min={1} max={10000} />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Space />
-            <Divider />
-            <Space />
-            <Typography.Title level={3}>Interval and Regions</Typography.Title>
-            <Typography.Paragraph>
-              How frequently should we fetch your API? And where should we fetch
-              it from?
-            </Typography.Paragraph>
-
-            <Form.Item name="interval" label="Interval" required>
-              <InputNumber addonAfter="s" min={15} max={60 * 60} />
-            </Form.Item>
-
-            <Form.Item
-              name="regions"
-              required
-              label="Regions"
-            >
-              {
-                /* <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-                Check all
-              </Checkbox> */
-              }
-              <Checkbox.Group style={{ width: "100%" }}>
-                <Row>
-                  {regions.data?.map((region) => (
-                    <Col key={region.id} span={8}>
-                      <Checkbox value={region.id}>{region.name}</Checkbox>
-                    </Col>
-                  ))}
-                </Row>
-              </Checkbox.Group>
-            </Form.Item>
-
-            <Space />
-            <Divider />
-            <Space />
-            <Row justify="end">
-              <Button
-                type="primary"
-                size="large"
-                htmlType="button"
-                loading={loading}
-                onClick={() => {
-                  form.submit();
-                }}
-              >
-                Update
-              </Button>
-            </Row>
-          </Form>
-        </Card>
+                    {intervalForm.formState.errors.distribution
+                      ? (
+                        <p className="mt-2 text-sm text-red-500">
+                          {intervalForm.formState.errors.distribution.message ||
+                            "Invalid"}
+                        </p>
+                      )
+                      : null}
+                  </div>
+                </div>
+                <div className="border-t border-slate-200 px-4 py-3 text-right sm:px-6">
+                  <Button
+                    type="secondary"
+                    onClick={intervalForm.handleSubmit(
+                      async ({ interval, distribution }) => {
+                        await updateEndpoint.mutateAsync({
+                          endpointId,
+                          teamSlug,
+                          interval: interval ? interval * 1000 : undefined,
+                          distribution,
+                        }).then(() =>
+                          notification.success({ message: `Endpoint updated` })
+                        )
+                          .catch((err) => {
+                            notification.error({
+                              message: (err as Error).message,
+                            });
+                          });
+                      },
+                    )}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </Layout>
   );

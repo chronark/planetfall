@@ -83,9 +83,17 @@ export const endpointRouter = t.router({
     body: z.string().optional(),
     degradedAfter: z.number().int().positive().optional(),
     teamSlug: z.string(),
-    interval: z.number().int().gte(1).lte(60 * 60).optional(),
+    interval: z.number().int().gte(1000).lte(60 * 60 * 1000).optional(),
     regions: z.array(z.string()).optional(),
+    name: z.string().optional(),
+    distribution: z.enum([Distribution.ALL, Distribution.RANDOM]).optional(),
   })).mutation(async ({ input, ctx }) => {
+    if (input.regions && input.regions.length === 0) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "regions must be undefined or non empty",
+      });
+    }
     if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
@@ -124,6 +132,7 @@ export const endpointRouter = t.router({
         interval: input.interval,
         degradedAfter: input.degradedAfter,
         regions: input.regions,
+        name: input.name,
       },
     });
 

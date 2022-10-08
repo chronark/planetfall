@@ -29,7 +29,7 @@ export function Button(
       disabled={props.disabled || isLoading}
       onClick={onClick}
     >
-      <ButtonStyle {...props} loading={isLoading} />
+      <ButtonStyle {...props} loading={isLoading} disabled={isLoading} />
     </Controller>
   );
 }
