@@ -7,11 +7,13 @@ import { Size } from "components/types";
 export type ButtonType =
   | "primary"
   | "secondary"
+  | "tertiary"
   | "alert";
 
 export type ButtonStyleProps = React.PropsWithChildren<{
   size?: Size;
   type?: ButtonType;
+  block?: boolean;
 
   /**
    * Display an icon instead of text
@@ -21,6 +23,7 @@ export type ButtonStyleProps = React.PropsWithChildren<{
   iconRight?: React.ReactNode;
   loading?: boolean;
   disabled?: boolean;
+  square?: boolean;
 }>;
 
 export const ButtonStyle: React.FC<ButtonStyleProps> = ({
@@ -32,6 +35,8 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
   loading,
   disabled,
   children,
+  block,
+  square,
 }): JSX.Element => {
   return (
     <div
@@ -39,7 +44,7 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
         /**
          * Common for all variations
          */
-        "flex relative justify-center rounded border transition-all duration-300 items-center text-center font-medium  whitespace-nowrap focus:outline-none",
+        "flex relative  justify-center rounded border transition-all duration-300 items-center text-center font-medium  whitespace-nowrap focus:outline-none",
         /**
          * Size for regular buttons
          */
@@ -54,6 +59,8 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
         icon && {
           "w-6 h-6 ": size === "sm" || size === "xs",
           "w-8 h-8 p-1": size === "md",
+          "h-12 p-1": size === "lg",
+          "w-12": size === "lg" && square,
         },
         /**
          * type
@@ -63,6 +70,8 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
             type === "primary",
           "bg-white text-slate-900 border-slate-700 hover:bg-slate-700 hover:text-slate-50":
             type === "secondary",
+          "bg-white text-slate-900 border-slate-700 border-dashed hover:bg-slate-700 hover:text-slate-50":
+            type === "tertiary",
 
           "bg-red-200 text-white border-red-500 hover:bg-white hover:text-error":
             type === "alert",
@@ -72,6 +81,7 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
           "bg-white text-slate-600 border-slate-60": type === "secondary",
           "bg-red-200 text-slate-white border-red-200": type === "alert",
         },
+        { "block w-full": block },
       )}
     >
       {iconLeft

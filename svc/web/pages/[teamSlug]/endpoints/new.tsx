@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Layout } from "components/app/layout/nav";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Transition } from "@headlessui/react";
@@ -10,11 +10,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@planetfall/svc/web/lib/hooks/trpc";
 import { useRouter } from "next/router";
 import { useUser } from "components/auth";
-import { Heading } from "@planetfall/svc/web/components/heading";
+import { Button } from "components";
+
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
 import {
   Alert,
-  Button,
   Card,
   Checkbox,
   Col,
@@ -32,12 +32,18 @@ import {
   Tag,
   Typography,
 } from "antd";
-import { InformationCircleIcon, MinusIcon } from "@heroicons/react/24/solid";
+import {
+  InformationCircleIcon,
+  MinusIcon,
+  MinusSmallIcon,
+  PlusIcon,
+} from "@heroicons/react/24/solid";
 import { Option } from "antd/lib/mentions";
 import TextArea from "antd/lib/input/TextArea";
-import { useForm, useWatch } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { Loading } from "@planetfall/svc/web/components/loading";
 import Link from "next/link";
+import { stat } from "node:fs";
 const gutter = 16;
 
 type FormData = {
@@ -50,6 +56,7 @@ type FormData = {
   interval: number;
   distribution: "ALL" | "RANDOM";
   regions: string[];
+  statusAssertions: { comparison: string; target: number }[];
 };
 
 export default function Page() {
@@ -62,6 +69,7 @@ export default function Page() {
     handleSubmit,
     setError,
     getValues,
+    control,
     watch,
   } = useForm<
     FormData
@@ -74,6 +82,15 @@ export default function Page() {
   const regions = trpc.region.list.useQuery();
 
   const [loading, setLoading] = useState(false);
+  const statusAssertions = useFieldArray({
+    control,
+    name: "statusAssertions",
+  });
+  // useEffect(() => {
+  //   if (statusAssertions.fields.length === 0) {
+  //     statusAssertions.append({ comparison: "GTE", target: 200 })
+  //   }
+  // }, [])
 
   async function submit(
     data: FormData,
@@ -84,6 +101,7 @@ export default function Page() {
     setLoading(true);
     try {
       console.log({ ...data, selectedRegions });
+
       const res = await createEndpoint.mutateAsync({
         name: data.name,
         method: data.method,
@@ -95,6 +113,7 @@ export default function Page() {
         regions: selectedRegions,
         distribution: data.distribution,
         teamSlug: router.query.teamSlug as string,
+        // statusAssertions: data.statusAssertions, TODO:
       });
       router.push(`/${router.query.teamSlug}/endpoints/${res.id}`);
     } catch (err) {
@@ -125,22 +144,22 @@ export default function Page() {
             </div>
 
             <div className="space-y-6 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="name"
                   className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Name
                 </label>
-                <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <div className="max-w-lg">
+                <div className="mt-1 sm:col-span-3 sm:mt-0">
+                  <div className="">
                     <input
                       type="text"
                       {...register("name", {
                         required: true,
                       })}
                       placeholder="My API"
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3  w-full ${
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
                         errors.url ? "border-red-500" : "border-slate-700"
                       } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     />
@@ -167,18 +186,18 @@ export default function Page() {
             </div>
 
             <div className="space-y-6 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="method"
                   className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Method
                 </label>
-                <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <div className="max-w-lg">
+                <div className="mt-1 sm:col-span-3 sm:mt-0">
+                  <div className="">
                     <select
                       {...register("method", { required: true })}
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     >
                       <option value="POST">POST</option>
                       <option value="GET">GET</option>
@@ -188,15 +207,15 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="url"
                   className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   URL
                 </label>
-                <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <div className="max-w-lg">
+                <div className="mt-1 sm:col-span-3 sm:mt-0">
+                  <div className="">
                     <input
                       type="text"
                       {...register("url", {
@@ -204,7 +223,7 @@ export default function Page() {
                         validate: (v) => z.string().url().safeParse(v).success,
                       })}
                       placeholder="https://example.com"
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3  w-full ${
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
                         errors.url ? "border-red-500" : "border-slate-700"
                       } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     />
@@ -232,40 +251,48 @@ export default function Page() {
             </div>
 
             <div className="space-y-6 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="body"
                   className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Body
                 </label>
-                <div className="mt-1 max-w-lg sm:col-span-2 sm:mt-0">
+                <div className="mt-1  sm:col-span-3 sm:mt-0">
                   <textarea
                     rows={3}
+                    disabled={!["POST", "PUT"].includes(formValues.method)}
                     {...register("body")}
-                    className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3  w-full ${
+                    className={`transition-all  focus:bg-slate-50 md:px-4 px-2 py-1 md:py-3  w-full ${
                       errors.body ? "border-red-500" : "border-slate-700"
-                    } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    } ${
+                      !["POST", "PUT"].includes(formValues.method)
+                        ? "cursor-not-allowed"
+                        : ""
+                    } hover:border-slate-900 focus:border-slate-900   border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     defaultValue={""}
+                    placeholder={!["POST", "PUT"].includes(formValues.method)
+                      ? "Only available in POST or PUT requests"
+                      : undefined}
                   />
                 </div>
               </div>
 
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="last-name"
                   className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Headers
                 </label>
-                <div className="mt-1 max-w-lg sm:col-span-2 sm:mt-0">
+                <div className="mt-1  sm:col-span-3 sm:mt-0">
                   <textarea
                     rows={3}
                     {...register("headers", {
                       validate: (v) => v ? JSON.parse(v) : true,
                     })}
                     placeholder={`{\n  "Authorization": "Bearer XXX"\n}`}
-                    className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3  w-full ${
+                    className={`transition-all  focus:bg-slate-50 md:px-4 px-2 py-1 md:py-3  w-full ${
                       errors.headers ? "border-red-500" : "border-slate-700"
                     } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     defaultValue={""}
@@ -295,7 +322,7 @@ export default function Page() {
               </p>
             </div>
             <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <div className="pr-16">
                   <label
                     htmlFor="last-name"
@@ -308,7 +335,7 @@ export default function Page() {
                     can be sent.
                   </p>
                 </div>
-                <div className="mt-1 max-w-lg flex sm:col-span-2 sm:mt-0">
+                <div className="mt-1  flex sm:col-span-3 sm:mt-0">
                   <div className="group relative flex flex-grow items-stretch focus-within:z-10">
                     <input
                       type="number"
@@ -317,7 +344,7 @@ export default function Page() {
                         min: 1,
                       })}
                       placeholder="600"
-                      className="block w-full rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:py-3  border-slate-900 border border-r-0 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none "
+                      className="block w-full rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:h-12  border-slate-900 border border-r-0 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none "
                     />
                   </div>
                   <div className="relative -ml-px inline-flex items-center space-x-2 rounded-r border border-l-0 border-slate-900 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 ">
@@ -325,18 +352,62 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
-                <div className="pr-16">
-                  <label
-                    htmlFor="response-body"
-                    className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
-                  >
-                    Response body validation
-                  </label>
+              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <label
+                  htmlFor="method"
+                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                >
+                  Status
+                </label>
+                <div className="mt-1 sm:col-span-3 sm:mt-0 space-y-4">
+                  {statusAssertions.fields.map((f, i) => (
+                    <div key={f.id} className="flex items-center gap-4">
+                      <select
+                        {...register(`statusAssertions.${i}.comparison`, {
+                          required: true,
+                        })}
+                        className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      >
+                        <option value="gte">Greater than or equal</option>
+                        <option value="lte">Less than or equal</option>
+                        <option value="eq">Equal</option>
+                      </select>
+                      <input
+                        type="number"
+                        {...register(`statusAssertions.${i}.target`, {
+                          required: true,
+                          valueAsNumber: true,
+                        })}
+                        className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      >
+                      </input>
+                      <div>
+                        <Button
+                          type="secondary"
+                          square
+                          onClick={() =>
+                            statusAssertions.remove(i)}
+                          size="lg"
+                          icon={<MinusSmallIcon className="w-6 h-6" />}
+                        />
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="w-full">
+                    <Button
+                      type="tertiary"
+                      onClick={() =>
+                        statusAssertions.append({
+                          comparison: "GTE",
+                          target: 200,
+                        })}
+                      size="lg"
+                      block
+                      icon={<PlusIcon className="w-6 h-6" />}
+                    />
+                  </div>
                 </div>
-                <p className="bg-sky-50 border rounded border-primary-500 px-4 py-2">
-                  Coming soon
-                </p>
               </div>
             </div>
           </div>
@@ -355,7 +426,7 @@ export default function Page() {
               <div className="pt-6 sm:pt-5">
                 <div role="group" aria-labelledby="label-email">
                   <div className="sm:grid sm:items-baseline sm:gap-4">
-                    <div className="mt-4 sm:col-span-2 sm:mt-0">
+                    <div className="mt-4 sm:col-span-3 sm:mt-0">
                       <fieldset className="w-full gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4  lg:grid-cols-6">
                         {regions.data?.map((r) => (
                           <button
@@ -404,7 +475,7 @@ export default function Page() {
               </p>
             </div>
             <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <div className="pr-16">
                   <label
                     htmlFor="last-name"
@@ -413,7 +484,7 @@ export default function Page() {
                     Interval
                   </label>
                 </div>
-                <div className="mt-1 max-w-lg flex sm:col-span-2 sm:mt-0">
+                <div className="mt-1  flex sm:col-span-3 sm:mt-0">
                   <div className="group relative flex flex-grow items-stretch focus-within:z-10">
                     <input
                       type="number"
@@ -422,7 +493,7 @@ export default function Page() {
                         min: 1,
                       })}
                       defaultValue={15}
-                      className="block w-full rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:py-3  border-slate-900 border border-r-0 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none "
+                      className="block w-full rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:h-12  border-slate-900 border border-r-0 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none "
                     />
                   </div>
                   <div className="relative -ml-px inline-flex items-center space-x-2 rounded-r border border-l-0 border-slate-900 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 ">
@@ -430,7 +501,7 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="distribution"
                   className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
@@ -441,11 +512,11 @@ export default function Page() {
                     region at once, or only from one.
                   </p>
                 </label>
-                <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <div className="max-w-lg">
+                <div className="mt-1 sm:col-span-3 sm:mt-0">
+                  <div className="">
                     <select
                       {...register("distribution", { required: true })}
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:py-3 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                       defaultValue="ALL"
                     >
                       <option value="RANDOM">Round Robin</option>
@@ -465,7 +536,7 @@ export default function Page() {
               </p>
             </div>
             <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <div className="pr-16">
                   <label
                     htmlFor="last-name"
@@ -474,8 +545,8 @@ export default function Page() {
                     Expected monthly requests
                   </label>
                 </div>
-                <div className="mt-1 max-w-lg flex sm:col-span-2 sm:mt-0">
-                  <div className=" block cursor-not-allowed w-full rounded transition-all  md:px-4 md:py-3  border-slate-900 border duration-300 ease-in-out focus:outline-none ">
+                <div className="mt-1  flex sm:col-span-3 sm:mt-0">
+                  <div className=" cursor-not-allowed w-full rounded transition-all  md:px-4 md:h-12 inline-flex items-center  border-slate-900 border duration-300 ease-in-out focus:outline-none ">
                     {monthlyRequests.toLocaleString()}
                   </div>
                 </div>

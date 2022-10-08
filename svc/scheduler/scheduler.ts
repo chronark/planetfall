@@ -7,11 +7,16 @@ export class Scheduler {
   private db: PrismaClient;
   private updatedAt: number = 0;
   private logger: Logger;
+  regions: Record<string, Region>;
 
   constructor({ logger }: { logger: Logger }) {
     this.db = new PrismaClient();
     this.clearIntervals = {};
     this.logger = logger;
+    this.regions = {};
+    setInterval(() => {
+      this.regions = {};
+    }, 5 * 60 * 1000);
   }
 
   public async syncEndpoints(): Promise<void> {
@@ -114,11 +119,16 @@ export class Scheduler {
       this.logger.info("testing endpoint", { endpointId: endpoint.id });
 
       await Promise.all((endpoint.regions as string[]).map(async (regionId) => {
-        const region = await this.db.region.findUnique({
-          where: { id: regionId },
-        });
+        let region = this.regions[regionId];
         if (!region) {
-          throw new Error(`region not found: ${regionId}`);
+          const res = await this.db.region.findUnique({
+            where: { id: regionId },
+          });
+          if (!res) {
+            throw new Error(`region not found: ${regionId}`);
+          }
+          region = res;
+          this.regions[regionId] = res;
         }
         this.logger.info("testing endpoint", {
           endpointId: endpoint.id,
@@ -137,7 +147,7 @@ export class Scheduler {
             url: endpoint.url,
             method: endpoint.method,
             headers: endpoint.headers,
-            body: endpoint.body,
+            body: endpoint.body ?? undefined,
           }),
         });
         if (!res.ok) {

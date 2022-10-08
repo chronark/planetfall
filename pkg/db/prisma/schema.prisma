@@ -34,8 +34,8 @@ enum Method {
 }
 
 enum Platform {
-  VERCEL
-  AWS
+  vercel
+  aws
 }
 
 model Region {
@@ -44,6 +44,7 @@ model Region {
   platform Platform
   region   String
 
+  // Url where the lambda function for this region is reachable
   url String @unique
 
   @@unique([platform, region])
@@ -89,72 +90,14 @@ model Endpoint {
   // string[] of region Ids
   regions      Json
   // json encoded map
+  // { KEY: VALUE}
   headers      Json?
   body         String?
 
-  statusAssertions  StatusAssertion[]
-  headerAssertions  HeaderAssertion[]
-  latencyAssertions LatencyAssertion[]
+  assertions Json?
 
   statusPages StatusPage[]
   checks      Check[]
-}
-
-enum StatusComparison {
-  EQ
-  NEQ
-  GT
-  GTE
-  LT
-  LTE
-}
-
-model StatusAssertion {
-  endpoint   Endpoint         @relation(fields: [endpointId], references: [id], onDelete: Cascade)
-  endpointId String
-  comparison StatusComparison
-  target     Int
-
-  @@id([endpointId, comparison, target])
-}
-
-enum HeaderComparison {
-  EQ
-  NEQ
-  GT
-  GTE
-  LT
-  LTE
-  CONTAINS
-  NOT_CONTAINS
-  EMPTY
-  NOT_EMPTY
-}
-
-model HeaderAssertion {
-  endpoint   Endpoint         @relation(fields: [endpointId], references: [id], onDelete: Cascade)
-  endpointId String
-  comparison HeaderComparison
-  key        String
-  target     String
-
-  @@id([endpointId, comparison, key, target])
-}
-
-enum LatencyComparison {
-  GT
-  GTE
-  LT
-  LTE
-}
-
-model LatencyAssertion {
-  endpoint   Endpoint          @relation(fields: [endpointId], references: [id], onDelete: Cascade)
-  endpointId String
-  comparison LatencyComparison
-  target     Int
-
-  @@id([endpointId, comparison, target])
 }
 
 model VerificationRequest {

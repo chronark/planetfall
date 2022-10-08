@@ -17,6 +17,10 @@ export const endpointRouter = t.router({
     interval: z.number().int().gte(1000).lte(60 * 60 * 1000),
     regions: z.array(z.string()),
     distribution: z.enum([Distribution.ALL, Distribution.RANDOM]),
+    statusAssertions: z.array(z.object({
+      comparison: z.enum(["gte", "lte", "eq"]),
+      target: z.number().int(),
+    })).optional(),
   })).mutation(async ({ input, ctx }) => {
     if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -46,7 +50,7 @@ export const endpointRouter = t.router({
         id: newId("endpoint"),
         name: input.name,
         url: input.url,
-        body: input.body,
+        body: input.body ?? null,
         headers: input.headers,
         active: true,
         method: input.method,
@@ -77,10 +81,11 @@ export const endpointRouter = t.router({
   }),
   update: t.procedure.input(z.object({
     endpointId: z.string(),
+    active: z.boolean().optional(),
     method: z.enum(["POST", "GET", "PUT", "DELETE"]).optional(),
     url: z.string().url().optional(),
     headers: z.record(z.string()).optional(),
-    body: z.string().optional(),
+    body: z.string().optional().nullable(),
     degradedAfter: z.number().int().positive().optional(),
     teamSlug: z.string(),
     interval: z.number().int().gte(1000).lte(60 * 60 * 1000).optional(),
@@ -125,9 +130,9 @@ export const endpointRouter = t.router({
       },
       data: {
         url: input.url,
+        active: input.active,
         body: input.body,
         headers: input.headers,
-        active: true,
         method: input.method,
         interval: input.interval,
         degradedAfter: input.degradedAfter,

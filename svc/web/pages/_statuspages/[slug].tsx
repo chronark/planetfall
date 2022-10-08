@@ -53,8 +53,8 @@ const Row: React.FC<
     ],
   );
 
-  const min = useMemo(() => Math.min(...values), values);
-  const max = useMemo(() => Math.max(...values), values);
+  const min = useMemo(() => Math.min(...values), [values]);
+  const max = useMemo(() => Math.max(...values), [values]);
   const p50 = usePercentile(0.5, values);
   const p95 = usePercentile(0.95, values);
   const p99 = usePercentile(0.99, values);

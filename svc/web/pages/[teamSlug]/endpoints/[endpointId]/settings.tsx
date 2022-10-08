@@ -81,7 +81,7 @@ export default function Page() {
     if (endpoint.data) {
       setSelectedRegions(endpoint.data.regions as string[]);
     }
-  }, [endpoint.data?.regions]);
+  }, [endpoint.data]);
 
   const nameForm = useForm<{ name: string }>();
   const urlForm = useForm<
@@ -99,6 +99,7 @@ export default function Page() {
         description="Edit your endpoint's settings"
         actions={[
           <Button
+            key="cancel"
             href={`/${teamSlug}/endpoints/${endpointId}`}
           >
             Cancel
@@ -375,7 +376,9 @@ export default function Page() {
                           endpointId,
                           teamSlug,
                           headers: headers ? JSON.parse(headers) : undefined,
-                          body,
+                          body: typeof body === "string" && body === ""
+                            ? null
+                            : body,
                         }).then(() =>
                           notification.success({ message: `Endpoint updated` })
                         )

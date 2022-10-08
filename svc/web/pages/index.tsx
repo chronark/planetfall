@@ -1,9 +1,19 @@
 import React from "react";
 
-import { Features, Footer, Header, Hero, Pricing } from "components/landing";
+import {
+  Features,
+  Footer,
+  Header,
+  Hero,
+  Pricing,
+  Stats,
+  StatsProps,
+} from "components/landing";
 import Head from "next/head";
+import { PrismaClient } from "@planetfall/db";
+import { GetStaticProps, NextPage } from "next";
 
-function Home() {
+const Landing: NextPage<StatsProps> = ({ teams, endpoints, checks }) => {
   return (
     <>
       <Head>
@@ -29,6 +39,7 @@ function Home() {
 
           <Hero />
           {/* <Companies /> */}
+          <Stats teams={teams} endpoints={endpoints} checks={checks} />
           <Features />
           {/* <Features02 /> */}
           <Pricing />
@@ -42,6 +53,24 @@ function Home() {
       </div>
     </>
   );
-}
+};
 
-export default Home;
+export default Landing;
+
+export const getStaticProps: GetStaticProps<StatsProps> = async () => {
+  const db = new PrismaClient();
+
+  const props = {
+    teams: await db.team.count(),
+    endpoints: await db.endpoint.count(),
+    checks: await db.check.count({
+      where: { time: { gte: new Date(Date.now() - 60 * 60 * 1000) } },
+    }) / 60 / 60,
+  };
+
+  await db.$disconnect();
+  return {
+    props,
+    revalidate: 60,
+  };
+};

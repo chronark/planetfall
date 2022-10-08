@@ -1,0 +1,21 @@
+{
+  "name": "@planetfall/assertions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Andreas Thomas",
+  "license": "ISC",
+  "dependencies": {
+    "@cfworker/json-schema": "^1.12.5",
+    "zod": "^3.19.1"
+  },
+  "devDependencies": {
+    "@planetfall/tsconfig": "*",
+    "typescript": "^4.8.3"
+  }
+}

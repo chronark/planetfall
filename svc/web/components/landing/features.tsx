@@ -63,8 +63,8 @@ export const Features: React.FC = (): JSX.Element => {
           <div className="mt-12">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {features.map((feature) => (
-                <div key={feature.title} className="pt-6">
-                  <div className="flow-root rounded bg-slate-50 px-6 pb-8">
+                <div key={feature.title} className="mt-6 shadow-cta ">
+                  <div className="flow-root rounded  bg-white px-6 pb-8">
                     <div className="-mt-6">
                       <div>
                         <span className="inline-flex items-center justify-center rounded-md bg-gradient-to-t from-primary-500 to-info-500 p-3 shadow-lg">

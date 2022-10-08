@@ -4,7 +4,6 @@ import http from "node:http";
 import "isomorphic-fetch";
 import { newLogger } from "./logger";
 
-
 const logger = newLogger({ dataset: "scheduler" });
 const s = new Scheduler({ logger });
 const e = new Events({ scheduler: s, logger });

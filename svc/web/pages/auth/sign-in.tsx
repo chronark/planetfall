@@ -34,7 +34,7 @@ export default function Page() {
     if (session.signedIn) {
       router.push("/home");
     }
-  }, [session.signedIn]);
+  }, [session.signedIn, router]);
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">

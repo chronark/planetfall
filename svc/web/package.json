@@ -49,6 +49,7 @@
     "stripe": "^10.12.0",
     "superjson": "^1.10.0",
     "tailwindcss-radix": "^2.6.0",
+    "@planetfall/assertions": "*",
     "zod": "^3.19.1"
   },
   "devDependencies": {

@@ -10,8 +10,8 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Button } from "components";
 import {
-  Button,
   Card,
   Checkbox,
   CheckboxOptionType,
@@ -43,6 +43,7 @@ import { router } from "@planetfall/svc/web/server/router";
 import type { Check } from "@planetfall/db";
 import classNames from "classnames";
 import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+import { procedureTypes } from "@trpc/server";
 
 const RegionTab: React.FC<
   { endpointId: string; regionId: string; regionName: string }
@@ -57,6 +58,7 @@ const RegionTab: React.FC<
   });
 
   const checks = trpc.check.list.useQuery({ endpointId, since, regionId }, {
+    enabled: !!endpointId,
     staleTime: endpoint.data?.interval
       ? endpoint.data.interval * 1000
       : undefined,
@@ -218,6 +220,9 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   const ctx = trpc.useContext();
   const [since, setSince] = useState(now - 60 * 60 * 1000);
   const deleteEndpoint = trpc.endpoint.delete.useMutation();
+  const updateEndpoint = trpc.endpoint.update.useMutation({
+    onSettled: () => ctx.endpoint.get.invalidate(),
+  });
   const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
     staleTime: 10000,
   });
@@ -333,17 +338,46 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
     <>
       <Row justify="space-between">
         <Col>
-          <Space direction="vertical">
-            <Typography.Title level={1}>
-              {endpoint.data?.name ?? endpoint.data?.url}
-            </Typography.Title>
-            <Typography.Link>
-              {endpoint.data?.name ? endpoint.data?.url : null}
-            </Typography.Link>
-          </Space>
+          <div className="sm:flex-auto">
+            <h1 className="text-xl md:text-4xl font-semibold text-slate-900">
+              {endpoint.data?.name}
+            </h1>
+            <p className="mt-2 text-sm text-slate-700">
+              {endpoint.data?.url}
+            </p>
+          </div>
         </Col>
         <Col>
           <Space>
+            {endpoint.data?.active
+              ? (
+                <div className="flex h-6 w-6 items-center justify-center">
+                  <span className="animate-ping-slow absolute inline-flex h-4 w-4 rounded-full bg-emerald-400 opacity-50">
+                  </span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500">
+                  </span>
+                </div>
+              )
+              : (
+                <div className="flex h-6 w-6 items-center justify-center">
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-500">
+                  </span>
+                </div>
+              )}
+
+            <Button
+              type="secondary"
+              disabled={!endpoint.data}
+              onClick={async () => {
+                await updateEndpoint.mutateAsync({
+                  endpointId,
+                  teamSlug,
+                  active: !endpoint.data!.active,
+                });
+              }}
+            >
+              {endpoint.data?.active ? "Active" : "Paused"}
+            </Button>
             <Popconfirm
               icon={null}
               key="delete"
@@ -361,10 +395,10 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
                 message.success("Endpoint deleted");
               }}
             >
-              <Button>Delete</Button>
+              <Button type="secondary">Delete</Button>
             </Popconfirm>
             <Button
-              type="primary"
+              type="secondary"
               href={`/${teamSlug}/endpoints/${endpointId}/settings`}
             >
               Settings

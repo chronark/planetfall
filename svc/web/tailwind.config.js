@@ -61,45 +61,46 @@ module.exports = {
         wider: "0.02em",
         widest: "0.4em",
       },
-    },
-    animation: {
-      "fade-in": "fade-in 0.5s linear forwards",
-      marquee: "marquee var(--marquee-duration) linear infinite",
-      "spin-forward-slow": "spin-forward 8s linear infinite",
-      "spin-slow": "spin 4s linear infinite",
-      "spin-slower": "spin 6s linear infinite",
-      "spin-reverse": "spin-reverse 1s linear infinite",
-      "spin-reverse-slow": "spin-reverse 4s linear infinite",
-      "spin-reverse-slower": "spin-reverse 10s linear infinite",
-    },
-    keyframes: {
-      "spin-forward": {
-        from: {
-          transform: "rotate(0deg)",
-        },
-        to: {
-          transform: "rotate(360deg)",
-        },
+      animation: {
+        "fade-in": "fade-in 0.5s linear forwards",
+        marquee: "marquee var(--marquee-duration) linear infinite",
+        "ping-slow": "ping 2s cubic-bezier(0, 0, 0.2, 1) infinite",
+        "spin-forward-slow": "spin-forward 8s linear infinite",
+        "spin-slow": "spin 2s linear infinite",
+        "spin-slower": "spin 6s linear infinite",
+        "spin-reverse": "spin-reverse 1s linear infinite",
+        "spin-reverse-slow": "spin-reverse 4s linear infinite",
+        "spin-reverse-slower": "spin-reverse 10s linear infinite",
       },
-      "spin-reverse": {
-        from: {
-          transform: "rotate(0)",
+      keyframes: {
+        "spin-forward": {
+          from: {
+            transform: "rotate(0deg)",
+          },
+          to: {
+            transform: "rotate(360deg)",
+          },
         },
-        to: {
-          transform: "rotate(-360deg)",
+        "spin-reverse": {
+          from: {
+            transform: "rotate(0)",
+          },
+          to: {
+            transform: "rotate(-360deg)",
+          },
         },
-      },
-      "fade-in": {
-        from: {
-          opacity: 0,
+        "fade-in": {
+          from: {
+            opacity: 0,
+          },
+          to: {
+            opacity: 1,
+          },
         },
-        to: {
-          opacity: 1,
-        },
-      },
-      marquee: {
-        "100%": {
-          transform: "translateY(-50%)",
+        marquee: {
+          "100%": {
+            transform: "translateY(-50%)",
+          },
         },
       },
     },

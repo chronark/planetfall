@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { unsealData } from "iron-session/edge";
-export default async (req: NextRequest) => {
+export default async function session(req: NextRequest): Promise<Response> {
   try {
     const sessionCookie = req.cookies.get(
       process.env.VERCEL ? "planetfall_auth" : "planetfall_auth_local",
@@ -23,7 +23,7 @@ export default async (req: NextRequest) => {
     console.error(err);
     return new Response(err.message, { status: 500 });
   }
-};
+}
 
 export const config = {
   runtime: "experimental-edge",

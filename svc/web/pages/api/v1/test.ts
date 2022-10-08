@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-export default async (_req: NextRequest) => {
+export default async function test(_req: NextRequest) {
   try {
     if (Math.random() <= 0.8) {
       return new Response(JSON.stringify({ ok: true }), { status: 200 });
@@ -15,7 +15,7 @@ export default async (_req: NextRequest) => {
     console.error(err);
     return new Response(err.message, { status: 500 });
   }
-};
+}
 
 export const config = {
   runtime: "experimental-edge",

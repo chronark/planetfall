@@ -8,7 +8,7 @@ const validation = z.object({
   // milliseconds
   // timeout: z.number().int().gte(1000).lte(60000),
   headers: z.record(z.string()).nullish(),
-  body: z.string().nullish(),
+  body: z.string().optional(),
 });
 export type Input = z.infer<typeof validation>;
 export type Output = {

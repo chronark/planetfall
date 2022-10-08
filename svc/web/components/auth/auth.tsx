@@ -64,6 +64,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = (
     };
 
     run();
+    // eslint-disable-next-line
   }, []);
   return (
     <Context.Provider value={{ session }}>
@@ -112,6 +113,6 @@ export const RedirectToSignIn: React.FC<PropsWithChildren> = (): null => {
     if (!session.signedIn && !session.loading) {
       router.push("/auth/sign-in");
     }
-  }, [router]);
+  }, [router, session.signedIn, session.loading]);
   return null;
 };
