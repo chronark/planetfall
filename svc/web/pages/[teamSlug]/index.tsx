@@ -2,9 +2,9 @@ import { Layout } from "../../components/app/layout/nav";
 
 import React from "react";
 import { useRouter } from "next/router";
+import { Card } from "components";
 import {
   Avatar,
-  Card,
   List,
   Row,
   Space,
@@ -14,6 +14,8 @@ import {
 } from "antd";
 import { trpc } from "../../lib/hooks/trpc";
 import Item from "antd/lib/list/Item";
+import { Heading } from "../../components/heading";
+import { Text } from "../../components";
 
 export default function Teampage() {
   const router = useRouter();
@@ -24,28 +26,31 @@ export default function Teampage() {
   return (
     <Layout breadcrumbs={[]}>
       <Space direction="vertical" size={32} style={{ width: "100%" }}>
-        <Typography.Title>{team.data?.name}</Typography.Title>
+        <Heading h2>{team.data?.name ?? ""}</Heading>
+
 
         <Card>
-          <Row>
-            <Statistic title="Plan" suffix={<Tag color="blue">PRO</Tag>} />
-          </Row>
-        </Card>
-        <Card title="Members">
-          <List
-            loading={team.isLoading}
-            itemLayout="horizontal"
-            dataSource={team.data?.members}
-            renderItem={(member) => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={<Avatar src={member.user.image} />}
-                  title={member.user.name}
-                  description={member.role}
-                />
-              </List.Item>
-            )}
-          />
+          <Card.Header>
+            <Card.Header.Title title="Members" />
+          </Card.Header>
+          <Card.Content>
+
+            <List
+              loading={team.isLoading}
+              itemLayout="horizontal"
+              dataSource={team.data?.members}
+              renderItem={(member) => (
+                <List.Item>
+                  <List.Item.Meta
+                    avatar={<Avatar src={member.user.image} />}
+                    title={member.user.name}
+                    description={member.role}
+                  />
+                </List.Item>
+              )}
+            />
+          </Card.Content>
+
         </Card>
       </Space>
     </Layout>
