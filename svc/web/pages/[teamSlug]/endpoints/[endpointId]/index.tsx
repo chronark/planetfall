@@ -3,6 +3,7 @@ import { useSession, useUser } from "components/auth";
 import { useRouter } from "next/router";
 import { trpc } from "../../../../lib/hooks/trpc";
 import { Area, Line } from "@ant-design/plots";
+import * as HoverCard from "@radix-ui/react-hover-card";
 
 import {
   createColumnHelper,
@@ -10,7 +11,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Button } from "components";
+import { Violin } from "@ant-design/plots";
+
+import { Button, Confirm, PageHeader, Text } from "components";
 import {
   Card,
   Checkbox,
@@ -18,7 +21,6 @@ import {
   Col,
   Divider,
   message,
-  PageHeader,
   Popconfirm,
   Row,
   Segmented,
@@ -44,6 +46,9 @@ import type { Check } from "@planetfall/db";
 import classNames from "classnames";
 import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import { procedureTypes } from "@trpc/server";
+import { checkIsManualRevalidate } from "next/dist/server/api-utils";
+import ms from "ms";
+import { text } from "stream/consumers";
 
 const RegionTab: React.FC<
   { endpointId: string; regionId: string; regionName: string }
@@ -59,12 +64,6 @@ const RegionTab: React.FC<
 
   const checks = trpc.check.list.useQuery({ endpointId, since, regionId }, {
     enabled: !!endpointId,
-    staleTime: endpoint.data?.interval
-      ? endpoint.data.interval * 1000
-      : undefined,
-    refetchInterval: endpoint.data?.interval
-      ? endpoint.data.interval * 1000
-      : undefined,
   });
 
   const annotations: Annotation[] = [];
@@ -212,6 +211,46 @@ const RegionTab: React.FC<
   );
 };
 
+type Series = ({
+  buffer: true;
+} | {
+  buffer: false;
+  time: Date;
+  latency: number | null;
+  region?: string;
+  error?: string;
+})[];
+
+export type StatsProps = {
+  label: string;
+  value: number | string;
+  suffix?: string;
+  status?: "success" | "warn" | "error";
+};
+const Stats: React.FC<StatsProps> = (
+  { label, value, suffix, status },
+): JSX.Element => {
+  return (
+    <div className="flex flex-col p-4">
+      <Text color="text-slate-500">{label}</Text>
+      <span
+        className={`text-2xl md:text-4xl ${
+          status === "success"
+            ? "text-emerald-500"
+            : status === "warn"
+            ? "text-amber-500"
+            : status === "error"
+            ? "text-rose-500"
+            : "text-slate-800"
+        }`}
+      >
+        {typeof value === "number" ? value.toLocaleString() : value}
+        {suffix}
+      </span>
+    </div>
+  );
+};
+
 const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   { endpointId, teamSlug },
 ): JSX.Element => {
@@ -226,25 +265,17 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
     staleTime: 10000,
   });
-  const checks = trpc.check.list.useQuery({ since, endpointId }, {
+
+  const checks = trpc.check.list.useQuery({
+    since: now - ms("24h"),
+    endpointId,
+  }, {
     enabled: !!endpointId,
-    staleTime: endpoint.data?.interval
-      ? endpoint.data.interval * 1000
-      : undefined,
+    staleTime: endpoint.data?.interval ? endpoint.data.interval : undefined,
     refetchInterval: endpoint.data?.interval
-      ? endpoint.data.interval * 1000
+      ? endpoint.data.interval
       : undefined,
   });
-  const regions = trpc.region.list.useQuery();
-
-  const data = useMemo(() => {
-    return (checks.data ?? []).map((c) => ({
-      time: c.time.toLocaleString(),
-      latency: c.latency,
-      regionId: regions.data?.find((r) => r.id === c.regionId)?.name,
-      error: c.error,
-    }));
-  }, [checks.data]);
 
   const latencies = useMemo(
     () =>
@@ -267,233 +298,124 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
     latencies,
   );
 
-  const annotations: Annotation[] = [
-    {
-      type: "line",
-      start: ["min", p50],
-      end: ["max", p50],
-      style: {
-        stroke: "#94a3b8",
-        lineWidth: 0.5,
-        lineDash: [4, 4],
-      },
-      text: {
-        content: "P50",
-      },
-    },
-    {
-      type: "line",
-      start: ["min", p99],
-      end: ["max", p99],
-      style: {
-        stroke: "#94a3b8",
-        lineWidth: 0.5,
-        lineDash: [4, 4],
-      },
-      text: {
-        content: "P99",
-      },
-    },
-  ];
-
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].error) {
-      annotations.push(
-        {
-          type: "line",
-          start: [i, "min"],
-          end: [i, "max"],
-          style: {
-            stroke: "#ef4444",
-            lineWidth: 1,
-            // lineDash: [8, 8],
-          },
-          text: {
-            offsetY: -4,
-            content: "Unavailable",
-          },
-        },
-      );
-    }
-  }
-
-  if (endpoint.data?.degradedAfter) {
-    annotations.push({
-      type: "line",
-      start: ["min", endpoint.data.degradedAfter],
-      end: ["max", endpoint.data.degradedAfter],
-      style: {
-        stroke: "#f59e0b",
-        lineWidth: 1,
-        lineDash: [8, 8],
-      },
-      text: {
-        offsetY: -4,
-        content: "Degraded",
-      },
-    });
-  }
+  const errors = (checks.data ?? []).filter((d) => d.error).length;
+  const availability = checks.data ? 1 - errors / checks.data.length : 1;
+  const degraded = checks.data
+    ? (endpoint.data?.degradedAfter
+      ? (checks.data ?? []).filter((d) =>
+        d.latency && d.latency >= endpoint.data.degradedAfter!
+      ).length
+      : 0) / checks.data.length
+    : 1;
 
   return (
     <>
-      <Row justify="space-between">
-        <Col>
-          <div className="sm:flex-auto">
-            <h1 className="text-xl md:text-4xl font-semibold text-slate-900">
-              {endpoint.data?.name}
-            </h1>
-            <p className="mt-2 text-sm text-slate-700">
-              {endpoint.data?.url}
-            </p>
-          </div>
-        </Col>
-        <Col>
-          <Space>
-            {endpoint.data?.active
-              ? (
-                <div className="flex h-6 w-6 items-center justify-center">
-                  <span className="animate-ping-slow absolute inline-flex h-4 w-4 rounded-full bg-emerald-400 opacity-50">
-                  </span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500">
-                  </span>
-                </div>
-              )
-              : (
-                <div className="flex h-6 w-6 items-center justify-center">
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-500">
-                  </span>
-                </div>
-              )}
+      <PageHeader
+        title={endpoint.data?.name ?? ""}
+        description={endpoint.data?.url}
+        actions={[
+          endpoint.data?.active
+            ? (
+              <div className="flex h-6 w-6 items-center justify-center mr-2">
+                <span className="animate-ping-slow absolute inline-flex h-4 w-4 rounded-full bg-emerald-400 opacity-50">
+                </span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500">
+                </span>
+              </div>
+            )
+            : (
+              <div className="flex h-6 w-6 items-center justify-center mr-2">
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-500">
+                </span>
+              </div>
+            ),
 
-            <Button
-              type="secondary"
-              disabled={!endpoint.data}
-              onClick={async () => {
-                await updateEndpoint.mutateAsync({
-                  endpointId,
-                  teamSlug,
-                  active: !endpoint.data!.active,
-                });
-              }}
-            >
-              {endpoint.data?.active ? "Active" : "Paused"}
-            </Button>
-            <Popconfirm
-              icon={null}
-              key="delete"
-              title={
-                <>
-                  <Typography.Title level={4}>Delete Endpoint</Typography.Title>
-                  <Typography.Paragraph>
-                    {endpoint.data?.url}
-                  </Typography.Paragraph>
-                </>
-              }
-              onConfirm={async () => {
-                await deleteEndpoint.mutateAsync({ endpointId });
-                router.push(`/${teamSlug}/endpoints`);
-                message.success("Endpoint deleted");
-              }}
-            >
-              <Button type="secondary">Delete</Button>
-            </Popconfirm>
-            <Button
-              type="secondary"
-              href={`/${teamSlug}/endpoints/${endpointId}/settings`}
-            >
-              Settings
-            </Button>
-          </Space>
-        </Col>
-      </Row>
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <Row justify="end">
-          <Space size="large">
-            <Col span={1 / 3}>
-              <Typography.Text>
-                p50: <Typography.Text strong>{p50}</Typography.Text> ms
-              </Typography.Text>
-            </Col>
-            <Col span={1 / 3}>
-              <Typography.Text>
-                p95: <Typography.Text strong>{p95}</Typography.Text> ms
-              </Typography.Text>
-            </Col>
+          <Button
+            key="update"
+            type="secondary"
+            disabled={!endpoint.data}
+            onClick={async () => {
+              await updateEndpoint.mutateAsync({
+                endpointId,
+                teamSlug,
+                active: !endpoint.data!.active,
+              });
+            }}
+          >
+            {endpoint.data?.active ? "Active" : "Paused"}
+          </Button>,
+          <Confirm
+            key="delete"
+            title="Delete Endpoint?"
+            description={endpoint.data?.name ?? endpoint.data?.url}
+            onConfirm={async () => {
+              await deleteEndpoint.mutateAsync({ endpointId });
+              router.push(`/${teamSlug}/endpoints`);
+              message.success("Endpoint deleted");
+            }}
+            trigger={<Button type="secondary">Delete</Button>}
+          />,
+          <Button
+            key="settings"
+            type="secondary"
+            href={`/${teamSlug}/endpoints/${endpointId}/settings`}
+          >
+            Settings
+          </Button>,
+        ]}
+      />
 
-            <Col span={1 / 3}>
-              <Typography.Text>
-                p99: <Typography.Text strong>{p99}</Typography.Text> ms
-              </Typography.Text>
-            </Col>
-            <Segmented
-              value={since}
-              options={[
-                {
-                  label: "1m",
-                  value: now - 60 * 1000,
-                },
-                {
-                  label: "15m",
-                  value: now - 15 * 60 * 1000,
-                },
-                {
-                  label: "1h",
-                  value: now - 60 * 60 * 1000,
-                },
-                {
-                  label: "3h",
-                  value: now - 3 * 60 * 60 * 1000,
-                },
-                {
-                  label: "6h",
-                  value: now - 6 * 60 * 60 * 1000,
-                },
-                {
-                  label: "24h",
-                  value: now - 24 * 60 * 60 * 1000,
-                },
-              ]}
-              onChange={(v) => {
-                setSince(parseInt(v.toString()));
-              }}
-            />
-            <Button
-              disabled={!endpoint.isStale}
-              icon={<ReloadOutlined />}
-              loading={endpoint.isFetching || endpoint.isLoading}
-              onClick={() => {
-                ctx.endpoint.get.invalidate();
-              }}
-            />
-          </Space>
-        </Row>
-        <Line
-          data={data}
-          padding="auto"
-          xField="time"
-          yField="latency"
-          seriesField="regionId"
-          smooth={true}
-          connectNulls={false}
-          legend={{
-            position: "bottom",
-          }}
-          yAxis={{
-            title: { text: "Latency [ms]" },
-            tickCount: 3,
-          }}
-          annotations={annotations}
-          xAxis={{
-            tickCount: 10,
-            label: {
-              formatter: (text) => new Date(text).toLocaleTimeString(),
-            },
-          }}
-          tooltip={{
-            title: (d) => new Date(d).toLocaleString(),
-          }}
+      <div className="w-full flex justify-around items-center gap-2 md:gap-4 lg:gap-8">
+        <Stats
+          label="Availability"
+          status={availability > 0.99
+            ? undefined
+            : availability >= 0.95
+            ? "warn"
+            : "error"}
+          value={availability * 100}
+          suffix="%"
         />
-      </Space>
+        <Stats
+          label="Degraded"
+          status={degraded <= 0.01
+            ? "success"
+            : degraded <= 0.05
+            ? "warn"
+            : "error"}
+          value={degraded * 100}
+          suffix="%"
+        />
+        <Stats
+          label="Errors"
+          status={errors > 0 ? "error" : undefined}
+          value={errors}
+        />
+        <Stats
+          label="P50"
+          status={endpoint.data?.degradedAfter
+            ? p50 >= endpoint.data.degradedAfter ? "warn" : undefined
+            : undefined}
+          value={p50}
+          suffix="ms"
+        />
+        <Stats
+          label="P95"
+          status={endpoint.data?.degradedAfter
+            ? p95 >= endpoint.data.degradedAfter ? "warn" : undefined
+            : undefined}
+          value={p95}
+          suffix="ms"
+        />
+        <Stats
+          label="P99"
+          status={endpoint.data?.degradedAfter
+            ? p99 >= endpoint.data.degradedAfter ? "warn" : undefined
+            : undefined}
+          value={p99}
+          suffix="ms"
+        />
+      </div>
     </>
   );
 };
@@ -507,7 +429,10 @@ const Checks: React.FC<{ endpointId: string }> = (
   const regions = trpc.region.list.useQuery();
   const { accessor } = createColumnHelper<Check>();
 
-  const failed = (checks.data ?? []).filter((c) => c.error);
+  const failed = (checks.data ?? []).filter((c) => c.error).map((c) => ({
+    ...c,
+    error: c.error ?? "Degraded Performance",
+  }));
 
   const columns = [
     accessor("time", {
@@ -525,6 +450,18 @@ const Checks: React.FC<{ endpointId: string }> = (
     }),
     accessor("error", {
       header: "Error",
+    }),
+    accessor("latency", {
+      header: "Latency",
+      cell: (info) =>
+        endpoint.data?.degradedAfter &&
+          info.getValue()! >= endpoint.data.degradedAfter
+          ? (
+            <span className="px-1 bg-amber-50 text-amber-500 rounded">
+              {info.getValue()!.toLocaleString()} ms
+            </span>
+          )
+          : info.getValue(),
     }),
 
     accessor("regionId", {
@@ -639,7 +576,7 @@ export default function EndpointPage() {
         <Main endpointId={endpointId} teamSlug={teamSlug} />
         <Divider />
 
-        <Typography.Title level={2}>Failed Checks</Typography.Title>
+        <Typography.Title level={2}>Errors</Typography.Title>
 
         {endpoint.data ? <Checks endpointId={endpoint.data?.id} /> : null}
 

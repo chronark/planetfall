@@ -8,6 +8,8 @@ export const checkRouter = t.router({
   list: t.procedure.input(z.object({
     endpointId: z.string(),
     since: z.number().optional(),
+    take: z.number().optional(),
+    order: z.enum(["asc", "desc"]).optional(),
     regionId: z.string().optional(),
   })).query(async ({ input, ctx }) => {
     if (!ctx.req.session?.user?.id) {
@@ -21,6 +23,7 @@ export const checkRouter = t.router({
         gte: new Date(input.since),
       };
     }
+
     if (input.regionId) {
       // @ts-ignore
       where["regionId"] = input.regionId;
@@ -40,8 +43,9 @@ export const checkRouter = t.router({
           },
         },
         checks: {
+          take: input.take,
           orderBy: {
-            time: "asc",
+            time: input.order,
           },
           where,
         },

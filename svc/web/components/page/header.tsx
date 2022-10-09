@@ -14,7 +14,7 @@ export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
           {props.description}
         </p>
       </div>
-      <div className="mt-3 flex sm:mt-0 sm:ml-4">
+      <div className="mt-3 sm:mt-0 sm:ml-4 flex items-center gap-2">
         {props.actions}
       </div>
     </div>

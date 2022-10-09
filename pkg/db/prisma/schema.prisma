@@ -160,11 +160,15 @@ model Team {
   statusPages StatusPage[]
 
   // QUOTA DEFINITIONS 
-  // How long checks are stored
-  retention Int // [days]
+  // How long checks are displayed
+  // we always store at least 1 month for billing
+  retention Int // [milliseconds]
 
   // How many checks may be done per month
-  maxMonthlyRequests Int?
+  maxMonthlyRequests Int
+  maxEndpoints       Int
+  minInterval        Int // [milliseconds]
+  maxTimeout         Int // [milliseconds]
 
   @@index([slug])
 }

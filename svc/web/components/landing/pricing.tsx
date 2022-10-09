@@ -3,8 +3,10 @@ import Image from "next/image";
 import Illustration from "../../public/landing/pricing-illustration.svg";
 import Link from "next/link";
 import { CheckIcon, MinusIcon } from "@heroicons/react/24/solid";
+import { DEFAULT_QUOTA } from "plans";
+import ms from "ms";
 
-type Tier = "Personal" | "Pro" | "Enterprise";
+type Tier = "Free" | "Personal" | "Pro" | "Enterprise";
 
 const tiers: {
   name: Tier;
@@ -14,23 +16,30 @@ const tiers: {
   cta: string;
 }[] = [
   {
-    name: "Personal",
-    href: "#",
+    name: "Free",
+    href: "/auth/sign-in",
     monthlyPrice: 0,
-    description: "Pay only for what you use",
+    description: "No credit card required",
+    cta: "Start for free",
+  },
+  {
+    name: "Personal",
+    href: "/auth/sign-in",
+    monthlyPrice: 0,
+    description: "For small and hobby projects",
     cta: "Start for free",
   },
 
   {
     name: "Pro",
-    href: "#",
+    href: "/home",
     monthlyPrice: 20,
     description: "For growing APIs and teams",
     cta: "Buy Pro",
   },
   {
     name: "Enterprise",
-    href: "#",
+    href: "mailto:support@planetfall.io",
     monthlyPrice: -1,
     description: "For large-scale APIs",
     cta: "Contact us",
@@ -48,11 +57,17 @@ const sections: {
     features: [
       {
         name: "Included requests",
-        tiers: { Personal: "100k", Pro: "1 million", Enterprise: "Custom" },
+        tiers: {
+          Free: `${DEFAULT_QUOTA.FREE.includedRequests / 1000}k`,
+          Personal: `${DEFAULT_QUOTA.PERSONAL.includedRequests / 1000}k`,
+          Pro: `${DEFAULT_QUOTA.PRO.includedRequests / 1000}k`,
+          Enterprise: "Custom",
+        },
       },
       {
         name: "Additional requests",
         tiers: {
+          Free: false,
           Personal: "$1 / 10,000",
           Pro: "$1 / 10,000",
           Enterprise: "Custom",
@@ -60,11 +75,11 @@ const sections: {
       },
       {
         name: "Teams",
-        tiers: { Personal: false, Pro: true, Enterprise: true },
+        tiers: { Free: false, Personal: false, Pro: true, Enterprise: true },
       },
       {
         name: "Integrated Domains",
-        tiers: { Personal: false, Pro: true, Enterprise: true },
+        tiers: { Free: false, Personal: false, Pro: true, Enterprise: true },
       },
     ],
   },
@@ -73,15 +88,30 @@ const sections: {
     features: [
       {
         name: "Number of endpoints",
-        tiers: { Personal: "5", Pro: "100", Enterprise: "∞" },
+        tiers: {
+          Free: DEFAULT_QUOTA.FREE.maxEndpoints.toLocaleString(),
+          Personal: DEFAULT_QUOTA.PERSONAL.maxEndpoints.toLocaleString(),
+          Pro: DEFAULT_QUOTA.PRO.maxEndpoints.toLocaleString(),
+          Enterprise: "∞",
+        },
       },
       {
-        name: "Minimum Frequency",
-        tiers: { Personal: "10s", Pro: "1s", Enterprise: "1s" },
+        name: "Minimum Interval",
+        tiers: {
+          Free: ms(DEFAULT_QUOTA.FREE.minInterval),
+          Personal: ms(DEFAULT_QUOTA.PERSONAL.minInterval),
+          Pro: ms(DEFAULT_QUOTA.PRO.minInterval),
+          Enterprise: ms(DEFAULT_QUOTA.ENTERPRISE.minInterval),
+        },
       },
       {
         name: "Timeout",
-        tiers: { Personal: "5s", Pro: "10s", Enterprise: "Custom" },
+        tiers: {
+          Free: ms(DEFAULT_QUOTA.FREE.maxTimeout),
+          Personal: ms(DEFAULT_QUOTA.PERSONAL.maxTimeout),
+          Pro: ms(DEFAULT_QUOTA.PRO.maxTimeout),
+          Enterprise: "Custom",
+        },
       },
     ],
   },
@@ -90,11 +120,21 @@ const sections: {
     features: [
       {
         name: "Data Retention",
-        tiers: { Personal: "24h", Pro: "7 days", Enterprise: "90 days" },
+        tiers: {
+          Free: ms(DEFAULT_QUOTA.FREE.retention, { long: true }),
+          Personal: ms(DEFAULT_QUOTA.PERSONAL.retention, { long: true }),
+          Pro: ms(DEFAULT_QUOTA.PRO.retention, { long: true }),
+          Enterprise: ms(DEFAULT_QUOTA.ENTERPRISE.retention, { long: true }),
+        },
       },
       {
         name: "Audit Logs",
-        tiers: { Personal: false, Pro: false, Enterprise: true },
+        tiers: {
+          Free: false,
+          Personal: false,
+          Pro: false,
+          Enterprise: true,
+        },
       },
     ],
   },
@@ -103,16 +143,39 @@ const sections: {
     features: [
       {
         name: "Webhooks",
-        tiers: { Personal: true, Pro: true, Enterprise: true },
+        tiers: {
+          Free: true,
+          Personal: true,
+          Pro: true,
+          Enterprise: true,
+        },
       },
-      { name: "Slack", tiers: { Personal: true, Pro: true, Enterprise: true } },
+      {
+        name: "Slack",
+        tiers: {
+          Free: false,
+          Personal: true,
+          Pro: true,
+          Enterprise: true,
+        },
+      },
       {
         name: "Email",
-        tiers: { Personal: false, Pro: true, Enterprise: true },
+        tiers: {
+          Free: false,
+          Personal: false,
+          Pro: true,
+          Enterprise: true,
+        },
       },
       {
         name: "Opsgenie",
-        tiers: { Personal: false, Pro: false, Enterprise: true },
+        tiers: {
+          Free: false,
+          Personal: false,
+          Pro: false,
+          Enterprise: true,
+        },
       },
     ],
   },
@@ -138,13 +201,13 @@ export const Pricing: React.FC = (): JSX.Element => {
             {/* xs to lg */}
             <div className="mx-auto max-w-2xl space-y-16 lg:hidden">
               {tiers.map((tier, tierIdx) => (
-                <section key={tier.name} className="lg:w-1/4">
+                <section key={tier.name} className="lg:w-1/5">
                   <div className="mb-8 px-4">
                     <h2 className="text-lg font-medium leading-6 text-slate-900">
                       {tier.name}
                     </h2>
                     <p className="mt-4">
-                      {tier.monthlyPrice > 0
+                      {tier.monthlyPrice >= 0
                         ? (
                           <>
                             <span className="text-4xl font-bold tracking-tight text-slate-900">
@@ -269,7 +332,7 @@ export const Pricing: React.FC = (): JSX.Element => {
                     {tiers.map((tier) => (
                       <th
                         key={tier.name}
-                        className="lg:w-1/4 px-6 pb-4 text-left text-lg font-medium leading-6 text-slate-900"
+                        className="lg:w-1/5 px-6 pb-4 text-left text-lg font-medium leading-6 text-slate-900"
                         scope="col"
                       >
                         {tier.name}
@@ -327,7 +390,7 @@ export const Pricing: React.FC = (): JSX.Element => {
                       <tr>
                         <th
                           className="bg-slate-50 py-3 pl-6 text-left text-sm font-medium text-slate-900"
-                          colSpan={4}
+                          colSpan={5}
                           scope="colgroup"
                         >
                           {section.name}

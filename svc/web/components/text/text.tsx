@@ -3,7 +3,7 @@ import cn from "classnames";
 import React, { PropsWithChildren } from "react";
 
 export interface TextProps {
-  size?: Size;
+  size?: Size | "2xl" | "3xl";
   /**
    * Override default default colors.
    * You can even use gradients here.
@@ -46,7 +46,7 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
   truncate,
 }): JSX.Element => {
   return (
-    <p
+    <span
       className={cn(
         {
           "text-xs": size === "xs",
@@ -56,7 +56,7 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
           "text-xl": size === "xl",
           "text-2xl": size === "2xl",
           "font-semibold": bold,
-          "break-words": lineBreak,
+          "whitespace-nowrap": !lineBreak,
           "font-mono": mono,
           "truncate text-ellipsis whitespace-nowrap": truncate,
         },
@@ -65,6 +65,6 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
       )}
     >
       {children}
-    </p>
+    </span>
   );
 };

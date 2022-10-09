@@ -55,6 +55,10 @@ resource "aws_ecs_task_definition" "scheduler" {
         {
           name : "AXIOM_TOKEN",
           value : var.axiom_token
+        },
+        {
+          name : "STRIPE_SECRET_KEY",
+          value : var.stripe_secret_key
         }
       ],
       "logConfiguration" : {

@@ -29,7 +29,7 @@ export default function Page() {
   const emailForm = useForm<{ email: string; name: string }>();
   const otpForm = useForm<{ otp: string }>();
 
-  const { session } = useSession();
+  const { session, invalidate } = useSession();
   useEffect(() => {
     if (session.signedIn) {
       router.push("/home");
@@ -179,7 +179,7 @@ export default function Page() {
                               name: emailForm.getValues().name,
                               otp,
                             });
-
+                            invalidate();
                             router.push("/home");
                             setLoading(false);
                           })}
@@ -208,62 +208,5 @@ export default function Page() {
         </section>
       </main>
     </div>
-    // <div className="absolute inset-0 w-screen h-screen flex items-center justify-center">
-    //   <Card title="Sign In">
-    //     <Form
-    //       onFinish={async ({ email, otp }) => {
-    //         setLoading(true);
-    //         if (step === "email") {
-    //           const { redirect } = await requestSignUp.mutateAsync({ email });
-    //           if (redirect) {
-    //             router.push(redirect);
-    //             return;
-    //           }
-    //           setStep("otp");
-    //         } else {
-    //           const { redirect } = await verifySignUp.mutateAsync({
-    //             identifier: email,
-    //             otp,
-    //           });
-
-    //           router.push("/home");
-    //         }
-    //         setLoading(false);
-    //       }}
-    //       form={form}
-    //       labelCol={{ span: 8 }}
-    //       layout="vertical"
-    //     >
-    //       <Form.Item
-    //         label="Email"
-    //         name="email"
-    //         rules={[{ required: true, type: "email" }]}
-    //       >
-    //         <Input
-    //           disabled={step === "otp"}
-    //           style={{ width: "100%" }}
-    //         />
-    //       </Form.Item>
-
-    //       {step === "otp"
-    //         ? (
-    //           <Form.Item
-    //             label="OTP"
-    //             name="otp"
-    //             rules={[{ required: step === "otp" }]}
-    //           >
-    //             <Input
-    //               style={{ width: "100%" }}
-    //             />
-    //           </Form.Item>
-    //         )
-    //         : null}
-
-    //       <Button type="primary" htmlType="submit" block loading={loading}>
-    //         {step === "email" ? "Request Token" : "Sign In"}
-    //       </Button>
-    //     </Form>
-    //   </Card>
-    // </div>
   );
 }

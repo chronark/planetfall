@@ -19,7 +19,6 @@ export class HeaderAssertion implements Assertion {
       required: [],
     };
     for (const check of checks) {
-      console.log({ check });
       switch (check.comparison) {
         case "eq":
           schema.properties![check.key] = {
@@ -41,7 +40,6 @@ export class HeaderAssertion implements Assertion {
   }
 
   public assert(req: AssertionRequest): AssertionResponse {
-    console.log(JSON.stringify({ req, schema: this.schema }, null, 2));
     const res = new Validator(this.schema).validate(req);
     if (res.valid) {
       return {

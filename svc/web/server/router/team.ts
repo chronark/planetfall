@@ -33,10 +33,26 @@ export const teamRouter = t.router({
       email: user.email,
       name: input.name,
     });
+
+    const productId = process.env.STRIPE_PRODUCT_ID_PRO;
+    if (!productId) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "STRIPE_PRODUCT_ID_PRO is not defined",
+      });
+    }
+    const product = await stripe.products.retrieve(productId);
+    const price = product.default_price?.toString();
+    if (!price) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "product does not have default price",
+      });
+    }
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
       trial_period_days: 14,
-      items: [{ price: process.env.STRIPE_PLAN_PRO_PRICE_ID }],
+      items: [{ price }],
     });
     if (!subscription) {
       throw new TRPCError({
@@ -65,6 +81,9 @@ export const teamRouter = t.router({
           : null,
         retention: DEFAULT_QUOTA.PRO.retention,
         maxMonthlyRequests: DEFAULT_QUOTA.PRO.maxMonthlyRequests,
+        maxEndpoints: DEFAULT_QUOTA.PRO.maxEndpoints,
+        maxTimeout: DEFAULT_QUOTA.PRO.maxTimeout,
+        minInterval: DEFAULT_QUOTA.PRO.minInterval,
         members: {
           create: {
             user: {

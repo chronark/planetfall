@@ -69,6 +69,9 @@ export default async function webhookHandler(
             stripeSubscriptionId: newSubscription.id,
             retention: DEFAULT_QUOTA.PRO.retention,
             maxMonthlyRequests: DEFAULT_QUOTA.PRO.maxMonthlyRequests,
+            maxEndpoints: DEFAULT_QUOTA.PRO.maxEndpoints,
+            minInterval: DEFAULT_QUOTA.PRO.minInterval,
+            maxTimeout: DEFAULT_QUOTA.PRO.maxTimeout,
             stripeCurrentBillingPeriodStart: new Date(
               newSubscription.current_period_start * 1000,
             ),
@@ -115,14 +118,20 @@ export default async function webhookHandler(
         if (!team) {
           throw new Error("team does not exist");
         }
-        if (team.plan === "PERSONAL") {
+        if (team.personal) {
           await db.team.update({
             where: {
               stripeCustomerId: subscription.customer.toString(),
             },
             data: {
+              plan: "FREE",
               maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
+              maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
+              maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
+              minInterval: DEFAULT_QUOTA.FREE.minInterval,
               stripeSubscriptionId: null,
+              stripeCurrentBillingPeriodStart: null,
+              stripeCurrentBillingPeriodEnd: null,
               retention: DEFAULT_QUOTA.FREE.retention,
             },
           });
@@ -134,6 +143,9 @@ export default async function webhookHandler(
             data: {
               plan: "DISABLED",
               stripeSubscriptionId: null,
+              maxMonthlyRequests: 0,
+              stripeCurrentBillingPeriodStart: null,
+              stripeCurrentBillingPeriodEnd: null,
             },
           });
         }

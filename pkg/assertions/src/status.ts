@@ -35,9 +35,7 @@ export class StatusAssertion implements Assertion {
   }
 
   public assert(req: AssertionRequest): AssertionResponse {
-    console.log({ req, schema: this.schema });
     const res = new Validator(this.schema).validate(req);
-    console.log(JSON.stringify({ res }, null, 2));
     if (res.valid) {
       return {
         success: true,

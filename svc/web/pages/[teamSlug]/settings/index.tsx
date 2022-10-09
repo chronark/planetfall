@@ -2,29 +2,22 @@ import { Layout } from "../../../components/app/layout/nav";
 
 import React from "react";
 import { useRouter } from "next/router";
-import {
-  Avatar,
-  Badge,
-  Button,
-  Card,
-  Col,
-  List,
-  Row,
-  Space,
-  Statistic,
-  Tabs,
-  Tag,
-  Typography,
-} from "antd";
+
 import { trpc } from "../../../lib/hooks/trpc";
-import { DEFAULT_QUOTA } from "@planetfall/svc/web/plans";
+import { Button, Card, Confirm, PageHeader, Text } from "components";
+import Link from "next/link";
 
 export default function SettingsPage() {
   const router = useRouter();
   const teamSlug = router.query.teamSlug as string;
   // router.push(router.asPath + "/endpoints");
   const team = trpc.team.get.useQuery({ teamSlug }, { enabled: !!teamSlug });
-  const checkout = trpc.billing.checkout.useMutation();
+
+  const ctx = trpc.useContext();
+  const checkout = trpc.billing.checkout.useMutation({
+    onSettled: () => ctx.team.get.invalidate(),
+  });
+  const cancel = trpc.billing.cancel.useMutation();
 
   const usage = trpc.billing.usage.useQuery({ teamId: team.data?.id ?? "" }, {
     enabled: !!team.data?.id,
@@ -35,28 +28,42 @@ export default function SettingsPage() {
     ? "planetfall.io"
     : "localhost:3000";
 
-  async function handleCheckout() {
+  async function handleCheckout(plan: "PRO" | "PERSONAL") {
     const { url } = await checkout.mutateAsync({
       teamId: team.data!.id,
       returnUrl: `${protocol}://${host}/${router.asPath}`,
+      plan,
     });
     if (url) {
       router.push(url);
     }
   }
+
+  const currentUsage = usage.data?.usage ?? 0;
+  const maxUsage = team.data?.maxMonthlyRequests ?? null;
+  const usagePercentage = maxUsage ? currentUsage / maxUsage * 100 : null;
   return (
     <Layout breadcrumbs={[]}>
-      <Space direction="vertical" size={32} style={{ width: "100%" }}>
-        <Typography.Title level={1}>Settings</Typography.Title>
+      {/* <PageHeader title="Settings" /> */}
 
-        <Card
-          title={
-            <Row justify="space-between" align="middle">
-              <Typography.Title>Plan</Typography.Title>
-              <Tag color="blue">{team.data?.plan}</Tag>
-            </Row>
-          }
-          actions={[
+      <Card>
+        <Card.Header>
+          <Card.Header.Title
+            title="Billing"
+            subtitle={
+              <Text>
+                You are currently on the{" "}
+                <span className="border border-slate-300 rounded px-1 bg-slate-50">
+                  {team.data?.plan}
+                </span>{" "}
+                plan.
+              </Text>
+            }
+          />
+        </Card.Header>
+
+        {
+          /* actions={[
             <Button
               type="primary"
               loading={checkout.isLoading}
@@ -68,71 +75,121 @@ export default function SettingsPage() {
                 ? "Upgrade to PRO"
                 : "Change Plan"}
             </Button>,
-          ]}
-        >
-          <Card.Meta
-            title={team.data?.stripeTrialExpires
-              ? (
-                <Typography.Text>
-                  Your <Typography.Text underline>Pro Trial</Typography.Text>
-                  {" "}
-                  expires in{" "}
-                  {(((team.data?.stripeTrialExpires?.getTime() ?? 0) -
-                    Date.now()) / 24 / 60 / 60 / 1000).toFixed(0)}{" "}
-                  days. To maintain access to premium features, upgrade to Pro.
-                </Typography.Text>
-              )
-              : null}
-          />
-          <div>
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              <div className="overflow-hidden py-5 sm:p-6">
-                <dt className="truncate text-sm font-medium text-slate-500">
-                  Requests
-                </dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
-                  {`${usage.data?.usage.toLocaleString()}
-                  ${
-                    team.data?.plan === "PERSONAL"
-                      ? `/ ${DEFAULT_QUOTA.PERSONAL.maxMonthlyRequests?.toLocaleString()}`
-                      : ""
-                  }`}
-                </dd>
-              </div>
-              <div className="overflow-hidden py-5 sm:p-6">
-                <dt className="truncate text-sm font-medium text-slate-500">
-                  Usage Cost
-                </dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
-                  {`$${((usage.data?.usage ?? 0) / 10000).toFixed(2)}`}
-                </dd>
-              </div>
-              {team.data?.stripeTrialExpires
+          ]} */
+        }
+        <Card.Content>
+          <div className="flex justify-around divide-x divide-slate-200">
+            <div className="px-8 w-1/3 flex flex-col gap-2">
+              <Text size="xl">Current Usage</Text>
+              <Text>
+                {currentUsage.toLocaleString()} /{" "}
+                {maxUsage?.toLocaleString() ?? "∞"} {usagePercentage !== null
+                  ? `(${
+                    usagePercentage.toLocaleString(undefined, {
+                      maximumFractionDigits: 2,
+                    })
+                  }%)`
+                  : null}
+              </Text>
+              {usagePercentage !== null
                 ? (
-                  <div className="overflow-hidden py-5 sm:p-6">
-                    <dt className="truncate text-sm font-medium text-slate-500">
-                      Trial left
-                    </dt>
-                    <dd className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
-                      {((team.data.stripeTrialExpires.getTime() - Date.now()) /
-                        24 / 60 / 60 / 1000).toFixed(0)} Days
-                    </dd>
+                  <div className="overflow-hidden rounded-full bg-gray-200">
+                    <div
+                      className="h-2 rounded bg-primary-600"
+                      style={{ width: `${usagePercentage}%` }}
+                    />
                   </div>
                 )
-                : (
-                  <div className="overflow-hidden py-5 sm:p-6">
-                    <dt className="truncate text-sm font-medium text-slate-500">
-                      Billing Cycle
-                    </dt>
-                    <dd className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
-                      {`${team.data?.stripeCurrentBillingPeriodStart?.toLocaleDateString()} - ${team.data?.stripeCurrentBillingPeriodEnd?.toLocaleDateString()}`}
-                    </dd>
-                  </div>
-                )}
-            </dl>
+                : null}
+            </div>
+
+            <div className="px-8 w-1/3 flex flex-col gap-2">
+              <Text size="xl">Cost</Text>
+              <Text>
+                ${team.data?.plan === "PRO" ? 20 : 0 +
+                  (Math.max(0, currentUsage - 100000) * 0.0001)
+                    .toLocaleString(undefined, { maximumFractionDigits: 2 })}
+              </Text>
+            </div>
+            <div className="px-8 w-1/3 flex flex-col gap-2">
+              <Text size="xl">Current Billing Cycle</Text>
+              <Text>
+                {`${team.data?.stripeCurrentBillingPeriodStart?.toLocaleDateString()} - ${team.data?.stripeCurrentBillingPeriodEnd?.toLocaleDateString()}`}
+              </Text>
+            </div>
           </div>
-        </Card>
-      </Space>
+        </Card.Content>
+
+        <Card.Footer>
+          <span>
+            Upgrade for{" "}
+            <Link
+              href="/pricing"
+              className="border-b border-primary-500 text-primary-600 hover:text-slate-900"
+            >
+              increased limits
+            </Link>.
+          </span>
+
+          <Card.Footer.Actions>
+            <Confirm
+              title="Are you sure you want to cancel?"
+              description="You can come back any time, your endpoints are not deleted."
+              onConfirm={() => cancel.mutateAsync({ teamId: team.data!.id })}
+              trigger={<Button type="secondary">Cancel</Button>}
+            />
+
+            {team.data
+              ? team.data?.personal
+                ? team.data?.plan === "FREE"
+                  ? (
+                    <Button
+                      onClick={() => handleCheckout("PERSONAL")}
+                      disabled={checkout.isLoading || !team.data}
+                    >
+                      Upgrade to PERSONAL
+                    </Button>
+                  )
+                  : team.data?.plan === "PERSONAL"
+                  ? (
+                    <Button
+                      onClick={() => handleCheckout("PRO")}
+                      disabled={checkout.isLoading || !team.data}
+                    >
+                      Upgrade to PRO
+                    </Button>
+                  )
+                  : team.data?.plan === "PRO"
+                  ? (
+                    <Button
+                      href="mailto:support@planetfall.io?subject=planetfall.io enterprise upgrade"
+                      disabled={checkout.isLoading || !team.data}
+                    >
+                      Upgrade to Enterprise
+                    </Button>
+                  )
+                  : null
+                : team.data?.plan === "DISABLED"
+                ? (
+                  <Button
+                    onClick={() => handleCheckout("PRO")}
+                    disabled={checkout.isLoading || !team.data}
+                  >
+                    Upgrade to PRO
+                  </Button>
+                )
+                : (
+                  <Button
+                    href="mailto:support@planetfall.io"
+                    disabled={checkout.isLoading || !team.data}
+                  >
+                    Upgrade to Enterprise
+                  </Button>
+                )
+              : null}
+          </Card.Footer.Actions>
+        </Card.Footer>
+      </Card>
     </Layout>
   );
 }

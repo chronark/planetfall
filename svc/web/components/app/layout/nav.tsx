@@ -26,6 +26,7 @@ import {
   Typography,
 } from "antd";
 import { router } from "@planetfall/svc/web/server/router";
+import { checkIsManualRevalidate } from "next/dist/server/api-utils";
 
 function classNames(...classes: unknown[]) {
   return classes.filter(Boolean).join(" ");
@@ -48,7 +49,6 @@ const Divider: React.FC = () => {
 const CreateNewTeam: React.FC = (): JSX.Element => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
   const createTeam = trpc.team.create.useMutation();
   useEffect(() => {
     if (createTeam.error) {
@@ -113,7 +113,7 @@ export type LayoutProps = {
 export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
   { children, breadcrumbs = [], teamSelector = true },
 ): JSX.Element => {
-  const { signOut } = useSession();
+  const { signOut, invalidate } = useSession();
   const { user } = useUser();
   const router = useRouter();
   const activeTeamSlug = router.query.teamSlug as string;
@@ -317,6 +317,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                                 type="link"
                                 onClick={async () => {
                                   await signOut();
+                                  invalidate();
                                   router.push("/");
                                 }}
                               >
@@ -489,7 +490,10 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                   ))}
                   <Disclosure.Button
                     as="button"
-                    onClick={() => signOut()}
+                    onClick={async () => {
+                      await signOut();
+                      invalidate;
+                    }}
                     className="block rounded-md py-2 px-3 text-base font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                   >
                     Sign Out

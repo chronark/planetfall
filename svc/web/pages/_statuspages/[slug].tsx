@@ -60,6 +60,76 @@ const Row: React.FC<
   const p99 = usePercentile(0.99, values);
 
   return (
+    // <div className="flex space-x-0.5 h-8 items-end mt-16">
+    //   {data.map((point, i) => {
+
+    //     const cn = ["flex-1 w h-full rounded-sm hover:opacity-80 hover:scale-y-125 transition-all duration-500"]
+
+    //     if (point.buffer) {
+    //       cn.push("bg-slate-50 border border-slate-300 hover:bg-slate-100 animate-pulse")
+    //     } else if (point.error) {
+    //       cn.push("bg-rose-400 border border-rose-600 hover:bg-rose-100")
+    //     } else if (endpoint.data?.degradedAfter && point.latency && point.latency >= endpoint.data.degradedAfter) {
+    //       cn.push("bg-amber-400 border border-amber-600 hover:bg-amber-100")
+    //     } else {
+    //       cn.push("bg-emerald-300 border border-emerald-500 hover:bg-emerald-100")
+
+    //     }
+    //     return (
+    //       <HoverCard.Root openDelay={50} closeDelay={40} key={i}>
+    //         <HoverCard.Trigger
+    //           key={i}
+    //           className={cn.join(" ")}
+    //         // style={{
+    //         //   height: `${height}%`,
+    //         // }}
+    //         />{" "}
+    //         <HoverCard.Portal>
+    //           <HoverCard.Content>
+    //             {!point.buffer
+    //               ? (
+    //                 <>
+    //                   <div className="overflow-hidden rounded-sm bg-white px-4 py-5 shadow sm:p-6">
+    //                     <dt className="truncate text-sm font-medium text-slate-500">
+    //                       {point.time.toLocaleString()}
+    //                     </dt>
+    //                     <dt className="truncate text-sm font-medium text-slate-500">
+    //                       {point.region}
+    //                     </dt>
+    //                     <dd className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
+    //                       {point.latency?.toLocaleString()} ms
+    //                     </dd>
+    //                   </div>
+    //                   <HoverCard.Arrow />
+    //                 </>
+    //               )
+    //               : null}
+    //           </HoverCard.Content>
+    //         </HoverCard.Portal>
+    //       </HoverCard.Root>
+    //     );
+    //   })}
+    // </div>
+
+    // <div className="relative">
+    //   <div className="absolute inset-0 flex items-center" aria-hidden="true">
+    //     <div className={classNames("w-full border-t",
+    //       {
+    //         "border-emerald-500": availability >= 0.99,
+    //         "border-orange-500": availability < 0.99 && availability >= 0.95,
+    //         "border-rose-500": availability < 0.95
+    //       })} />
+    //   </div>
+    //   <div className="relative flex justify-center">
+    //     <span className={classNames("bg-white px-2 text-sm",
+    //       {
+    //         "text-emerald-500": availability >= 0.99,
+    //         "text-orange-500": availability < 0.99 && availability >= 0.95,
+    //         "text-rose-500": availability < 0.95
+    //       }
+    //     )}>{(availability * 100).toFixed(2)}%</span>
+    //   </div>
+    // </div>
     <li className="border-t sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded my-16  hover:border-primary-500 duration-1000">
       <div className="flex-col gap-2 lg:flex-row items-start border-b border-slate-200  px-4 py-5 sm:px-6 flex justify-between md:items-center">
         <div className="lg:w-1/2">

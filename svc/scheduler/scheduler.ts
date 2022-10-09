@@ -37,29 +37,28 @@ export class Scheduler {
     });
 
     for (const t of teams) {
-      if (t.maxMonthlyRequests) {
-        const since = t.stripeCurrentBillingPeriodStart ??
-          new Date(now.getUTCFullYear(), now.getUTCMonth());
-        const usage = await this.db.check.count({
-          where: {
-            time: {
-              gte: since,
-            },
-            endpoint: {
-              teamId: t.id,
-            },
+      const since = t.stripeCurrentBillingPeriodStart ??
+        new Date(now.getUTCFullYear(), now.getUTCMonth());
+      const usage = await this.db.check.count({
+        where: {
+          time: {
+            gte: since,
           },
-        });
-        if (usage > t.maxMonthlyRequests) {
-          this.logger.info("team has exceeded monthly requests", {
+          endpoint: {
             teamId: t.id,
-            maxMonthlyRequests: t.maxMonthlyRequests,
-            since,
-            usage,
-          });
-          break;
-        }
+          },
+        },
+      });
+      if (usage > t.maxMonthlyRequests) {
+        this.logger.info("team has exceeded monthly requests", {
+          teamId: t.id,
+          maxMonthlyRequests: t.maxMonthlyRequests,
+          since,
+          usage,
+        });
+        break;
       }
+
       for (const e of t.endpoints) {
         want[e.id] = e;
       }

@@ -3,6 +3,7 @@ import { Events } from "./events";
 import http from "node:http";
 import "isomorphic-fetch";
 import { newLogger } from "./logger";
+import { Billing } from "./billing";
 
 const logger = newLogger({ dataset: "scheduler" });
 const s = new Scheduler({ logger });
@@ -19,3 +20,12 @@ const server = http.createServer((_req, res) => {
   res.end("OK");
 });
 server.listen(process.env.PORT ?? 8000);
+
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+if (!stripeSecretKey) {
+  logger.warn("BILLING IS NOT ENABLED");
+}
+if (stripeSecretKey) {
+  const billing = new Billing({ logger, stripeSecretKey });
+  setInterval(() => billing.run(), 60_000);
+}

@@ -16,6 +16,8 @@
     "@planetfall/db": "*",
     "@planetfall/id": "*",
     "isomorphic-fetch": "^3.0.0",
+    "@stripe/stripe-js": "^1.38.1",
+
     "kafkajs": "^2.2.0",
     "tslog": "^3.3.4",
     "zod": "^3.19.1"

@@ -9,7 +9,7 @@ export interface Logger {
 export function newLogger(opts?: { dataset: string }): Logger {
   const logger = new tslog.Logger();
   logger.setSettings({
-    colorizePrettyLogs: false,
+    colorizePrettyLogs: process.env.NODE_ENV !== "production",
   });
 
   if (opts?.dataset) {

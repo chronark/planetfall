@@ -54,6 +54,7 @@ export async function handler(
         "User-Agent": "planetfall.io",
         ...v.data.headers,
       },
+      redirect: "manual",
       body: v.data.body,
       // signal: abortController.signal,
     });
@@ -63,6 +64,7 @@ export async function handler(
       headers: {
         "Content-Type": "application/json",
       },
+
       body: JSON.stringify({ status, latency }),
     };
   } catch (e) {

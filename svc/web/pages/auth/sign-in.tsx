@@ -29,7 +29,7 @@ export default function Page() {
   const emailForm = useForm<{ email: string }>();
   const otpForm = useForm<{ otp: string }>();
 
-  const { session } = useSession();
+  const { session, invalidate } = useSession();
   useEffect(() => {
     if (session.signedIn) {
       router.push("/home");
@@ -144,6 +144,7 @@ export default function Page() {
                               identifier: emailForm.getValues().email,
                               otp,
                             });
+                            invalidate();
 
                             router.push("/home");
                             setLoading(false);

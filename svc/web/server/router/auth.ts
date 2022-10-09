@@ -226,10 +226,6 @@ export const authRouter = t.router({
       email: input.identifier,
       name: input.name,
     });
-    const subscription = await stripe.subscriptions.create({
-      customer: customer.id,
-      items: [{ price: process.env.STRIPE_PLAN_PERSONAL_PRICE_ID }],
-    });
 
     const slug = slugify(input.name, { lower: true });
     const user = await ctx.db.user.create({
@@ -244,19 +240,15 @@ export const authRouter = t.router({
               create: {
                 id: newId("team"),
                 personal: true,
-                plan: "PERSONAL",
+                plan: "FREE",
                 name: input.name,
                 slug,
                 stripeCustomerId: customer.id,
-                stripeSubscriptionId: subscription.id,
-                stripeCurrentBillingPeriodStart: new Date(
-                  subscription.current_period_start * 1000,
-                ),
-                stripeCurrentBillingPeriodEnd: new Date(
-                  subscription.current_period_end * 1000,
-                ),
-                retention: DEFAULT_QUOTA.PERSONAL.retention,
-                maxMonthlyRequests: DEFAULT_QUOTA.PERSONAL.maxMonthlyRequests,
+                retention: DEFAULT_QUOTA.FREE.retention,
+                maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
+                maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
+                minInterval: DEFAULT_QUOTA.FREE.minInterval,
+                maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
               },
             },
           },

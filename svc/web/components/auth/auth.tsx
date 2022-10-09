@@ -22,8 +22,12 @@ export type Session = {
 
 const Context = createContext<{
   session: Session;
+  invalidate: () => void;
 }>({
   session: { signedIn: false, loading: true },
+  invalidate: () => {
+    throw new Error("Implement me");
+  },
 });
 
 export type AuthProviderProps = {
@@ -36,6 +40,11 @@ export const AuthProvider: React.FC<PropsWithChildren> = (
     signedIn: false,
     loading: true,
   });
+  const [nonce, setNonce] = useState(0);
+
+  function invalidate() {
+    setNonce(nonce + 1);
+  }
 
   const ctx = trpc.useContext();
   useEffect(() => {
@@ -65,9 +74,9 @@ export const AuthProvider: React.FC<PropsWithChildren> = (
 
     run();
     // eslint-disable-next-line
-  }, []);
+  }, [nonce]);
   return (
-    <Context.Provider value={{ session }}>
+    <Context.Provider value={{ session, invalidate }}>
       {children}
     </Context.Provider>
   );
@@ -78,7 +87,7 @@ export function useSession() {
 
   const signOut = trpc.auth.signOut.useMutation().mutateAsync;
 
-  return { session: ctx.session, signOut };
+  return { session: ctx.session, signOut, invalidate: ctx.invalidate };
 }
 
 export function useUser() {

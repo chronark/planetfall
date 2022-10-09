@@ -3,26 +3,28 @@ import { Heading } from "../../heading";
 import { Text } from "../../text/text";
 
 export interface CardHeaderTitleProps {
-  title: string;
-  subtitle?: string;
+  title: string | React.ReactNode;
+  subtitle?: string | React.ReactNode;
+  actions?: React.ReactNode[];
 }
 
 export const CardHeaderTitle: React.FC<CardHeaderTitleProps> = ({
   title,
   subtitle,
+  actions,
 }): JSX.Element => {
   return (
     <div className="px-4 py-4 lg:px-6 lg:py-6">
       <div className="flex items-center justify-between">
-        <Heading h2>{title}</Heading>
+        <Heading h3>{title}</Heading>
+        <div className="flex items-center gap-2">
+          {actions}
+        </div>
       </div>
-      {subtitle
-        ? (
-          <div className="mt-4">
-            <Text>{subtitle}</Text>
-          </div>
-        )
-        : null}
+
+      {typeof subtitle === "string"
+        ? <Text>{subtitle}</Text>
+        : subtitle ?? null}
     </div>
   );
 };

@@ -57,13 +57,13 @@ resource "vercel_project" "web" {
       target = ["production"]
     },
     {
-      key    = "STRIPE_PLAN_PRO_PRICE_ID"
-      value  = var.stripe_plan_pro_price_id
+      key    = "STRIPE_PRODUCT_ID_PRO"
+      value  = var.stripe_product_id_pro
       target = ["production"]
     },
      {
-      key    = "STRIPE_PLAN_PERSONAL_PRICE_ID"
-      value  = var.stripe_plan_personal_price_id
+      key    = "STRIPE_PRODUCT_ID_PERSONAL"
+      value  = var.stripe_product_id_personal
       target = ["production"]
     },
     {
