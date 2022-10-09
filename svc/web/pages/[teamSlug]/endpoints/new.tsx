@@ -127,7 +127,7 @@ export default function Page() {
   const formValues = watch();
   const monthlyRequests =
     (formValues.distribution === "ALL" ? selectedRegions.length : 1) * 30 * 24 *
-    60 * 60 / formValues.interval || 0;
+      60 * 60 / formValues.interval || 0;
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
@@ -159,8 +159,9 @@ export default function Page() {
                         required: true,
                       })}
                       placeholder="My API"
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-slate-700"
-                        } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
+                        errors.url ? "border-red-500" : "border-slate-700"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     />
                   </div>
                   {errors.name
@@ -222,8 +223,9 @@ export default function Page() {
                         validate: (v) => z.string().url().safeParse(v).success,
                       })}
                       placeholder="https://example.com"
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-slate-700"
-                        } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
+                        errors.url ? "border-red-500" : "border-slate-700"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     />
                   </div>
                   {errors.url
@@ -261,11 +263,13 @@ export default function Page() {
                     rows={3}
                     disabled={!["POST", "PUT"].includes(formValues.method)}
                     {...register("body")}
-                    className={`transition-all  focus:bg-slate-50 md:px-4 px-2 py-1 md:py-3  w-full ${errors.body ? "border-red-500" : "border-slate-700"
-                      } ${!["POST", "PUT"].includes(formValues.method)
+                    className={`transition-all  focus:bg-slate-50 md:px-4 px-2 py-1 md:py-3  w-full ${
+                      errors.body ? "border-red-500" : "border-slate-700"
+                    } ${
+                      !["POST", "PUT"].includes(formValues.method)
                         ? "cursor-not-allowed"
                         : ""
-                      } hover:border-slate-900 focus:border-slate-900   border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    } hover:border-slate-900 focus:border-slate-900   border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     defaultValue={""}
                     placeholder={!["POST", "PUT"].includes(formValues.method)
                       ? "Only available in POST or PUT requests"
@@ -288,8 +292,9 @@ export default function Page() {
                       validate: (v) => v ? JSON.parse(v) : true,
                     })}
                     placeholder={`{\n  "Authorization": "Bearer XXX"\n}`}
-                    className={`transition-all  focus:bg-slate-50 md:px-4 px-2 py-1 md:py-3  w-full ${errors.headers ? "border-red-500" : "border-slate-700"
-                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    className={`transition-all  focus:bg-slate-50 md:px-4 px-2 py-1 md:py-3  w-full ${
+                      errors.headers ? "border-red-500" : "border-slate-700"
+                    } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     defaultValue={""}
                   />
                   {errors.headers
@@ -427,10 +432,11 @@ export default function Page() {
                           <button
                             type="button"
                             key={r.id}
-                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${selectedRegions.includes(r.id)
-                              ? "border-slate-900 bg-slate-50"
-                              : "border-slate-300"
-                              }`}
+                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${
+                              selectedRegions.includes(r.id)
+                                ? "border-slate-900 bg-slate-50"
+                                : "border-slate-300"
+                            }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(
@@ -470,7 +476,6 @@ export default function Page() {
             </div>
             <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
               <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
-
                 <label
                   htmlFor="last-name"
                   className="block sm:col-span-2  text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"

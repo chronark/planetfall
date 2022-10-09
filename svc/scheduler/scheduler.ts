@@ -115,15 +115,17 @@ export class Scheduler {
     endpoint: Endpoint,
   ): Promise<void> {
     try {
-
-      const allRegions = endpoint.regions as string[]
+      const allRegions = endpoint.regions as string[];
       if (allRegions.length === 0) {
-        throw new Error(`endpoint ${endpoint.id} has no active regions`)
+        throw new Error(`endpoint ${endpoint.id} has no active regions`);
       }
-      const regions = endpoint.distribution === "ALL" ? allRegions
-        : [allRegions[Math.floor(Math.random() * allRegions.length)]]
-      this.logger.info("testing endpoint", { endpointId: endpoint.id, regions });
-
+      const regions = endpoint.distribution === "ALL"
+        ? allRegions
+        : [allRegions[Math.floor(Math.random() * allRegions.length)]];
+      this.logger.info("testing endpoint", {
+        endpointId: endpoint.id,
+        regions,
+      });
 
       await Promise.all(regions.map(async (regionId) => {
         let region = this.regions[regionId];
@@ -168,8 +170,6 @@ export class Scheduler {
         const { status, latency } = body as { status: number; latency: number };
 
         let error: string | undefined = undefined;
-
-
 
         await this.db.check.create({
           data: {

@@ -1,4 +1,4 @@
-import {  PrismaClient } from "@planetfall/db";
+import { PrismaClient } from "@planetfall/db";
 import { Logger } from "./logger";
 import Stripe from "stripe";
 
