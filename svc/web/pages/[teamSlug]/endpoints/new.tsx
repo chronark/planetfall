@@ -127,7 +127,7 @@ export default function Page() {
   const formValues = watch();
   const monthlyRequests =
     (formValues.distribution === "ALL" ? selectedRegions.length : 1) * 30 * 24 *
-      60 * 60 / formValues.interval || 0;
+    60 * 60 / formValues.interval || 0;
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
@@ -144,14 +144,14 @@ export default function Page() {
             </div>
 
             <div className="space-y-6 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                  className="sm:col-span-2 block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Name
                 </label>
-                <div className="mt-1 sm:col-span-3 sm:mt-0">
+                <div className="mt-1 sm:col-span-4 sm:mt-0">
                   <div className="">
                     <input
                       type="text"
@@ -159,9 +159,8 @@ export default function Page() {
                         required: true,
                       })}
                       placeholder="My API"
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
-                        errors.url ? "border-red-500" : "border-slate-700"
-                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-slate-700"
+                        } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     />
                   </div>
                   {errors.name
@@ -180,20 +179,20 @@ export default function Page() {
               <h3 className="text-lg font-medium leading-6 text-slate-900">
                 URL
               </h3>
-              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+              <p className="mt-1 text-sm text-slate-500">
                 Enter the url of your endpoint and select a HTTP method
               </p>
             </div>
 
             <div className="space-y-6 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="method"
-                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                  className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Method
                 </label>
-                <div className="mt-1 sm:col-span-3 sm:mt-0">
+                <div className="mt-1 sm:col-span-4 sm:mt-0">
                   <div className="">
                     <select
                       {...register("method", { required: true })}
@@ -207,14 +206,14 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="url"
-                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                  className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   URL
                 </label>
-                <div className="mt-1 sm:col-span-3 sm:mt-0">
+                <div className="mt-1 sm:col-span-4 sm:mt-0">
                   <div className="">
                     <input
                       type="text"
@@ -223,9 +222,8 @@ export default function Page() {
                         validate: (v) => z.string().url().safeParse(v).success,
                       })}
                       placeholder="https://example.com"
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
-                        errors.url ? "border-red-500" : "border-slate-700"
-                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-slate-700"
+                        } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     />
                   </div>
                   {errors.url
@@ -251,25 +249,23 @@ export default function Page() {
             </div>
 
             <div className="space-y-6 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="body"
-                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                  className="sm:col-span-2 block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Body
                 </label>
-                <div className="mt-1  sm:col-span-3 sm:mt-0">
+                <div className="mt-1  sm:col-span-4 sm:mt-0">
                   <textarea
                     rows={3}
                     disabled={!["POST", "PUT"].includes(formValues.method)}
                     {...register("body")}
-                    className={`transition-all  focus:bg-slate-50 md:px-4 px-2 py-1 md:py-3  w-full ${
-                      errors.body ? "border-red-500" : "border-slate-700"
-                    } ${
-                      !["POST", "PUT"].includes(formValues.method)
+                    className={`transition-all  focus:bg-slate-50 md:px-4 px-2 py-1 md:py-3  w-full ${errors.body ? "border-red-500" : "border-slate-700"
+                      } ${!["POST", "PUT"].includes(formValues.method)
                         ? "cursor-not-allowed"
                         : ""
-                    } hover:border-slate-900 focus:border-slate-900   border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      } hover:border-slate-900 focus:border-slate-900   border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     defaultValue={""}
                     placeholder={!["POST", "PUT"].includes(formValues.method)
                       ? "Only available in POST or PUT requests"
@@ -278,23 +274,22 @@ export default function Page() {
                 </div>
               </div>
 
-              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="last-name"
-                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                  className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Headers
                 </label>
-                <div className="mt-1  sm:col-span-3 sm:mt-0">
+                <div className="mt-1  sm:col-span-4 sm:mt-0">
                   <textarea
                     rows={3}
                     {...register("headers", {
                       validate: (v) => v ? JSON.parse(v) : true,
                     })}
                     placeholder={`{\n  "Authorization": "Bearer XXX"\n}`}
-                    className={`transition-all  focus:bg-slate-50 md:px-4 px-2 py-1 md:py-3  w-full ${
-                      errors.headers ? "border-red-500" : "border-slate-700"
-                    } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    className={`transition-all  focus:bg-slate-50 md:px-4 px-2 py-1 md:py-3  w-full ${errors.headers ? "border-red-500" : "border-slate-700"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     defaultValue={""}
                   />
                   {errors.headers
@@ -317,25 +312,25 @@ export default function Page() {
               <h3 className="text-lg font-medium leading-6 text-slate-900">
                 Assertions
               </h3>
-              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+              <p className="mt-1  text-sm text-slate-500">
                 Define validations and latency thresholds
               </p>
             </div>
             <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
-                <div className="pr-16">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <div className=" sm:col-span-2 ">
                   <label
                     htmlFor="last-name"
-                    className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
+                    className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                   >
                     Degraded After
                   </label>
-                  <p className="mt-1 max-w-2xl text-sm font-normal text-slate-500">
+                  <p className="mt-1 text-sm font-normal text-slate-500">
                     After this time the API is considered degraded and alerts
                     can be sent.
                   </p>
                 </div>
-                <div className="mt-1  flex sm:col-span-3 sm:mt-0">
+                <div className="mt-1  flex sm:col-span-4 sm:mt-0">
                   <div className="group relative flex flex-grow items-stretch focus-within:z-10">
                     <input
                       type="number"
@@ -352,14 +347,14 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="method"
-                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                  className="block text-sm sm:col-span-2 font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Status
                 </label>
-                <div className="mt-1 sm:col-span-3 sm:mt-0 space-y-4">
+                <div className="mt-1 sm:col-span-4 sm:mt-0 space-y-4">
                   {statusAssertions.fields.map((f, i) => (
                     <div key={f.id} className="flex items-center gap-4">
                       <select
@@ -432,11 +427,10 @@ export default function Page() {
                           <button
                             type="button"
                             key={r.id}
-                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${
-                              selectedRegions.includes(r.id)
-                                ? "border-slate-900 bg-slate-50"
-                                : "border-slate-300"
-                            }`}
+                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${selectedRegions.includes(r.id)
+                              ? "border-slate-900 bg-slate-50"
+                              : "border-slate-300"
+                              }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(
@@ -470,21 +464,20 @@ export default function Page() {
               <h3 className="text-lg font-medium leading-6 text-slate-900">
                 Interval
               </h3>
-              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+              <p className="mt-1  text-sm text-slate-500">
                 How frequently should we call your API
               </p>
             </div>
             <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
-                <div className="pr-16">
-                  <label
-                    htmlFor="last-name"
-                    className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
-                  >
-                    Interval
-                  </label>
-                </div>
-                <div className="mt-1  flex sm:col-span-3 sm:mt-0">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+
+                <label
+                  htmlFor="last-name"
+                  className="block sm:col-span-2  text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
+                >
+                  Interval
+                </label>
+                <div className="mt-1  flex sm:col-span-4 sm:mt-0">
                   <div className="group relative flex flex-grow items-stretch focus-within:z-10">
                     <input
                       type="number"
@@ -501,18 +494,18 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
                   htmlFor="distribution"
-                  className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                  className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Distribution
-                  <p className="mt-1 max-w-2xl text-sm font-normal text-slate-500">
+                  <p className="mt-1 text-sm font-normal text-slate-500">
                     Choose whether we should send a request from every selected
                     region at once, or only from one.
                   </p>
                 </label>
-                <div className="mt-1 sm:col-span-3 sm:mt-0">
+                <div className="mt-1 sm:col-span-4 sm:mt-0">
                   <div className="">
                     <select
                       {...register("distribution", { required: true })}
@@ -532,20 +525,18 @@ export default function Page() {
               <h3 className="text-lg font-medium leading-6 text-slate-900">
                 Summary
               </h3>
-              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+              <p className="mt-1  text-sm text-slate-500">
               </p>
             </div>
             <div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
-              <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
-                <div className="pr-16">
-                  <label
-                    htmlFor="last-name"
-                    className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
-                  >
-                    Expected monthly requests
-                  </label>
-                </div>
-                <div className="mt-1  flex sm:col-span-3 sm:mt-0">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <label
+                  htmlFor="last-name"
+                  className="sm:col-span-2 block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
+                >
+                  Expected monthly requests
+                </label>
+                <div className="mt-1 flex sm:col-span-4 sm:mt-0">
                   <div className=" cursor-not-allowed w-full rounded transition-all  md:px-4 md:h-12 inline-flex items-center  border-slate-900 border duration-300 ease-in-out focus:outline-none ">
                     {monthlyRequests.toLocaleString()}
                   </div>

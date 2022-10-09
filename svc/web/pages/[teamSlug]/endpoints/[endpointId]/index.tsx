@@ -365,7 +365,7 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
         ]}
       />
 
-      <div className="w-full flex justify-around items-center gap-2 md:gap-4 lg:gap-8">
+      <div className="w-full flex justify-between items-center gap-2 md:gap-4 lg:gap-8">
         <Stats
           label="Availability"
           status={availability > 0.99

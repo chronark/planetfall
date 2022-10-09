@@ -115,9 +115,17 @@ export class Scheduler {
     endpoint: Endpoint,
   ): Promise<void> {
     try {
-      this.logger.info("testing endpoint", { endpointId: endpoint.id });
 
-      await Promise.all((endpoint.regions as string[]).map(async (regionId) => {
+      const allRegions = endpoint.regions as string[]
+      if (allRegions.length === 0) {
+        throw new Error(`endpoint ${endpoint.id} has no active regions`)
+      }
+      const regions = endpoint.distribution === "ALL" ? allRegions
+        : [allRegions[Math.floor(Math.random() * allRegions.length)]]
+      this.logger.info("testing endpoint", { endpointId: endpoint.id, regions });
+
+
+      await Promise.all(regions.map(async (regionId) => {
         let region = this.regions[regionId];
         if (!region) {
           const res = await this.db.region.findUnique({
@@ -161,9 +169,7 @@ export class Scheduler {
 
         let error: string | undefined = undefined;
 
-        if (status !== 200) {
-          error = "status code was not 200";
-        }
+
 
         await this.db.check.create({
           data: {
