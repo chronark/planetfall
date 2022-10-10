@@ -3,15 +3,7 @@ import { Layout } from "../../components/app/layout/nav";
 import React from "react";
 import { useRouter } from "next/router";
 import { Card } from "components";
-import {
-  Avatar,
-  List,
-  Row,
-  Space,
-  Statistic,
-  Tag,
-  Typography,
-} from "antd";
+import { Avatar, List, Row, Space, Statistic, Tag, Typography } from "antd";
 import { trpc } from "../../lib/hooks/trpc";
 import Item from "antd/lib/list/Item";
 import { Heading } from "../../components/heading";
@@ -28,13 +20,11 @@ export default function Teampage() {
       <Space direction="vertical" size={32} style={{ width: "100%" }}>
         <Heading h2>{team.data?.name ?? ""}</Heading>
 
-
         <Card>
           <Card.Header>
             <Card.Header.Title title="Members" />
           </Card.Header>
           <Card.Content>
-
             <List
               loading={team.isLoading}
               itemLayout="horizontal"
@@ -50,7 +40,6 @@ export default function Teampage() {
               )}
             />
           </Card.Content>
-
         </Card>
       </Space>
     </Layout>

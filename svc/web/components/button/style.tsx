@@ -58,7 +58,7 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
          */
         icon && {
           "w-6 h-6 ": size === "sm" || size === "xs",
-          "w-8 h-8 p-1": size === "md",
+          "w-8 h-8": size === "md",
           "h-12 p-1": size === "lg",
           "w-12": size === "lg" && square,
         },

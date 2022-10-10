@@ -27,6 +27,7 @@ import {
 } from "antd";
 import { router } from "@planetfall/svc/web/server/router";
 import { checkIsManualRevalidate } from "next/dist/server/api-utils";
+import { Logo } from "../../logo";
 
 function classNames(...classes: unknown[]) {
   return classes.filter(Boolean).join(" ");
@@ -144,7 +145,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                           href="/"
                           className="text-slate-900 font-bold hover:text-slate-800"
                         >
-                          Planetfall
+                          <Logo className="w-8 h-8" />
                         </Link>
                       </li>
                       {teamSelector && !invalidteam

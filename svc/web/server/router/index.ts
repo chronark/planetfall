@@ -6,7 +6,6 @@ import { authRouter } from "./auth";
 import { pageRouter } from "./page";
 import { checkRouter } from "./check";
 import { billingRouter } from "./billing";
-
 export const router = t.router({
   team: teamRouter,
   endpoint: endpointRouter,

@@ -1,4 +1,9 @@
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import {
+  ChevronDownIcon,
+  MinusIcon,
+  PlusIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/solid";
 import {
   Check,
   Endpoint as EndpointType,
@@ -6,21 +11,34 @@ import {
   Region as RegionType,
   StatusPage,
 } from "@planetfall/db";
-import { Collapse, Popover } from "antd";
+import * as Collapse from "@radix-ui/react-collapsible";
+import * as HoverCard from "@radix-ui/react-hover-card";
+import { Divider, Popover } from "antd";
 import classNames from "classnames";
 import { GetStaticPropsContext } from "next";
 import React, { useEffect, useMemo, useState } from "react";
-import { usePercentile } from "../../lib/hooks/percentile";
+import { percentile, usePercentile } from "../../lib/hooks/percentile";
 import { Area, Heatmap, Line, TinyArea } from "@ant-design/plots";
 import Link from "next/link";
 import { NotFound } from "../../components/notFound/notFound";
+import { late, string } from "zod";
 
+import { Button, Stats } from "components";
+import { Heading } from "../../components/heading";
+import exp from "constants";
 export type PageProps = {
   name: string;
   endpoints: {
     name: string | null;
     url: string;
-    checks: { time: number; latency: number | null; region: string }[];
+    checks: {
+      time: number;
+      latency: number | null;
+      region: string;
+      error?: string;
+    }[];
+    degradedAfter?: number;
+    regions: string[];
   }[];
 };
 
@@ -30,20 +48,26 @@ const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
       <span className="flex-shrink-0 font-semibold">
         {label}:
       </span>
-      <span>{value} ms</span>
+      <span>{value.toLocaleString()} ms</span>
     </div>
   );
 };
 
-const Row: React.FC<
-  {
-    endpoint: PageProps["endpoints"][0];
-    charts: number;
-  }
-> = (
-  { endpoint, charts },
+type Series = {
+  time: number;
+  latency?: number;
+  error?: string;
+  region: string;
+}[];
+
+const Chart: React.FC<{
+  height?: string;
+  endpoint: PageProps["endpoints"][0];
+  withAvailability?: boolean;
+}> = (
+  { endpoint, height, withAvailability },
 ): JSX.Element => {
-  const values = useMemo(
+  const latencies = useMemo(
     () =>
       endpoint.checks.filter((c) => typeof c.latency === "number").map((c) =>
         c.latency
@@ -53,129 +77,290 @@ const Row: React.FC<
     ],
   );
 
-  const min = useMemo(() => Math.min(...values), [values]);
-  const max = useMemo(() => Math.max(...values), [values]);
-  const p50 = usePercentile(0.5, values);
-  const p95 = usePercentile(0.95, values);
-  const p99 = usePercentile(0.99, values);
+  const max = useMemo(() => Math.max(...latencies), [latencies]);
+
+  // buckets by hour
+  // key is the unix timestamp of the start of each hour
+  const buckets: Record<number, Series> = {};
+  for (const check of endpoint.checks) {
+    const bucketKeyDate = new Date(check.time);
+    bucketKeyDate.setMinutes(0);
+    bucketKeyDate.setSeconds(0);
+    bucketKeyDate.setMilliseconds(0);
+    const bucketKey = bucketKeyDate.getTime();
+
+    if (!(bucketKey in buckets)) {
+      buckets[bucketKey] = [];
+    }
+    buckets[bucketKey].push({
+      time: check.time,
+      latency: check.latency ?? undefined,
+      error: check.error,
+      region: check.region,
+    });
+  }
+
+  let i = 0;
+  while (Object.keys(buckets).length < 72) {
+    buckets[i++] = [];
+  }
+
+  const errors = endpoint.checks.filter((s) => s.error).length;
+  const availability = endpoint.checks.length > 0
+    ? 1 - (errors / endpoint.checks.length)
+    : 1;
+  return (
+    <div>
+      {withAvailability
+        ? (
+          <div className="relative mb-2">
+            <div
+              className="absolute inset-0 flex items-center"
+              aria-hidden="true"
+            >
+              <div
+                className={classNames("w-full border-t", {
+                  "border-emerald-500": availability >= 0.99,
+                  "border-orange-500": availability < 0.99 &&
+                    availability >= 0.95,
+                  "border-rose-500": availability < 0.95,
+                })}
+              />
+            </div>
+            <div className="relative flex justify-center">
+              <span
+                className={classNames("bg-white px-2 text-sm", {
+                  "text-emerald-500": availability >= 0.99,
+                  "text-orange-500": availability < 0.99 &&
+                    availability >= 0.95,
+                  "text-rose-500": availability < 0.95,
+                })}
+              >
+                {(availability * 100).toFixed(2)}%
+              </span>
+            </div>
+          </div>
+        )
+        : null}
+      <div className={`flex space-x-1 ${height ?? "h-12"} items-end`}>
+        {Object.entries(buckets).map(([time, bucket], i) => {
+          const start = new Date(parseInt(time));
+          const end = new Date(start.getTime() + 60 * 60 * 1000);
+          const latencies = bucket.filter((c) => c.latency).map((c) =>
+            c.latency
+          ) as number[];
+          const p50 = percentile(0.5, latencies);
+          const p95 = percentile(0.95, latencies);
+          const p99 = percentile(0.99, latencies);
+          const height = bucket.length === 0
+            ? 100
+            : Math.min(1, Math.log(p99) / Math.log(max)) * 100;
+
+          const bucketErrors = bucket.filter((c) => c.error);
+          const bucketDegraded = endpoint.degradedAfter
+            ? p99 > endpoint.degradedAfter
+            : 0;
+          const cn = ["flex-1 h-full rounded-sm  transition-all duration-150"];
+
+          if (bucket.length === 0) {
+            cn.push(
+              "bg-slate-50 border border-slate-300 hover:bg-slate-200 animate-pulse",
+            );
+          } else if (bucketErrors.length > 0) {
+            cn.push("bg-red-400 border border-red-600 hover:bg-red-100");
+          } else if (bucketDegraded > 0) {
+            cn.push(
+              "bg-yellow-300 border border-yellow-500 hover:bg-yellow-100",
+            );
+          } else {
+            cn.push(
+              "bg-emerald-300 border border-emerald-500 hover:bg-emerald-100",
+            );
+          }
+
+          return (
+            <HoverCard.Root openDelay={50} closeDelay={40} key={i}>
+              <HoverCard.Trigger
+                key={i}
+                className={cn.join(" ")}
+                style={{
+                  height: `${height}%`,
+                }}
+              />{" "}
+              <HoverCard.Portal>
+                <HoverCard.Content>
+                  {bucket.length > 0
+                    ? (
+                      <>
+                        <div className="overflow-hidden max-w-xl rounded-sm bg-white px-4 py-5 shadow sm:p-6">
+                          <dt className="truncate text-sm font-medium text-slate-500">
+                            {start.toLocaleDateString()}
+                          </dt>
+                          <dt className="truncate text-sm font-medium text-slate-500">
+                          </dt>
+                          <dt className="truncate text-sm font-medium text-slate-500">
+                            {/* {bucket.region} */}
+                          </dt>
+                          <div>
+                            <h3 className="text-lg font-medium leading-6 text-slate-900">
+                              {start.toLocaleTimeString()} -{" "}
+                              {end.toLocaleTimeString()}
+                            </h3>
+                            <dl className="mt-5 grid grid-cols-1 md:grid-cols-3 ">
+                              {[{ name: "p50", value: p50 }, {
+                                name: "p95",
+                                value: p95,
+                              }, { name: "p99", value: p99 }].map((item) => (
+                                <Stats
+                                  key={item.name}
+                                  label={item.name}
+                                  value={item.value.toLocaleString()}
+                                  suffix="ms"
+                                  status={endpoint.degradedAfter
+                                    ? item.value >= endpoint.degradedAfter
+                                      ? "warn"
+                                      : "success"
+                                    : undefined}
+                                />
+                              ))}
+                            </dl>
+                            <Divider />
+                            {bucketErrors.length > 0
+                              ? (
+                                <div>
+                                  <Heading h3>Errors</Heading>
+                                  <ul className="divide-y divide-slate-100">
+                                    {bucketErrors.map((err, i) => (
+                                      <li
+                                        key={i}
+                                        className="relative bg-white py-3 hover:bg-slate-50 "
+                                      >
+                                        <div className="flex justify-between space-x-3">
+                                          <time
+                                            dateTime={new Date(err.time)
+                                              .toLocaleString()}
+                                            className="truncate text-sm font-medium text-slate-900"
+                                          >
+                                            {new Date(err.time)
+                                              .toLocaleString()}
+                                          </time>
+                                          <span className="flex-shrink-0 whitespace-nowrap text-sm text-slate-500">
+                                            {err.region}
+                                          </span>
+                                        </div>
+                                        <span className="text-sm text-slate-600 line-clamp-2">
+                                          {err.error}
+                                        </span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )
+                              : null}
+                          </div>
+                        </div>
+                        <HoverCard.Arrow />
+                      </>
+                    )
+                    : null}
+                </HoverCard.Content>
+              </HoverCard.Portal>
+            </HoverCard.Root>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const Row: React.FC<
+  {
+    endpoint: PageProps["endpoints"][0];
+  }
+> = (
+  { endpoint },
+): JSX.Element => {
+  const latencies = useMemo(
+    () =>
+      endpoint.checks.filter((c) => typeof c.latency === "number").map((c) =>
+        c.latency
+      ) as number[],
+    [
+      endpoint.checks,
+    ],
+  );
+
+  const min = useMemo(() => Math.min(...latencies), [latencies]);
+  const max = useMemo(() => Math.max(...latencies), [latencies]);
+  const p50 = usePercentile(0.5, latencies);
+  const p95 = usePercentile(0.95, latencies);
+  const p99 = usePercentile(0.99, latencies);
+
+  const [expanded, setExpanded] = useState(false);
 
   return (
-    // <div className="flex space-x-0.5 h-8 items-end mt-16">
-    //   {data.map((point, i) => {
-
-    //     const cn = ["flex-1 w h-full rounded-sm hover:opacity-80 hover:scale-y-125 transition-all duration-500"]
-
-    //     if (point.buffer) {
-    //       cn.push("bg-slate-50 border border-slate-300 hover:bg-slate-100 animate-pulse")
-    //     } else if (point.error) {
-    //       cn.push("bg-rose-400 border border-rose-600 hover:bg-rose-100")
-    //     } else if (endpoint.data?.degradedAfter && point.latency && point.latency >= endpoint.data.degradedAfter) {
-    //       cn.push("bg-amber-400 border border-amber-600 hover:bg-amber-100")
-    //     } else {
-    //       cn.push("bg-emerald-300 border border-emerald-500 hover:bg-emerald-100")
-
-    //     }
-    //     return (
-    //       <HoverCard.Root openDelay={50} closeDelay={40} key={i}>
-    //         <HoverCard.Trigger
-    //           key={i}
-    //           className={cn.join(" ")}
-    //         // style={{
-    //         //   height: `${height}%`,
-    //         // }}
-    //         />{" "}
-    //         <HoverCard.Portal>
-    //           <HoverCard.Content>
-    //             {!point.buffer
-    //               ? (
-    //                 <>
-    //                   <div className="overflow-hidden rounded-sm bg-white px-4 py-5 shadow sm:p-6">
-    //                     <dt className="truncate text-sm font-medium text-slate-500">
-    //                       {point.time.toLocaleString()}
-    //                     </dt>
-    //                     <dt className="truncate text-sm font-medium text-slate-500">
-    //                       {point.region}
-    //                     </dt>
-    //                     <dd className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
-    //                       {point.latency?.toLocaleString()} ms
-    //                     </dd>
-    //                   </div>
-    //                   <HoverCard.Arrow />
-    //                 </>
-    //               )
-    //               : null}
-    //           </HoverCard.Content>
-    //         </HoverCard.Portal>
-    //       </HoverCard.Root>
-    //     );
-    //   })}
-    // </div>
-
-    // <div className="relative">
-    //   <div className="absolute inset-0 flex items-center" aria-hidden="true">
-    //     <div className={classNames("w-full border-t",
-    //       {
-    //         "border-emerald-500": availability >= 0.99,
-    //         "border-orange-500": availability < 0.99 && availability >= 0.95,
-    //         "border-rose-500": availability < 0.95
-    //       })} />
-    //   </div>
-    //   <div className="relative flex justify-center">
-    //     <span className={classNames("bg-white px-2 text-sm",
-    //       {
-    //         "text-emerald-500": availability >= 0.99,
-    //         "text-orange-500": availability < 0.99 && availability >= 0.95,
-    //         "text-rose-500": availability < 0.95
-    //       }
-    //     )}>{(availability * 100).toFixed(2)}%</span>
-    //   </div>
-    // </div>
-    <li className="border-t sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded my-16  hover:border-primary-500 duration-1000">
-      <div className="flex-col gap-2 lg:flex-row items-start border-b border-slate-200  px-4 py-5 sm:px-6 flex justify-between md:items-center">
-        <div className="lg:w-1/2">
-          <span className="text-lg font-medium leading-6 text-slate-900">
-            {endpoint.name ?? endpoint.url}
-          </span>
+    <li className="border-t sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded my-16  hover:border-slate-800 duration-1000">
+      <Collapse.Root open={expanded} onOpenChange={setExpanded}>
+        <div className="flex-col gap-2 lg:flex-row items-start border-b border-slate-200  px-4 py-5 sm:px-6 flex justify-between md:items-center">
+          <div className="lg:w-1/2">
+            <span className="text-lg font-medium leading-6 text-slate-900">
+              {endpoint.name ?? endpoint.url}
+            </span>
+          </div>
+          <div className="lg:w-1/2 flex gap-2 sm:gap-4 xl:gap-6 justify-between flex-wrap md:flex-nowrap items-center">
+            <Stat label="min" value={Math.round(min)} />
+            <Stat label="max" value={Math.round(max)} />
+            <Stat label="p50" value={Math.round(p50)} />
+            <Stat label="p95" value={Math.round(p95)} />
+            <Stat label="p99" value={Math.round(p99)} />
+          </div>
         </div>
-        <div className="lg:w-1/2 flex gap-2 sm:gap-4 xl:gap-6 justify-between flex-wrap md:flex-nowrap">
-          <Stat label="min" value={Math.round(min)} />
-          <Stat label="max" value={Math.round(max)} />
-          <Stat label="p50" value={Math.round(p50)} />
-          <Stat label="p95" value={Math.round(p95)} />
-          <Stat label="p99" value={Math.round(p99)} />
-        </div>
-      </div>
 
-      <div className="px-4 pt-10 pb-5 sm:px-6">
-        <Line
-          style={{ height: charts > 3 ? "100px" : "150px" }}
-          data={endpoint.checks.map((c) => ({
-            ...c,
-            time: new Date(c.time).toLocaleString(),
-          }))}
-          xField="time"
-          yField="latency"
-          seriesField="region"
-          autoFit={true}
-          smooth={true}
-          legend={{
-            position: "bottom",
-          }}
-          yAxis={false}
-          xAxis={{
-            tickCount: 5,
-            label: {
-              formatter: (text) => new Date(text).toLocaleTimeString(),
-            },
-          }}
-          tooltip={{
-            title: (d) => new Date(d).toLocaleString(),
-          }}
-          lineStyle={{
-            lineWidth: 1.5,
-          }}
-        />
-      </div>
+        <div className="p-4 flex flex-col space-y-8">
+          <Chart endpoint={endpoint} withAvailability />
+          <Collapse.Trigger>
+            <div className="relative">
+              <div
+                className="absolute inset-0 flex items-center"
+                aria-hidden="true"
+              >
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center">
+                <span className="bg-white px-2 text-slate-500 hover:text-primary-500 ">
+                  <PlusIcon
+                    className={`h-6 w-6 duration-500 ${
+                      expanded ? "rotate-45" : ""
+                    }`}
+                    aria-hidden="true"
+                  />
+                </span>
+              </div>
+            </div>
+          </Collapse.Trigger>
+
+          <Collapse.Content>
+            <ul className="space-y-4">
+              {endpoint.regions.map((region) => {
+                const scopedChecks = endpoint.checks.filter((c) =>
+                  c.region === region
+                );
+
+                return (
+                  <li key={region}>
+                    <Heading h4>{region}</Heading>
+
+                    <Chart
+                      height="h-8"
+                      endpoint={{ ...endpoint, checks: scopedChecks }}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+          </Collapse.Content>
+        </div>
+      </Collapse.Root>
     </li>
   );
 };
@@ -210,7 +395,7 @@ export default function Page(
         )}
       >
         <div className="flex items-center justify-center w-full">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
             {data.name}
           </h1>
         </div>
@@ -221,7 +406,6 @@ export default function Page(
             <Row
               key={endpoint.url}
               endpoint={endpoint}
-              charts={data.endpoints.length ?? 0}
             />
           ))}
         </ol>
@@ -275,7 +459,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
             },
             where: {
               time: {
-                "gte": new Date(Date.now() - 60 * 60 * 1000),
+                "gte": new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
               },
             },
           },
@@ -302,11 +486,15 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
     endpoints: page.endpoints.map((e) => ({
       name: e.name,
       url: e.url,
+      degradedAfter: e.degradedAfter ?? undefined,
       checks: e.checks.map((c) => ({
         time: c.time.getTime(),
         latency: c.latency,
         region: regionIdToName[c.regionId],
       })),
+      regions: (e.regions as string[]).map((regionId) =>
+        regionIdToName[regionId]
+      ),
     })),
   };
 

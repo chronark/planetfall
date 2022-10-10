@@ -3,6 +3,7 @@ import { ArrowLongRightIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession, useUser } from "../auth";
+import { Logo } from "../logo";
 
 export const Header: React.FC = (): JSX.Element => {
   let [isScrolled, setIsScrolled] = useState(false);
@@ -30,7 +31,12 @@ export const Header: React.FC = (): JSX.Element => {
           {/* Site branding */}
           <div className="shrink-0 mr-4">
             {/* Logo */}
-            <Link className="block" href="/" aria-label="Planetfall">
+            <Link
+              className="flex items-center gap-2"
+              href="/"
+              aria-label="Planetfall"
+            >
+              <Logo className="w-10 h-10" />
               <span className="text-slate-900 font-semibold text-2xl ">
                 Planetfall
               </span>

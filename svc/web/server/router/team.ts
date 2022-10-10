@@ -9,94 +9,96 @@ import { DEFAULT_QUOTA } from "../../plans";
 import { t } from "../trpc";
 
 export const teamRouter = t.router({
-  create: t.procedure.input(z.object({
-    name: z.string(),
-  })).mutation(async ({ input, ctx }) => {
-    if (!ctx.req.session?.user?.id) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    }
+  create: t.procedure
+    .input(z.object({
+      name: z.string(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.req.session?.user?.id) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
 
-    const user = await ctx.db.user.findUnique({
-      where: {
-        id: ctx.req.session.user.id,
-      },
-    });
-    if (!user) {
-      throw new TRPCError({ code: "NOT_FOUND" });
-    }
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      typescript: true,
-      apiVersion: "2022-08-01",
-    });
-
-    const customer = await stripe.customers.create({
-      email: user.email,
-      name: input.name,
-    });
-
-    const productId = process.env.STRIPE_PRODUCT_ID_PRO;
-    if (!productId) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "STRIPE_PRODUCT_ID_PRO is not defined",
+      const user = await ctx.db.user.findUnique({
+        where: {
+          id: ctx.req.session.user.id,
+        },
       });
-    }
-    const product = await stripe.products.retrieve(productId);
-    const price = product.default_price?.toString();
-    if (!price) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "product does not have default price",
+      if (!user) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+        typescript: true,
+        apiVersion: "2022-08-01",
       });
-    }
-    const subscription = await stripe.subscriptions.create({
-      customer: customer.id,
-      trial_period_days: 14,
-      items: [{ price }],
-    });
-    if (!subscription) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "unable to create subscription",
-      });
-    }
 
-    return await ctx.db.team.create({
-      data: {
-        id: newId("team"),
-        personal: false,
-        plan: "PRO",
+      const customer = await stripe.customers.create({
+        email: user.email,
         name: input.name,
-        slug: slugify(input.name, { lower: true, replacement: "_" }),
-        stripeCustomerId: customer.id,
-        stripeSubscriptionId: subscription.id,
-        stripeCurrentBillingPeriodStart: new Date(
-          subscription.current_period_start * 1000,
-        ),
-        stripeCurrentBillingPeriodEnd: new Date(
-          subscription.current_period_end * 1000,
-        ),
-        stripeTrialExpires: subscription.trial_end
-          ? new Date(subscription.trial_end * 1000)
-          : null,
-        retention: DEFAULT_QUOTA.PRO.retention,
-        maxMonthlyRequests: DEFAULT_QUOTA.PRO.maxMonthlyRequests,
-        maxEndpoints: DEFAULT_QUOTA.PRO.maxEndpoints,
-        maxTimeout: DEFAULT_QUOTA.PRO.maxTimeout,
-        minInterval: DEFAULT_QUOTA.PRO.minInterval,
-        members: {
-          create: {
-            user: {
-              connect: {
-                id: ctx.req.session.user.id,
+      });
+
+      const productId = process.env.STRIPE_PRODUCT_ID_PRO;
+      if (!productId) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "STRIPE_PRODUCT_ID_PRO is not defined",
+        });
+      }
+      const product = await stripe.products.retrieve(productId);
+      const price = product.default_price?.toString();
+      if (!price) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "product does not have default price",
+        });
+      }
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        trial_period_days: 14,
+        items: [{ price }],
+      });
+      if (!subscription) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "unable to create subscription",
+        });
+      }
+
+      return await ctx.db.team.create({
+        data: {
+          id: newId("team"),
+          personal: false,
+          plan: "PRO",
+          name: input.name,
+          slug: slugify(input.name, { lower: true, replacement: "_" }),
+          stripeCustomerId: customer.id,
+          stripeSubscriptionId: subscription.id,
+          stripeCurrentBillingPeriodStart: new Date(
+            subscription.current_period_start * 1000,
+          ),
+          stripeCurrentBillingPeriodEnd: new Date(
+            subscription.current_period_end * 1000,
+          ),
+          stripeTrialExpires: subscription.trial_end
+            ? new Date(subscription.trial_end * 1000)
+            : null,
+          retention: DEFAULT_QUOTA.PRO.retention,
+          maxMonthlyRequests: DEFAULT_QUOTA.PRO.maxMonthlyRequests,
+          maxEndpoints: DEFAULT_QUOTA.PRO.maxEndpoints,
+          maxTimeout: DEFAULT_QUOTA.PRO.maxTimeout,
+          minInterval: DEFAULT_QUOTA.PRO.minInterval,
+          members: {
+            create: {
+              user: {
+                connect: {
+                  id: ctx.req.session.user.id,
+                },
               },
+              role: "OWNER",
             },
-            role: "OWNER",
           },
         },
-      },
-    });
-  }),
+      });
+    }),
   list: t.procedure.query(async ({ ctx }) => {
     if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });

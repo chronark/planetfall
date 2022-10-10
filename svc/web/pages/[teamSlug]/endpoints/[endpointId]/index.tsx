@@ -14,7 +14,7 @@ import {
 } from "@tanstack/react-table";
 import { Violin } from "@ant-design/plots";
 
-import { Button, Confirm, PageHeader, Text } from "components";
+import { Button, Confirm, PageHeader, Stats } from "components";
 import {
   Card,
   Checkbox,
@@ -226,36 +226,6 @@ type Series = ({
   region?: string;
   error?: string;
 })[];
-
-export type StatsProps = {
-  label: string;
-  value: string;
-  suffix?: string;
-  status?: "success" | "warn" | "error";
-};
-const Stats: React.FC<StatsProps> = (
-  { label, value, suffix, status },
-): JSX.Element => {
-  return (
-    <div className="flex flex-col p-4">
-      <Text color="text-slate-500">{label}</Text>
-      <span
-        className={`text-2xl md:text-4xl ${
-          status === "success"
-            ? "text-emerald-500"
-            : status === "warn"
-            ? "text-amber-500"
-            : status === "error"
-            ? "text-rose-500"
-            : "text-slate-800"
-        }`}
-      >
-        {value}
-        {suffix}
-      </span>
-    </div>
-  );
-};
 
 const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   { endpointId, teamSlug },
