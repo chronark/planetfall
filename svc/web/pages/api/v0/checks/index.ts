@@ -92,6 +92,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                     gte: request.data.body.since ? new Date(request.data.body.since) : undefined
                 }
             },
+            orderBy: {
+                time: "desc"
+            },
             take: 1000
         })
 
