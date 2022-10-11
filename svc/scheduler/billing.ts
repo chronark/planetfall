@@ -35,43 +35,52 @@ export class Billing {
     });
 
     for (const t of teams) {
-      const usage = await this.db.check.count({
-        where: {
-          time: {
-            gte: t.stripeCurrentBillingPeriodStart!,
-            lte: t.stripeCurrentBillingPeriodEnd!,
-          },
-          endpoint: {
-            teamId: t.id,
-          },
-        },
-      });
-      this.logger.info("Team usage report", {
-        teamId: t.id,
-        plan: t.plan,
-        usage,
-        billingPeriodStart: t.stripeCurrentBillingPeriodStart,
-        billingPeriodEnd: t.stripeCurrentBillingPeriodEnd,
-      });
+      try {
 
-      const sub = await this.stripe.subscriptions.retrieve(
-        t.stripeSubscriptionId!,
-      );
 
-      const itemId = sub.items.data.find((i) =>
-        i.object === "subscription_item" && i.plan.active
-      )?.id;
-      if (!itemId) {
-        this.logger.error("unable to find subscription item id", {
-          teamId: t.id,
+        const usage = await this.db.check.count({
+          where: {
+            time: {
+              gte: t.stripeCurrentBillingPeriodStart!,
+              lte: t.stripeCurrentBillingPeriodEnd!,
+            },
+            endpoint: {
+              teamId: t.id,
+            },
+          },
         });
-        continue;
-      }
+        this.logger.info("Team usage report", {
+          teamId: t.id,
+          plan: t.plan,
+          usage,
+          billingPeriodStart: t.stripeCurrentBillingPeriodStart,
+          billingPeriodEnd: t.stripeCurrentBillingPeriodEnd,
+        });
 
-      await this.stripe.subscriptionItems.createUsageRecord(itemId, {
-        quantity: usage,
-        action: "set",
-      });
+        const sub = await this.stripe.subscriptions.retrieve(
+          t.stripeSubscriptionId!,
+        );
+
+        const itemId = sub.items.data.find((i) =>
+          i.object === "subscription_item" && i.plan.active
+        )?.id;
+        if (!itemId) {
+          this.logger.error("unable to find subscription item id", {
+            teamId: t.id,
+          });
+          continue;
+        }
+
+        await this.stripe.subscriptionItems.createUsageRecord(itemId, {
+          quantity: usage,
+          action: "set",
+        });
+      }
+      catch (e) {
+        this.logger.error((e as Error).message, {
+          teamId: t.id
+        })
+      }
     }
   }
 }
