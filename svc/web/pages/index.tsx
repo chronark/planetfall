@@ -7,6 +7,7 @@ import {
   Hero,
   Pricing,
   Stats,
+  // Companies,
   StatsProps,
 } from "components/landing";
 import { PrismaClient } from "@planetfall/db";
@@ -27,11 +28,8 @@ const Landing: NextPage<StatsProps> = ({ teams, endpoints, checks }) => {
           {/* <Companies /> */}
           <Stats teams={teams} endpoints={endpoints} checks={checks} />
           <Features />
-          {/* <Features02 /> */}
           <Pricing />
           {/* <Testimonials /> */}
-          {/* <Resources /> */}
-          {/* <Cta /> */}
         </main>
 
         {/*  Site footer */}

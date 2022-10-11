@@ -4,13 +4,13 @@ const Rings: React.FC = (): JSX.Element => {
   let id = useId();
 
   return (
-    <div className="absolute left-1/2 w-4/5 h-full stroke-slate-300/70 [mask-image:linear-gradient(to_top,white_20%,transparent_75%)] -translate-x-1/2 sm:-top-20 md:-top-28 lg:-top-32 xl:-top-48">
+    <div className="absolute left-1/2  h-full scale-150 stroke-slate-300/70 [mask-image:linear-gradient(to_top,white_20%,transparent_75%)] -translate-x-1/2">
       {/* Outer ring */}
       <svg
         viewBox="0 0 1026 1026"
         fill="none"
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full animate-spin-forward-slow"
+        className="inset-0 h-full w-full animate-spin-forward-slow"
       >
         <path
           d="M1025 513c0 282.77-229.23 512-512 512S1 795.77 1 513 230.23 1 513 1s512 229.23 512 512Z"
@@ -72,7 +72,10 @@ const Rings: React.FC = (): JSX.Element => {
 };
 export const Hero: React.FC = (): JSX.Element => {
   return (
-    <section className="relative min-h-screen w-screen mt-16 -pt-16">
+    <section
+      className="relative w-screen mt-16 -pt-16"
+      style={{ minHeight: "50vh" }}
+    >
       <Rings />
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">

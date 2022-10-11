@@ -3,7 +3,7 @@ import { useSession, useUser } from "components/auth";
 import { useRouter } from "next/router";
 import { trpc } from "../../../../lib/hooks/trpc";
 import { Area, Line } from "@ant-design/plots";
-import ms from "ms"
+import ms from "ms";
 
 import {
   createColumnHelper,
@@ -40,9 +40,7 @@ import { Annotation } from "@antv/g2plot";
 import { usePercentile } from "lib/hooks/percentile";
 import type { Check } from "@planetfall/db";
 import classNames from "classnames";
-import {
-  MinusIcon,
-} from "@heroicons/react/24/solid";
+import { MinusIcon } from "@heroicons/react/24/solid";
 import { Heading } from "components/heading";
 
 const RegionTab: React.FC<
@@ -50,161 +48,161 @@ const RegionTab: React.FC<
 > = (
   { endpointId, regionId, regionName },
 ): JSX.Element => {
-    const now = useMemo(() => Date.now(), []);
-    const ctx = trpc.useContext();
-    const [since, setSince] = useState(now - 60 * 60 * 1000);
-    const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
-      enabled: !!endpointId,
-    });
+  const now = useMemo(() => Date.now(), []);
+  const ctx = trpc.useContext();
+  const [since, setSince] = useState(now - 60 * 60 * 1000);
+  const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
+    enabled: !!endpointId,
+  });
 
-    const checks = trpc.check.list.useQuery({ endpointId, since, regionId }, {
-      enabled: !!endpointId,
-    });
+  const checks = trpc.check.list.useQuery({ endpointId, since, regionId }, {
+    enabled: !!endpointId,
+  });
 
-    const annotations: Annotation[] = [];
-    if (endpoint.data?.degradedAfter) {
-      annotations.push(
-        {
-          type: "regionFilter",
-          start: ["min", endpoint.data.degradedAfter],
-          end: ["max", "max"],
-          color: "#f59e0b",
+  const annotations: Annotation[] = [];
+  if (endpoint.data?.degradedAfter) {
+    annotations.push(
+      {
+        type: "regionFilter",
+        start: ["min", endpoint.data.degradedAfter],
+        end: ["max", "max"],
+        color: "#f59e0b",
+      },
+      {
+        type: "line",
+        text: {
+          content: "Degraded",
         },
-        {
-          type: "line",
-          text: {
-            content: "Degraded",
-          },
-          start: ["min", endpoint.data.degradedAfter],
-          end: ["max", endpoint.data.degradedAfter],
-          style: {
-            stroke: "#f59e0b",
-            lineDash: [8, 8],
-          },
+        start: ["min", endpoint.data.degradedAfter],
+        end: ["max", endpoint.data.degradedAfter],
+        style: {
+          stroke: "#f59e0b",
+          lineDash: [8, 8],
         },
-      );
-    }
-
-    const latencies = useMemo(
-      () =>
-        (checks.data ?? []).filter((c) => typeof c.latency === "number").map(
-          (c) => c.latency,
-        ) as number[],
-      [checks.data],
+      },
     );
+  }
 
-    const p50 = usePercentile(
-      0.50,
-      latencies,
-    );
-    const p95 = usePercentile(
-      0.95,
-      latencies,
-    );
-    const p99 = usePercentile(
-      0.99,
-      latencies,
-    );
+  const latencies = useMemo(
+    () =>
+      (checks.data ?? []).filter((c) => typeof c.latency === "number").map(
+        (c) => c.latency,
+      ) as number[],
+    [checks.data],
+  );
 
-    return (
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <Typography.Title level={3}>
-          {regionName}
-        </Typography.Title>
+  const p50 = usePercentile(
+    0.50,
+    latencies,
+  );
+  const p95 = usePercentile(
+    0.95,
+    latencies,
+  );
+  const p99 = usePercentile(
+    0.99,
+    latencies,
+  );
 
-        <Row justify="end">
-          <Space size="large">
-            <Col span={1 / 3}>
-              <Typography.Text>
-                p50: <Typography.Text strong>{p50}</Typography.Text> ms
-              </Typography.Text>
-            </Col>
-            <Col span={1 / 3}>
-              <Typography.Text>
-                p95: <Typography.Text strong>{p95}</Typography.Text> ms
-              </Typography.Text>
-            </Col>
+  return (
+    <Space direction="vertical" style={{ width: "100%" }}>
+      <Typography.Title level={3}>
+        {regionName}
+      </Typography.Title>
 
-            <Col span={1 / 3}>
-              <Typography.Text>
-                p99: <Typography.Text strong>{p99}</Typography.Text> ms
-              </Typography.Text>
-            </Col>
-            <Segmented
-              value={since}
-              options={[
-                {
-                  label: "1m",
-                  value: now - 60 * 1000,
-                },
-                {
-                  label: "15m",
-                  value: now - 15 * 60 * 1000,
-                },
-                {
-                  label: "1h",
-                  value: now - 60 * 60 * 1000,
-                },
-                {
-                  label: "3h",
-                  value: now - 3 * 60 * 60 * 1000,
-                },
-                {
-                  label: "6h",
-                  value: now - 6 * 60 * 60 * 1000,
-                },
-                {
-                  label: "24h",
-                  value: now - 24 * 60 * 60 * 1000,
-                },
-              ]}
-              onChange={(v) => {
-                setSince(parseInt(v.toString()));
-              }}
-            />
-            <Button
-              disabled={!endpoint.isStale}
-              icon={<ReloadOutlined />}
-              loading={endpoint.isFetching || endpoint.isLoading}
-              onClick={() => {
-                ctx.endpoint.get.invalidate();
-              }}
-            >
-            </Button>
-          </Space>
-        </Row>
-        <Line
-          data={(checks.data ?? []).map((c) => ({
-            time: c.time.toLocaleString(),
-            latency: c.latency,
-          }))}
-          padding="auto"
-          xField="time"
-          yField="latency"
-          smooth
-          color="#3366FF"
-          autoFit={true}
-          legend={{
-            position: "bottom",
-          }}
-          annotations={annotations}
-          yAxis={{
-            title: { text: "Latency [ms]" },
-            tickCount: 3,
-          }}
-          xAxis={{
-            tickCount: 10,
-            label: {
-              formatter: (text) => new Date(text).toLocaleTimeString(),
-            },
-          }}
-          tooltip={{
-            title: (d) => new Date(d).toLocaleString(),
-          }}
-        />
-      </Space>
-    );
-  };
+      <Row justify="end">
+        <Space size="large">
+          <Col span={1 / 3}>
+            <Typography.Text>
+              p50: <Typography.Text strong>{p50}</Typography.Text> ms
+            </Typography.Text>
+          </Col>
+          <Col span={1 / 3}>
+            <Typography.Text>
+              p95: <Typography.Text strong>{p95}</Typography.Text> ms
+            </Typography.Text>
+          </Col>
+
+          <Col span={1 / 3}>
+            <Typography.Text>
+              p99: <Typography.Text strong>{p99}</Typography.Text> ms
+            </Typography.Text>
+          </Col>
+          <Segmented
+            value={since}
+            options={[
+              {
+                label: "1m",
+                value: now - 60 * 1000,
+              },
+              {
+                label: "15m",
+                value: now - 15 * 60 * 1000,
+              },
+              {
+                label: "1h",
+                value: now - 60 * 60 * 1000,
+              },
+              {
+                label: "3h",
+                value: now - 3 * 60 * 60 * 1000,
+              },
+              {
+                label: "6h",
+                value: now - 6 * 60 * 60 * 1000,
+              },
+              {
+                label: "24h",
+                value: now - 24 * 60 * 60 * 1000,
+              },
+            ]}
+            onChange={(v) => {
+              setSince(parseInt(v.toString()));
+            }}
+          />
+          <Button
+            disabled={!endpoint.isStale}
+            icon={<ReloadOutlined />}
+            loading={endpoint.isFetching || endpoint.isLoading}
+            onClick={() => {
+              ctx.endpoint.get.invalidate();
+            }}
+          >
+          </Button>
+        </Space>
+      </Row>
+      <Line
+        data={(checks.data ?? []).map((c) => ({
+          time: c.time.toLocaleString(),
+          latency: c.latency,
+        }))}
+        padding="auto"
+        xField="time"
+        yField="latency"
+        smooth
+        color="#3366FF"
+        autoFit={true}
+        legend={{
+          position: "bottom",
+        }}
+        annotations={annotations}
+        yAxis={{
+          title: { text: "Latency [ms]" },
+          tickCount: 3,
+        }}
+        xAxis={{
+          tickCount: 10,
+          label: {
+            formatter: (text) => new Date(text).toLocaleTimeString(),
+          },
+        }}
+        tooltip={{
+          title: (d) => new Date(d).toLocaleString(),
+        }}
+      />
+    </Space>
+  );
+};
 
 type Series = ({
   buffer: true;
@@ -336,8 +334,8 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
           status={availability > 0.99
             ? undefined
             : availability >= 0.95
-              ? "warn"
-              : "error"}
+            ? "warn"
+            : "error"}
           value={(availability * 100).toLocaleString(undefined, {
             maximumFractionDigits: 2,
           })}
@@ -348,8 +346,8 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
           status={degraded <= 0.01
             ? "success"
             : degraded <= 0.05
-              ? "warn"
-              : "error"}
+            ? "warn"
+            : "error"}
           value={(degraded * 100).toLocaleString(undefined, {
             maximumFractionDigits: 2,
           })}
@@ -396,7 +394,7 @@ const Errors: React.FC<{ endpointId: string }> = (
   const endpoint = trpc.endpoint.get.useQuery({ endpointId });
   const checks = trpc.check.list.useQuery({ endpointId, since });
   const regions = trpc.region.list.useQuery();
-  console.log({endpoint})
+  console.log({ endpoint });
   const { accessor } = createColumnHelper<Check>();
 
   const failed = (checks.data ?? []).filter((c) => c.error).map((c) => ({
@@ -438,7 +436,7 @@ const Errors: React.FC<{ endpointId: string }> = (
       header: "Region",
       cell: (info) =>
         regions.data?.find((r) => r.id === info.getValue())?.name ??
-        info.getValue(),
+          info.getValue(),
     }),
   ];
   const table = useReactTable({
@@ -550,7 +548,10 @@ const Feed: React.FC<FeedProps> = ({ endpointId }): JSX.Element => {
     }),
     accessor("time", {
       header: "Time",
-      cell: (info) => Date.now() - info.getValue().getTime() > 60 * 60 * 1000 ? info.getValue().toLocaleString() : ms(Date.now() - info.getValue().getTime(), { long: true }) + " ago",
+      cell: (info) =>
+        Date.now() - info.getValue().getTime() > 60 * 60 * 1000
+          ? info.getValue().toLocaleString()
+          : ms(Date.now() - info.getValue().getTime()) + " ago",
     }),
 
     accessor("status", {
@@ -573,11 +574,12 @@ const Feed: React.FC<FeedProps> = ({ endpointId }): JSX.Element => {
       header: "Latency",
       cell: (info) => (
         <span
-          className={`px-1 ${endpoint.data?.degradedAfter &&
-            info.getValue()! >= endpoint.data.degradedAfter
-            ? "bg-amber-50 text-amber-500 rounded"
-            : ""
-            }`}
+          className={`px-1 ${
+            endpoint.data?.degradedAfter &&
+              info.getValue()! >= endpoint.data.degradedAfter
+              ? "bg-amber-50 text-amber-500 rounded"
+              : ""
+          }`}
         >
           {info.getValue()!.toLocaleString()} ms
         </span>
@@ -588,7 +590,7 @@ const Feed: React.FC<FeedProps> = ({ endpointId }): JSX.Element => {
       header: "Region",
       cell: (info) =>
         regions.data?.find((r) => r.id === info.getValue())?.name ??
-        info.getValue(),
+          info.getValue(),
     }),
   ];
   const table = useReactTable({

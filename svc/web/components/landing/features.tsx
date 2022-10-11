@@ -67,7 +67,7 @@ export const Features: React.FC = (): JSX.Element => {
                   <div className="flow-root rounded  bg-white px-6 pb-8">
                     <div className="-mt-6">
                       <div>
-                        <span className="inline-flex items-center justify-center rounded-md bg-gradient-to-t from-primary-500 to-info-500 p-3 shadow-lg">
+                        <span className="inline-flex items-center justify-center rounded-md bg-gradient-to-t from-primary-800 to-info-600 p-3 shadow-lg">
                           <feature.icon
                             className="h-6 w-6 text-white"
                             aria-hidden="true"

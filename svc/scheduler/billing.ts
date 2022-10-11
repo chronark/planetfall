@@ -36,8 +36,6 @@ export class Billing {
 
     for (const t of teams) {
       try {
-
-
         const usage = await this.db.check.count({
           where: {
             time: {
@@ -75,11 +73,10 @@ export class Billing {
           quantity: usage,
           action: "set",
         });
-      }
-      catch (e) {
+      } catch (e) {
         this.logger.error((e as Error).message, {
-          teamId: t.id
-        })
+          teamId: t.id,
+        });
       }
     }
   }

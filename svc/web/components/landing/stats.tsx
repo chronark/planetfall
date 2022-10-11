@@ -36,16 +36,16 @@ export const Stats: React.FC<StatsProps> = (
             {/* Trusted by */}
           </p>
         </div>
-        <div className="container mx-auto grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <div className="container mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
           {stats.map(({ label, value }) => (
             <div
               key={label}
-              className="overflow-hidden rounded px-4 py-3  shadow-cta "
+              className="overflow-hidden rounded px-4 m py-3 flex sm:flex-col items-center justify-between gap-2"
             >
-              <dt className="text-center text-lg font-medium leading-6  text-slate-500">
+              <dt className="text-center  text-lg font-medium leading-6  text-slate-500">
                 {label}
               </dt>
-              <dd className="text-center text-5xl font-bold tracking-tight mt-2 text-slate-900">
+              <dd className="text-center text-2xl  sm:text-5xl font-bold tracking-tight text-slate-900">
                 {value.toLocaleString(undefined, { maximumFractionDigits: 2 })}
               </dd>
             </div>

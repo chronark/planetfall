@@ -78,6 +78,10 @@ const sections: {
         tiers: { Free: false, Personal: false, Pro: true, Enterprise: true },
       },
       {
+        name: "Status Pages",
+        tiers: { Free: "1", Personal: "2", Pro: "5", Enterprise: "∞" },
+      },
+      {
         name: "Integrated Domains",
         tiers: { Free: false, Personal: false, Pro: true, Enterprise: true },
       },

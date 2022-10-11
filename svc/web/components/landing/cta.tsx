@@ -37,8 +37,8 @@ export const Cta: React.FC = (): JSX.Element => {
                   <feGaussianBlur stdDeviation="50" in="SourceGraphic" />
                 </filter>
                 <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="a">
-                  <stop stop-color="#60A5FA" stop-opacity="0" offset="0%" />
-                  <stop stop-color="#F656AA" offset="100%" />
+                  <stop stopColor="#60A5FA" stop-opacity="0" offset="0%" />
+                  <stop stopColor="#F656AA" offset="100%" />
                 </linearGradient>
               </defs>
               <g fill="none" fill-rule="evenodd">
