@@ -21,7 +21,7 @@ const nextConfig = {
       "ui-avatars.com",
     ],
   },
-  
+
   webpack: (config) => {
     config.resolve.fallback = { fs: false };
 

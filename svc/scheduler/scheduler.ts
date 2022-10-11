@@ -89,6 +89,9 @@ export class Scheduler {
     this.logger.info("adding new endpoint", { endpointId });
     const endpoint = await this.db.endpoint.findUnique({
       where: { id: endpointId },
+      include: {
+        regions: true,
+      },
     });
     if (!endpoint) {
       throw new Error(`endpoint not found: ${endpointId}`);
@@ -112,22 +115,21 @@ export class Scheduler {
   }
 
   private async testEndpoint(
-    endpoint: Endpoint,
+    endpoint: Endpoint & { regions: Region[] },
   ): Promise<void> {
     try {
-      const allRegions = endpoint.regions as string[];
-      if (allRegions.length === 0) {
+      if (endpoint.regions.length === 0) {
         throw new Error(`endpoint ${endpoint.id} has no active regions`);
       }
-      const regions = endpoint.distribution === "ALL"
-        ? allRegions
-        : [allRegions[Math.floor(Math.random() * allRegions.length)]];
+      const regions = endpoint.distribution === "ALL" ? endpoint.regions : [
+        endpoint.regions[Math.floor(Math.random() * endpoint.regions.length)],
+      ];
       this.logger.info("testing endpoint", {
         endpointId: endpoint.id,
         regions,
       });
 
-      await Promise.all(regions.map(async (regionId) => {
+      await Promise.all(regions.map(async ({ id: regionId }) => {
         let region = this.regions[regionId];
         if (!region) {
           const res = await this.db.region.findUnique({

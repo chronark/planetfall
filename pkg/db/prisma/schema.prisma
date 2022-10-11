@@ -40,7 +40,8 @@ model Region {
   region   String
 
   // Url where the lambda function for this region is reachable
-  url String @unique
+  url       String     @unique
+  endpoints Endpoint[]
 
   @@unique([platform, region])
 }
@@ -83,7 +84,7 @@ model Endpoint {
   timeout      Int?
   distribution Distribution
   // string[] of region Ids
-  regions      Json
+  regions      Region[]
   // json encoded map
   // { KEY: VALUE}
   headers      Json?

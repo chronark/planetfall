@@ -724,7 +724,7 @@ export default function EndpointPage() {
           tabPosition="left"
           style={{ height: "50vh" }}
           items={regions.data?.filter((r) =>
-            (endpoint.data?.regions as string[])?.includes(r.id)
+            (endpoint.data?.regions)?.find((region) => region.id === r.id)
           ).map((
             region,
           ) => ({

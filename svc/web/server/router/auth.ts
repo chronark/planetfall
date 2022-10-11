@@ -166,17 +166,17 @@ export const authRouter = t.router({
     const permission = new Permission([
       {
         resource: "teams",
-        actions: ["read", "write"]
+        actions: ["read", "write"],
       },
       {
         resource: "endpoints",
-        actions: ["read", "write"]
+        actions: ["read", "write"],
       },
       {
         resource: "checks",
-        actions: ["read", "write"]
-      }
-    ])
+        actions: ["read", "write"],
+      },
+    ]);
     const token = newId("token");
     const hash = crypto.createHash("sha256").update(token).digest("base64");
     const { expires } = await ctx.db.token.create({
@@ -189,8 +189,7 @@ export const authRouter = t.router({
             id: user.id,
           },
         },
-        permissions: permission.statements
-
+        permissions: permission.statements,
       },
     });
 
@@ -277,17 +276,17 @@ export const authRouter = t.router({
     const permissions = new Permission([
       {
         resource: "teams",
-        actions: ["read", "write"]
+        actions: ["read", "write"],
       },
       {
         resource: "endpoints",
-        actions: ["read", "write"]
+        actions: ["read", "write"],
       },
       {
         resource: "checks",
-        actions: ["read", "write"]
-      }
-    ])
+        actions: ["read", "write"],
+      },
+    ]);
     const token = newId("token");
     const hash = crypto.createHash("sha256").update(token).digest("base64");
     const { expires } = await ctx.db.token.create({
@@ -300,7 +299,7 @@ export const authRouter = t.router({
             id: user.id,
           },
         },
-        permissions: permissions.statements
+        permissions: permissions.statements,
       },
     });
 

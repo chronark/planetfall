@@ -110,7 +110,7 @@ export default function Page() {
         headers: data.headers ? JSON.parse(data.headers) : undefined,
         degradedAfter: data.degradedAfter || undefined,
         interval: data.interval * 1000,
-        regions: selectedRegions,
+        regionIds: selectedRegions,
         distribution: data.distribution,
         teamSlug: router.query.teamSlug as string,
         // statusAssertions: data.statusAssertions, TODO:

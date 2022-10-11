@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { string, z } from "zod";
 import { t } from "../trpc";
 import { Kafka } from "@upstash/kafka";
-import { Distribution } from "@planetfall/db";
+import { Distribution, Platform } from "@planetfall/db";
 
 export const endpointRouter = t.router({
   create: t.procedure.input(z.object({
@@ -15,7 +15,7 @@ export const endpointRouter = t.router({
     degradedAfter: z.number().int().positive().optional(),
     teamSlug: z.string(),
     interval: z.number().int().gte(1000).lte(60 * 60 * 1000),
-    regions: z.array(z.string()),
+    regionIds: z.array(z.string()),
     distribution: z.enum([Distribution.ALL, Distribution.RANDOM]),
     statusAssertions: z.array(z.object({
       comparison: z.enum(["gte", "lte", "eq"]),
@@ -57,7 +57,9 @@ export const endpointRouter = t.router({
         interval: input.interval,
         degradedAfter: input.degradedAfter,
         distribution: input.distribution,
-        regions: input.regions,
+        regions: {
+          connect: input.regionIds.map((id) => ({ id })),
+        },
         team: {
           connect: {
             id: team.id,
@@ -89,14 +91,14 @@ export const endpointRouter = t.router({
     degradedAfter: z.number().int().positive().optional(),
     teamSlug: z.string(),
     interval: z.number().int().gte(1000).lte(60 * 60 * 1000).optional(),
-    regions: z.array(z.string()).optional(),
+    regionIds: z.array(z.string()).optional(),
     name: z.string().optional(),
     distribution: z.enum([Distribution.ALL, Distribution.RANDOM]).optional(),
   })).mutation(async ({ input, ctx }) => {
-    if (input.regions && input.regions.length === 0) {
+    if (input.regionIds && input.regionIds.length === 0) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "regions must be undefined or non empty",
+        message: "regionIds must be undefined or non empty",
       });
     }
     if (!ctx.req.session?.user?.id) {
@@ -136,7 +138,14 @@ export const endpointRouter = t.router({
         method: input.method,
         interval: input.interval,
         degradedAfter: input.degradedAfter,
-        regions: input.regions,
+        // regions: {
+        //   connect: input.regions?.map(regionId => ({
+        //     platform_region: {
+        //       platform: regionId.split(":")[0],
+        //       region: regionId.split(":")[1]
+        //     }
+        //   }))
+        // },
         name: input.name,
       },
     });
@@ -246,6 +255,9 @@ export const endpointRouter = t.router({
       where: {
         teamId: team.id,
       },
+      include: {
+        regions: true,
+      },
     });
   }),
   get: t.procedure.input(z.object({
@@ -260,6 +272,7 @@ export const endpointRouter = t.router({
         id: input.endpointId,
       },
       include: {
+        regions: true,
         team: {
           include: {
             members: {

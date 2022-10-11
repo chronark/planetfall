@@ -75,11 +75,11 @@ export default function Page() {
   const regions = trpc.region.list.useQuery();
 
   const [selectedRegions, setSelectedRegions] = useState(
-    endpoint.data?.regions ? endpoint.data.regions as string[] : [],
+    endpoint.data?.regions ? endpoint.data.regions : [],
   );
   useEffect(() => {
     if (endpoint.data) {
-      setSelectedRegions(endpoint.data.regions as string[]);
+      setSelectedRegions(endpoint.data.regions);
     }
   }, [endpoint.data]);
 
@@ -450,17 +450,23 @@ export default function Page() {
                           type="button"
                           key={r.id}
                           className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${
-                            selectedRegions.includes(r.id)
+                            selectedRegions.find((region) => region.id === r.id)
                               ? "border-slate-900 bg-slate-50"
                               : "border-slate-300"
                           }`}
                           onClick={() => {
-                            if (selectedRegions.includes(r.id)) {
+                            if (
+                              selectedRegions.find((region) =>
+                                region.id === r.id
+                              )
+                            ) {
                               setSelectedRegions(
-                                selectedRegions.filter((id) => id !== r.id),
+                                selectedRegions.filter((region) =>
+                                  region.id !== r.id
+                                ),
                               );
                             } else {
-                              setSelectedRegions([...selectedRegions, r.id]);
+                              setSelectedRegions([...selectedRegions, r]);
                             }
                           }}
                         >
@@ -485,7 +491,7 @@ export default function Page() {
                       await updateEndpoint.mutateAsync({
                         endpointId,
                         teamSlug,
-                        regions: selectedRegions,
+                        regionIds: selectedRegions.map((r) => r.id),
                       }).then(() =>
                         notification.success({ message: `Endpoint updated` })
                       )
