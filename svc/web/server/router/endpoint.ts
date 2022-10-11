@@ -138,14 +138,11 @@ export const endpointRouter = t.router({
         method: input.method,
         interval: input.interval,
         degradedAfter: input.degradedAfter,
-        // regions: {
-        //   connect: input.regions?.map(regionId => ({
-        //     platform_region: {
-        //       platform: regionId.split(":")[0],
-        //       region: regionId.split(":")[1]
-        //     }
-        //   }))
-        // },
+        regions: {
+          set: input.regionIds?.map((id) => ({
+            id,
+          })),
+        },
         name: input.name,
       },
     });

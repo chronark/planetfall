@@ -42,6 +42,14 @@ export default function SettingsPage() {
   const currentUsage = usage.data?.usage ?? 0;
   const maxUsage = team.data?.maxMonthlyRequests ?? null;
   const usagePercentage = maxUsage ? currentUsage / maxUsage * 100 : null;
+
+  const monthStart = new Date();
+  monthStart.setDate(1);
+  monthStart.setHours(0, 0, 0, 0);
+  const monthEnd = new Date();
+  monthEnd.setMonth(monthEnd.getMonth() + 1);
+  monthEnd.setDate(0);
+  monthEnd.setHours(0, 0, 0, 0);
   return (
     <Layout breadcrumbs={[]}>
       {/* <PageHeader title="Settings" /> */}
@@ -114,7 +122,13 @@ export default function SettingsPage() {
             <div className="px-8 w-1/3 flex flex-col gap-2">
               <Text size="xl">Current Billing Cycle</Text>
               <Text>
-                {`${team.data?.stripeCurrentBillingPeriodStart?.toLocaleDateString()} - ${team.data?.stripeCurrentBillingPeriodEnd?.toLocaleDateString()}`}
+                {`${
+                  (team.data?.stripeCurrentBillingPeriodStart ?? monthStart)
+                    .toLocaleDateString()
+                } - ${
+                  (team.data?.stripeCurrentBillingPeriodEnd ?? monthEnd)
+                    .toLocaleDateString()
+                }`}
               </Text>
             </div>
           </div>

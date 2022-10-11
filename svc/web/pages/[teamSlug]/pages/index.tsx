@@ -91,6 +91,8 @@ export default function Pagespage() {
   const teamSlug = router.query.teamSlug as string;
   const pages = trpc.page.list.useQuery({
     teamSlug,
+  }, {
+    enabled: !!teamSlug,
   });
   return (
     <Layout breadcrumbs={breadcrumbs}>

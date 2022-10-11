@@ -27,8 +27,8 @@ export const Logo: React.FC<LogoProps> = ({ className }): JSX.Element => {
           y2="230"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#1939B7" />
-          <stop offset={1} stop-color="#0f172a" />
+          <stop stopColor="#1939B7" />
+          <stop offset={1} stopColor="#0f172a" />
         </linearGradient>
       </defs>
     </svg>
