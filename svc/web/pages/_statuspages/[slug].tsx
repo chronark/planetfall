@@ -64,8 +64,9 @@ const Chart: React.FC<{
   height?: string;
   endpoint: PageProps["endpoints"][0];
   withAvailability?: boolean;
+  nBuckets: number
 }> = (
-  { endpoint, height, withAvailability },
+  { endpoint, height, withAvailability, nBuckets },
 ): JSX.Element => {
     const latencies = useMemo(
       () =>
@@ -79,7 +80,6 @@ const Chart: React.FC<{
 
     const max = useMemo(() => Math.max(...latencies), [latencies]);
 
-    const nBuckets = 72; // 1 hour over 3 days
     // buckets by hour
     // key is the unix timestamp of the start of each hour
     const buckets: Record<string, Series> = {};
@@ -102,7 +102,7 @@ const Chart: React.FC<{
       const bucketKey = bucketKeyDate.getTime().toString();
 
       if (!(bucketKey in buckets)) {
-        buckets[bucketKey] = [];
+        continue
       }
       buckets[bucketKey].push({
         time: check.time,
@@ -151,7 +151,7 @@ const Chart: React.FC<{
           )
           : null}
         <div className={`flex space-x-1 ${height ?? "h-12"} items-end`}>
-          {Object.entries(buckets).sort((a, b) => parseInt(a[0]) -parseInt(b[0])).map(([time, bucket], i) => {
+          {Object.entries(buckets).sort((a, b) => parseInt(a[0]) - parseInt(b[0])).map(([time, bucket], i) => {
             const start = new Date(parseInt(time));
             const end = new Date(start.getTime() + 60 * 60 * 1000);
             const latencies = bucket.filter((c) => c.latency).map((c) =>
@@ -325,7 +325,12 @@ const Row: React.FC<
           </div>
 
           <div className="p-4 flex flex-col space-y-8">
-            <Chart endpoint={endpoint} withAvailability />
+            <div className="hidden lg:block">
+              <Chart endpoint={endpoint} withAvailability nBuckets={72} />
+            </div>
+            <div className="lg:hidden">
+              <Chart endpoint={endpoint} withAvailability nBuckets={24} />
+            </div>
             <Collapse.Trigger>
               <div className="relative">
                 <div
