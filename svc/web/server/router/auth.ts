@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import { TRPCError } from "@trpc/server";
 import { Email } from "@planetfall/email";
 import { newId } from "@planetfall/id";
+import { Permission } from "@planetfall/permissions";
 import slugify from "slugify";
 import { Stripe } from "stripe";
 import { DEFAULT_QUOTA } from "../../plans";
@@ -161,6 +162,21 @@ export const authRouter = t.router({
     if (!user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
+
+    const permission = new Permission([
+      {
+        resource: "teams",
+        actions: ["read", "write"]
+      },
+      {
+        resource: "endpoints",
+        actions: ["read", "write"]
+      },
+      {
+        resource: "checks",
+        actions: ["read", "write"]
+      }
+    ])
     const token = newId("token");
     const hash = crypto.createHash("sha256").update(token).digest("base64");
     const { expires } = await ctx.db.token.create({
@@ -173,13 +189,15 @@ export const authRouter = t.router({
             id: user.id,
           },
         },
+        permissions: permission.statements
+
       },
     });
 
     ctx.req.session.user = {
       id: user.id,
       token: token,
-      expires: expires.getTime(),
+      expires: expires!.getTime(),
     };
     await ctx.req.session.save();
     return {
@@ -255,6 +273,21 @@ export const authRouter = t.router({
         },
       },
     });
+
+    const permissions = new Permission([
+      {
+        resource: "teams",
+        actions: ["read", "write"]
+      },
+      {
+        resource: "endpoints",
+        actions: ["read", "write"]
+      },
+      {
+        resource: "checks",
+        actions: ["read", "write"]
+      }
+    ])
     const token = newId("token");
     const hash = crypto.createHash("sha256").update(token).digest("base64");
     const { expires } = await ctx.db.token.create({
@@ -267,13 +300,14 @@ export const authRouter = t.router({
             id: user.id,
           },
         },
+        permissions: permissions.statements
       },
     });
 
     ctx.req.session.user = {
       id: user.id,
       token: token,
-      expires: expires.getTime(),
+      expires: expires!.getTime(),
     };
     await ctx.req.session.save();
 

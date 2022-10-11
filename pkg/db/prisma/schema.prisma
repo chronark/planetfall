@@ -10,20 +10,15 @@ generator client {
   previewFeatures = ["referentialIntegrity"]
 }
 
-enum Action {
-  READ
-  WRITE
-}
-
 model Token {
   id        String @id
   tokenHash String @unique
 
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
-  expires DateTime
+  expires DateTime?
 
-  endpoints Action?
+  permissions Json
 }
 
 enum Method {

@@ -2,6 +2,7 @@ const withTM = require("next-transpile-modules")(
   [
     "@planetfall/db",
     "@planetfall/id",
+    "@planetfall/permissions",
   ],
 );
 
@@ -20,7 +21,7 @@ const nextConfig = {
       "ui-avatars.com",
     ],
   },
-
+  
   webpack: (config) => {
     config.resolve.fallback = { fs: false };
 

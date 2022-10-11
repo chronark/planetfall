@@ -362,10 +362,13 @@ const Row: React.FC<
                     <li key={region}>
                       <Heading h4>{region}</Heading>
 
-                      <Chart
-                        height="h-8"
-                        endpoint={{ ...endpoint, checks: scopedChecks }}
-                      />
+                      <div className="hidden lg:block">
+                        <Chart endpoint={{ ...endpoint, checks: scopedChecks }} nBuckets={72} />
+                      </div>
+                      <div className="lg:hidden">
+                        <Chart endpoint={{ ...endpoint, checks: scopedChecks }} nBuckets={24} />
+                      </div>
+
                     </li>
                   );
                 })}

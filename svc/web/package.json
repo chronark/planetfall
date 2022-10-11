@@ -16,6 +16,7 @@
     "@hookform/resolvers": "^2.9.8",
     "@planetfall/assertions": "*",
     "@planetfall/auth": "*",
+    "@planetfall/permissions": "*",
     "@planetfall/db": "*",
     "@planetfall/id": "*",
     "@radix-ui/react-alert-dialog": "^1.0.0",
