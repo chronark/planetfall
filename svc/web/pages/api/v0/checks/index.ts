@@ -53,11 +53,9 @@ export default async function handler(
 
     const bearerToken = authorization.replace("Bearer ", "");
 
-    console.log({ bearerToken });
     const hash = crypto.createHash("sha256").update(bearerToken).digest(
       "base64",
     );
-    console.log({ hash });
     const db = new PrismaClient();
     const token = await db.token.findUnique({ where: { tokenHash: hash } });
 

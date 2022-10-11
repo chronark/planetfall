@@ -9,7 +9,7 @@ export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
   return (
     <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between mb-8 md:mb-16 ">
       <div className="sm:flex-auto">
-        <h1 className="text-xl font-semibold text-slate-900">{props.title}</h1>
+        <h1 className="text-4xl font-semibold text-slate-900">{props.title}</h1>
         <p className="mt-2 text-sm text-slate-700">
           {props.description}
         </p>

@@ -57,7 +57,7 @@ export function Controller(
     <button
       type={props.htmlType ?? "button"}
       onClick={props.onClick}
-      className="focus:outline-none w-full"
+      className="focus:outline-none"
     >
       {props.children}
     </button>

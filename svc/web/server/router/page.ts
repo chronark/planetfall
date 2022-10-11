@@ -131,6 +131,9 @@ export const pageRouter = t.router({
       where: {
         teamId: team.id,
       },
+      include: {
+        endpoints: true,
+      },
     });
   }),
   get: t.procedure.input(z.object({

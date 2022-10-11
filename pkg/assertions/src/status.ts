@@ -1,7 +1,7 @@
 import { Schema, Validator } from "@cfworker/json-schema";
 import { Assertion, AssertionRequest, AssertionResponse } from "./types";
 
-export type StatusComparison = "gte" | "lte";
+export type StatusComparison = "gte" | "lte" | "eq";
 export class StatusAssertion implements Assertion {
   public readonly type = "status";
   public readonly schema: Schema;
