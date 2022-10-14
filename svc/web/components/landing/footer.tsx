@@ -5,26 +5,25 @@ import React from "react";
 export const Footer: React.FC = (): JSX.Element => {
   return (
     <footer className="container mx-auto">
-      {
-        /* <div className="py-16 text-center ">
-        <Link
-          href="https://planetfall.io"
-          className="font-extrabold text-2xl hover:text-primary-800"
-        >
-          planetfall.io
-        </Link>
-        <nav className="mt-10 text-sm" aria-label="quick links">
-          <div className="-my-1 flex justify-center gap-x-6">
-            <Link href="#features" className="hover:text-info-600">
-              Features
+      <div className="py-8 text-center ">
+        <nav className=" text-sm" aria-label="quick links">
+          <div className="-my-1 flex justify-center gap-1 text-slate-600">
+            Built by
+            <Link
+              href="https://twitter.com/chronarkdotdev"
+              className=" text-slate-600 hover:text-primary-600"
+            >
+              @chronarkdotdev
             </Link>
-            <Link href="#pricing" className="hover:text-info-600">
+            {
+              /* <Link href="/pricing" className="hover:text-primary-600">
               Pricing
-            </Link>
+            </Link> */
+            }
           </div>
         </nav>
-      </div> */
-      }
+      </div>
+
       <div className="flex flex-col items-center border-t border-slate-400/10 py-10 sm:flex-row-reverse sm:justify-between">
         <div className="flex gap-x-6">
           <Link

@@ -9,6 +9,8 @@ export interface ButtonControllerProps {
   onClick?: (e?: MouseEvent<HTMLButtonElement>) => void | Promise<void>;
 
   disabled?: boolean;
+
+  block?: boolean;
 }
 
 export interface LinkControllerProps {
@@ -21,6 +23,7 @@ export interface LinkControllerProps {
    * Opens a new browser page when clicking on it.
    */
   newTab?: boolean;
+  block?: boolean;
 }
 
 /**
@@ -57,7 +60,7 @@ export function Controller(
     <button
       type={props.htmlType ?? "button"}
       onClick={props.onClick}
-      className="focus:outline-none"
+      className={`focus:outline-none ${props.block ? "w-full" : ""}`}
     >
       {props.children}
     </button>
