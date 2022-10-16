@@ -13,7 +13,7 @@ class ApiError extends Error {
 }
 
 const input = z.object({
-  method: z.enum(["POST"]),
+  method: z.enum(["GET"]),
   headers: z.object({
     "content-type": z.string().refine((h) => h === "application/json"),
   }),
@@ -32,7 +32,11 @@ type Res =
   }
   | {
     data?: never;
-    error: string;
+    error: {
+      code: string
+      message: string
+
+    };
   };
 
 export default async function handler(
@@ -115,9 +119,9 @@ export default async function handler(
   } catch (e) {
     if (e instanceof ApiError) {
       console.error(e.message);
-      res.status(e.status).json({ error: e.message });
+      res.status(e.status).json({ error: {code: e.status.toString(), message:e.message} });
       return;
     }
-    res.status(500).json({ error: (e as Error).message });
+    res.status(500).json({ error: {code: "unexpected", message:(e as Error).message} });
   }
 }

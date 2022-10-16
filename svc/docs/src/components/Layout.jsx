@@ -39,6 +39,7 @@ const navigation = [
   {
     title: "API reference",
     links: [
+      { title: "API Basics", href: "/rest-api" },
       { title: "Checks", href: "/rest-api/checks" },
     ],
   },

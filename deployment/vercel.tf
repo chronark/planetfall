@@ -1,6 +1,8 @@
 
 
-
+locals {
+  docs_url = "planetfall-docs.vercel.app"
+}
 
 resource "vercel_project" "web" {
   name      = "planetfall"
@@ -8,8 +10,8 @@ resource "vercel_project" "web" {
   framework = "nextjs"
 
 
-  build_command  = "cd ../.. && npx turbo run build --filter=web"
-  root_directory = "svc/web"
+  build_command              = "cd ../.. && npx turbo run build --filter=web"
+  root_directory             = "svc/web"
   serverless_function_region = "fra1"
 
   git_repository = {
@@ -29,10 +31,10 @@ resource "vercel_project" "web" {
       value  = "https://vercel-vitals.axiom.co/api/v1/send?configurationId=icfg_oPwbzTXCEWVftFAoGBeNQFKJ&projectId=b5766f87-cc3f-4925-9480-53e74b861789&type=web-vitals"
       target = ["production"]
     },
-     {
+    {
       key    = "SENDGRID_API_KEY"
       value  = var.sendgrid_api_key
-      target = ["production","preview","development"]
+      target = ["production", "preview", "development"]
     },
 
     {
@@ -61,7 +63,7 @@ resource "vercel_project" "web" {
       value  = var.stripe_product_id_pro
       target = ["production"]
     },
-     {
+    {
       key    = "STRIPE_PRODUCT_ID_PERSONAL"
       value  = var.stripe_product_id_personal
       target = ["production"]
@@ -71,10 +73,41 @@ resource "vercel_project" "web" {
       value  = var.iron_session_secret
       target = ["production"]
     },
+    {
+      key    = "DOCS_URL"
+      value  = "https://${local.docs_url}"
+      target = ["production", "preview", "development"]
+    }
   ]
 
 }
 
+
+
+
+resource "vercel_project" "docs" {
+  name      = "docs"
+  team_id   = var.vercel_team_id
+  framework = "nextjs"
+
+
+  build_command              = "cd ../.. && npx turbo run build --filter=docs"
+  root_directory             = "svc/docs"
+  serverless_function_region = "fra1"
+
+  git_repository = {
+    repo = "chronark/planetfall"
+    type = "github"
+  }
+
+
+}
+
+resource "vercel_project_domain" "docs" {
+  project_id = vercel_project.docs.id
+  team_id    = var.vercel_team_id
+  domain     = local.docs_url
+}
 
 
 resource "vercel_dns_record" "sendgrid_url9477" {
@@ -157,11 +190,26 @@ data "vercel_project_directory" "planetfall" {
   path = "../"
 }
 
-resource "vercel_deployment" "prod" {
+resource "vercel_deployment" "web" {
   project_id  = vercel_project.web.id
-  team_id = var.vercel_team_id
+  team_id     = var.vercel_team_id
   files       = data.vercel_project_directory.planetfall.files
   path_prefix = data.vercel_project_directory.planetfall.path
   production  = true
+
+
+}
+resource "vercel_deployment" "docs" {
+  project_id  = vercel_project.docs.id
+  team_id     = var.vercel_team_id
+  files       = data.vercel_project_directory.planetfall.files
+  path_prefix = data.vercel_project_directory.planetfall.path
+  production  = true
+
+  # This doesn't really depend on the web app, but I don't want to have both of them
+  # in the vercel build queue at the same time.
+  depends_on = [
+    vercel_deployment.web
+  ]
 
 }
