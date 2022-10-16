@@ -333,7 +333,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                   >
                     <div className="flex rounded-full bg-white focus:outline-none ">
                       <span className="sr-only">Open user menu</span>
-                      <Image
+                      <img
                         className="h-8 w-8 rounded-full"
                         src={user
                           ? user?.image ??
@@ -456,7 +456,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
               <div className="border-t border-slate-200 pt-4 pb-3">
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
-                    <Image
+                    <img
                       className="h-10 w-10 rounded-full"
                       src={user?.image ??
                         `https://ui-avatars.com/api/?size=32&name=${user?.name}`}

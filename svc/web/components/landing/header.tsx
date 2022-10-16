@@ -32,14 +32,15 @@ export const Header: React.FC = (): JSX.Element => {
           <div className="shrink-0 mr-4">
             {/* Logo */}
             <Link
-              className="flex items-center gap-2"
               href="/"
               aria-label="Planetfall"
             >
-              <Logo className="w-10 h-10 text-slate-900" />
-              <span className="text-slate-900 font-semibold text-2xl ">
-                Planetfall
-              </span>
+              <div className="flex items-center gap-2">
+                <Logo className="w-10 h-10 text-slate-900" />
+                <span className="text-slate-900 font-semibold text-2xl ">
+                  Planetfall
+                </span>
+              </div>
             </Link>
           </div>
           {/* Desktop navigation */}

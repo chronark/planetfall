@@ -4,6 +4,7 @@ import { trpc } from "lib/hooks/trpc";
 import PlausibleProvider from "next-plausible";
 import "styles/ant.css";
 import "public/fonts/css/pangea.css";
+// import "nextra-theme-docs/style.css"
 
 import {
   AuthProvider,
@@ -25,14 +26,17 @@ function MyApp(
   });
   const router = useRouter();
   const publicPages = [
-    "/",
-    "/pricing",
-    "/auth/sign-in",
-    "/auth/sign-up",
-    "/auth/sign-out",
-    "/_statuspages/[slug]",
+    "^/$",
+    "^/pricing$",
+    "^/auth/sign-in$",
+    "^/auth/sign-up$",
+    "^/auth/sign-out$",
+    "^/_statuspages/[slug]$",
+    "^/docs/*",
   ];
-  const isPublicPage = publicPages.includes(router.pathname);
+  const isPublicPage = publicPages.some((r) =>
+    new RegExp(r).test(router.pathname)
+  );
   return (
     <PlausibleProvider domain="planetfall.io">
       <ConfigProvider>
