@@ -28,14 +28,6 @@ export default function middleware(req: NextRequest) {
   switch (subdomain) {
     case "":
       return NextResponse.next();
-    case "api":
-      /**
-       * Our public rest api routes are at `/pages/api/rest/vX/...`
-       * but I want the public url to look like `api.planetfall.io/vX/...`
-       */
-      url.pathname = `/api/rest${url.pathname}`;
-
-      break;
 
     default:
       url.pathname = `/_statuspages/${subdomain}`;

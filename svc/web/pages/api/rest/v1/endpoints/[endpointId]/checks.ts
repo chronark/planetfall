@@ -15,9 +15,6 @@ class ApiError extends Error {
 
 const input = z.object({
   method: z.enum(["GET"]),
-  headers: z.object({
-    "content-type": z.string().refine((h) => h === "application/json"),
-  }),
   query: z.object({
     endpointId: z.string(),
     since: z.string()
