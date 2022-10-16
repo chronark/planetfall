@@ -26,7 +26,7 @@ You can filter the results by passing query parameters.
 | Paramter | Type   | Required | Description                                                         |
 |----------|--------|----------|---------------------------------------------------------------------|
 | **since**    | Integer    | No       | Only return checks after this time [unix timestamp in milliseconds] |
-| **region**   | String | No       | Filter checks by region                                             |
+| **region**   | String | No       | Filter checks by region, for a list of region ids, please go to [Planetfall Regions](/docs/regions)                                             |
 | **limit**    | Integer    | No       | Limit response to this many checks, by default up to 1000 checks are returned.                                  |
 
 ### Response
