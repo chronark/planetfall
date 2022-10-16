@@ -1,9 +1,9 @@
 ---
-title: Checks
+title: Endpoints
 description: Quidem magni aut exercitationem maxime rerum eos.
 ---
 
-The **endpoints** API allows you to create, update, and delete endpoints as well as querying checks.
+Create, update, and delete endpoints and query their associated checks.
 
 ---
 
