@@ -1,5 +1,6 @@
 import { Check, PrismaClient } from "@planetfall/db";
 import { Permission } from "@planetfall/permissions";
+import CheckableTag from "antd/lib/tag/CheckableTag";
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from "node:crypto";
 import { z } from "zod";
@@ -19,23 +20,62 @@ const input = z.object({
   }),
   query: z.object({
     endpointId: z.string(),
-    since: z.string().transform(z.number().int().parse).optional(),
-    regionId: z.string().optional(),
-    limit: z.string().transform(z.number().int().positive().parse).optional(),
+    since: z.string()
+      .transform((since, ctx) => {
+        const n = parseInt(since);
+        if (Number.isNaN(n)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "not an integer",
+          });
+        }
+        return n;
+      })
+      .optional(),
+    region: z.string().optional(),
+    limit: z.string()
+      .transform((limit, ctx) => {
+        const n = parseInt(limit);
+        if (Number.isNaN(n)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "not an integer",
+          });
+        }
+        if (n <= 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "must be positive",
+          });
+        }
+        return n;
+      })
+      .optional(),
   }),
 });
 
 type Res =
   | {
-    data: Check[];
+    data: {
+      id: string;
+      endpointId: string;
+      latency?: number;
+      time: number;
+
+      error?: string;
+      status?: number;
+      body?: string;
+
+      headers?: Record<string, string>;
+      regionId: string;
+    }[];
     error?: never;
   }
   | {
     data?: never;
     error: {
-      code: string
-      message: string
-
+      code: string;
+      message: string;
     };
   };
 
@@ -54,9 +94,12 @@ export default async function handler(
 
     const request = input.safeParse(req);
     if (!request.success) {
-      throw new ApiError({ status: 400, message: request.error.message });
+      throw new ApiError({
+        status: 400,
+        message: JSON.stringify(JSON.parse(request.error.message)),
+      });
     }
-
+    console.log(request.data);
     const bearerToken = authorization.replace("Bearer ", "");
 
     const hash = crypto.createHash("sha256").update(bearerToken).digest(
@@ -102,7 +145,7 @@ export default async function handler(
     const checks = await db.check.findMany({
       where: {
         endpointId: request.data.query.endpointId,
-        regionId: request.data.query.regionId,
+        regionId: request.data.query.region,
         time: {
           gte: request.data.query.since
             ? new Date(request.data.query.since)
@@ -115,13 +158,29 @@ export default async function handler(
       take: request.data.query.limit || 1000,
     });
 
-    res.json({ data: checks });
+    res.json({
+      data: checks.map((c) => ({
+        ...c,
+        headers: c.headers !== null
+          ? c.headers as Record<string, string>
+          : undefined,
+        body: c.body ?? undefined,
+        time: c.time.getTime(),
+        latency: c.latency !== null ? c.latency : undefined,
+        error: c.error ?? undefined,
+        status: c.status ?? undefined,
+      })),
+    });
   } catch (e) {
     if (e instanceof ApiError) {
       console.error(e.message);
-      res.status(e.status).json({ error: {code: e.status.toString(), message:e.message} });
+      res.status(e.status).json({
+        error: { code: e.status.toString(), message: e.message },
+      });
       return;
     }
-    res.status(500).json({ error: {code: "unexpected", message:(e as Error).message} });
+    res.status(500).json({
+      error: { code: "unexpected", message: (e as Error).message },
+    });
   }
 }

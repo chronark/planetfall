@@ -10,7 +10,7 @@ import { Navigation } from "@/components/Navigation";
 import { Prose } from "@/components/Prose";
 import { Search } from "@/components/Search";
 import { ThemeSelector } from "@/components/ThemeSelector";
-import {navigation} from "navigation.ts" 
+import { navigation } from "navigation.ts";
 
 function GitHubIcon(props) {
   return (
