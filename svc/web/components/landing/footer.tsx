@@ -29,7 +29,7 @@ export const Footer: React.FC = (): JSX.Element => {
           <Link
             href="https://twitter.com/planetfallio"
             className="group"
-            aria-label="TaxPal on Twitter"
+            aria-label="Planetfall twitter account"
           >
             <svg
               aria-hidden="true"
