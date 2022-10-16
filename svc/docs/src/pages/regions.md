@@ -13,26 +13,25 @@ More regions from other cloud vendors  will be added in the future.
 
 | RegionId              | Name                  |
 | --------------------- | --------------------- |
-|`aws:af-south-`        | Cape Town, Africa     |
-|`aws:ap-east-`         | Hong Kong             |
-|`aws:ap-northeast-`    | Tokyo, Japan          |
-|`aws:ap-northeast-`    | Seoul, Korea          |
-|`aws:ap-northeast-`    | Osaka, Japan          |
-|`aws:ap-south-`        | Mumbai, India         |
-|`aws:ap-southeast-`    | Singapore             |
-|`aws:ap-southeast-`    | Sydney, Australia     |
-|`aws:ap-southeast-`    | Jakarta               |
-|`aws:ca-central-`      | Canada                |
-|`aws:eu-central-`      | Frankfurt, Germany    |
-|`aws:eu-north-`        | Stockholm, Sweden     |
-|`aws:eu-south-`        | Milan, Italy          |
-|`aws:eu-west-`         | Ireland               |
-|`aws:eu-west-`         | London, UK            |
-|`aws:eu-west-`         | Paris, France         |
-|`aws:me-south-`        | Bahrain               |
-|`aws:sa-east-`         | São Paulo             |
-|`aws:us-east-`         | N. Virginia, USA      |
-|`aws:us-east-`         | Ohio, USA             |
-|`aws:us-west-`         | N. California, USA    |
-|`aws:us-west-`         | Oregon, USA           |
-
+|`aws:af-south-1`        | Cape Town, Africa     |
+|`aws:ap-east-1`         | Hong Kong             |
+|`aws:ap-northeast-1`    | Tokyo, Japan          |
+|`aws:ap-northeast-2`    | Seoul, Korea          |
+|`aws:ap-northeast-3`    | Osaka, Japan          |
+|`aws:ap-south-1`        | Mumbai, India         |
+|`aws:ap-southeast-1`    | Singapore             |
+|`aws:ap-southeast-2`    | Sydney, Australia     |
+|`aws:ap-southeast-3`    | Jakarta               |
+|`aws:ca-central-1`      | Canada                |
+|`aws:eu-central-1`      | Frankfurt, Germany    |
+|`aws:eu-north-1`        | Stockholm, Sweden     |
+|`aws:eu-south-1`        | Milan, Italy          |
+|`aws:eu-west-1`         | Ireland               |
+|`aws:eu-west-2`         | London, UK            |
+|`aws:eu-west-3`         | Paris, France         |
+|`aws:me-south-1`        | Bahrain               |
+|`aws:sa-east-1`         | São Paulo             |
+|`aws:us-east-1`         | N. Virginia, USA      |
+|`aws:us-east-2`         | Ohio, USA             |
+|`aws:us-west-1`         | N. California, USA    |
+|`aws:us-west-2`         | Oregon, USA           |
