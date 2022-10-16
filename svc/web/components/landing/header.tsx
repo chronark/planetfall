@@ -49,6 +49,14 @@ export const Header: React.FC = (): JSX.Element => {
               <li className="hidden md:block">
                 <Link
                   className="font-medium text-slate-500 hover:text-slate-300 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                  href="/docs"
+                >
+                  Docs
+                </Link>
+              </li>
+              <li className="hidden md:block">
+                <Link
+                  className="font-medium text-slate-500 hover:text-slate-300 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
                   href="/pricing"
                 >
                   Pricing
