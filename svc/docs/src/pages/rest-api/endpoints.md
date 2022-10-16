@@ -23,12 +23,14 @@ Returns a list of checks for the given endpoint.
 
 #### Query Paramters
 
-You can filter the results by passing query parameters. | Parameter | Type |
-Required | Description |
+You can filter the results by passing query parameters. 
+
+
+| Paramter | Type   | Required | Description                                                         |
 |----------|--------|----------|---------------------------------------------------------------------|
-| **since** | int | No | Only return checks after this time [unix timestamp in
-milliseconds] | | **region** | string | No | Filter checks by region | |
-**limit** | int | No | Limit response to this many checks |
+| since    | int    | No       | Only return checks after this time [unix timestamp in milliseconds] |
+| region   | string | No       | Filter checks by region                                             |
+| limit    | int    | No       | Limit response to this many checks                                  |
 
 #### Response
 
