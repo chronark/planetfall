@@ -19,9 +19,9 @@ const input = z.object({
   }),
   query: z.object({
     endpointId: z.string(),
-    since: z.number().int().optional(),
+    since: z.string().transform(z.number().int().parse).optional(),
     regionId: z.string().optional(),
-    limit: z.number().int().positive().optional(),
+    limit: z.string().transform(z.number().int().positive().parse).optional(),
   }),
 });
 
