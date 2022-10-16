@@ -3,12 +3,10 @@ title: Checks
 description: Quidem magni aut exercitationem maxime rerum eos.
 ---
 
-ABC
+The **endpoints** API allows you to create, update, and delete endpoints as well as querying checks.
 
 ---
 
-
-The **endpoints** API allows you to create, update, and delete endpoints as well as querying checks.
 
 ## **GET** /v1/endpoints/{endpointId}/checks
 
