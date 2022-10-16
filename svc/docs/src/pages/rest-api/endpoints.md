@@ -1,6 +1,6 @@
 ---
 title: Endpoints
-description: Quidem magni aut exercitationem maxime rerum eos.
+description: Manage your Planetfall endpoints
 ---
 
 Create, update, and delete endpoints and query their associated checks.
