@@ -16,7 +16,7 @@ Returns a list of checks for the given endpoint.
 
 | Parameter      | Type   | Required | Description                                                                             |
 | -------------- | ------ | -------- | --------------------------------------------------------------------------------------- |
-| **endpointId** | string | yes      | The ID of the endpoint. You can find this in the URL when viewing the endpoint details. |
+| **endpointId** | String | yes      | The ID of the endpoint. You can find this in the URL when viewing the endpoint details. |
 
 ### Query Paramters
 
@@ -25,9 +25,9 @@ You can filter the results by passing query parameters.
 
 | Paramter | Type   | Required | Description                                                         |
 |----------|--------|----------|---------------------------------------------------------------------|
-| **since**    | int    | No       | Only return checks after this time [unix timestamp in milliseconds] |
-| **region**   | string | No       | Filter checks by region                                             |
-| **limit**    | int    | No       | Limit response to this many checks                                  |
+| **since**    | Integer    | No       | Only return checks after this time [unix timestamp in milliseconds] |
+| **region**   | String | No       | Filter checks by region                                             |
+| **limit**    | Integer    | No       | Limit response to this many checks, by default up to 1000 checks are returned.                                  |
 
 ### Response
 
