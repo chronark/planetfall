@@ -7,21 +7,20 @@ ABC
 
 ---
 
-## Endpoints
 
 The **endpoints** API allows you to create, update, and delete endpoints as well as querying checks.
 
-### **GET** /v1/endpoints/{endpointId}/checks
+## **GET** /v1/endpoints/{endpointId}/checks
 
 Returns a list of checks for the given endpoint.
 
-#### Path Parameters
+### Path Parameters
 
 | Parameter      | Type   | Required | Description                                                                             |
 | -------------- | ------ | -------- | --------------------------------------------------------------------------------------- |
 | **endpointId** | string | yes      | The ID of the endpoint. You can find this in the URL when viewing the endpoint details. |
 
-#### Query Paramters
+### Query Paramters
 
 You can filter the results by passing query parameters. 
 
@@ -32,7 +31,7 @@ You can filter the results by passing query parameters.
 | **region**   | string | No       | Filter checks by region                                             |
 | **limit**    | int    | No       | Limit response to this many checks                                  |
 
-#### Response
+### Response
 
 ```json
 {
