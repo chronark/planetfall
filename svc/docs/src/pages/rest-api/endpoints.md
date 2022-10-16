@@ -7,9 +7,9 @@ ABC
 
 ---
 
-## Checks
+## Endpoints
 
-The `checks` API allows you to read the results from your endpoint.
+The **endpoints** API allows you to create, update, and delete endpoints as well as querying checks.
 
 ### **GET** /v1/endpoints/{endpointId}/checks
 
