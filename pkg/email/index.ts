@@ -1,7 +1,7 @@
 import { MailService } from "@sendgrid/mail";
 
 export class Email {
-  private client: MailService;
+  client: MailService;
 
   constructor() {
     this.client = new MailService();
