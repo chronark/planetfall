@@ -16,14 +16,14 @@ Returns a list of checks for the given endpoint.
 
 | Parameter      | Type   | Required | Description                                                                             |
 | -------------- | ------ | -------- | --------------------------------------------------------------------------------------- |
-| **endpointId** | String | yes      | The ID of the endpoint. You can find this in the URL when viewing the endpoint details. |
+| **endpointId** | String | Yes      | The ID of the endpoint. You can find this in the URL when viewing the endpoint details. |
 
 ### Query Paramters
 
 You can filter the results by passing query parameters. 
 
 
-| Paramter | Type   | Required | Description                                                         |
+| Parameter | Type   | Required | Description                                                         |
 |----------|--------|----------|---------------------------------------------------------------------|
 | **since**    | Integer    | No       | Only return checks after this time [unix timestamp in milliseconds] |
 | **region**   | String | No       | Filter checks by region, for a list of region ids, please go to [Planetfall Regions](/docs/regions)                                             |
