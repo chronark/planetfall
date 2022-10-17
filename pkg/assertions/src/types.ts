@@ -1,4 +1,4 @@
-import { Schema } from "@cfworker/json-schema";
+import type { Schema } from "ajv";
 
 export type AssertionRequest = {
   body: string;

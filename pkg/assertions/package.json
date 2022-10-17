@@ -11,8 +11,7 @@
   "author": "Andreas Thomas",
   "license": "ISC",
   "dependencies": {
-    "@cfworker/json-schema": "^1.12.5",
-    "zod": "^3.19.1"
+    "ajv": "^8.11.0"
   },
   "devDependencies": {
     "@planetfall/tsconfig": "*",

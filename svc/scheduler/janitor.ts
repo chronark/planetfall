@@ -1,0 +1,45 @@
+import { PrismaClient } from "@planetfall/db";
+import { Logger } from "./logger";
+
+export class Janitor {
+  private db: PrismaClient;
+  private logger: Logger;
+
+  constructor(
+    { logger }: { logger: Logger },
+  ) {
+
+    this.db = new PrismaClient();
+    this.logger = logger;
+  }
+
+  public async run(): Promise<void> {
+    this.logger.info("janitor running");
+
+    const teams = await this.db.team.findMany();
+
+
+    for (const t of teams) {
+      const cutoff = new Date(Date.now() - t.retention)
+      try {
+        const evicted = await this.db.check.deleteMany({
+          where: {
+            time: {
+              lt: cutoff,
+            },
+          },
+        });
+        this.logger.info("Evicted checks", {
+          teamId: t.id,
+          count: evicted.count,
+        });
+
+
+      } catch (e) {
+        this.logger.error((e as Error).message, {
+          teamId: t.id,
+        });
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import type { Assertion } from "./types";
 
-import { Schema } from "@cfworker/json-schema";
+import type { Schema } from "ajv";
 import { HeaderAssertion } from "./header";
 import { StatusAssertion } from "./status";
 export function serialize(

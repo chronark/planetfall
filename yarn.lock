@@ -411,11 +411,6 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@cfworker/json-schema@^1.12.5":
-  version "1.12.5"
-  resolved "https://registry.yarnpkg.com/@cfworker/json-schema/-/json-schema-1.12.5.tgz#8a2b4f335662cbf4fa00d0101cec2a03defbf7d5"
-  integrity sha512-k+ungOs1TxSfNfmfOxkwaiNL2EgRQjhk2SRweMYoKkBJZUYsGsY+XYpe2KpuS9EyjZWjZhq8QvVM+gwi3g1+hQ==
-
 "@colors/colors@1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
@@ -1681,7 +1676,7 @@ ajv@^6.10.0, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^8.0.1:
+ajv@^8.0.1, ajv@^8.11.0:
   version "8.11.0"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.11.0.tgz#977e91dd96ca669f54a11e23e378e33b884a565f"
   integrity sha512-wGgprdCvMalC0BztXvitD2hC04YffAvtsUn93JbGXYLAtCUO4xd17mCCZQxUOItiBwZvJScWo8NIvQMQ71rdpg==

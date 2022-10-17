@@ -1,5 +1,9 @@
-import { Schema, Validator } from "@cfworker/json-schema";
+import Ajv from "ajv"
+import type { Schema } from "ajv"
 import { Assertion, AssertionRequest, AssertionResponse } from "./types";
+
+
+const ajv = new Ajv()
 
 export type HeaderComparison = "eq" | "exists";
 export class HeaderAssertion implements Assertion {
@@ -40,20 +44,27 @@ export class HeaderAssertion implements Assertion {
   }
 
   public assert(req: AssertionRequest): AssertionResponse {
-    const res = new Validator(this.schema).validate(req);
-    if (res.valid) {
+    const validate = ajv.compile(this.schema)
+    const valid = validate(req);
+    if (valid) {
       return {
         success: true,
       };
     }
+    if (validate.errors && validate.length > 0) {
+      return {
+        success: false,
+        error: validate.errors[0].message ?? "Something went wromg"
+      }
+    }
     return {
       success: false,
-      error: res.errors[0].error,
+      error: "Something went wrong",
     };
   }
 
   public serialize(): string {
-    return JSON.stringify(this.schema);
+    return JSON.stringify(this.schema)
   }
 
   static deserilize(schema: string): HeaderAssertion {
