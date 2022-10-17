@@ -34,4 +34,4 @@ if (stripeSecretKey) {
 
 
 const janitor = new Janitor({ logger })
-setInterval(janitor.run, 60 * 1000)
+setInterval(()=>janitor.run(), 60 * 1000)
