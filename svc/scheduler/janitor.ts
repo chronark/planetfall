@@ -5,12 +5,13 @@ export class Janitor {
   private db: PrismaClient;
   private logger: Logger;
 
-  constructor(
-    { logger }: { logger: Logger },
+  constructor(opts: { logger: Logger },
   ) {
-
     this.db = new PrismaClient();
-    this.logger = logger;
+    if (!opts.logger){
+      throw new Error("janitor requires logger")
+    }
+    this.logger = opts.logger;
   }
 
   public async run(): Promise<void> {
