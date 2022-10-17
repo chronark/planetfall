@@ -7,7 +7,6 @@ Create, update, and delete endpoints and query their associated checks.
 
 ---
 
-
 ## **GET** /v1/endpoints/{endpointId}/checks
 
 Returns a list of checks for the given endpoint.
@@ -20,14 +19,13 @@ Returns a list of checks for the given endpoint.
 
 ### Query Paramters
 
-You can filter the results by passing query parameters. 
+You can filter the results by passing query parameters.
 
-
-| Parameter | Type   | Required | Description                                                         |
-|----------|--------|----------|---------------------------------------------------------------------|
-| **since**    | Integer    | No       | Only return checks after this time [unix timestamp in milliseconds] |
-| **region**   | String | No       | Filter checks by region, for a list of region ids, please go to [Planetfall Regions](/docs/regions)                                             |
-| **limit**    | Integer    | No       | Limit response to this many checks, by default up to 1000 checks are returned.                                  |
+| Parameter  | Type    | Required | Description                                                                                         |
+| ---------- | ------- | -------- | --------------------------------------------------------------------------------------------------- |
+| **since**  | Integer | No       | Only return checks after this time [unix timestamp in milliseconds]                                 |
+| **region** | String  | No       | Filter checks by region, for a list of region ids, please go to [Planetfall Regions](/docs/regions) |
+| **limit**  | Integer | No       | Limit response to this many checks, by default up to 1000 checks are returned.                      |
 
 ### Response
 

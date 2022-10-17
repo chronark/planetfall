@@ -80,7 +80,7 @@ export default function Page() {
                 <h2 className="text-lg font-semibold text-primary-500">
                   Planetfall
                 </h2>
-                <p className="mt-1 text-4xl font-bold tracking-tight ttext-slate-900 sm:text-5xl lg:text-6xl">
+                <p className="mt-1 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
                   Sign In
                 </p>
               </div>
