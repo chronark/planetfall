@@ -26,17 +26,17 @@ function MyApp(
   });
   const router = useRouter();
   const publicPages = [
-    "^/$",
-    "^/pricing$",
-    "^/auth/sign-in$",
-    "^/auth/sign-up$",
-    "^/auth/sign-out$",
-    "^/_statuspages/[slug]$",
-    "^/docs/*",
+    "/",
+    "/pricing",
+    "/auth/sign-in",
+    "/auth/sign-up",
+    "/auth/sign-out",
+    "/_statuspages/[slug]",
   ];
-  const isPublicPage = publicPages.some((r) =>
+  const isPublicPage = router.pathname.startsWith("/docs") || publicPages.some((r) =>
     new RegExp(r).test(router.pathname)
   );
+
   return (
     <PlausibleProvider domain="planetfall.io">
       <ConfigProvider>
