@@ -14,6 +14,8 @@ export type Input = z.infer<typeof validation>;
 export type Output = {
   status: number;
   latency: number;
+  body: string
+  headers: Record<string, string>
 };
 export type ErrorOutput = {
   error: string;
@@ -48,7 +50,7 @@ export async function handler(
 
     const start = Date.now();
     console.log("Sending body: ", v.data.body);
-    const { status } = await fetch(v.data.url, {
+    const res = await fetch(v.data.url, {
       method: v.data.method,
       headers: {
         "User-Agent": "planetfall.io",
@@ -65,7 +67,9 @@ export async function handler(
         "Content-Type": "application/json",
       },
 
-      body: JSON.stringify({ status, latency }),
+      body: JSON.stringify({
+        status: res.status, latency, body: await res.text(), headers: res.headers
+      }),
     };
   } catch (e) {
     const err = e as Error;

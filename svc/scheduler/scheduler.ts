@@ -167,9 +167,8 @@ export class Scheduler {
           );
         }
 
-        const body = await res.json();
 
-        const { status, latency } = body as { status: number; latency: number };
+        const parsed = await res.json() as { status: number; latency: number, body: string, headers: Record<string, string> };
 
         let error: string | undefined = undefined;
 
@@ -177,11 +176,13 @@ export class Scheduler {
           data: {
             id: newId("check"),
             endpointId: endpoint.id,
-            latency,
+            latency: parsed.latency,
             time,
-            status,
+            status: parsed.status,
             regionId,
             error,
+            body: parsed.body,
+            headers: parsed.headers
           },
         });
       }));
