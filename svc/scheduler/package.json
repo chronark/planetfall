@@ -14,6 +14,7 @@
   "dependencies": {
     "@axiomhq/axiom-node": "^0.8.0",
     "@planetfall/db": "*",
+    "@planetfall/assertions": "*",
     "@planetfall/id": "*",
     "isomorphic-fetch": "^3.0.0",
     "kafkajs": "^2.2.0",
