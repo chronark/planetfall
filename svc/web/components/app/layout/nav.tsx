@@ -152,7 +152,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                         ? (
                           <>
                             <Divider />
-                            <li>
+                            <li key="dropdown">
                               <Dropdown
                                 trigger={["click", "hover"]}
                                 overlay={
@@ -505,7 +505,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
           </>
         )}
       </Disclosure>
-      <main className="mx-auto container my-8 lg:my-16 pb-56 px-4 md:px-0">
+      <main className="mx-auto container  pb-56 px-4 md:px-0">
         {children}
       </main>
 

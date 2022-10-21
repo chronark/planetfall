@@ -33,9 +33,8 @@ function MyApp(
     "/auth/sign-out",
     "/_statuspages/[slug]",
   ];
-  const isPublicPage = router.pathname.startsWith("/docs") || publicPages.some((r) =>
-    new RegExp(r).test(router.pathname)
-  );
+  const isPublicPage = router.pathname.startsWith("/docs") ||
+    publicPages.some((r) => new RegExp(r).test(router.pathname));
 
   return (
     <PlausibleProvider domain="planetfall.io">

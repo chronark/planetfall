@@ -31,7 +31,5 @@ if (stripeSecretKey) {
   setInterval(() => billing.run(), 60_000);
 }
 
-
-
-const janitor = new Janitor({ logger })
-setInterval(()=>janitor.run(), 60 * 1000)
+const janitor = new Janitor({ logger });
+setInterval(() => janitor.run(), 60 * 1000);

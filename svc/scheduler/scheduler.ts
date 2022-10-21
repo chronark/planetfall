@@ -126,7 +126,7 @@ export class Scheduler {
       ];
       this.logger.info("testing endpoint", {
         endpointId: endpoint.id,
-        regions,
+        regions: regions.map((r) => r.id),
       });
 
       await Promise.all(regions.map(async ({ id: regionId }) => {

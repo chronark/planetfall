@@ -1,17 +1,15 @@
-import Ajv from "ajv"
-import type { Schema } from "ajv"
+import Ajv from "ajv";
+import type { Schema } from "ajv";
 import { Assertion, AssertionRequest, AssertionResponse } from "./types";
-
-
 
 export type StatusComparison = "gte" | "lte" | "eq";
 export class StatusAssertion implements Assertion {
   public readonly type = "status";
   public readonly schema: Schema;
-  private readonly ajv: Ajv
+  private readonly ajv: Ajv;
   constructor(schema: Schema) {
     this.schema = schema;
-    this.ajv = new Ajv()
+    this.ajv = new Ajv();
   }
 
   static new(
@@ -40,7 +38,7 @@ export class StatusAssertion implements Assertion {
   }
 
   public assert(req: AssertionRequest): AssertionResponse {
-    const validate = this.ajv.compile(this.schema)
+    const validate = this.ajv.compile(this.schema);
     const valid = validate(req);
     if (valid) {
       return {
@@ -50,8 +48,8 @@ export class StatusAssertion implements Assertion {
     if (validate.errors && validate.length > 0) {
       return {
         success: false,
-        error: validate.errors[0].message ?? "Something went wromg"
-      }
+        error: validate.errors[0].message ?? "Something went wromg",
+      };
     }
     return {
       success: false,

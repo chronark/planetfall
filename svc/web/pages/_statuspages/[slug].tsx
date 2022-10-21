@@ -10,6 +10,7 @@ import {
   PrismaClient,
   Region as RegionType,
   StatusPage,
+  Team,
 } from "@planetfall/db";
 import * as Collapse from "@radix-ui/react-collapsible";
 import * as HoverCard from "@radix-ui/react-hover-card";
@@ -21,13 +22,13 @@ import { percentile, usePercentile } from "../../lib/hooks/percentile";
 import { Area, Heatmap, Line, TinyArea } from "@ant-design/plots";
 import Link from "next/link";
 import { NotFound } from "../../components/notFound/notFound";
-import { late, string } from "zod";
-
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { Button, Stats } from "components";
 import { Heading } from "../../components/heading";
 import exp from "constants";
 export type PageProps = {
   name: string;
+  team: { retention: number };
   endpoints: {
     name: string | null;
     url: string;
@@ -286,9 +287,10 @@ const Chart: React.FC<{
 const Row: React.FC<
   {
     endpoint: PageProps["endpoints"][0];
+    maxBuckets: number;
   }
 > = (
-  { endpoint },
+  { endpoint, maxBuckets },
 ): JSX.Element => {
   const latencies = useMemo(
     () =>
@@ -309,82 +311,106 @@ const Row: React.FC<
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <li className="border-t sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded my-16  hover:border-slate-800 duration-1000">
-      <Collapse.Root open={expanded} onOpenChange={setExpanded}>
-        <div className="flex-col gap-2 lg:flex-row items-start border-b border-slate-200  px-4 py-5 sm:px-6 flex justify-between md:items-center">
-          <div className="lg:w-1/2">
-            <span className="text-lg font-medium leading-6 text-slate-900">
-              {endpoint.name ?? endpoint.url}
+    <div className=" border-t list-none sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded my-16  hover:border-slate-800 duration-1000">
+      <div className="flex-col gap-2 lg:flex-row items-start border-b border-slate-200  px-4 py-5 sm:px-6 flex justify-between md:items-center">
+        <div className="lg:w-1/2">
+          <span className="text-lg font-medium leading-6 text-slate-900">
+            {endpoint.name ?? endpoint.url}
+          </span>
+        </div>
+        <div className="lg:w-1/2 flex gap-2 sm:gap-4 xl:gap-6 justify-between flex-wrap md:flex-nowrap items-center">
+          <Stat label="min" value={Math.round(min)} />
+          <Stat label="max" value={Math.round(max)} />
+          <Stat label="p50" value={Math.round(p50)} />
+          <Stat label="p95" value={Math.round(p95)} />
+          <Stat label="p99" value={Math.round(p99)} />
+        </div>
+      </div>
+
+      <div className="p-4 flex flex-col space-y-8">
+        <div className="hidden lg:block">
+          <Chart
+            endpoint={endpoint}
+            withAvailability
+            nBuckets={Math.min(72, maxBuckets)}
+          />
+        </div>
+        <div className="lg:hidden">
+          <Chart
+            endpoint={endpoint}
+            withAvailability
+            nBuckets={Math.min(24, maxBuckets)}
+          />
+        </div>
+
+        <button className="relative" onClick={() => setExpanded(!expanded)}>
+          <div
+            className="absolute inset-0 flex items-center"
+            aria-hidden="true"
+          >
+            <div className="w-full border-t border-slate-200" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className=" bg-white px-2 text-slate-500 hover:text-primary-500 ">
+              {expanded
+                ? <MinusIcon className="h-6 w-6" />
+                : <PlusIcon className="h-6 w-6" />}
             </span>
           </div>
-          <div className="lg:w-1/2 flex gap-2 sm:gap-4 xl:gap-6 justify-between flex-wrap md:flex-nowrap items-center">
-            <Stat label="min" value={Math.round(min)} />
-            <Stat label="max" value={Math.round(max)} />
-            <Stat label="p50" value={Math.round(p50)} />
-            <Stat label="p95" value={Math.round(p95)} />
-            <Stat label="p99" value={Math.round(p99)} />
-          </div>
-        </div>
+        </button>
 
-        <div className="p-4 flex flex-col space-y-8">
-          <div className="hidden lg:block">
-            <Chart endpoint={endpoint} withAvailability nBuckets={72} />
-          </div>
-          <div className="lg:hidden">
-            <Chart endpoint={endpoint} withAvailability nBuckets={24} />
-          </div>
-          <Collapse.Trigger>
-            <div className="relative">
-              <div
-                className="absolute inset-0 flex items-center"
-                aria-hidden="true"
+        <AnimatePresence>
+          {expanded
+            ? (
+              <motion.ul
+                className="space-y-4 lg:space-y-8"
+                initial="hidden"
+                animate="show"
+                variants={{
+                  hidden: {},
+                  show: {
+                    transition: {
+                      staggerChildren: 0.1,
+                    },
+                  },
+                }}
               >
-                <div className="w-full border-t border-slate-200" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-white px-2 text-slate-500 hover:text-primary-500 ">
-                  <PlusIcon
-                    className={`h-6 w-6 duration-500 ${
-                      expanded ? "rotate-45" : ""
-                    }`}
-                    aria-hidden="true"
-                  />
-                </span>
-              </div>
-            </div>
-          </Collapse.Trigger>
+                {endpoint.regions.map((region) => {
+                  const scopedChecks = endpoint.checks.filter((c) =>
+                    c.region === region
+                  );
 
-          <Collapse.Content>
-            <ul className="space-y-4">
-              {endpoint.regions.map((region) => {
-                const scopedChecks = endpoint.checks.filter((c) =>
-                  c.region === region
-                );
+                  return (
+                    <motion.li
+                      key={region}
+                      variants={{
+                        hidden: { scale: 0.8, opacity: 0 },
+                        show: { scale: 1, opacity: 1 },
+                      }}
+                    >
+                      <Heading h4>{region}</Heading>
 
-                return (
-                  <li key={region}>
-                    <Heading h4>{region}</Heading>
-
-                    <div className="hidden lg:block">
-                      <Chart
-                        endpoint={{ ...endpoint, checks: scopedChecks }}
-                        nBuckets={72}
-                      />
-                    </div>
-                    <div className="lg:hidden">
-                      <Chart
-                        endpoint={{ ...endpoint, checks: scopedChecks }}
-                        nBuckets={24}
-                      />
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </Collapse.Content>
-        </div>
-      </Collapse.Root>
-    </li>
+                      <div className="hidden lg:block">
+                        <Chart
+                          endpoint={{ ...endpoint, checks: scopedChecks }}
+                          nBuckets={Math.min(72, maxBuckets)}
+                        />
+                      </div>
+                      <div className="lg:hidden">
+                        <Chart
+                          endpoint={{ ...endpoint, checks: scopedChecks }}
+                          nBuckets={Math.min(24, maxBuckets)}
+                        />
+                      </div>
+                    </motion.li>
+                  );
+                })}
+              </motion.ul>
+            )
+            : null}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 };
 export default function Page(
@@ -406,7 +432,9 @@ export default function Page(
   if (!data) {
     return <NotFound />;
   }
-
+  // Due to different retentions, we need to adjust the number of buckets
+  const maxBuckets = Math.ceil(data.team.retention / 1000 / 60 / 60);
+  console.log({ maxBuckets, retention: data.team.retention });
   return (
     <div className="min-h-screen relative">
       <header
@@ -424,14 +452,35 @@ export default function Page(
         </div>
       </header>
       <main className="container mx-auto md:py-16 ">
-        <ol className="sm:px-4">
+        <motion.ul
+          className="gap-4"
+          initial="hidden"
+          animate="show"
+          variants={{
+            hidden: {},
+            show: {
+              transition: {
+                staggerChildren: 0.1,
+              },
+            },
+          }}
+        >
           {data.endpoints.map((endpoint) => (
-            <Row
+            <motion.li
               key={endpoint.url}
-              endpoint={endpoint}
-            />
+              variants={{
+                hidden: { scale: 0.9, opacity: 0 },
+                show: { scale: 1, opacity: 1, transition: { type: "spring" } },
+              }}
+            >
+              <Row
+                maxBuckets={maxBuckets}
+                key={endpoint.url}
+                endpoint={endpoint}
+              />
+            </motion.li>
           ))}
-        </ol>
+        </motion.ul>
       </main>
       <footer className="border-t bottom-0 inset-x-0 py-16">
         <p className="text-center text-slate-400">
@@ -471,6 +520,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
       slug,
     },
     include: {
+      team: true,
       endpoints: {
         where: {
           active: true,
@@ -492,6 +542,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
     },
   });
 
+  console.log({ page });
   if (!page) {
     return {
       props: {},
@@ -507,6 +558,9 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
 
   const data: PageProps = {
     name: page.name,
+    team: {
+      retention: page.team.retention,
+    },
     endpoints: page.endpoints.map((e) => ({
       name: e.name,
       url: e.url,
@@ -520,6 +574,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
     })),
   };
 
+  console.log(data);
   return {
     props: {
       data,

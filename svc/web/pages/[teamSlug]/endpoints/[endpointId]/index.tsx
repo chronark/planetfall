@@ -220,11 +220,7 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   const router = useRouter();
   const now = useMemo(() => Date.now(), []);
   const ctx = trpc.useContext();
-  const [since, setSince] = useState(now - 60 * 60 * 1000);
-  const deleteEndpoint = trpc.endpoint.delete.useMutation();
-  const updateEndpoint = trpc.endpoint.update.useMutation({
-    onSettled: () => ctx.endpoint.get.invalidate(),
-  });
+
   const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
     staleTime: 10000,
   });
@@ -272,62 +268,7 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
     : 1;
 
   return (
-    <>
-      <PageHeader
-        title={endpoint.data?.name ?? ""}
-        description={endpoint.data?.url}
-        actions={[
-          endpoint.data?.active
-            ? (
-              <div className="flex h-6 w-6 items-center justify-center mr-2">
-                <span className="animate-ping-slow absolute inline-flex h-4 w-4 rounded-full bg-emerald-400 opacity-50">
-                </span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500">
-                </span>
-              </div>
-            )
-            : (
-              <div className="flex h-6 w-6 items-center justify-center mr-2">
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-500">
-                </span>
-              </div>
-            ),
-
-          <Button
-            key="update"
-            type="secondary"
-            disabled={!endpoint.data}
-            onClick={async () => {
-              await updateEndpoint.mutateAsync({
-                endpointId,
-                teamSlug,
-                active: !endpoint.data!.active,
-              });
-            }}
-          >
-            {endpoint.data?.active ? "Active" : "Paused"}
-          </Button>,
-          <Confirm
-            key="delete"
-            title="Delete Endpoint?"
-            description={endpoint.data?.name ?? endpoint.data?.url}
-            onConfirm={async () => {
-              await deleteEndpoint.mutateAsync({ endpointId });
-              router.push(`/${teamSlug}/endpoints`);
-              message.success("Endpoint deleted");
-            }}
-            trigger={<Button type="secondary">Delete</Button>}
-          />,
-          <Button
-            key="settings"
-            type="secondary"
-            href={`/${teamSlug}/endpoints/${endpointId}/settings`}
-          >
-            Settings
-          </Button>,
-        ]}
-      />
-
+    <div className="relative">
       <div className="w-full flex justify-between items-center gap-2 md:gap-4 lg:gap-8">
         <Stats
           label="Availability"
@@ -383,7 +324,7 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
           suffix="ms"
         />
       </div>
-    </>
+    </div>
   );
 };
 
@@ -688,51 +629,109 @@ export default function EndpointPage() {
       }]);
     }
   }, [endpoint.data]);
+  const ctx = trpc.useContext();
+  const now = useMemo(() => Date.now(), []);
+
+  const [since, setSince] = useState(now - 60 * 60 * 1000);
+  const deleteEndpoint = trpc.endpoint.delete.useMutation();
+  const updateEndpoint = trpc.endpoint.update.useMutation({
+    onSettled: () => ctx.endpoint.get.invalidate(),
+  });
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <Space
-        size={48}
-        direction="vertical"
-        style={{ width: "100%", marginBottom: 100 }}
-      >
-        <Main endpointId={endpointId} teamSlug={teamSlug} />
-        <Divider />
-
-        <Heading h2>Errors</Heading>
-
-        {endpoint.data ? <Errors endpointId={endpoint.data?.id} /> : null}
-
-        <Divider />
-
-        <Heading h2>Latest Checks</Heading>
-
-        <Feed endpointId={endpointId} />
-        <Divider />
-
-        <Heading h2>Latency By Region</Heading>
-        <Tabs
-          tabPosition="left"
-          style={{ height: "50vh" }}
-          items={regions.data?.filter((r) =>
-            (endpoint.data?.regions)?.find((region) => region.id === r.id)
-          ).map((
-            region,
-          ) => ({
-            label: region.name,
-            key: region.id,
-            children: (
-              <div style={{ margin: "0 0 0 3rem" }}>
-                <RegionTab
-                  endpointId={endpointId}
-                  regionId={region.id}
-                  regionName={region.name}
-                />
+      <PageHeader
+        sticky
+        title={endpoint.data?.name ?? ""}
+        description={endpoint.data?.url}
+        actions={[
+          endpoint.data?.active
+            ? (
+              <div className="flex h-6 w-6 items-center justify-center mr-2">
+                <span className="animate-ping-slow absolute inline-flex h-4 w-4 rounded-full bg-emerald-400 opacity-50">
+                </span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500">
+                </span>
+              </div>
+            )
+            : (
+              <div className="flex h-6 w-6 items-center justify-center mr-2">
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-500">
+                </span>
               </div>
             ),
-          }))}
-        />
-      </Space>
+
+          <Button
+            key="update"
+            type="secondary"
+            disabled={!endpoint.data}
+            onClick={async () => {
+              await updateEndpoint.mutateAsync({
+                endpointId,
+                teamSlug,
+                active: !endpoint.data!.active,
+              });
+            }}
+          >
+            {endpoint.data?.active ? "Active" : "Paused"}
+          </Button>,
+          <Confirm
+            key="delete"
+            title="Delete Endpoint?"
+            description={endpoint.data?.name ?? endpoint.data?.url}
+            onConfirm={async () => {
+              await deleteEndpoint.mutateAsync({ endpointId });
+              router.push(`/${teamSlug}/endpoints`);
+              message.success("Endpoint deleted");
+            }}
+            trigger={<Button type="secondary">Delete</Button>}
+          />,
+          <Button
+            key="settings"
+            type="secondary"
+            href={`/${teamSlug}/endpoints/${endpointId}/settings`}
+          >
+            Settings
+          </Button>,
+        ]}
+      />
+
+      <Main endpointId={endpointId} teamSlug={teamSlug} />
+      <Divider />
+
+      <Heading h2>Errors</Heading>
+
+      {endpoint.data ? <Errors endpointId={endpoint.data?.id} /> : null}
+
+      <Divider />
+
+      <Heading h2>Latest Checks</Heading>
+
+      <Feed endpointId={endpointId} />
+      <Divider />
+
+      <Heading h2>Latency By Region</Heading>
+      <Tabs
+        tabPosition="left"
+        style={{ height: "50vh" }}
+        items={regions.data?.filter((r) =>
+          (endpoint.data?.regions)?.find((region) => region.id === r.id)
+        ).map((
+          region,
+        ) => ({
+          label: region.name,
+          key: region.id,
+          children: (
+            <div style={{ margin: "0 0 0 3rem" }}>
+              <RegionTab
+                endpointId={endpointId}
+                regionId={region.id}
+                regionName={region.name}
+              />
+            </div>
+          ),
+        }))}
+      />
     </Layout>
   );
 }

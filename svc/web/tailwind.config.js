@@ -9,6 +9,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      transitionProperty: {
+        "width": "width",
+      },
       boxShadow: {
         ambient: "0 35px 120px -10px rgba(51, 102, 255, 0.03)",
         cta: "0 35px 120px -10px rgba(51, 102, 255, 0.1)",

@@ -5,11 +5,10 @@ export class Janitor {
   private db: PrismaClient;
   private logger: Logger;
 
-  constructor(opts: { logger: Logger },
-  ) {
+  constructor(opts: { logger: Logger }) {
     this.db = new PrismaClient();
     if (!opts.logger) {
-      throw new Error("janitor requires logger")
+      throw new Error("janitor requires logger");
     }
     this.logger = opts.logger;
   }
@@ -19,13 +18,12 @@ export class Janitor {
 
     const teams = await this.db.team.findMany();
 
-
     for (const t of teams) {
-      const cutoff = new Date(Date.now() - t.retention)
+      const cutoff = new Date(Date.now() - t.retention);
       this.logger.info("Expiring checks", {
         teamId: t.id,
         cutoff,
-      })
+      });
       try {
         const evicted = await this.db.check.deleteMany({
           where: {
@@ -38,8 +36,6 @@ export class Janitor {
           teamId: t.id,
           count: evicted.count,
         });
-
-
       } catch (e) {
         this.logger.error((e as Error).message, {
           teamId: t.id,

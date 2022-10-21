@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@planetfall/svc/web/lib/hooks/trpc";
 import { useRouter } from "next/router";
 import { useUser } from "components/auth";
-import { Button } from "components";
+import { Button, PageHeader } from "components";
 
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
 import {
@@ -131,6 +131,10 @@ export default function Page() {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
+      <PageHeader
+        title="Create a new endpoint"
+        sticky
+      />
       <form className="space-y-8 divide-y divide-slate-200">
         <div className="space-y-8  sm:space-y-5 lg:space-y-24">
           <div className="space-y-6 sm:space-y-5">
