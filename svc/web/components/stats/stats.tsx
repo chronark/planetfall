@@ -1,7 +1,7 @@
 import { Text } from "../text";
 export type StatsProps = {
   label: string;
-  value: string;
+  value: string | React.ReactNode;
   suffix?: string;
   status?: "success" | "warn" | "error";
 };

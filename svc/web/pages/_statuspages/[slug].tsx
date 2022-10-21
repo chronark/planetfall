@@ -542,7 +542,6 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
     },
   });
 
-  console.log({ page });
   if (!page) {
     return {
       props: {},

@@ -42,6 +42,7 @@ import type { Check } from "@planetfall/db";
 import classNames from "classnames";
 import { MinusIcon } from "@heroicons/react/24/solid";
 import { Heading } from "components/heading";
+import Link from "next/link";
 
 const RegionTab: React.FC<
   { endpointId: string; regionId: string; regionName: string }
@@ -222,6 +223,7 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   const ctx = trpc.useContext();
 
   const endpoint = trpc.endpoint.get.useQuery({ endpointId }, {
+    enabled: !!endpointId,
     staleTime: 10000,
   });
 
@@ -458,6 +460,8 @@ type FeedProps = {
   endpointId: string;
 };
 const Feed: React.FC<FeedProps> = ({ endpointId }): JSX.Element => {
+  const router = useRouter();
+  const teamSlug = router.query.teamSlug as string;
   const endpoint = trpc.endpoint.get.useQuery({ endpointId });
   const res = trpc.check.list.useQuery({ endpointId, take: 10, order: "desc" });
   const regions = trpc.region.list.useQuery();
@@ -532,6 +536,16 @@ const Feed: React.FC<FeedProps> = ({ endpointId }): JSX.Element => {
       cell: (info) =>
         regions.data?.find((r) => r.id === info.getValue())?.name ??
           info.getValue(),
+    }),
+    accessor("id", {
+      header: "",
+      cell: (info) => (
+        <Link
+          href={`/${teamSlug}/endpoints/${endpointId}/checks/${info.getValue()}`}
+        >
+          Details
+        </Link>
+      ),
     }),
   ];
   const table = useReactTable({

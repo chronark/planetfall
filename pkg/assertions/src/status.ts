@@ -1,8 +1,13 @@
 import Ajv from "ajv";
-import type { Schema } from "ajv";
-import { Assertion, AssertionRequest, AssertionResponse } from "./types";
+import {
+  Assertion,
+  AssertionRequest,
+  AssertionResponse,
+  Schema,
+} from "./types";
 
-export type StatusComparison = "gte" | "lte" | "eq";
+export type StatusComparison = "gt" | "gte" | "lt" | "lte" | "eq";
+
 export class StatusAssertion implements Assertion {
   public readonly type = "status";
   public readonly schema: Schema;
@@ -12,28 +17,25 @@ export class StatusAssertion implements Assertion {
     this.ajv = new Ajv();
   }
 
-  static new(
-    checks: { comparison: StatusComparison; target: number }[],
+  static build(
+    comparison: StatusComparison,
+    target: number,
   ): StatusAssertion {
     const schema: Schema = {
-      type: "integer",
+      type: "object",
+      properties: {
+        status: {
+          type: "integer",
+          minimum: comparison === "gte" ? target : undefined,
+          maximum: comparison === "lte" ? target : undefined,
+          exclusiveMinimum: comparison === "gt" ? target : undefined,
+          exclusiveMaximum: comparison === "lt" ? target : undefined,
+          const: comparison === "eq" ? target : undefined,
+        },
+      },
       required: ["status"],
     };
-    for (const check of checks) {
-      switch (check.comparison) {
-        case "gte":
-          schema.minimum = check.target;
 
-          break;
-
-        case "lte":
-          schema.maximum = check.target;
-
-          break;
-        default:
-          break;
-      }
-    }
     return new StatusAssertion(schema);
   }
 
@@ -43,6 +45,7 @@ export class StatusAssertion implements Assertion {
     if (valid) {
       return {
         success: true,
+        error: undefined,
       };
     }
     if (validate.errors && validate.length > 0) {

@@ -61,6 +61,7 @@ export async function handler(
       // signal: abortController.signal,
     });
     const latency = Date.now() - start;
+
     return {
       statusCode: 200,
       headers: {
@@ -70,8 +71,8 @@ export async function handler(
       body: JSON.stringify({
         status: res.status,
         latency,
-        body: await res.text(),
-        headers: res.headers,
+        headers: Object.fromEntries(res.headers as any),
+        body: Buffer.from(await res.text()).toString("base64"),
       }),
     };
   } catch (e) {

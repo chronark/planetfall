@@ -1,7 +1,5 @@
-import type { Assertion } from "./types";
+import type { Assertion, Schema } from "./types";
 
-import type { Schema } from "ajv";
-import { HeaderAssertion } from "./header";
 import { StatusAssertion } from "./status";
 export function serialize(
   assertions: Assertion[],
@@ -19,8 +17,7 @@ export function deserialize(
     switch (r.type) {
       case "status":
         return new StatusAssertion(r.schema);
-      case "header":
-        return new HeaderAssertion(r.schema);
+
       default:
         throw new Error(`unknown assertion type: ${r.type}`);
     }

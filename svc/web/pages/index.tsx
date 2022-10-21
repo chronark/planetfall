@@ -55,6 +55,6 @@ export const getStaticProps: GetStaticProps<StatsProps> = async () => {
   await db.$disconnect();
   return {
     props,
-    revalidate: 60,
+    revalidate: 12 * 60 * 60, // 12h
   };
 };

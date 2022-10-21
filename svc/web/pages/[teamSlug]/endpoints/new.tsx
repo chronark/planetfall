@@ -56,7 +56,10 @@ type FormData = {
   interval: number;
   distribution: "ALL" | "RANDOM";
   regions: string[];
-  statusAssertions: { comparison: string; target: number }[];
+  statusAssertions: {
+    comparison: "gt" | "lt" | "eq" | "lte" | "gte";
+    target: number;
+  }[];
 };
 
 export default function Page() {
@@ -113,7 +116,7 @@ export default function Page() {
         regionIds: selectedRegions,
         distribution: data.distribution,
         teamSlug: router.query.teamSlug as string,
-        // statusAssertions: data.statusAssertions, TODO:
+        statusAssertions: data.statusAssertions,
       });
       router.push(`/${router.query.teamSlug}/endpoints/${res.id}`);
     } catch (err) {
@@ -403,7 +406,7 @@ export default function Page() {
                       type="tertiary"
                       onClick={() =>
                         statusAssertions.append({
-                          comparison: "GTE",
+                          comparison: "eq",
                           target: 200,
                         })}
                       size="lg"

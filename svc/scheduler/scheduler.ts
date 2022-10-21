@@ -175,6 +175,10 @@ export class Scheduler {
         };
 
         let error: string | undefined = undefined;
+        if (parsed.body.length > 10000) {
+          parsed.body = parsed.body.slice(0, 10000);
+          error = "response body is too long";
+        }
 
         await this.db.check.create({
           data: {

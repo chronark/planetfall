@@ -4,6 +4,7 @@ import { string, z } from "zod";
 import { t } from "../trpc";
 import { Kafka } from "@upstash/kafka";
 import { Distribution, Platform } from "@planetfall/db";
+import * as assertions from "@planetfall/assertions";
 
 export const endpointRouter = t.router({
   create: t.procedure.input(z.object({
@@ -18,7 +19,7 @@ export const endpointRouter = t.router({
     regionIds: z.array(z.string()),
     distribution: z.enum([Distribution.ALL, Distribution.RANDOM]),
     statusAssertions: z.array(z.object({
-      comparison: z.enum(["gte", "lte", "eq"]),
+      comparison: z.enum(["gte", "lt", "gt", "lte", "eq"]),
       target: z.number().int(),
     })).optional(),
   })).mutation(async ({ input, ctx }) => {
@@ -45,6 +46,11 @@ export const endpointRouter = t.router({
       throw new TRPCError({ code: "NOT_FOUND", message: "team not found" });
     }
 
+    const as: assertions.Assertion[] = [];
+    for (const { comparison, target } of input.statusAssertions ?? []) {
+      as.push(assertions.StatusAssertion.build(comparison, target));
+    }
+
     const endpoint = await ctx.db.endpoint.create({
       data: {
         id: newId("endpoint"),
@@ -60,6 +66,7 @@ export const endpointRouter = t.router({
         regions: {
           connect: input.regionIds.map((id) => ({ id })),
         },
+        assertions: assertions.serialize(as),
         team: {
           connect: {
             id: team.id,

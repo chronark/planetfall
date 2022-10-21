@@ -56,4 +56,43 @@ export const checkRouter = t.router({
     }
     return endpoint.checks;
   }),
+  get: t.procedure.input(z.object({
+    checkId: z.string(),
+  })).query(async ({ input, ctx }) => {
+    if (!ctx.req.session?.user?.id) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    const check = await ctx.db.check.findUnique({
+      where: {
+        id: input.checkId,
+      },
+      include: {
+        endpoint: {
+          include: {
+            team: {
+              include: {
+                members: {
+                  where: {
+                    userId: ctx.req.session.user.id,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!check) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "check not found" });
+    }
+    if (
+      !check.endpoint.team.members.some((m) =>
+        m.userId === ctx.req.session.user!.id
+      )
+    ) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return check;
+  }),
 });

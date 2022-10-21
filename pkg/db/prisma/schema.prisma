@@ -199,7 +199,8 @@ model Check {
   // The HTTP response status
   status Int?
   // Raw http response body
-  body   String?
+  // Encoded in base64
+  body   String? @db.VarChar(10000)
 
   // http response headers as {key: value} object
   headers  Json?

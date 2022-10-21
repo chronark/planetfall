@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "node --loader=tsx --test ./**/*.test.ts "
   },
   "keywords": [],
   "author": "Andreas Thomas",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@planetfall/tsconfig": "*",
-    "typescript": "^4.8.3"
+    "typescript": "^4.8.3",
+    "tsx": "^3.10.1"
   }
 }
