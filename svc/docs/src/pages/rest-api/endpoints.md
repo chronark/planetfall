@@ -7,7 +7,7 @@ Create, update, and delete endpoints and query their associated checks.
 
 ---
 
-## **GET** /v1/endpoints/{endpointId}/checks
+## **GET /v1/endpoints/{endpointId}/checks**
 
 Returns a list of checks for the given endpoint.
 

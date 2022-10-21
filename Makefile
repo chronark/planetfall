@@ -14,7 +14,7 @@ deploy: clean build
 	terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
 
 dev: clean build
-	npx turbo run dev --filter=web
+	npx turbo run dev --filter=!scheduler
 
 fmt: clean
 	deno fmt

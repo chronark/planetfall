@@ -14,8 +14,8 @@ export type Input = z.infer<typeof validation>;
 export type Output = {
   status: number;
   latency: number;
-  body: string
-  headers: Record<string, string>
+  body: string;
+  headers: Record<string, string>;
 };
 export type ErrorOutput = {
   error: string;
@@ -68,7 +68,10 @@ export async function handler(
       },
 
       body: JSON.stringify({
-        status: res.status, latency, body: await res.text(), headers: res.headers
+        status: res.status,
+        latency,
+        body: await res.text(),
+        headers: res.headers,
       }),
     };
   } catch (e) {

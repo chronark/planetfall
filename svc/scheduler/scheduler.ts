@@ -167,8 +167,12 @@ export class Scheduler {
           );
         }
 
-
-        const parsed = await res.json() as { status: number; latency: number, body: string, headers: Record<string, string> };
+        const parsed = await res.json() as {
+          status: number;
+          latency: number;
+          body: string;
+          headers: Record<string, string>;
+        };
 
         let error: string | undefined = undefined;
 
@@ -182,7 +186,7 @@ export class Scheduler {
             regionId,
             error,
             body: parsed.body,
-            headers: parsed.headers
+            headers: parsed.headers,
           },
         });
       }));
