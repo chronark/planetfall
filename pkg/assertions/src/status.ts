@@ -12,16 +12,13 @@ export class StatusAssertion implements Assertion {
   public readonly type = "status";
   public readonly schema: Schema;
   private readonly ajv: Ajv;
-  constructor(schema: Schema) {
-    this.schema = schema;
-    this.ajv = new Ajv();
-  }
-
-  static build(
-    comparison: StatusComparison,
-    target: number,
-  ): StatusAssertion {
-    const schema: Schema = {
+  public readonly comparison: StatusComparison;
+  public readonly target: number;
+  public readonly version = "v1";
+  constructor(comparison: StatusComparison, target: number) {
+    this.comparison = comparison;
+    this.target = target;
+    this.schema = {
       type: "object",
       properties: {
         status: {
@@ -36,7 +33,7 @@ export class StatusAssertion implements Assertion {
       required: ["status"],
     };
 
-    return new StatusAssertion(schema);
+    this.ajv = new Ajv();
   }
 
   public assert(req: AssertionRequest): AssertionResponse {
@@ -49,9 +46,10 @@ export class StatusAssertion implements Assertion {
       };
     }
     if (validate.errors && validate.length > 0) {
+      const err = validate.errors[0];
       return {
         success: false,
-        error: `Status error: ${validate.errors[0].message}, ${JSON.stringify(validate.errors[0])}`,
+        error: `Status error: ${err.message}, ${JSON.stringify(err.params)}`,
       };
     }
     return {
@@ -61,10 +59,17 @@ export class StatusAssertion implements Assertion {
   }
 
   public serialize(): string {
-    return JSON.stringify(this.schema);
+    return JSON.stringify({
+      type: this.type,
+      version: this.version,
+      comparison: this.comparison,
+      target: this.target,
+    });
   }
 
-  static deserilize(schema: string): StatusAssertion {
-    return new StatusAssertion(JSON.parse(schema));
+  static deserilize(
+    raw: { comparison: StatusComparison; target: number },
+  ): StatusAssertion {
+    return new StatusAssertion(raw.comparison, raw.target);
   }
 }

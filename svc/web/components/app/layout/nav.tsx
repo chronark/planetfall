@@ -14,17 +14,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { trpc } from "@planetfall/svc/web/lib/hooks/trpc";
 import { useSession, useUser } from "components/auth";
-import {
-  Button,
-  Dropdown,
-  Form,
-  Input,
-  Menu,
-  message,
-  Modal,
-  Space,
-  Typography,
-} from "antd";
+import * as Dropdown from "@radix-ui/react-dropdown-menu";
+import { Button } from "components";
+import { Form, Input, Menu, message, Modal, Space, Typography } from "antd";
 import { router } from "@planetfall/svc/web/server/router";
 import { checkIsManualRevalidate } from "next/dist/server/api-utils";
 import { Logo } from "../../logo";
@@ -61,7 +53,9 @@ const CreateNewTeam: React.FC = (): JSX.Element => {
 
   return (
     <>
-      <Button type="link" onClick={() => setOpen(true)}>Create new team</Button>
+      <Button type="secondary" onClick={() => setOpen(true)}>
+        Create new team
+      </Button>
       <Modal
         title="Create Team"
         open={open}
@@ -150,104 +144,70 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                       </li>
                       {teamSelector && !invalidteam
                         ? (
-                          <>
-                            <Divider key="divider"/>
-                            <li key="dropdown">
-                              <Dropdown
-                                trigger={["click", "hover"]}
-                                overlay={
-                                  <Menu
-                                    items={[
-                                      { type: "group", label: "Personal" },
-                                      ...(teams.data ?? []).filter((t) =>
-                                        t.team.personal
-                                      ).map((t) => ({
-                                        label: (
-                                          <Link key={t.teamId} href={`/${t.team.slug}`}>
-                                            <Button type="link">
-                                              {t.team.name}
-                                            </Button>
-                                          </Link>
-                                        ),
-                                        key: t.teamId,
-                                      })),
-                                      { type: "group", label: "Teams" },
-                                      ...(teams.data ?? []).filter((t) =>
-                                        !t.team.personal
-                                      ).map((t) => ({
-                                        label: (
-                                          <Link href={`/${t.team.slug}`}>
-                                            {t.team.name}
-                                          </Link>
-                                        ),
-                                        key: t.teamId,
-                                      })),
-                                      { type: "divider" },
-                                      {
-                                        label: <CreateNewTeam />,
-                                        key: "createnew",
-                                      },
-                                    ]}
-                                  />
-                                }
-                              >
-                                <div className="flex items-center px-2 py-1 gap-2 text-slate-500 hover:text-slate-700">
-                                  <span className="text-sm font-medium">
-                                    {activeTeamSlug}
-                                  </span>
-                                  <ChevronUpDownIcon className="w-4 h-4" />
-                                </div>
-                              </Dropdown>
-
-                              {
-                                /* <Dropdown.Root>
-                                <Dropdown.Trigger className="flex items-center px-2 py-1 gap-2 text-slate-500 hover:text-slate-700">
-                                  <span className="text-sm font-medium">
-                                    {activeTeamSlug}
-                                  </span>
-                                  <ChevronUpDownIcon className="w-4 h-4" />
+                          <li key="dropdown">
+                            <Dropdown.Root>
+                              <div className="flex items-center px-2 py-1 gap-2 text-slate-500 hover:text-slate-700">
+                                <Link
+                                  href={`${activeTeamSlug}`}
+                                  className="text-sm font-medium"
+                                >
+                                  {activeTeamSlug}
+                                </Link>
+                                <Dropdown.Trigger>
+                                  <ChevronUpDownIcon className="w-5 h-5" />
                                 </Dropdown.Trigger>
+                              </div>
+                              <Dropdown.Content className="bg-white rounded border border-slate-200 shadow-xl ">
+                                <div className="px-4 py-3">
+                                  <h3 className=" text-xs font-medium text-slate-500">
+                                    Personal
+                                  </h3>
+                                  {(teams.data ?? []).filter((t) =>
+                                    t.team.personal
+                                  ).map((t) => (
+                                    <Link
+                                      key={t.teamId}
+                                      href={`/${t.team.slug}`}
+                                      className={classNames(
+                                        "group flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:text-primary-500",
+                                        {
+                                          "bg-slate-500":
+                                            t.team.slug === activeTeamSlug,
+                                        },
+                                      )}
+                                    >
+                                      {t.team.name}
+                                    </Link>
+                                  ))}
+                                </div>
 
-                                <Dropdown.Portal>
-                                  <Dropdown.Content
-                                    onCloseAutoFocus={(e) => {
-                                      e.preventDefault();
-                                    }}
-                                    className={classNames(
-                                      " radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down",
-                                      "w-48 rounded px-1.5 py-1 shadow-md md:w-56",
-                                      "bg-white dark:bg-slate-800",
-                                    )}
-                                  >
-                                    {teams.data?.maπ((team) => (
-                                      <Dropdown.Item
-                                        key={team.teamId}
+                                <div className="px-4 py-3">
+                                  <h3 className=" text-xs font-medium text-slate-500">
+                                    Teams
+                                  </h3>
+                                  <ul>
+                                    {(teams.data ?? []).filter((t) =>
+                                      !t.team.personal
+                                    ).map((t) => (
+                                      <Link
+                                        key={t.teamId}
+                                        href={`/${t.team.slug}`}
                                         className={classNames(
-                                          "flex cursor-default select-none items-center rounded-md px-2 py-2 text-xs outline-none",
-                                          "text-slate-400 focus:bg-slate-50 dark:text-slate-500 dark:focus:bg-slate-900",
+                                          "group flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:text-primary-500",
+                                          {
+                                            "bg-slate-500":
+                                              t.team.slug === activeTeamSlug,
+                                          },
                                         )}
                                       >
-                                        <Link
-                                          href={`/${team.team.slug}`}
-                                          className="flex-grow text-slate-700 dark:text-slate-300"
-                                        >
-                                          {team.team.name}
-                                        </Link>
-                                      </Dropdown.Item>
+                                        {t.team.name}
+                                      </Link>
                                     ))}
-                                    <Dropdown.Item key="new-team" className={classNames(
-                                          "flex cursor-default select-none items-center rounded-md px-2 py-2 text-xs outline-none",
-                                          "text-slate-400 focus:bg-slate-50 dark:text-slate-500 dark:focus:bg-slate-900",
-                                        )}>
-                                         Create new team
-
-                                    </Dropdown.Item>
-                                  </Dropdown.Content>
-                                </Dropdown.Portal>
-                              </Dropdown.Root> */
-                              }
-                            </li>
-                          </>
+                                  </ul>
+                                </div>
+                              </Dropdown.Content>
+                            </Dropdown.Root>
+                          </li>
                         )
                         : null}
                       {breadcrumbs.map((c, i) => (
@@ -298,40 +258,19 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                   </Disclosure.Button>
                 </div>
                 <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
-                  <button
+                  {
+                    /* <button
                     type="button"
                     className="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none "
                   >
                     <span className="sr-only">View notifications</span>
                     <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
+                  </button> */
+                  }
 
                   {/* Profile dropdown */}
-                  <Dropdown
-                    trigger={["click"]}
-                    overlay={
-                      <Menu
-                        items={[
-                          {
-                            label: (
-                              <Button
-                                type="link"
-                                onClick={async () => {
-                                  await signOut();
-                                  invalidate();
-                                  router.push("/");
-                                }}
-                              >
-                                Sign Out
-                              </Button>
-                            ),
-                            key: "sign.out",
-                          },
-                        ]}
-                      />
-                    }
-                  >
-                    <div className="flex rounded-full bg-white focus:outline-none ">
+                  <Dropdown.Root>
+                    <Dropdown.Trigger className="flex rounded-full bg-white focus:outline-none ">
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
@@ -343,8 +282,22 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                         width={32}
                         height={32}
                       />
-                    </div>
-                  </Dropdown>
+                    </Dropdown.Trigger>
+                    <Dropdown.Content>
+                      <Dropdown.Item key="sign-out">
+                        <Button
+                          type="secondary"
+                          onClick={async () => {
+                            await signOut();
+                            invalidate();
+                            router.push("/");
+                          }}
+                        >
+                          Sign Out
+                        </Button>
+                      </Dropdown.Item>
+                    </Dropdown.Content>
+                  </Dropdown.Root>
                   {
                     /* <Menu as="div" className="relative ml-4 flex-shrink-0">
                     <div>

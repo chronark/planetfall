@@ -48,7 +48,7 @@ export const endpointRouter = t.router({
 
     const as: assertions.Assertion[] = [];
     for (const { comparison, target } of input.statusAssertions ?? []) {
-      as.push(assertions.StatusAssertion.build(comparison, target));
+      as.push(new assertions.StatusAssertion(comparison, target));
     }
 
     const endpoint = await ctx.db.endpoint.create({
@@ -66,7 +66,7 @@ export const endpointRouter = t.router({
         regions: {
           connect: input.regionIds.map((id) => ({ id })),
         },
-        assertions: assertions.serialize(as),
+        // assertions: assertions.serialize(as),
         team: {
           connect: {
             id: team.id,

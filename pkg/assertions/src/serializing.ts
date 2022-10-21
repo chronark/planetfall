@@ -1,9 +1,9 @@
-import type { Assertion, Schema } from "./types";
+import type { Assertion } from "./types";
 
 import { StatusAssertion } from "./status";
 export function serialize(
   assertions: Assertion[],
-): { type: string; schema: Schema }[] {
+): { type: string; schema: unknown }[] {
   return assertions.map((a) => ({
     type: a.type,
     schema: a.schema,
@@ -11,12 +11,12 @@ export function serialize(
 }
 
 export function deserialize(
-  raw: { type: string; schema: Schema }[],
+  raw: { type: string; schema: unknown }[],
 ): Assertion[] {
   return raw.map((r) => {
     switch (r.type) {
       case "status":
-        return new StatusAssertion(r.schema);
+        return StatusAssertion.deserilize(r.schema as any);
 
       default:
         throw new Error(`unknown assertion type: ${r.type}`);

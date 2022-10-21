@@ -1,7 +1,7 @@
 import { Endpoint, PrismaClient, Region } from "@planetfall/db";
 import { newId } from "@planetfall/id";
 import { Logger } from "./logger";
-import * as assertions from "@planetfall/assertions"
+import * as assertions from "@planetfall/assertions";
 export class Scheduler {
   // Map of endpoint id -> clearInterval function
   private clearIntervals: Record<string, () => void>;
@@ -130,8 +130,6 @@ export class Scheduler {
         regions: regions.map((r) => r.id),
       });
 
-
-
       await Promise.all(regions.map(async ({ id: regionId }) => {
         let region = this.regions[regionId];
         if (!region) {
@@ -183,23 +181,20 @@ export class Scheduler {
           error = "response body is too long";
         }
 
-
-        const as = assertions.deserialize(endpoint.assertions as any ?? [])
+        const as = assertions.deserialize(endpoint.assertions as any ?? []);
         for (const a of as) {
           this.logger.info("asserting stuff", {
             type: a.type,
             schema: a.schema,
-            status: parsed.status
-          })
-          const assertionResponse = a.assert(parsed)
+            status: parsed.status,
+          });
+          const assertionResponse = a.assert(parsed);
           if (!assertionResponse.success) {
-            error = assertionResponse.error
-            this.logger.warn("Assertion failed", { error })
-            break
+            error = assertionResponse.error;
+            this.logger.warn("Assertion failed", { error });
+            break;
           }
         }
-
-
 
         await this.db.check.create({
           data: {

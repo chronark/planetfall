@@ -4,6 +4,7 @@ import { trpc } from "lib/hooks/trpc";
 import PlausibleProvider from "next-plausible";
 import "styles/ant.css";
 import "public/fonts/css/pangea.css";
+import "@tremor/react/dist/esm/tremor.css";
 // import "nextra-theme-docs/style.css"
 
 import {

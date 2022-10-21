@@ -361,7 +361,7 @@ export default function Page() {
               </div>
               <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
                 <label
-                  htmlFor="method"
+                  htmlFor="status"
                   className="block text-sm sm:col-span-2 font-medium text-slate-700 sm:mt-px sm:pt-2"
                 >
                   Status

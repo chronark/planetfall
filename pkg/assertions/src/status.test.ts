@@ -29,7 +29,7 @@ describe("lte", () => {
 
   for (const tc of tcs) {
     test(tc.name, () => {
-      const s = StatusAssertion.build("lte", tc.target);
+      const s = new StatusAssertion("lte", tc.target);
       const res = s.assert({ status: tc.status } as any);
       assert.strictEqual(res.success, tc.wantSuccess, res.error);
     });
@@ -56,7 +56,7 @@ describe("lt", () => {
 
   for (const tc of tcs) {
     test(tc.name, () => {
-      const s = StatusAssertion.build("lte", tc.target);
+      const s = new StatusAssertion("lte", tc.target);
       const res = s.assert({ status: tc.status } as any);
       assert.strictEqual(res.success, tc.wantSuccess, res.error);
     });
@@ -83,7 +83,7 @@ describe("eq", () => {
 
   for (const tc of tcs) {
     test(tc.name, () => {
-      const s = StatusAssertion.build("lte", tc.target);
+      const s = new StatusAssertion("lte", tc.target);
       const res = s.assert({ status: tc.status } as any);
       assert.strictEqual(res.success, tc.wantSuccess, res.error);
     });
@@ -110,7 +110,7 @@ describe("gt", () => {
 
   for (const tc of tcs) {
     test(tc.name, () => {
-      const s = StatusAssertion.build("lte", tc.target);
+      const s = new StatusAssertion("lte", tc.target);
       const res = s.assert({ status: tc.status } as any);
       assert.strictEqual(res.success, tc.wantSuccess, res.error);
     });
@@ -137,7 +137,7 @@ describe("gte", () => {
 
   for (const tc of tcs) {
     test(tc.name, () => {
-      const s = StatusAssertion.build("lte", tc.target);
+      const s = new StatusAssertion("lte", tc.target);
       const res = s.assert({ status: tc.status } as any);
       assert.strictEqual(res.success, tc.wantSuccess, res.error);
     });

@@ -38,7 +38,7 @@ resource "aws_lambda_function" "pinger" {
   handler = "index.handler"
   runtime = "nodejs16.x"
   timeout = 30
-  memory_size = "512"
+  memory_size = "1024"
 
 
 
