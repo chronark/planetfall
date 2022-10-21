@@ -194,6 +194,7 @@ export class Scheduler {
           const assertionResponse = a.assert(parsed)
           if (!assertionResponse.success) {
             error = assertionResponse.error
+            this.logger.warn("Assertion failed", { error })
             break
           }
         }
