@@ -1,9 +1,3 @@
-
-
-locals {
-  docs_url = "planetfall-docs.vercel.app"
-}
-
 resource "vercel_project" "web" {
   name      = "planetfall"
   team_id   = var.vercel_team_id
@@ -75,8 +69,8 @@ resource "vercel_project" "web" {
     },
     {
       key    = "DOCS_URL"
-      value  = "https://${local.docs_url}"
-      target = ["production", "preview", "development"]
+      value  = "https://${vercel_project_domain.docs.domain}"
+      target = ["production", "preview"]
     }
   ]
 
@@ -93,7 +87,6 @@ resource "vercel_project" "docs" {
 
   build_command              = "cd ../.. && npx turbo run build --filter=docs"
   root_directory             = "svc/docs"
-  serverless_function_region = "fra1"
 
   git_repository = {
     repo = "chronark/planetfall"
@@ -106,7 +99,7 @@ resource "vercel_project" "docs" {
 resource "vercel_project_domain" "docs" {
   project_id = vercel_project.docs.id
   team_id    = var.vercel_team_id
-  domain     = local.docs_url
+  domain     = "planetfall-docs.vercel.app"
 }
 
 
@@ -205,11 +198,5 @@ resource "vercel_deployment" "docs" {
   files       = data.vercel_project_directory.planetfall.files
   path_prefix = data.vercel_project_directory.planetfall.path
   production  = true
-
-  # This doesn't really depend on the web app, but I don't want to have both of them
-  # in the vercel build queue at the same time.
-  depends_on = [
-    vercel_deployment.web
-  ]
 
 }
