@@ -186,6 +186,11 @@ export class Scheduler {
 
         const as = assertions.deserialize(endpoint.assertions as any ?? [])
         for (const a of as) {
+          this.logger.info("asserting stuff", {
+            type: a.type,
+            schema: a.schema,
+            status: parsed.status
+          })
           const assertionResponse = a.assert(parsed)
           if (!assertionResponse.success) {
             error = assertionResponse.error
