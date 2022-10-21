@@ -51,7 +51,7 @@ export class StatusAssertion implements Assertion {
     if (validate.errors && validate.length > 0) {
       return {
         success: false,
-        error: `Status error: ${validate.errors[0].message}, ${JSON.stringify(validate.errors[0].data)}`,
+        error: `Status error: ${validate.errors[0].message}, ${JSON.stringify(validate.errors[0])}`,
       };
     }
     return {

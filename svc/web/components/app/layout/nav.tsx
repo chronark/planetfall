@@ -163,7 +163,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                                         t.team.personal
                                       ).map((t) => ({
                                         label: (
-                                          <Link href={`/${t.team.slug}`}>
+                                          <Link key={t.teamId} href={`/${t.team.slug}`}>
                                             <Button type="link">
                                               {t.team.name}
                                             </Button>
