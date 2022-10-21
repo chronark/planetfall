@@ -37,7 +37,7 @@ export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
         </p>
       </div>
       <div className="mt-3 sm:mt-0 sm:ml-4 flex items-center gap-2">
-        {props.actions}
+        {props.actions?.map((a,i)=><div key={i}>{a}</div>)}
       </div>
     </div>
   );

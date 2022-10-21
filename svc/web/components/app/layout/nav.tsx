@@ -151,7 +151,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                       {teamSelector && !invalidteam
                         ? (
                           <>
-                            <Divider />
+                            <Divider key="divider"/>
                             <li key="dropdown">
                               <Dropdown
                                 trigger={["click", "hover"]}
