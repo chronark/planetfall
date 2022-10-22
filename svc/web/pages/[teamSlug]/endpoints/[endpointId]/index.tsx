@@ -190,34 +190,34 @@ const RegionTab: React.FC<
       />
       {
         /* <Line
-          data={(checks.data ?? []).map((c) => ({
-            time: c.time.toISOString(),
-            latency: c.latency,
-          }))}
-          padding="auto"
-          xField="time"
-          yField="latency"
-          smooth
-          color="#3366FF"
-          autoFit={true}
-          legend={{
-            position: "bottom",
-          }}
-          annotations={annotations}
-          yAxis={{
-            title: { text: "Latency [ms]" },
-            tickCount: 3,
-          }}
-          xAxis={{
-            tickCount: 10,
-            label: {
-              formatter: (text) => new Date(text).toLocaleTimeString(),
-            },
-          }}
-          tooltip={{
-            title: (d) => new Date(d).toLocaleString(),
-          }}
-        /> */
+            data={(checks.data ?? []).map((c) => ({
+              time: c.time.toISOString(),
+              latency: c.latency,
+            }))}
+            padding="auto"
+            xField="time"
+            yField="latency"
+            smooth
+            color="#3366FF"
+            autoFit={true}
+            legend={{
+              position: "bottom",
+            }}
+            annotations={annotations}
+            yAxis={{
+              title: { text: "Latency [ms]" },
+              tickCount: 3,
+            }}
+            xAxis={{
+              tickCount: 10,
+              label: {
+                formatter: (text) => new Date(text).toLocaleTimeString(),
+              },
+            }}
+            tooltip={{
+              title: (d) => new Date(d).toLocaleString(),
+            }}
+          /> */
       }
     </Space>
   );

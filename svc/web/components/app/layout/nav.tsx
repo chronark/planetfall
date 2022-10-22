@@ -157,7 +157,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                                   <ChevronUpDownIcon className="w-5 h-5" />
                                 </Dropdown.Trigger>
                               </div>
-                              <Dropdown.Content className="bg-white rounded border border-slate-200 shadow-xl ">
+                              <Dropdown.Content className="z-50 bg-white rounded border border-slate-200 shadow-xl ">
                                 <div className="px-4 py-3">
                                   <h3 className=" text-xs font-medium text-slate-500">
                                     Personal

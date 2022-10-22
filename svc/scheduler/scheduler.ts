@@ -174,20 +174,18 @@ export class Scheduler {
           body: string;
           headers: Record<string, string>;
           timing: {
-            dnsStart: number,
-            dnsDone: number,
-            connectStart: number,
-            connectDone: number,
-            firstByteStart: number,
-            firstByteDone: number,
-            tlsHandshakeStart: number,
-            tlsHandshakeDone: number
-          }
-
+            dnsStart: number;
+            dnsDone: number;
+            connectStart: number;
+            connectDone: number;
+            firstByteStart: number;
+            firstByteDone: number;
+            tlsHandshakeStart: number;
+            tlsHandshakeDone: number;
+          };
         };
 
         let error: string | undefined = undefined;
-
 
         const as = assertions.deserialize(endpoint.assertions as any ?? []);
         for (const a of as) {
@@ -219,7 +217,7 @@ export class Scheduler {
             error,
             body: parsed.body,
             headers: parsed.headers,
-            timing: parsed.timing
+            timing: parsed.timing,
           },
         });
       }));

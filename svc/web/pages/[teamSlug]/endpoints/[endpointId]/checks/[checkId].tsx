@@ -48,6 +48,168 @@ import {
 } from "@heroicons/react/24/solid";
 import { Heading } from "components/heading";
 
+type Timings = {
+  dnsStart: number;
+  dnsDone: number;
+  connectStart: number;
+  connectDone: number;
+  tlsHandshakeStart: number;
+  tlsHandshakeDone: number;
+  firstByteStart: number;
+  firstByteDone: number;
+};
+
+const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
+  const start = Math.min(...Object.values(timings).filter((t) => t > 0));
+  const end = Math.max(...Object.values(timings).filter((t) => t > 0));
+
+  console.log(
+    JSON.stringify(
+      Object.entries(timings).map(([k, v]) => ({ k, v: v - start })),
+      null,
+      2,
+    ),
+  );
+
+  return (
+    <div className="transition-all duration-500">
+      {timings.dnsDone > 0
+        ? (
+          <div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
+            <div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+              <span>DNS</span>
+              <span>
+                {(timings.dnsDone - timings.dnsStart).toLocaleString()} ms
+              </span>
+            </div>
+            <div className="w-4/5 flex">
+              <div
+                style={{
+                  width: `${
+                    Math.max(1, timings.dnsDone - timings.dnsStart) /
+                    (end - start) * 100
+                  }%`,
+                }}
+              >
+                <div className="h-1.5 bg-gradient-to-r from-primary-700 to-primary-500 rounded-sm">
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+        : null}
+
+      {timings.connectDone > 0
+        ? (
+          <div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
+            <div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+              <span>Connection</span>
+              <span>
+                {(timings.connectDone - timings.connectStart).toLocaleString()}
+                {" "}
+                ms
+              </span>
+            </div>
+            <div className="w-4/5 flex">
+              <div
+                style={{
+                  width: `${
+                    (timings.connectStart - start) / (end - start) * 100
+                  }%`,
+                }}
+              >
+              </div>
+              <div
+                style={{
+                  width: `${
+                    Math.max(1, timings.connectDone - timings.connectStart) /
+                    (end - start) * 100
+                  }%`,
+                }}
+              >
+                <div className="h-1.5 bg-gradient-to-r from-primary-700 to-primary-500 rounded-sm">
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+        : null}
+      {timings.tlsHandshakeDone > 0
+        ? (
+          <div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
+            <div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+              <span>TLS</span>
+              <span>
+                {(timings.tlsHandshakeDone - timings.tlsHandshakeStart)
+                  .toLocaleString()} ms
+              </span>
+            </div>
+            <div className="w-4/5 flex">
+              <div
+                style={{
+                  width: `${
+                    (timings.tlsHandshakeStart - start) / (end - start) * 100
+                  }%`,
+                }}
+              >
+              </div>
+              <div
+                style={{
+                  width: `${
+                    Math.max(
+                      1,
+                      timings.tlsHandshakeDone - timings.tlsHandshakeStart,
+                    ) / (end - start) * 100
+                  }%`,
+                }}
+              >
+                <div className="h-1.5 bg-gradient-to-r from-primary-700 to-primary-500 rounded-sm">
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+        : null}
+      {timings.firstByteDone > 0
+        ? (
+          <div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
+            <div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+              <span>TTFB</span>
+              <span>
+                {(timings.firstByteDone - timings.firstByteStart)
+                  .toLocaleString()} ms
+              </span>
+            </div>
+            <div className="w-4/5 flex">
+              <div
+                style={{
+                  width: `${
+                    (timings.firstByteStart - start) / (end - start) * 100
+                  }%`,
+                }}
+              >
+              </div>
+              <div
+                style={{
+                  width: `${
+                    Math.max(
+                      1,
+                      timings.firstByteDone - timings.firstByteStart,
+                    ) / (end - start) * 100
+                  }%`,
+                }}
+              >
+                <div className="h-1.5 bg-gradient-to-r from-primary-700 to-primary-500 rounded-sm">
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+        : null}
+    </div>
+  );
+};
+
 export default function CheckPage() {
   const router = useRouter();
   const teamSlug = router.query.teamSlug as string;
@@ -88,7 +250,7 @@ export default function CheckPage() {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  let body = check.data?.body ? atob(check.data.body) : null;
+  let body = check.data?.body ? check.data.body : null;
   if (body) {
     try {
       body = JSON.stringify(JSON.parse(body), null, 2);
@@ -138,6 +300,17 @@ export default function CheckPage() {
           />
         </div>
       </div>
+      {check.data?.timing
+        ? (
+          <>
+            <Divider />
+            <Heading h2>Trace</Heading>
+
+            <DNS timings={check.data.timing as Timings} />
+          </>
+        )
+        : null}
+
       <Divider />
 
       {check.data?.error
