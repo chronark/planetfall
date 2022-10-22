@@ -24,7 +24,7 @@ export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
       className={classNames(
         "border-b transition-all duration-500 border-gray-200 bg-white my-5 lg:my-16 sm:flex sm:items-center sm:justify-between",
         {
-          "sticky top-0 z-20 py-2 lg:py-4": props.sticky,
+          "sticky z-10 top-0 py-2 lg:py-4": props.sticky,
           "bg-white/95 backdrop-blur [@supports(backdrop-filter:blur(0))]:bg-white/75":
             isScrolled,
         },

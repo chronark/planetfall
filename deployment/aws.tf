@@ -24,7 +24,7 @@ module "pinger_us_east_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -51,7 +51,7 @@ module "pinger_us_east_2" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -76,7 +76,7 @@ module "pinger_us_west_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -103,7 +103,7 @@ module "pinger_us_west_2" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -130,7 +130,7 @@ module "pinger_ap_south_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -155,7 +155,7 @@ module "pinger_ap_northeast_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -179,7 +179,7 @@ module "pinger_ap_northeast_2" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -203,7 +203,7 @@ module "pinger_ap_northeast_3" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -229,7 +229,7 @@ module "pinger_ap_southeast_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -253,7 +253,7 @@ module "pinger_ap_southeast_2" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -280,7 +280,7 @@ module "pinger_ca_central_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -305,7 +305,7 @@ module "pinger_eu_central_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -330,7 +330,7 @@ module "pinger_eu_west_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -355,7 +355,7 @@ module "pinger_eu_west_2" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -380,7 +380,7 @@ module "pinger_eu_west_3" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -404,7 +404,7 @@ module "pinger_eu_north_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -430,7 +430,7 @@ module "pinger_sa_east_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -456,7 +456,7 @@ module "pinger_me_south_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -481,7 +481,7 @@ module "pinger_ap_southeast_3" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -506,7 +506,7 @@ module "pinger_af_south_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -531,7 +531,7 @@ module "pinger_ap_east_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }
@@ -555,7 +555,7 @@ module "pinger_eu_south_1" {
   source = "./pinger"
   zip = {
     path = "../svc/proxy-aws/dist/function.v2.zip"
-    hash="v1"
+    hash="v2"
     #path = data.archive_file.function_archive.output_path
     # hash = data.archive_file.function_archive.output_base64sha256
   }

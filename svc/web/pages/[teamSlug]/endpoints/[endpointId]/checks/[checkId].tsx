@@ -57,6 +57,8 @@ type Timings = {
   tlsHandshakeDone: number;
   firstByteStart: number;
   firstByteDone: number;
+  transferStart: number;
+  transferDone: number;
 };
 
 const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
@@ -174,7 +176,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
         ? (
           <div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
             <div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
-              <span>TTFB</span>
+              <span>Waiting for response</span>
               <span>
                 {(timings.firstByteDone - timings.firstByteStart)
                   .toLocaleString()} ms
@@ -195,6 +197,42 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
                     Math.max(
                       1,
                       timings.firstByteDone - timings.firstByteStart,
+                    ) / (end - start) * 100
+                  }%`,
+                }}
+              >
+                <div className="h-1.5 bg-gradient-to-r from-primary-700 to-primary-500 rounded-sm">
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+        : null}
+      {timings.transferDone > 0
+        ? (
+          <div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
+            <div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+              <span>Transfer</span>
+              <span>
+                {(timings.transferDone - timings.transferStart)
+                  .toLocaleString()} ms
+              </span>
+            </div>
+            <div className="w-4/5 flex">
+              <div
+                style={{
+                  width: `${
+                    (timings.transferStart - start) / (end - start) * 100
+                  }%`,
+                }}
+              >
+              </div>
+              <div
+                style={{
+                  width: `${
+                    Math.max(
+                      1,
+                      timings.transferDone - timings.transferStart,
                     ) / (end - start) * 100
                   }%`,
                 }}

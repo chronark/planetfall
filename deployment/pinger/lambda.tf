@@ -33,7 +33,7 @@ resource "aws_lambda_function" "check_proxy" {
   description      = "Proxy latency checks from a specific region"
   publish          = true
   filename         = var.zip.path
-  # source_code_hash = var.zip.hash
+  source_code_hash = var.zip.hash
 
   handler = "main"
   runtime = "go1.x"

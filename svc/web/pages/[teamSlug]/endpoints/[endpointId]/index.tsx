@@ -246,7 +246,7 @@ const Main: React.FC<{ endpointId: string; teamSlug: string }> = (
   });
 
   const checks = trpc.check.list.useQuery({
-    since: now - ms("24h"),
+    since: now - ms("1h"),
     endpointId,
   }, {
     enabled: !!endpointId,
@@ -604,7 +604,7 @@ const Feed: React.FC<FeedProps> = ({ endpointId }): JSX.Element => {
           <tr key={headerGroup.id}>
             {headerGroup.headers.map((header, i) => (
               <th
-                key={header.id}
+                key={i}
                 className={classNames(
                   "sticky px-4 bg-white z-10  border-t border-b border-slate-400  py-3.5 text-left text-sm font-semibold text-slate-900",
                   {
@@ -623,11 +623,11 @@ const Feed: React.FC<FeedProps> = ({ endpointId }): JSX.Element => {
         ))}
       </thead>
       <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id}>
+        {table.getRowModel().rows.map((row, i) => (
+          <tr key={row.id + i}>
             {row.getVisibleCells().map((cell) => (
               <td
-                key={cell.id}
+                key={cell.id + i}
                 className="whitespace-nowrap px-3 py-2 text-sm text-slate-500"
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -639,8 +639,8 @@ const Feed: React.FC<FeedProps> = ({ endpointId }): JSX.Element => {
       <tfoot>
         {table.getFooterGroups().map((footerGroup) => (
           <tr key={footerGroup.id}>
-            {footerGroup.headers.map((header) => (
-              <th key={header.id}>
+            {footerGroup.headers.map((header, i) => (
+              <th key={i}>
                 {header.isPlaceholder ? null : flexRender(
                   header.column.columnDef.footer,
                   header.getContext(),

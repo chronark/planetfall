@@ -44,7 +44,7 @@ export const Item: React.FC<{ endpointId: string; i: number }> = (
       ctx.endpoint.list.invalidate();
     },
   });
-  const since = useMemo(() => Date.now() - 24 * 60 * 60 * 1000, []);
+  const since = useMemo(() => Date.now() - 60 * 60 * 1000, []);
   const endpoint = trpc.endpoint.get.useQuery({ endpointId });
   const checks = trpc.check.list.useQuery({ endpointId, since });
 

@@ -30,10 +30,12 @@ type Timing struct {
 	DnsDone           int64 `json:"dnsDone"`
 	ConnectStart      int64 `json:"connectStart"`
 	ConnectDone       int64 `json:"connectDone"`
-	FirstByteStart    int64 `json:"firstByteStart"`
-	FirstByteDone     int64 `json:"firstByteDone"`
 	TlsHandshakeStart int64 `json:"tlsHandshakeStart"`
 	TlsHandshakeDone  int64 `json:"tlsHandshakeDone"`
+	FirstByteStart    int64 `json:"firstByteStart"`
+	FirstByteDone     int64 `json:"firstByteDone"`
+	TransferStart     int64 `json:"transferStart"`
+	TransferDone      int64 `json:"transferDone"`
 }
 type Response struct {
 	Version string            `json:"version"`
@@ -82,14 +84,19 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 		req.Header.Add(key, value)
 	}
 	trace := &httptrace.ClientTrace{
-		DNSStart:             func(_ httptrace.DNSStartInfo) { timing.DnsStart = time.Now().UnixMilli() },
-		DNSDone:              func(_ httptrace.DNSDoneInfo) { timing.DnsDone = time.Now().UnixMilli() },
-		ConnectStart:         func(_, _ string) { timing.ConnectStart = time.Now().UnixMilli() },
-		ConnectDone:          func(_, _ string, _ error) { timing.ConnectDone = time.Now().UnixMilli() },
-		GotConn:              func(_ httptrace.GotConnInfo) { timing.FirstByteStart = time.Now().UnixMilli() },
-		GotFirstResponseByte: func() { timing.FirstByteDone = time.Now().UnixMilli() },
-		TLSHandshakeStart:    func() { timing.TlsHandshakeStart = time.Now().UnixMilli() },
-		TLSHandshakeDone:     func(_ tls.ConnectionState, _ error) { timing.TlsHandshakeDone = time.Now().UnixMilli() },
+		DNSStart:          func(_ httptrace.DNSStartInfo) { timing.DnsStart = time.Now().UnixMilli() },
+		DNSDone:           func(_ httptrace.DNSDoneInfo) { timing.DnsDone = time.Now().UnixMilli() },
+		ConnectStart:      func(_, _ string) { timing.ConnectStart = time.Now().UnixMilli() },
+		ConnectDone:       func(_, _ string, _ error) { timing.ConnectDone = time.Now().UnixMilli() },
+		TLSHandshakeStart: func() { timing.TlsHandshakeStart = time.Now().UnixMilli() },
+		TLSHandshakeDone:  func(_ tls.ConnectionState, _ error) { timing.TlsHandshakeDone = time.Now().UnixMilli() },
+		GotConn: func(_ httptrace.GotConnInfo) {
+			timing.FirstByteStart = time.Now().UnixMilli()
+		},
+		GotFirstResponseByte: func() {
+			timing.FirstByteDone = time.Now().UnixMilli()
+			timing.TransferStart = time.Now().UnixMilli()
+		},
 	}
 
 	req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
@@ -103,6 +110,7 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 	}
 	start := time.Now()
 	res, err := client.Do(req)
+	timing.TransferDone = time.Now().UnixMilli()
 	latency := time.Since(start).Milliseconds()
 	if err != nil {
 		return handleError(err, http.StatusInternalServerError)
