@@ -162,7 +162,7 @@ export class Scheduler {
             body: endpoint.body ?? undefined,
           }),
         });
-        if (!res.ok) {
+        if (res.status !== 200) {
           throw new Error(
             `unable to ping: ${region.id} [${res.status}]: ${await res.text()}`,
           );
@@ -187,7 +187,7 @@ export class Scheduler {
         };
 
         let error: string | undefined = undefined;
-       
+
 
         const as = assertions.deserialize(endpoint.assertions as any ?? []);
         for (const a of as) {

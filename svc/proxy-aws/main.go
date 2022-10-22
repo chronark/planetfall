@@ -60,8 +60,6 @@ func handlError(err error, statusCode int) (events.LambdaFunctionURLResponse, er
 
 func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
 
-	log.Println(event.Headers)
-	log.Println(event.Body)
 	if event.Headers["content-type"] != "application/json" {
 		return events.LambdaFunctionURLResponse{StatusCode: 400, Body: "use application/json"}, nil
 	}
