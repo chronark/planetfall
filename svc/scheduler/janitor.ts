@@ -31,8 +31,8 @@ export class Janitor {
       try {
         const evicted = await this.db.check.deleteMany({
           where: {
-            endpointId: {
-              in: t.endpoints.map(e => e.id)
+            endpoint: {
+              teamId: t.id
             },
             time: {
               lt: cutoff,
