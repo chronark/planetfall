@@ -6,8 +6,8 @@
 
 data "archive_file" "function_archive" {
   type        = "zip"
-  source_dir  = "${path.module}/../svc/pinger/dist"
-  output_path = "${path.module}/../svc/pinger/dist/function.zip"
+  source_file  = "${path.module}/../svc/proxy-aws/dist/main"
+  output_path = "${path.module}/../svc/proxy-aws/dist/function.zip"
 }
 
 
@@ -23,8 +23,10 @@ provider "aws" {
 module "pinger_us_east_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "us-east-1"
   environment = "production"
@@ -48,8 +50,10 @@ provider "aws" {
 module "pinger_us_east_2" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "us-east-2"
   environment = "production"
@@ -71,8 +75,10 @@ provider "aws" {
 module "pinger_us_west_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "us-west-1"
   environment = "production"
@@ -96,8 +102,10 @@ provider "aws" {
 module "pinger_us_west_2" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "us-west-2"
   environment = "production"
@@ -121,8 +129,10 @@ provider "aws" {
 module "pinger_ap_south_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "ap-south-1"
   environment = "production"
@@ -144,8 +154,10 @@ provider "aws" {
 module "pinger_ap_northeast_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "ap-northeast-1"
   environment = "production"
@@ -166,8 +178,10 @@ provider "aws" {
 module "pinger_ap_northeast_2" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "ap-northeast-2"
   environment = "production"
@@ -188,8 +202,10 @@ provider "aws" {
 module "pinger_ap_northeast_3" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "ap-northeast-3"
   environment = "production"
@@ -212,8 +228,10 @@ provider "aws" {
 module "pinger_ap_southeast_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "ap-southeast-1"
   environment = "production"
@@ -234,8 +252,10 @@ provider "aws" {
 module "pinger_ap_southeast_2" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "ap-southeast-2"
   environment = "production"
@@ -259,8 +279,10 @@ provider "aws" {
 module "pinger_ca_central_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "ca-central-1"
   environment = "production"
@@ -282,8 +304,10 @@ provider "aws" {
 module "pinger_eu_central_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "eu-central-1"
   environment = "production"
@@ -305,8 +329,10 @@ provider "aws" {
 module "pinger_eu_west_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "eu-west-1"
   environment = "production"
@@ -328,8 +354,10 @@ provider "aws" {
 module "pinger_eu_west_2" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "eu-west_2"
   environment = "production"
@@ -351,8 +379,10 @@ provider "aws" {
 module "pinger_eu_west_3" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "eu-west_3"
   environment = "production"
@@ -373,8 +403,10 @@ provider "aws" {
 module "pinger_eu_north_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "eu-north-1"
   environment = "production"
@@ -397,8 +429,10 @@ provider "aws" {
 module "pinger_sa_east_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "sa-east-1"
   environment = "production"
@@ -421,8 +455,10 @@ provider "aws" {
 module "pinger_me_south_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "me-south-1"
   environment = "production"
@@ -444,8 +480,10 @@ provider "aws" {
 module "pinger_ap_southeast_3" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "ap-southeast_3"
   environment = "production"
@@ -467,8 +505,10 @@ provider "aws" {
 module "pinger_af_south_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "af-south-1"
   environment = "production"
@@ -490,8 +530,10 @@ provider "aws" {
 module "pinger_ap_east_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "ap-east-1"
   environment = "production"
@@ -512,8 +554,10 @@ provider "aws" {
 module "pinger_eu_south_1" {
   source = "./pinger"
   zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
+    path = "../svc/proxy-aws/dist/function.zip"
+    hash=""
+    #path = data.archive_file.function_archive.output_path
+    # hash = data.archive_file.function_archive.output_base64sha256
   }
   region      = "eu-south-1"
   environment = "production"

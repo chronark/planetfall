@@ -164,7 +164,7 @@ export class Scheduler {
         });
         if (!res.ok) {
           throw new Error(
-            `unable to ping: ${region.id}: ${await res.text()}`,
+            `unable to ping: ${region.id} [${res.status}]: ${await res.text()}`,
           );
         }
 
@@ -173,6 +173,17 @@ export class Scheduler {
           latency: number;
           body: string;
           headers: Record<string, string>;
+          timing: {
+            dnsStart: number,
+            dnsDone: number,
+            connectStart: number,
+            connectDone: number,
+            firstByteStart: number,
+            firstByteDone: number,
+            tlsHandshakeStart: number,
+            tlsHandshakeDone: number
+          }
+
         };
 
         let error: string | undefined = undefined;

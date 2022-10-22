@@ -6,7 +6,16 @@ build: rm
 	yarn install
 	yarn build
 
-deploy: rm build
+build-proxy: export GOOS=linux
+build-proxy: export GOARCH=amd64
+build-proxy:
+	cd svc/proxy-aws && \
+	rm -rf dist && \
+	go mod tidy && \
+	go build -o ./dist/main ./main.go && \
+	zip ./dist/function.zip ./dist/main
+
+deploy: build-proxy
 	terraform -chdir=deployment init
 	terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
 

@@ -28,16 +28,16 @@ variable "zip" {
 
 
 
-resource "aws_lambda_function" "pinger" {
-  function_name    = "pinger-${var.region}-${var.environment}"
+resource "aws_lambda_function" "check_proxy" {
+  function_name    = "check-proxy-${var.region}-${var.environment}"
   description      = "Proxy latency checks from a specific region"
   publish          = true
   filename         = var.zip.path
-  source_code_hash = var.zip.hash
+  # source_code_hash = var.zip.hash
 
-  handler = "index.handler"
-  runtime = "nodejs16.x"
-  timeout = 30
+  handler = "main"
+  runtime = "go1.x"
+  timeout = 10
   memory_size = "1024"
 
 
@@ -51,7 +51,7 @@ resource "aws_lambda_function" "pinger" {
 
 
 resource "aws_lambda_function_url" "url" {
-  function_name      = aws_lambda_function.pinger.function_name
+  function_name      = aws_lambda_function.check_proxy.function_name
   authorization_type = "NONE"
 
   cors {
@@ -64,14 +64,14 @@ resource "aws_lambda_function_url" "url" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "pinger" {
-  name = "/aws/lambda/${aws_lambda_function.pinger.function_name}"
+resource "aws_cloudwatch_log_group" "check_proxy" {
+  name = "/aws/lambda/${aws_lambda_function.check_proxy.function_name}"
 
   retention_in_days = 7
 }
 
 resource "aws_iam_role" "lambda_exec" {
-  name = "pinger-${var.region}-${var.environment}"
+  name = "check-proxy-${var.region}-${var.environment}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

@@ -206,5 +206,18 @@ model Check {
   headers  Json?
   regionId String
 
+  // Timing information about the request
+  // {
+  //  dnsStart: number,
+  //  dnsDone: number,
+  //  connectStart: number,
+  //  connectDone: number,
+  //  firstByteStart: number,
+  //  firstByteDone: number,
+  //  tlsHandshakeStart: number,
+  //  tlsHandshakeDone: number
+  //}
+  timing Json?
+
   @@index([endpointId])
 }
