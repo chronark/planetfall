@@ -187,10 +187,7 @@ export class Scheduler {
         };
 
         let error: string | undefined = undefined;
-        if (parsed.body.length > 10000) {
-          parsed.body = parsed.body.slice(0, 10000);
-          error = "response body is too long";
-        }
+       
 
         const as = assertions.deserialize(endpoint.assertions as any ?? []);
         for (const a of as) {
@@ -207,6 +204,10 @@ export class Scheduler {
           }
         }
 
+        if (parsed.body.length > 1000) {
+          parsed.body = parsed.body.slice(0, 1000);
+        }
+
         await this.db.check.create({
           data: {
             id: newId("check"),
@@ -218,6 +219,7 @@ export class Scheduler {
             error,
             body: parsed.body,
             headers: parsed.headers,
+            timing: parsed.timing
           },
         });
       }));
