@@ -127,10 +127,13 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 	for key := range res.Header {
 		headers[key] = res.Header.Get(key)
 	}
+	if len(body) > 1000 {
+		body = body[:1000]
+	}
 	output := Response{
 		Version: "v1",
 		Status:  res.StatusCode,
-		Body:    base64.StdEncoding.EncodeToString(body[:1000]),
+		Body:    base64.StdEncoding.EncodeToString(body),
 		Headers: headers,
 		Timing:  timing,
 		Latency: latency,

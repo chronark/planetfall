@@ -148,7 +148,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = (
                             <Dropdown.Root>
                               <div className="flex items-center px-2 py-1 gap-2 text-slate-500 hover:text-slate-700">
                                 <Link
-                                  href={`${activeTeamSlug}`}
+                                  href={`/${activeTeamSlug}`}
                                   className="text-sm font-medium"
                                 >
                                   {activeTeamSlug}

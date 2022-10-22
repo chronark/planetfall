@@ -16,7 +16,11 @@ export class Janitor {
   public async run(): Promise<void> {
     this.logger.info("janitor running");
 
-    const teams = await this.db.team.findMany();
+    const teams = await this.db.team.findMany({
+      include: {
+        endpoints: true
+      }
+    });
 
     for (const t of teams) {
       const cutoff = new Date(Date.now() - t.retention);
@@ -27,6 +31,9 @@ export class Janitor {
       try {
         const evicted = await this.db.check.deleteMany({
           where: {
+            endpointId: {
+              in: t.endpoints.map(e => e.id)
+            },
             time: {
               lt: cutoff,
             },
