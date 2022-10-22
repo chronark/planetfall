@@ -18,6 +18,7 @@
     "@planetfall/assertions": "*",
     "@planetfall/auth": "*",
     "@planetfall/db": "*",
+    "@planetfall/email": "*",
     "@planetfall/id": "*",
     "@planetfall/permissions": "*",
     "@radix-ui/react-alert-dialog": "^1.0.0",

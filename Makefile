@@ -13,7 +13,7 @@ build-proxy:
 	rm -rf dist && \
 	go mod tidy && \
 	go build -o ./dist/main ./main.go && \
-	zip ./dist/function.zip ./dist/main
+	zip ./dist/function.v2.zip ./dist/main
 
 deploy: build-proxy
 	terraform -chdir=deployment init

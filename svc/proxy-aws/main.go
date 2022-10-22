@@ -36,6 +36,7 @@ type Timing struct {
 	TlsHandshakeDone  int64 `json:"tlsHandshakeDone"`
 }
 type Response struct {
+	Version string            `json:"version"`
 	Status  int               `json:"status"`
 	Latency int64             `json:"latency"`
 	Body    string            `json:"body"`
@@ -47,7 +48,7 @@ type ErrorResponse struct {
 	Error string `json:"error"`
 }
 
-func handlError(err error, statusCode int) (events.LambdaFunctionURLResponse, error) {
+func handleError(err error, statusCode int) (events.LambdaFunctionURLResponse, error) {
 	body, err := json.Marshal(ErrorResponse{Error: err.Error()})
 	if err != nil {
 		return events.LambdaFunctionURLResponse{StatusCode: 500}, err
@@ -64,11 +65,10 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 		return events.LambdaFunctionURLResponse{StatusCode: 400, Body: "use application/json"}, nil
 	}
 
-	log.Println("Running")
 	input := &Request{}
 	err := json.Unmarshal([]byte(event.Body), input)
 	if err != nil {
-		return handlError(err, http.StatusBadRequest)
+		return handleError(err, http.StatusBadRequest)
 	}
 
 	log.Println("Input", input)
@@ -76,7 +76,7 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 
 	req, err := http.NewRequest(input.Method, input.Url, strings.NewReader(input.Body))
 	if err != nil {
-		return handlError(err, http.StatusInternalServerError)
+		return handleError(err, http.StatusInternalServerError)
 	}
 	for key, value := range event.Headers {
 		req.Header.Add(key, value)
@@ -105,20 +105,21 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 	res, err := client.Do(req)
 	latency := time.Since(start).Milliseconds()
 	if err != nil {
-		return handlError(err, http.StatusInternalServerError)
+		return handleError(err, http.StatusInternalServerError)
 	}
 
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return handlError(err, http.StatusInternalServerError)
+		return handleError(err, http.StatusInternalServerError)
 	}
 	headers := make(map[string]string)
 	for key := range res.Header {
 		headers[key] = res.Header.Get(key)
 	}
 	output := Response{
+		Version: "v1",
 		Status:  res.StatusCode,
 		Body:    string(body),
 		Headers: headers,
@@ -127,7 +128,7 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 	}
 	responseBody, err := json.Marshal(output)
 	if err != nil {
-		return handlError(err, http.StatusInternalServerError)
+		return handleError(err, http.StatusInternalServerError)
 	}
 
 	return events.LambdaFunctionURLResponse{
