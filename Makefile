@@ -12,8 +12,8 @@ build-proxy:
 	cd svc/proxy-aws && \
 	rm -rf dist && \
 	go mod tidy && \
-	go build -o ./dist/main ./main.go && \
-	zip ./dist/function.v2.zip ./dist/main
+	go build -o ./dist/main ./main.go 
+	# zip ./dist/function.v2.zip ./dist/main
 
 deploy: build-proxy
 	terraform -chdir=deployment init

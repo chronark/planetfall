@@ -160,6 +160,7 @@ export class Scheduler {
             method: endpoint.method,
             headers: endpoint.headers,
             body: endpoint.body ?? undefined,
+            timeout: endpoint.timeout ?? undefined
           }),
         });
         if (res.status !== 200) {
@@ -202,9 +203,7 @@ export class Scheduler {
           }
         }
 
-        if (parsed.body.length > 1000) {
-          parsed.body = parsed.body.slice(0, 1000);
-        }
+
 
         await this.db.check.create({
           data: {

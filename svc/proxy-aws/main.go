@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"encoding/base64"
 	"encoding/json"
 	"io"
 	"log"
@@ -129,7 +130,7 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 	output := Response{
 		Version: "v1",
 		Status:  res.StatusCode,
-		Body:    string(body),
+		Body:    base64.StdEncoding.EncodeToString(body[:1000]),
 		Headers: headers,
 		Timing:  timing,
 		Latency: latency,
