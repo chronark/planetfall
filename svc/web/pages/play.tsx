@@ -47,7 +47,7 @@ const Play: NextPage = () => {
         method: data.method,
         url: data.url,
         regionIds: selectedRegions,
-        checks: data.repeat > 0 ? 2 : 1
+        checks: data.repeat  ? 2 : 1
       });
     } catch (err) {
       console.error(err);
