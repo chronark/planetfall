@@ -22,7 +22,6 @@ export const checkRouter = t.router({
         });
       }
 
-
       const res = await fetch(region.url, {
         method: "POST",
         headers: {

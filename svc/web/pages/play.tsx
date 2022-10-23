@@ -117,6 +117,7 @@ const Play: NextPage = () => {
                         region: r.region.name,
                       };
                       if (r.checks.length > 1) {
+                        r.checks = r.checks.sort((a, b) => a.time - b.time);
                         x.Cold = r.checks[0].latency;
                         x.Hot = r.checks[1].latency;
                       } else {
@@ -167,9 +168,14 @@ const Play: NextPage = () => {
                           <div className="flex flex-col justify-between items-center">
                             {r.checks.length > 1
                               ? (
-                                <Heading h3>
-                                  {i === 0 ? "Cold" : "Hot"}
-                                </Heading>
+                                <>
+                                  <Heading h3>
+                                    {i === 0 ? "Cold" : "Hot"}
+                                  </Heading>
+                                  <span className="text-slate-500 text-sm">
+                                    {new Date(c.time).toUTCString()}
+                                  </span>
+                                </>
                               )
                               : null}
                             <div className="flex">
