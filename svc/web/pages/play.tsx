@@ -53,7 +53,7 @@ const Play: NextPage = () => {
 
   useEffect(() => {
     let checks = 0;
-    const { method, url, regionIds } = router.query;
+    const { method, url, regions } = router.query;
     if (method && typeof method === "string") {
       setValue("method", method.toUpperCase());
       checks++;
@@ -62,8 +62,8 @@ const Play: NextPage = () => {
       setValue("url", url);
       checks++;
     }
-    if (regionIds && typeof regionIds === "string") {
-      setSelectedRegions(regionIds.split(","));
+    if (regions && typeof regions === "string") {
+      setSelectedRegions(regions.split(","));
       checks++;
     }
 
@@ -71,7 +71,7 @@ const Play: NextPage = () => {
       check.mutate({
         method: method as string,
         url: url as string,
-        regionIds: (regionIds as string).split(","),
+        regionIds: (regions as string).split(","),
       });
     }
   }, [router.query]);
