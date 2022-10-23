@@ -96,7 +96,6 @@ export default async function handler(
         message: JSON.stringify(JSON.parse(request.error.message)),
       });
     }
-    console.log(request.data);
     const bearerToken = authorization.replace("Bearer ", "");
 
     const hash = crypto.createHash("sha256").update(bearerToken).digest(

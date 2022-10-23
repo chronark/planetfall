@@ -30,7 +30,6 @@ export default function middleware(req: NextRequest) {
     .replace(process.env.VERCEL_URL ?? "", "")
     .replace(/\.$/, "");
 
-  console.log({ subdomain });
 
   switch (subdomain) {
     case "":

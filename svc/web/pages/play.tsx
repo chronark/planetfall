@@ -6,19 +6,21 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Card, Loading, PageHeader, Stats, Trace } from "../components";
+import { Card, Loading, PageHeader, Stats, Text, Trace } from "../components";
 import { Heading } from "../components/heading";
 import { Header } from "../components/landing";
 import { trpc } from "../lib/hooks/trpc";
 import * as Tabs from "@radix-ui/react-tabs";
+import { BarChart } from "@tremor/react";
+import Head from "next/head";
 
 type FormData = {
   url: string;
   method: string;
   regions: string[];
 
-  // 1 -> true, 0 -> false
-  repeat: number;
+  // "true" |"false"
+  repeat: string;
 };
 const Play: NextPage = () => {
   const {
@@ -47,7 +49,7 @@ const Play: NextPage = () => {
         method: data.method,
         url: data.url,
         regionIds: selectedRegions,
-        checks: data.repeat  ? 2 : 1
+        checks: data.repeat === "true" ? 2 : 1,
       });
     } catch (err) {
       console.error(err);
@@ -71,7 +73,7 @@ const Play: NextPage = () => {
       params++;
     }
     if (repeat === "true") {
-      setValue("repeat", 1);
+      setValue("repeat", "true");
     }
 
     if (params === 3) {
@@ -105,9 +107,39 @@ const Play: NextPage = () => {
       {check.data
         ? (
           <div>
-            <Heading h2>Results</Heading>
+            {check.data.length >= 2
+              ? (
+                <>
+                  <Heading h3>Latency per Region</Heading>
+                  <BarChart
+                    data={check.data.map((r) => {
+                      const x: Record<string, string | number> = {
+                        region: r.region.name,
+                      };
+                      if (r.checks.length > 1) {
+                        x.Cold = r.checks[0].latency;
+                        x.Hot = r.checks[1].latency;
+                      } else {
+                        x.Latency = r.checks[0].latency;
+                      }
+                      return x;
+                    })}
+                    dataKey="region"
+                    categories={check.data && check.data.length > 0 &&
+                        check.data[0].checks.length > 1
+                      ? ["Cold", "Hot"]
+                      : ["Latency"]}
+                    colors={["blue", "red"]}
+                    valueFormatter={(n: number) => `${n.toLocaleString()} ms`}
+                  />
+                </>
+              )
+              : null}
+            <Divider />
+            <Heading h3>Details</Heading>
+
             <Tabs.Root defaultValue={check.data[0].region.id}>
-              <Tabs.List className="flex w-full ">
+              <Tabs.List className="flex w-full justify-center ">
                 {check.data.map((r) => (
                   <Tabs.Trigger
                     key={r.region.id}
@@ -122,75 +154,59 @@ const Play: NextPage = () => {
               <div className="mt-4">
                 {check.data.map((r) => (
                   <Tabs.Content key={r.region.id} value={r.region.id}>
-                    <Card>
-                      <Card.Header>
-                        <Card.Header.Title
-                          title={r.region.name}
-                          subtitle={
-                            <div className="flex items-center gap-1">
-                              <span className="text-sm">
-                                {r.method.toUpperCase()}
-                              </span>
-                              <Link href={r.url}>{r.url}</Link>
+                    <div className="flex flex-col md:flex-row justify-between divide-y md:divide-y-0  w-full">
+                      {r.checks.sort((a, b) =>
+                        a.time - b.time
+                      ).map((c, i) => (
+                        <div
+                          key={i}
+                          className={`${
+                            r.checks.length > 1 ? "w-1/2" : "w-full"
+                          } p-4 flex flex-col divide-y divide-slate-200`}
+                        >
+                          <div className="flex flex-col justify-between items-center">
+                            {r.checks.length > 1
+                              ? (
+                                <Heading h3>
+                                  {i === 0 ? "Cold" : "Hot"}
+                                </Heading>
+                              )
+                              : null}
+                            <div className="flex">
+                              <Stats
+                                label="Latency"
+                                value={c.latency}
+                                suffix="ms"
+                              />
+
+                              <Stats
+                                label="Status"
+                                value={c.status}
+                              />
                             </div>
-                          }
-                        />
-                      </Card.Header>
-                      <Card.Content>
-                        <div className="flex flex-col md:flex-row justify-between divide-y md:divide-y-0 md:divide-x  w-full">
-                          {r.checks.sort((a, b) =>
-                            a.time - b.time
-                          ).map((c, i) => (
-                            <div
-                              key={i}
-                              className={`${r.checks.length > 1 ? "w-1/2" : "w-full"
-                                } p-4 flex flex-col divide-y divide-slate-200`}
-                            >
-                              <div className="flex flex-col justify-between items-center">
-                                {r.checks.length > 1
-                                  ? (
-                                    <Heading h3>
-                                      {i === 0 ? "Cold" : "Hot"}
-                                    </Heading>
-                                  )
-                                  : null}
-                                <div className="flex">
-                                  <Stats
-                                    label="Latency"
-                                    value={c.latency}
-                                    suffix="ms"
-                                  />
+                          </div>
+                          <div className="py-4 md:py-8">
+                            <Heading h4>Trace</Heading>
 
-                                  <Stats
-                                    label="Status"
-                                    value={c.status}
-                                  />
-                                </div>
-                              </div>
-                              <div className="py-4 md:py-8">
-                                <Heading h4>Trace</Heading>
-
-                                <Trace timings={c.timing} />
-                              </div>
-                              <div className="py-4 md:py-8">
-                                <Heading h4>Response Header</Heading>
-                                <pre className="rounded p-2 bg-slate-50">
-                                  {JSON.stringify(c.headers, null, 2)}
-                                </pre>
-                              </div>
-                              <div className="py-4 md:py-8">
-                                <Heading h4>Response Body</Heading>
-                                <pre className="rounded p-2 bg-slate-50">
-                                  {atob(c.body)}
+                            <Trace timings={c.timing} />
+                          </div>
+                          <div className="py-4 md:py-8">
+                            <Heading h4>Response Header</Heading>
+                            <pre className="rounded p-2 bg-slate-50">
+                              {JSON.stringify(c.headers, null, 2)}
+                            </pre>
+                          </div>
+                          <div className="py-4 md:py-8">
+                            <Heading h4>Response Body</Heading>
+                            <pre className="rounded p-2 bg-slate-50">
+                              {atob(c.body)}
 
 
-                                </pre>
-                              </div>
-                            </div>
-                          ))}
+                            </pre>
+                          </div>
                         </div>
-                      </Card.Content>
-                    </Card>
+                      ))}
+                    </div>
                   </Tabs.Content>
                 ))}
               </div>
@@ -250,8 +266,9 @@ const Play: NextPage = () => {
                         validate: (v) => z.string().url().safeParse(v).success,
                       })}
                       placeholder="https://example.com"
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-slate-700"
-                        } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
+                        errors.url ? "border-red-500" : "border-slate-700"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     />
                   </div>
                   {errors.url
@@ -291,8 +308,8 @@ const Play: NextPage = () => {
                       {...register("repeat", { required: false })}
                       className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     >
-                      <option value={0}>No</option>
-                      <option value={1}>Yes</option>
+                      <option value="false">No</option>
+                      <option value="true">Yes</option>
                     </select>
                   </div>
                 </div>
@@ -318,10 +335,11 @@ const Play: NextPage = () => {
                           <button
                             type="button"
                             key={r.id}
-                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${selectedRegions.includes(r.id)
+                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${
+                              selectedRegions.includes(r.id)
                                 ? "border-slate-900 bg-slate-50"
                                 : "border-slate-300"
-                              }`}
+                            }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(
