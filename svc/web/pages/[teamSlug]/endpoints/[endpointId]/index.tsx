@@ -374,7 +374,7 @@ const Errors: React.FC<{ endpointId: string }> = (
   const columns = [
     accessor("time", {
       header: "Time",
-      cell: (info) => info.getValue().toLocaleString(),
+      cell: (info) => info.getValue()?.toLocaleString(),
     }),
 
     accessor("status", {
@@ -395,7 +395,7 @@ const Errors: React.FC<{ endpointId: string }> = (
           info.getValue()! >= endpoint.data.degradedAfter
           ? (
             <span className="px-1 bg-amber-50 text-amber-500 rounded">
-              {info.getValue()!.toLocaleString()} ms
+              {info.getValue()?.toLocaleString()} ms
             </span>
           )
           : info.getValue(),
@@ -526,7 +526,7 @@ const Feed: React.FC<FeedProps> = ({ endpointId }): JSX.Element => {
       header: "Time",
       cell: (info) =>
         Date.now() - info.getValue().getTime() > 60 * 60 * 1000
-          ? info.getValue().toLocaleString()
+          ? info.getValue()?.toLocaleString()
           : ms(Date.now() - info.getValue().getTime()) + " ago",
     }),
 
@@ -557,7 +557,7 @@ const Feed: React.FC<FeedProps> = ({ endpointId }): JSX.Element => {
               : ""
           }`}
         >
-          {info.getValue()!.toLocaleString()} ms
+          {info.getValue()?.toLocaleString()} ms
         </span>
       ),
     }),

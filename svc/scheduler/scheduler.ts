@@ -147,9 +147,6 @@ export class Scheduler {
           regionId: region.id,
         });
 
-        // Date object in UTC timezone
-        const time = new Date(new Date().toUTCString());
-
         const res = await fetch(region.url, {
           method: "POST",
           headers: {
@@ -160,7 +157,8 @@ export class Scheduler {
             method: endpoint.method,
             headers: endpoint.headers,
             body: endpoint.body ?? undefined,
-            timeout: endpoint.timeout ?? undefined
+            timeout: endpoint.timeout ?? undefined,
+            checks: 1
           }),
         });
         if (res.status !== 200) {
@@ -170,6 +168,7 @@ export class Scheduler {
         }
 
         const parsed = await res.json() as {
+          time: number,
           status: number;
           latency: number;
           body: string;
@@ -184,40 +183,41 @@ export class Scheduler {
             tlsHandshakeStart: number;
             tlsHandshakeDone: number;
           };
-        };
+        }[]
 
         let error: string | undefined = undefined;
 
-        const as = assertions.deserialize(endpoint.assertions as any ?? []);
-        for (const a of as) {
-          this.logger.info("asserting stuff", {
-            type: a.type,
-            schema: a.schema,
-            status: parsed.status,
-          });
-          const assertionResponse = a.assert(parsed);
-          if (!assertionResponse.success) {
-            error = assertionResponse.error;
-            this.logger.warn("Assertion failed", { error });
-            break;
-          }
-        }
+        // const as = assertions.deserialize(endpoint.assertions as any ?? []);
+        // for (const a of as) {
+        //   this.logger.info("asserting stuff", {
+        //     type: a.type,
+        //     schema: a.schema,
+        //     status: parsed.status,
+        //   });
+        //   const assertionResponse = a.assert(parsed);
+        //   if (!assertionResponse.success) {
+        //     error = assertionResponse.error;
+        //     this.logger.warn("Assertion failed", { error });
+        //     break;
+        //   }
+        // }
 
+        const runId = parsed.length > 1 ? newId("run") : undefined
 
-
-        await this.db.check.create({
-          data: {
+        await this.db.check.createMany({
+          data: parsed.map(c => ({
             id: newId("check"),
+            runId,
             endpointId: endpoint.id,
-            latency: parsed.latency,
-            time,
-            status: parsed.status,
+            latency: c.latency,
+            time: new Date(c.time),
+            status: c.status,
             regionId,
             error,
-            body: parsed.body,
-            headers: parsed.headers,
-            timing: parsed.timing,
-          },
+            body: c.body,
+            headers: c.headers,
+            timing: c.timing,
+          })),
         });
       }));
     } catch (err) {

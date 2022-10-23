@@ -22,6 +22,8 @@ type Request struct {
 	Headers map[string]string `json:"headers"`
 	// Timeout in milliseconds
 	Timeout int `json:"timeout"`
+	// How many checks should run
+	Checks int `json:"checks"`
 }
 
 // All values are unix timestamps in milliseconds
@@ -37,12 +39,13 @@ type Timing struct {
 	TransferStart     int64 `json:"transferStart"`
 	TransferDone      int64 `json:"transferDone"`
 }
-type Response struct {
-	Version string            `json:"version"`
+
+type CheckResponse struct {
 	Status  int               `json:"status"`
 	Latency int64             `json:"latency"`
 	Body    string            `json:"body"`
 	Headers map[string]string `json:"headers"`
+	Time    int64             `json:"time"`
 	Timing  Timing            `json:"timing"`
 }
 
@@ -67,17 +70,49 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 		return events.LambdaFunctionURLResponse{StatusCode: 400, Body: "use application/json"}, nil
 	}
 
-	input := &Request{}
-	err := json.Unmarshal([]byte(event.Body), input)
+	input := Request{}
+	err := json.Unmarshal([]byte(event.Body), &input)
 	if err != nil {
 		return handleError(err, http.StatusBadRequest)
 	}
+	if input.Checks == 0 {
+		input.Checks = 1
+	}
 
+	responses := make([]CheckResponse, input.Checks)
+	for i := 0; i < input.Checks; i++ {
+		responses[i], err = check(ctx, input)
+		if err != nil {
+			return handleError(err, http.StatusInternalServerError)
+		}
+	}
+
+	responseBody, err := json.Marshal(responses)
+	if err != nil {
+		return handleError(err, http.StatusInternalServerError)
+	}
+
+	return events.LambdaFunctionURLResponse{
+		StatusCode: 200,
+		Body:       string(responseBody),
+		Headers: map[string]string{
+			"Content-Type": "application/json",
+		},
+	}, nil
+
+}
+
+func main() {
+	lambda.Start(HandleRequest)
+}
+
+func check(ctx context.Context, input Request) (CheckResponse, error) {
+	now := time.Now()
 	timing := Timing{}
 
 	req, err := http.NewRequest(input.Method, input.Url, strings.NewReader(input.Body))
 	if err != nil {
-		return handleError(err, http.StatusInternalServerError)
+		return CheckResponse{}, err
 	}
 	for key, value := range input.Headers {
 		req.Header.Add(key, value)
@@ -112,14 +147,14 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 	timing.TransferDone = time.Now().UnixMilli()
 	latency := time.Since(start).Milliseconds()
 	if err != nil {
-		return handleError(err, http.StatusInternalServerError)
+		return CheckResponse{}, err
 	}
 
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return handleError(err, http.StatusInternalServerError)
+		return CheckResponse{}, err
 	}
 	headers := make(map[string]string)
 	for key := range res.Header {
@@ -128,29 +163,12 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 	if len(body) > 1000 {
 		body = body[:1000]
 	}
-	output := Response{
-		Version: "v1",
+	return CheckResponse{
+		Time: now.UnixMilli(),
 		Status:  res.StatusCode,
 		Body:    base64.StdEncoding.EncodeToString(body),
 		Headers: headers,
 		Timing:  timing,
 		Latency: latency,
-	}
-	responseBody, err := json.Marshal(output)
-	if err != nil {
-		return handleError(err, http.StatusInternalServerError)
-	}
-
-	return events.LambdaFunctionURLResponse{
-		StatusCode: 200,
-		Body:       string(responseBody),
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
 	}, nil
-
-}
-
-func main() {
-	lambda.Start(HandleRequest)
 }

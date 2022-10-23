@@ -32,6 +32,7 @@ function MyApp(
     "/auth/sign-in",
     "/auth/sign-up",
     "/auth/sign-out",
+    "/play",
     "/_statuspages/[slug]",
   ];
   const isPublicPage = router.pathname.startsWith("/docs") ||

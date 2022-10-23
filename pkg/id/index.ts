@@ -41,4 +41,5 @@ export const newId = new IdGenerator({
   page: "page",
   check: "chk",
   token: "tkn",
+  run: "run"
 }).id;

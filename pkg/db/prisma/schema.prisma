@@ -188,6 +188,8 @@ model Membership {
 }
 
 model Check {
+  // For repeated cold->hot checks
+  runId      String? 
   id         String   @id
   endpoint   Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
   endpointId String
