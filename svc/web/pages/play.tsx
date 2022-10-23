@@ -1,4 +1,6 @@
-import type{NextPage} from "next"
-export default const Play: NextPage = ()=>{
-    
+import type { NextPage } from "next"
+const  Play:NextPage=()=> {
+    return <div>HEllo</div>
 }
+
+export default Play
