@@ -135,12 +135,12 @@ const Play: NextPage = () => {
                           ).map((c, i) => (
                             <div
                               key={i}
-                              className="md:w-1/2 p-4 flex flex-col divide-y divide-slate-200"
+                              className={`${r.checks.length > 1 ? "w-1/2" : "w-full"} p-4 flex flex-col divide-y divide-slate-200`}
                             >
                               <div className="flex flex-col justify-between items-center">
-                                <Heading h3>
+                                {r.checks.length>1?<Heading h3>
                                   {i === 0 ? "Cold" : "Hot"}
-                                </Heading>
+                                </Heading>:null}
                                 <div className="flex">
                                   <Stats
                                     label="Latency"
@@ -162,13 +162,13 @@ const Play: NextPage = () => {
                               <div className="py-4 md:py-8">
                                 <Heading h4>Response Header</Heading>
                                 <pre className="rounded p-2 bg-slate-50">
-                                                                {JSON.stringify(c.headers, null, 2)}
+                                  {JSON.stringify(c.headers, null, 2)}
                                 </pre>
                               </div>
                               <div className="py-4 md:py-8">
                                 <Heading h4>Response Body</Heading>
                                 <pre className="rounded p-2 bg-slate-50">
-                                                                {atob(c.body)}
+                                  {atob(c.body)}
 
 
                                 </pre>
@@ -237,9 +237,8 @@ const Play: NextPage = () => {
                         validate: (v) => z.string().url().safeParse(v).success,
                       })}
                       placeholder="https://example.com"
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
-                        errors.url ? "border-red-500" : "border-slate-700"
-                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-slate-700"
+                        } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     />
                   </div>
                   {errors.url
@@ -273,11 +272,10 @@ const Play: NextPage = () => {
                           <button
                             type="button"
                             key={r.id}
-                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${
-                              selectedRegions.includes(r.id)
+                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${selectedRegions.includes(r.id)
                                 ? "border-slate-900 bg-slate-50"
                                 : "border-slate-300"
-                            }`}
+                              }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(

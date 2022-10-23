@@ -9,7 +9,10 @@ export const checkRouter = t.router({
     url: z.string().url(),
     method: z.string(),
     regionIds: z.array(z.string()),
+    checks: z.number().int().gte(1).lte(2).optional()
   })).mutation(async ({ input, ctx }) => {
+
+
     return await Promise.all(input.regionIds.map(async (regionId) => {
       const region = await ctx.db.region.findUnique({
         where: { id: regionId },
@@ -30,7 +33,7 @@ export const checkRouter = t.router({
           url: input.url,
           method: input.method,
           timeout: 2000,
-          checks: 2,
+          checks: input.checks ?? 1,
         }),
       });
       if (res.status !== 200) {
