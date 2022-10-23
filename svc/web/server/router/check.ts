@@ -5,6 +5,72 @@ import { t } from "../trpc";
 import { Kafka } from "@upstash/kafka";
 
 export const checkRouter = t.router({
+  play: t.procedure.input(z.object({
+    url: z.string().url(),
+    method: z.string(),
+    regionIds: z.array(z.string()),
+  })).mutation(async ({ input, ctx }) => {
+    return await Promise.all(input.regionIds.map(async (regionId) => {
+      const region = await ctx.db.region.findUnique({
+        where: { id: regionId },
+      });
+      if (!region) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `regionId: ${regionId} not found`,
+        });
+      }
+
+      const res = await fetch(region.url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: input.url,
+          method: input.method,
+          timeout: 2000,
+          checks: 2,
+        }),
+      });
+      if (res.status !== 200) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `unable to ping: ${region.id} [${res.status}]: ${await res
+            .text()}`,
+        });
+      }
+
+      const checks = await res.json() as {
+        time: number;
+        status: number;
+        latency: number;
+        body: string;
+        headers: Record<string, string>;
+        timing: {
+          dnsStart: number;
+          dnsDone: number;
+          connectStart: number;
+          connectDone: number;
+          firstByteStart: number;
+          firstByteDone: number;
+          tlsHandshakeStart: number;
+          tlsHandshakeDone: number;
+          transferStart: number;
+          transferDone: number;
+        };
+      }[];
+      return {
+        url: input.url,
+        method: input.method,
+        region: {
+          id: region.id,
+          name: region.name,
+        },
+        checks,
+      };
+    }));
+  }),
   list: t.procedure.input(z.object({
     endpointId: z.string(),
     since: z.number().optional(),

@@ -158,7 +158,7 @@ export class Scheduler {
             headers: endpoint.headers,
             body: endpoint.body ?? undefined,
             timeout: endpoint.timeout ?? undefined,
-            checks: 1
+            checks: 1,
           }),
         });
         if (res.status !== 200) {
@@ -168,7 +168,7 @@ export class Scheduler {
         }
 
         const parsed = await res.json() as {
-          time: number,
+          time: number;
           status: number;
           latency: number;
           body: string;
@@ -183,7 +183,7 @@ export class Scheduler {
             tlsHandshakeStart: number;
             tlsHandshakeDone: number;
           };
-        }[]
+        }[];
 
         let error: string | undefined = undefined;
 
@@ -202,10 +202,10 @@ export class Scheduler {
         //   }
         // }
 
-        const runId = parsed.length > 1 ? newId("run") : undefined
+        const runId = parsed.length > 1 ? newId("run") : undefined;
 
         await this.db.check.createMany({
-          data: parsed.map(c => ({
+          data: parsed.map((c) => ({
             id: newId("check"),
             runId,
             endpointId: endpoint.id,

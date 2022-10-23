@@ -7,3 +7,4 @@ export * from "./confirm";
 export * from "./card";
 export * from "./stats";
 export * from "./loading";
+export * from "./trace";

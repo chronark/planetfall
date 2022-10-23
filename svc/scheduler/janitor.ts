@@ -18,8 +18,8 @@ export class Janitor {
 
     const teams = await this.db.team.findMany({
       include: {
-        endpoints: true
-      }
+        endpoints: true,
+      },
     });
 
     for (const t of teams) {
@@ -32,7 +32,7 @@ export class Janitor {
         const evicted = await this.db.check.deleteMany({
           where: {
             endpoint: {
-              teamId: t.id
+              teamId: t.id,
             },
             time: {
               lt: cutoff,
