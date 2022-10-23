@@ -52,22 +52,22 @@ const Play: NextPage = () => {
   }
 
   useEffect(() => {
-    let checks = 0;
+    let params = 0;
     const { method, url, regions } = router.query;
     if (method && typeof method === "string") {
       setValue("method", method.toUpperCase());
-      checks++;
+      params++;
     }
     if (url && typeof url === "string") {
       setValue("url", url);
-      checks++;
+      params++;
     }
     if (regions && typeof regions === "string") {
       setSelectedRegions(regions.split(","));
-      checks++;
+      params++;
     }
 
-    if (checks === 3) {
+    if (params === 3) {
       check.mutate({
         method: method as string,
         url: url as string,
