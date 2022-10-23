@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 	"net/http/httptrace"
 	"strings"
@@ -74,14 +73,13 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 		return handleError(err, http.StatusBadRequest)
 	}
 
-	log.Println("Input", input)
 	timing := Timing{}
 
 	req, err := http.NewRequest(input.Method, input.Url, strings.NewReader(input.Body))
 	if err != nil {
 		return handleError(err, http.StatusInternalServerError)
 	}
-	for key, value := range event.Headers {
+	for key, value := range input.Headers {
 		req.Header.Add(key, value)
 	}
 	trace := &httptrace.ClientTrace{

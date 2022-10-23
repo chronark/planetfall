@@ -87,10 +87,9 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             <div className="w-4/5 flex">
               <div
                 style={{
-                  width: `${
-                    Math.max(1, timings.dnsDone - timings.dnsStart) /
+                  width: `${Math.max(1, timings.dnsDone - timings.dnsStart) /
                     (end - start) * 100
-                  }%`,
+                    }%`,
                 }}
               >
                 <div className="h-1.5 bg-gradient-to-r from-primary-700 to-primary-500 rounded-sm">
@@ -115,18 +114,16 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             <div className="w-4/5 flex">
               <div
                 style={{
-                  width: `${
-                    (timings.connectStart - start) / (end - start) * 100
-                  }%`,
+                  width: `${(timings.connectStart - start) / (end - start) * 100
+                    }%`,
                 }}
               >
               </div>
               <div
                 style={{
-                  width: `${
-                    Math.max(1, timings.connectDone - timings.connectStart) /
+                  width: `${Math.max(1, timings.connectDone - timings.connectStart) /
                     (end - start) * 100
-                  }%`,
+                    }%`,
                 }}
               >
                 <div className="h-1.5 bg-gradient-to-r from-primary-700 to-primary-500 rounded-sm">
@@ -149,20 +146,18 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             <div className="w-4/5 flex">
               <div
                 style={{
-                  width: `${
-                    (timings.tlsHandshakeStart - start) / (end - start) * 100
-                  }%`,
+                  width: `${(timings.tlsHandshakeStart - start) / (end - start) * 100
+                    }%`,
                 }}
               >
               </div>
               <div
                 style={{
-                  width: `${
-                    Math.max(
-                      1,
-                      timings.tlsHandshakeDone - timings.tlsHandshakeStart,
-                    ) / (end - start) * 100
-                  }%`,
+                  width: `${Math.max(
+                    1,
+                    timings.tlsHandshakeDone - timings.tlsHandshakeStart,
+                  ) / (end - start) * 100
+                    }%`,
                 }}
               >
                 <div className="h-1.5 bg-gradient-to-r from-primary-700 to-primary-500 rounded-sm">
@@ -185,20 +180,18 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             <div className="w-4/5 flex">
               <div
                 style={{
-                  width: `${
-                    (timings.firstByteStart - start) / (end - start) * 100
-                  }%`,
+                  width: `${(timings.firstByteStart - start) / (end - start) * 100
+                    }%`,
                 }}
               >
               </div>
               <div
                 style={{
-                  width: `${
-                    Math.max(
-                      1,
-                      timings.firstByteDone - timings.firstByteStart,
-                    ) / (end - start) * 100
-                  }%`,
+                  width: `${Math.max(
+                    1,
+                    timings.firstByteDone - timings.firstByteStart,
+                  ) / (end - start) * 100
+                    }%`,
                 }}
               >
                 <div className="h-1.5 bg-gradient-to-r from-primary-700 to-primary-500 rounded-sm">
@@ -221,20 +214,18 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             <div className="w-4/5 flex">
               <div
                 style={{
-                  width: `${
-                    (timings.transferStart - start) / (end - start) * 100
-                  }%`,
+                  width: `${(timings.transferStart - start) / (end - start) * 100
+                    }%`,
                 }}
               >
               </div>
               <div
                 style={{
-                  width: `${
-                    Math.max(
-                      1,
-                      timings.transferDone - timings.transferStart,
-                    ) / (end - start) * 100
-                  }%`,
+                  width: `${Math.max(
+                    1,
+                    timings.transferDone - timings.transferStart,
+                  ) / (end - start) * 100
+                    }%`,
                 }}
               >
                 <div className="h-1.5 bg-gradient-to-r from-primary-700 to-primary-500 rounded-sm">
@@ -288,11 +279,19 @@ export default function CheckPage() {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  let body = check.data?.body ? check.data.body : null;
+  let body: string | null = null
+  if (check.data?.body) {
+    try {
+      body = atob(check.data.body)
+    }
+    catch {
+      body = check.data.body
+    }
+  }
   if (body) {
     try {
       body = JSON.stringify(JSON.parse(body), null, 2);
-    } catch {}
+    } catch { }
   }
 
   return (
@@ -313,9 +312,8 @@ export default function CheckPage() {
           />
           <Stats
             label={check.data?.time?.toLocaleString() ?? ""}
-            value={`${
-              check.data?.time ? ms(Date.now() - check.data.time.getTime()) : ""
-            }`}
+            value={`${check.data?.time ? ms(Date.now() - check.data.time.getTime()) : ""
+              }`}
             suffix="ago"
           />
           <Stats
@@ -326,7 +324,7 @@ export default function CheckPage() {
             label="Latency"
             value={check.data?.latency?.toLocaleString() ?? "None"}
             status={check.data?.endpoint.degradedAfter && check.data?.latency &&
-                check.data.latency >= check.data.endpoint.degradedAfter
+              check.data.latency >= check.data.endpoint.degradedAfter
               ? "warn"
               : undefined}
             suffix="ms"
