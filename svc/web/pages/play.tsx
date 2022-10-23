@@ -47,6 +47,7 @@ const Play: NextPage = () => {
         method: data.method,
         url: data.url,
         regionIds: selectedRegions,
+        checks: data.repeat > 0 ? 2 : 1
       });
     } catch (err) {
       console.error(err);
@@ -142,9 +143,8 @@ const Play: NextPage = () => {
                           ).map((c, i) => (
                             <div
                               key={i}
-                              className={`${
-                                r.checks.length > 1 ? "w-1/2" : "w-full"
-                              } p-4 flex flex-col divide-y divide-slate-200`}
+                              className={`${r.checks.length > 1 ? "w-1/2" : "w-full"
+                                } p-4 flex flex-col divide-y divide-slate-200`}
                             >
                               <div className="flex flex-col justify-between items-center">
                                 {r.checks.length > 1
@@ -250,9 +250,8 @@ const Play: NextPage = () => {
                         validate: (v) => z.string().url().safeParse(v).success,
                       })}
                       placeholder="https://example.com"
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
-                        errors.url ? "border-red-500" : "border-slate-700"
-                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-slate-700"
+                        } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     />
                   </div>
                   {errors.url
@@ -319,11 +318,10 @@ const Play: NextPage = () => {
                           <button
                             type="button"
                             key={r.id}
-                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${
-                              selectedRegions.includes(r.id)
+                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${selectedRegions.includes(r.id)
                                 ? "border-slate-900 bg-slate-50"
                                 : "border-slate-300"
-                            }`}
+                              }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(
