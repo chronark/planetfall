@@ -103,7 +103,6 @@ export default function Page() {
     }
     setLoading(true);
     try {
-      console.log({ ...data, selectedRegions });
 
       const res = await createEndpoint.mutateAsync({
         name: data.name,

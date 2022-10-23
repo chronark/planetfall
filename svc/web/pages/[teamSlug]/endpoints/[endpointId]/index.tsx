@@ -363,7 +363,6 @@ const Errors: React.FC<{ endpointId: string }> = (
     enabled: !!endpointId,
   });
   const regions = trpc.region.list.useQuery();
-  console.log({ endpoint });
   const { accessor } = createColumnHelper<Check>();
 
   const failed = (checks.data ?? []).filter((c) => c.error).map((c) => ({

@@ -67,7 +67,6 @@ const Play: NextPage = () => {
       checks++;
     }
 
-    console.log({ checks, regionIds });
     if (checks === 3) {
       check.mutate({
         method: method as string,

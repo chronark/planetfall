@@ -292,7 +292,6 @@ const Row: React.FC<
 > = (
   { endpoint, maxBuckets },
 ): JSX.Element => {
-  console.log(new Date(endpoint.checks[0].time));
   const latencies = useMemo(
     () =>
       endpoint.checks.filter((c) => typeof c.latency === "number").map((c) =>
@@ -435,9 +434,7 @@ export default function Page(
   }
   // Due to different retentions, we need to adjust the number of buckets
   const maxBuckets = Math.ceil(data.team.retention / 1000 / 60 / 60);
-  console.log(
-    JSON.stringify({ maxBuckets, retention: data.team.retention }, null, 2),
-  );
+
   return (
     <div className="min-h-screen relative">
       <header

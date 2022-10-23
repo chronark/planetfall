@@ -58,7 +58,6 @@ export default function Page() {
     enabled: !!endpointId,
   });
 
-  console.log(endpoint.data);
 
   const breadcrumbs = [
     {

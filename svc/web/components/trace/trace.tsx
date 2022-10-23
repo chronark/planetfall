@@ -23,7 +23,6 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
     const percentage = (
       done - start
     ) / (max - min) * 100;
-    console.log({ percentage });
     if (percentage > 0) {
       return `${percentage}%`;
     }
