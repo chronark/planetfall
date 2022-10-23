@@ -11,7 +11,7 @@ export const checkRouter = t.router({
     regionIds: z.array(z.string()).min(1).max(5),
     checks: z.number().int().gte(1).lte(2).optional(),
   })).mutation(async ({ input, ctx }) => {
-    return await Promise.all(input.regionIds.map(async (regionId) => {
+    const regions = await Promise.all(input.regionIds.map(async (regionId) => {
       const region = await ctx.db.region.findUnique({
         where: { id: regionId },
       });
@@ -62,8 +62,6 @@ export const checkRouter = t.router({
         };
       }[];
       return {
-        url: input.url,
-        method: input.method,
         region: {
           id: region.id,
           name: region.name,
@@ -71,6 +69,11 @@ export const checkRouter = t.router({
         checks,
       };
     }));
+    return {
+      url: input.url,
+      method: input.method,
+      regions,
+    };
   }),
   list: t.procedure.input(z.object({
     endpointId: z.string(),
