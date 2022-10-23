@@ -7,7 +7,7 @@ import { Kafka } from "@upstash/kafka";
 export const checkRouter = t.router({
   play: t.procedure.input(z.object({
     url: z.string().url(),
-    method: z.string(),
+    method: z.string().transform(m=>m.toUpperCase()),
     regionIds: z.array(z.string()),
     checks: z.number().int().gte(1).lte(2).optional()
   })).mutation(async ({ input, ctx }) => {
@@ -23,6 +23,8 @@ export const checkRouter = t.router({
           message: `regionId: ${regionId} not found`,
         });
       }
+
+      console.log({input})
 
       const res = await fetch(region.url, {
         method: "POST",
