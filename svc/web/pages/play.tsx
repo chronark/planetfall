@@ -173,7 +173,7 @@ const Play: NextPage = () => {
                                     {i === 0 ? "Cold" : "Hot"}
                                   </Heading>
                                   <span className="text-slate-500 text-sm">
-                                    {new Date(c.time).toUTCString()}
+                                    {new Date(c.time).toISOString()}
                                   </span>
                                 </>
                               )
