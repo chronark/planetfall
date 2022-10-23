@@ -180,7 +180,7 @@ const Play: NextPage = () => {
                             <div className="flex">
                               <Stats
                                 label="Latency"
-                                value={c.latency}
+                                value={c.latency.toLocaleString()}
                                 suffix="ms"
                               />
 
