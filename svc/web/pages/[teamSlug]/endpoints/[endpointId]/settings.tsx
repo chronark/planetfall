@@ -58,7 +58,6 @@ export default function Page() {
     enabled: !!endpointId,
   });
 
-
   const breadcrumbs = [
     {
       label: endpoint.data?.name ?? endpoint.data?.url ?? endpointId,

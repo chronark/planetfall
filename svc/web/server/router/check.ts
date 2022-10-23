@@ -7,12 +7,10 @@ import { Kafka } from "@upstash/kafka";
 export const checkRouter = t.router({
   play: t.procedure.input(z.object({
     url: z.string().url(),
-    method: z.string().transform(m=>m.toUpperCase()),
+    method: z.string().transform((m) => m.toUpperCase()),
     regionIds: z.array(z.string()),
-    checks: z.number().int().gte(1).lte(2).optional()
+    checks: z.number().int().gte(1).lte(2).optional(),
   })).mutation(async ({ input, ctx }) => {
-
-
     return await Promise.all(input.regionIds.map(async (regionId) => {
       const region = await ctx.db.region.findUnique({
         where: { id: regionId },
@@ -24,7 +22,7 @@ export const checkRouter = t.router({
         });
       }
 
-      console.log({input})
+      console.log({ input });
 
       const res = await fetch(region.url, {
         method: "POST",

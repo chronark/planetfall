@@ -103,7 +103,6 @@ export default function Page() {
     }
     setLoading(true);
     try {
-
       const res = await createEndpoint.mutateAsync({
         name: data.name,
         method: data.method,

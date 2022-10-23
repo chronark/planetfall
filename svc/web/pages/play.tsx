@@ -16,6 +16,9 @@ type FormData = {
   url: string;
   method: string;
   regions: string[];
+
+  // 1 -> true, 0 -> false
+  repeat: number;
 };
 const Play: NextPage = () => {
   const {
@@ -53,7 +56,7 @@ const Play: NextPage = () => {
 
   useEffect(() => {
     let params = 0;
-    const { method, url, regions } = router.query;
+    const { method, url, regions, repeat } = router.query;
     if (method && typeof method === "string") {
       setValue("method", method.toUpperCase());
       params++;
@@ -66,12 +69,16 @@ const Play: NextPage = () => {
       setSelectedRegions(regions.split(","));
       params++;
     }
+    if (repeat === "true") {
+      setValue("repeat", 1);
+    }
 
     if (params === 3) {
       check.mutate({
         method: method as string,
         url: url as string,
         regionIds: (regions as string).split(","),
+        checks: repeat === "true" ? 2 : 1,
       });
     }
   }, [router.query]);
@@ -135,12 +142,18 @@ const Play: NextPage = () => {
                           ).map((c, i) => (
                             <div
                               key={i}
-                              className={`${r.checks.length > 1 ? "w-1/2" : "w-full"} p-4 flex flex-col divide-y divide-slate-200`}
+                              className={`${
+                                r.checks.length > 1 ? "w-1/2" : "w-full"
+                              } p-4 flex flex-col divide-y divide-slate-200`}
                             >
                               <div className="flex flex-col justify-between items-center">
-                                {r.checks.length>1?<Heading h3>
-                                  {i === 0 ? "Cold" : "Hot"}
-                                </Heading>:null}
+                                {r.checks.length > 1
+                                  ? (
+                                    <Heading h3>
+                                      {i === 0 ? "Cold" : "Hot"}
+                                    </Heading>
+                                  )
+                                  : null}
                                 <div className="flex">
                                   <Stats
                                     label="Latency"
@@ -237,8 +250,9 @@ const Play: NextPage = () => {
                         validate: (v) => z.string().url().safeParse(v).success,
                       })}
                       placeholder="https://example.com"
-                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-slate-700"
-                        } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
+                        errors.url ? "border-red-500" : "border-slate-700"
+                      } hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                     />
                   </div>
                   {errors.url
@@ -253,6 +267,39 @@ const Play: NextPage = () => {
             </div>
           </div>
 
+          <div className="space-y-6 sm:space-y-5">
+            <div>
+              <h3 className="text-lg font-medium leading-6 text-slate-900">
+                Repeat
+              </h3>
+              <p className="mt-1 text-sm text-slate-500">
+                Send 2 requests to your API in rapid succession to simulate cold
+                and hot functions or caches.
+              </p>
+            </div>
+
+            <div className="space-y-6 sm:space-y-5">
+              <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+                <label
+                  htmlFor="repeat"
+                  className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+                >
+                  Repeat
+                </label>
+                <div className="mt-1 sm:col-span-4 sm:mt-0">
+                  <div className="">
+                    <select
+                      {...register("repeat", { required: false })}
+                      className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    >
+                      <option value={0}>No</option>
+                      <option value={1}>Yes</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
             <div>
               <h3 className="text-lg font-medium leading-6 text-slate-900">
@@ -272,10 +319,11 @@ const Play: NextPage = () => {
                           <button
                             type="button"
                             key={r.id}
-                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${selectedRegions.includes(r.id)
+                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${
+                              selectedRegions.includes(r.id)
                                 ? "border-slate-900 bg-slate-50"
                                 : "border-slate-300"
-                              }`}
+                            }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(
