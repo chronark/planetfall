@@ -6,3 +6,4 @@ dist
 .tfvars
 *.tfstate
 .terraform
+.tinyb

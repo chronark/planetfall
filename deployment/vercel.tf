@@ -71,6 +71,11 @@ resource "vercel_project" "web" {
       key    = "DOCS_URL"
       value  = "https://${vercel_project_domain.docs.domain}"
       target = ["production", "preview"]
+    },
+     {
+      key    = "TINYBIRD_TOKEN"
+      value  = var.tinybird_token
+      target = ["production", "preview"]
     }
   ]
 

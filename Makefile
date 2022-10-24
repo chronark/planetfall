@@ -37,3 +37,7 @@ dev: rm build
 
 fmt: rm
 	deno fmt
+
+
+tinybird:
+	docker run -v $$(pwd)/svc/tinybird:/mnt/data -it tinybirdco/tinybird-cli-docker

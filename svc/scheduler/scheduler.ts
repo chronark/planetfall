@@ -204,24 +204,53 @@ export class Scheduler {
 
         const runId = parsed.length > 1 ? newId("run") : undefined;
 
+
+        const data = parsed.map((c) => ({
+          id: newId("check"),
+          runId,
+          endpointId: endpoint.id,
+          latency: c.latency,
+          time: new Date(c.time),
+          status: c.status,
+          regionId,
+          error,
+          body: c.body,
+          headers: c.headers,
+          timing: c.timing,
+        }))
+
         await this.db.check.createMany({
-          data: parsed.map((c) => ({
-            id: newId("check"),
-            runId,
-            endpointId: endpoint.id,
-            latency: c.latency,
-            time: new Date(c.time),
-            status: c.status,
-            regionId,
-            error,
-            body: c.body,
-            headers: c.headers,
-            timing: c.timing,
-          })),
+          data,
         });
+
+
+        const tinybirdRes = await fetch(
+          'https://api.tinybird.co/v0/events?name=checks__v2',
+          {
+            method: 'POST',
+            body: data.map(c => JSON.stringify({
+              source: "scheduler",
+              id: c.id,
+              runId: c.runId,
+              endpointId: c.endpointId,
+              teamId: endpoint.teamId,
+              latency: c.latency,
+              time: c.time.toISOString(),
+              status: c.status,
+              regionId: c.regionId,
+              error: c.error,
+              timing: JSON.stringify(c.timing),
+              body: c.body,
+              header: JSON.stringify(c.headers)
+            })).join("\n"),
+            headers: { Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}` }
+          })
+
+        this.logger.info("tinybird",  await tinybirdRes.json())
       }));
     } catch (err) {
       this.logger.error((err as Error).message);
     }
   }
 }
+

@@ -273,7 +273,7 @@ export default function CheckPage() {
     }),
   ];
   const table = useReactTable({
-    data: Object.entries(check.data?.headers ?? {} as Record<string, string>)
+    data: Object.entries(check.data?.header ?? {} as Record<string, string>)
       .map(([key, value]) => ({ key, value })),
     columns,
 
@@ -313,7 +313,7 @@ export default function CheckPage() {
           <Stats
             label={check.data?.time?.toLocaleString() ?? ""}
             value={`${
-              check.data?.time ? ms(Date.now() - check.data.time.getTime()) : ""
+              check.data?.time ? ms(Date.now() - new Date(check.data.time).getTime()) : ""
             }`}
             suffix="ago"
           />

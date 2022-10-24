@@ -96,6 +96,7 @@ export const billingRouter = t.router({
       }],
       success_url: input.returnUrl,
       cancel_url: input.returnUrl,
+      
     });
 
     return { url };

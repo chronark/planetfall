@@ -51,10 +51,15 @@ export const teamRouter = t.router({
           message: "product does not have default price",
         });
       }
+      const beginningOfMonth = new Date()
+      beginningOfMonth.setUTCMonth(beginningOfMonth.getUTCMonth() + 1)
+      beginningOfMonth.setUTCDate(0)
+      beginningOfMonth.setUTCHours(0, 0, 0, 0)
       const subscription = await stripe.subscriptions.create({
         customer: customer.id,
         trial_period_days: 14,
         items: [{ price }],
+        billing_cycle_anchor: beginningOfMonth.getTime() * 1000
       });
       if (!subscription) {
         throw new TRPCError({

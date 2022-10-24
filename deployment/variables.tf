@@ -73,3 +73,7 @@ variable "axiom_token" {
 
 
 
+variable "tinybird_token" {
+  type = string
+  sensitive = true
+}
