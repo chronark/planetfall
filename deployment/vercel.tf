@@ -165,21 +165,6 @@ resource "vercel_project_domain" "wildcard" {
 }
 
 
-# data "vercel_project_directory" "root" {
-#   path = ".."
-
-# }
-
-# resource "vercel_deployment" "pinger" {
-#   for_each    = vercel_project.pinger
-#   project_id  = each.value.id
-#   files       = data.vercel_project_directory.root.files
-#   path_prefix = data.vercel_project_directory.root.path
-#   production  = true
-#   team_id = var.vercel_team_id
-# }
-
-
 
 
 
@@ -188,20 +173,20 @@ data "vercel_project_directory" "planetfall" {
   path = "../"
 }
 
-# resource "vercel_deployment" "web" {
-#   project_id  = vercel_project.web.id
-#   team_id     = var.vercel_team_id
-#   files       = data.vercel_project_directory.planetfall.files
-#   path_prefix = data.vercel_project_directory.planetfall.path
-#   production  = true
+resource "vercel_deployment" "web" {
+  project_id  = vercel_project.web.id
+  team_id     = var.vercel_team_id
+  files       = data.vercel_project_directory.planetfall.files
+  path_prefix = data.vercel_project_directory.planetfall.path
+  production  = true
 
 
-# }
-# resource "vercel_deployment" "docs" {
-#   project_id  = vercel_project.docs.id
-#   team_id     = var.vercel_team_id
-#   files       = data.vercel_project_directory.planetfall.files
-#   path_prefix = data.vercel_project_directory.planetfall.path
-#   production  = true
+}
+resource "vercel_deployment" "docs" {
+  project_id  = vercel_project.docs.id
+  team_id     = var.vercel_team_id
+  files       = data.vercel_project_directory.planetfall.files
+  path_prefix = data.vercel_project_directory.planetfall.path
+  production  = true
 
-# }
+}
