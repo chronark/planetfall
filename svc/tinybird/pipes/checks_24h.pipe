@@ -1,0 +1,9 @@
+NODE recent_checks
+SQL >
+    SELECT *
+    FROM checks__v2
+    WHERE checks__v2.time > now() - INTERVAL 1 HOUR
+
+
+TYPE materialized
+DATASOURCE checks_in_last_hour

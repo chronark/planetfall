@@ -1,0 +1,14 @@
+NODE endpoint_metrics_0
+SQL >
+
+    %
+    SELECT
+      endpointId,
+      date, 
+      quantiles(0.5, 0.95, 0.99)(latency) as percentiles
+    from checks
+    WHERE 
+      endpointId = {{String(endpointId, required=True)}}
+    group by endpointId, toDate(checks.time) as date
+
+

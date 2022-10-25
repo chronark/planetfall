@@ -1,0 +1,15 @@
+NODE checks_by_endpoint_24h_0
+SQL >
+
+    %
+    SELECT *
+    FROM checks
+    WHERE
+        checks.endpointId = {{ String(endpointId, required=True) }}
+        AND checks.time >= now64() - INTERVAL 1 DAY
+        {% if defined(regionId) %}
+
+            AND checks.regionId = {{ String(regionId, required=False) }}
+        {% end %}
+
+

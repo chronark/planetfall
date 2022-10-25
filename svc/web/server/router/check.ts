@@ -80,27 +80,13 @@ export const checkRouter = t.router({
   }),
   list: t.procedure.input(z.object({
     endpointId: z.string(),
-    since: z.number().optional(),
-    take: z.number().optional(),
-    order: z.enum(["asc", "desc"]).optional(),
     regionId: z.string().optional(),
   })).query(async ({ input, ctx }) => {
     if (!ctx.req.session?.user?.id) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
 
-    const where = {};
-    if (input.since) {
-      // @ts-ignore
-      where["time"] = {
-        gte: new Date(input.since),
-      };
-    }
 
-    if (input.regionId) {
-      // @ts-ignore
-      where["regionId"] = input.regionId;
-    }
     const endpoint = await ctx.db.endpoint.findUnique({
       where: {
         id: input.endpointId,
@@ -115,19 +101,64 @@ export const checkRouter = t.router({
             },
           },
         },
-        checks: {
-          take: input.take,
-          orderBy: {
-            time: input.order,
-          },
-          where,
-        },
+
       },
     });
     if (!endpoint) {
       throw new TRPCError({ code: "NOT_FOUND", message: "endpoint not found" });
     }
-    return endpoint.checks;
+
+
+
+    const url = new URL("https://api.tinybird.co/v0/pipes/checks_by_endpoint_24h.json")
+    url.searchParams.append("endpointId", input.endpointId)
+    if (input.regionId){
+    url.searchParams.append("regionId", input.regionId)
+
+    }
+
+
+    const res = await fetch(url,{
+      headers:{
+        Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`
+      }
+    })
+
+    if (res.status === 404) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Could not find checks for endpoint" })
+    }
+    if (res.status === 400) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: await res.text() })
+    }
+
+
+    if (res.status !== 200) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: await res.text() })
+    }
+    const body = await res.json() as {
+      data: {
+        endpointId: string,
+        id: string,
+        runId?:string,
+        latency: number,
+        regionId: string,
+        status: number,
+        teamId: string,
+        error?: string,
+        time: string,
+        timing: string
+        body: string,
+        header: string
+      }[]
+    }
+
+    console.log(JSON.stringify(body, null, 2))
+    if (body.data.length === 0) {
+      throw new TRPCError({ code: "NOT_FOUND", message:"No checks for endpoint" })
+    }
+
+
+    return body.data;
   }),
   get: t.procedure.input(z.object({
     checkId: z.string(),
@@ -137,7 +168,7 @@ export const checkRouter = t.router({
     }
 
 
-    const res = await fetch(`https://api.tinybird.co/v0/pipes/check_by_id.json?checkId=${input.checkId}`, {
+    const res = await fetch(`https://api.tinybird.co/v0/pipes/prod__check_by_id.json?checkId=${input.checkId}`, {
       headers: {
         "Authorization": `Bearer ${process.env.TINYBIRD_TOKEN}`
       }

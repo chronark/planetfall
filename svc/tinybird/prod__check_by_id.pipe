@@ -1,0 +1,8 @@
+NODE filter_by_id
+SQL >
+
+    %
+    SELECT * FROM checks WHERE id = {{String(checkId, description="Id of the check to retrieve", required=True)}}
+
+
+

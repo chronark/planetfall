@@ -1,0 +1,12 @@
+NODE checks_by_team
+SQL >
+
+    SELECT
+        checks.teamId,
+        COUNT(*) as checks
+    FROM
+    	checks
+     GROUP BY
+    	checks.teamId
+
+
