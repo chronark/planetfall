@@ -313,7 +313,9 @@ export default function CheckPage() {
           <Stats
             label={check.data?.time?.toLocaleString() ?? ""}
             value={`${
-              check.data?.time ? ms(Date.now() - new Date(check.data.time).getTime()) : ""
+              check.data?.time
+                ? ms(Date.now() - new Date(check.data.time).getTime())
+                : ""
             }`}
             suffix="ago"
           />

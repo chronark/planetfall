@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import "tailwindcss/tailwind.css";
 import { trpc } from "lib/hooks/trpc";
-import PlausibleProvider from "next-plausible";
+import { Analytics } from '@vercel/analytics/react';
 import "styles/ant.css";
 import "public/fonts/css/pangea.css";
 import "@tremor/react/dist/esm/tremor.css";
@@ -39,22 +39,22 @@ function MyApp(
     publicPages.some((r) => new RegExp(r).test(router.pathname));
 
   return (
-    <PlausibleProvider domain="planetfall.io">
-      <ConfigProvider>
-        <AuthProvider>
-          {isPublicPage ? <Component {...pageProps} /> : (
-            <>
-              <SignedIn>
-                <Component {...pageProps} />
-              </SignedIn>
-              <SignedOut>
-                <RedirectToSignIn />
-              </SignedOut>
-            </>
-          )}
-        </AuthProvider>
-      </ConfigProvider>
-    </PlausibleProvider>
+    <ConfigProvider>
+      <Analytics />
+
+      <AuthProvider>
+        {isPublicPage ? <Component {...pageProps} /> : (
+          <>
+            <SignedIn>
+              <Component {...pageProps} />
+            </SignedIn>
+            <SignedOut>
+              <RedirectToSignIn />
+            </SignedOut>
+          </>
+        )}
+      </AuthProvider>
+    </ConfigProvider>
   );
 }
 

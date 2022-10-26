@@ -63,7 +63,6 @@ export const checkRouter = t.router({
         };
       }[];
 
-
       return {
         region: {
           id: region.id,
@@ -86,7 +85,6 @@ export const checkRouter = t.router({
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
 
-
     const endpoint = await ctx.db.endpoint.findUnique({
       where: {
         id: input.endpointId,
@@ -101,62 +99,66 @@ export const checkRouter = t.router({
             },
           },
         },
-
       },
     });
     if (!endpoint) {
       throw new TRPCError({ code: "NOT_FOUND", message: "endpoint not found" });
     }
 
-
-
-    const url = new URL("https://api.tinybird.co/v0/pipes/checks_by_endpoint_24h.json")
-    url.searchParams.append("endpointId", input.endpointId)
-    if (input.regionId){
-    url.searchParams.append("regionId", input.regionId)
-
+    const url = new URL(
+      "https://api.tinybird.co/v0/pipes/production__checks_by_endpoint_24h__v1.json",
+    );
+    url.searchParams.append("endpointId", input.endpointId);
+    if (input.regionId) {
+      url.searchParams.append("regionId", input.regionId);
     }
 
-
-    const res = await fetch(url,{
-      headers:{
-        Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`
-      }
-    })
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
+      },
+    });
 
     if (res.status === 404) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Could not find checks for endpoint" })
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Could not find checks for endpoint",
+      });
     }
     if (res.status === 400) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: await res.text() })
+      throw new TRPCError({ code: "BAD_REQUEST", message: await res.text() });
     }
 
-
     if (res.status !== 200) {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: await res.text() })
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: await res.text(),
+      });
     }
     const body = await res.json() as {
       data: {
-        endpointId: string,
-        id: string,
-        runId?:string,
-        latency: number,
-        regionId: string,
-        status: number,
-        teamId: string,
-        error?: string,
-        time: string,
-        timing: string
-        body: string,
-        header: string
-      }[]
-    }
+        endpointId: string;
+        id: string;
+        runId?: string;
+        latency: number;
+        regionId: string;
+        status: number;
+        teamId: string;
+        error?: string;
+        time: string;
+        timing: string;
+        body: string;
+        header: string;
+      }[];
+    };
 
-    console.log(JSON.stringify(body, null, 2))
+    console.log(JSON.stringify(body, null, 2));
     if (body.data.length === 0) {
-      throw new TRPCError({ code: "NOT_FOUND", message:"No checks for endpoint" })
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "No checks for endpoint",
+      });
     }
-
 
     return body.data;
   }),
@@ -167,44 +169,48 @@ export const checkRouter = t.router({
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
 
-
-    const res = await fetch(`https://api.tinybird.co/v0/pipes/prod__check_by_id.json?checkId=${input.checkId}`, {
-      headers: {
-        "Authorization": `Bearer ${process.env.TINYBIRD_TOKEN}`
-      }
-    })
+    const res = await fetch(
+      `https://api.tinybird.co/v0/pipes/prod__check_by_id.json?checkId=${input.checkId}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${process.env.TINYBIRD_TOKEN}`,
+        },
+      },
+    );
     if (res.status === 404) {
-      throw new TRPCError({ code: "NOT_FOUND", message: await res.text() })
+      throw new TRPCError({ code: "NOT_FOUND", message: await res.text() });
     }
     if (res.status === 400) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: await res.text() })
+      throw new TRPCError({ code: "BAD_REQUEST", message: await res.text() });
     }
 
-
     if (res.status !== 200) {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: await res.text() })
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: await res.text(),
+      });
     }
     const body = await res.json() as {
       data: {
-        endpointId: string,
-        id: string,
-        latency: number,
-        regionId: string,
-        status: number,
-        teamId: string,
-        error?: string,
-        time: string,
-        timing: string
-        body: string,
-        header: string
-      }[]
-    }
+        endpointId: string;
+        id: string;
+        latency: number;
+        regionId: string;
+        status: number;
+        teamId: string;
+        error?: string;
+        time: string;
+        timing: string;
+        body: string;
+        header: string;
+      }[];
+    };
 
     if (body.data.length === 0) {
-      throw new TRPCError({ code: "NOT_FOUND" })
+      throw new TRPCError({ code: "NOT_FOUND" });
     }
 
-    console.log(JSON.stringify(body, null, 2))
+    console.log(JSON.stringify(body, null, 2));
 
     const endpoint = await ctx.db.endpoint.findUnique({
       where: {
@@ -217,11 +223,11 @@ export const checkRouter = t.router({
               where: {
                 userId: ctx.req.session.user.id,
               },
-            }
+            },
           },
         },
-      }
-    })
+      },
+    });
     if (!endpoint) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
@@ -230,19 +236,18 @@ export const checkRouter = t.router({
       endpoint,
       ...body.data[0],
       timing: JSON.parse(body.data[0].timing) as {
-        dnsStart: number
-        dnsDone: number
-        connectStart: number
-        connectDone: number
-        tlsHandshakeStart: number
-        tlsHandshakeDone: number
-        firstByteStart: number
-        firstByteDone: number
-        transferStart: number
-        transferDone: number
+        dnsStart: number;
+        dnsDone: number;
+        connectStart: number;
+        connectDone: number;
+        tlsHandshakeStart: number;
+        tlsHandshakeDone: number;
+        firstByteStart: number;
+        firstByteDone: number;
+        transferStart: number;
+        transferDone: number;
       },
-      header: JSON.parse(body.data[0].header) as Record<string, string>
-    }
-  })
-
+      header: JSON.parse(body.data[0].header) as Record<string, string>,
+    };
+  }),
 });
