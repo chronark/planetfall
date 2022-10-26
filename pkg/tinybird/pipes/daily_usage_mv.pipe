@@ -1,0 +1,17 @@
+VERSION 2
+NODE daily_usage_mv__v2
+SQL >
+
+    SELECT
+    teamId,
+    COUNT(*) as checks,
+    toYYYYMMDD(time) as day
+FROM production__checks__v2
+GROUP BY
+    teamId,
+    day
+
+
+
+TYPE materialized
+DATASOURCE daily_usage_mv_ds

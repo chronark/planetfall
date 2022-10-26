@@ -40,4 +40,4 @@ fmt: rm
 
 
 tinybird:
-	docker run -v $$(pwd)/svc/tinybird:/mnt/data -it tinybirdco/tinybird-cli-docker
+	docker run -v $$(pwd)/pkg/tinybird:/mnt/data -it tinybirdco/tinybird-cli-docker

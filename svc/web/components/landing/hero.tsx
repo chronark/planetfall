@@ -1,6 +1,4 @@
 import React, { useId } from "react";
-import Link from "next/link";
-import { Logo } from "../logo";
 const Rings: React.FC = (): JSX.Element => {
   let id = useId();
 

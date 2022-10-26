@@ -1,6 +1,7 @@
 import { Endpoint, PrismaClient, Region } from "@planetfall/db";
 import { newId } from "@planetfall/id";
 import { Logger } from "./logger";
+import * as tb from "@planetfall/tinybird";
 import * as assertions from "@planetfall/assertions";
 export class Scheduler {
   // Map of endpoint id -> clearInterval function
@@ -8,10 +9,12 @@ export class Scheduler {
   private db: PrismaClient;
   private updatedAt: number = 0;
   private logger: Logger;
+  private tinybird: tb.Client;
   regions: Record<string, Region>;
 
   constructor({ logger }: { logger: Logger }) {
     this.db = new PrismaClient();
+    this.tinybird = new tb.Client();
     this.clearIntervals = {};
     this.logger = logger;
     this.regions = {};
@@ -53,6 +56,7 @@ export class Scheduler {
       if (usage > t.maxMonthlyRequests) {
         this.logger.info("team has exceeded monthly requests", {
           teamId: t.id,
+          teamSlug: t.slug,
           maxMonthlyRequests: t.maxMonthlyRequests,
           since,
           usage,
@@ -204,7 +208,6 @@ export class Scheduler {
 
         const runId = parsed.length > 1 ? newId("run") : undefined;
 
-
         const data = parsed.map((c) => ({
           id: newId("check"),
           runId,
@@ -217,40 +220,30 @@ export class Scheduler {
           body: c.body,
           headers: c.headers,
           timing: c.timing,
-        }))
+        }));
 
         await this.db.check.createMany({
           data,
         });
 
-
-        const tinybirdRes = await fetch(
-          'https://api.tinybird.co/v0/events?name=checks__v2',
-          {
-            method: 'POST',
-            body: data.map(c => JSON.stringify({
-              source: "scheduler",
-              id: c.id,
-              runId: c.runId,
-              endpointId: c.endpointId,
-              teamId: endpoint.teamId,
-              latency: c.latency,
-              time: c.time.toISOString(),
-              status: c.status,
-              regionId: c.regionId,
-              error: c.error,
-              timing: JSON.stringify(c.timing),
-              body: c.body,
-              header: JSON.stringify(c.headers)
-            })).join("\n"),
-            headers: { Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}` }
-          })
-
-        this.logger.info("tinybird",  await tinybirdRes.json())
+        await this.tinybird.publishChecks(data.map((c) => ({
+          source: "scheduler",
+          id: c.id,
+          runId: c.runId,
+          endpointId: c.endpointId,
+          teamId: endpoint.teamId,
+          latency: c.latency,
+          time: c.time,
+          status: c.status,
+          regionId: c.regionId,
+          error: c.error,
+          timing: JSON.stringify(c.timing),
+          body: c.body,
+          header: JSON.stringify(c.headers),
+        })));
       }));
     } catch (err) {
       this.logger.error((err as Error).message);
     }
   }
 }
-

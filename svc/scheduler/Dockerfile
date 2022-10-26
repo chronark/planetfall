@@ -1,7 +1,7 @@
  FROM node:18 as builder
 
  WORKDIR /planetfall
- RUN yarn global add turbo
+ RUN pnpm global add turbo
 
  COPY . .
  RUN turbo prune --scope=@planetfall/scheduler --docker
@@ -18,14 +18,14 @@ ENV PLANETFALL_BUILD ${build}
 
  COPY .gitignore .gitignore
  COPY --from=builder /planetfall/out/json/ .
- COPY --from=builder /planetfall/out/yarn.lock ./yarn.lock
- RUN yarn install
+ COPY --from=builder /planetfall/out/pnpm-lock.yaml ./pnpm-lock.yaml
+ RUN pnpm install
 
 
 #  Build the project
  COPY --from=builder /planetfall/out/full/ .
  COPY turbo.json turbo.json
- RUN yarn turbo run build --filter=scheduler...
+ RUN pnpm turbo run build --filter=scheduler...
  
 
  CMD ["node", "svc/scheduler/dist/main.js"]
@@ -36,6 +36,6 @@ ENV PLANETFALL_BUILD ${build}
 # WORKDIR /planetfall
 
 # COPY . .
-# RUN yarn install
+# RUN pnpm install
 # RUN npx turbo run build --filter=scheduler
 # CMD ["node", "svc/scheduler/dist/main.js"]
