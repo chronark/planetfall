@@ -9,14 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.6.0-next.1",
     "@heroicons/react": "^2.0.12",
     "@next/font": "^13.0.0",
+    "@planetfall/auth": "*",
     "@planetfall/db": "*",
+    "@planetfall/email": "*",
+    "@planetfall/id": "*",
+    "@planetfall/permissions": "*",
     "@prisma/client": "^4.5.0",
     "framer-motion": "^7.6.1",
     "next": "13.0.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.38.0",
+    "slugify": "^1.6.5",
+    "stripe": "^10.15.0",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@types/node": "18.11.6",

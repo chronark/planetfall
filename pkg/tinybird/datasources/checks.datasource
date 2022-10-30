@@ -1,4 +1,4 @@
-VERSION 2
+VERSION 3
 
 
 SCHEMA >
@@ -11,8 +11,8 @@ SCHEMA >
     `time` DateTime64(3) `json:$.time`,
     `timing` String `json:$.timing`,
     `body` String `json:$.body`,
-    `header` String `json:$.header`
-
+    `header` String `json:$.header`,
+    `error` Nullable(String) `json:$.error`
 ENGINE "MergeTree"
 ENGINE_PARTITION_KEY "toYYYYMM(time)"
 ENGINE_SORTING_KEY "time"

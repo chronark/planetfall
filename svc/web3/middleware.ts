@@ -1,4 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from 'next/server'
+import { NextResponse } from "next/server";
+
 import { withClerkMiddleware } from "@clerk/nextjs/server";
 
 export const config = {
@@ -42,5 +44,6 @@ function middleware(req: NextRequest) {
   }
   return NextResponse.rewrite(url);
 }
+
 
 export default withClerkMiddleware(middleware)

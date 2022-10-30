@@ -1,6 +1,7 @@
 import "./globals.css"
 import "public/fonts/css/pangea.css";
 
+import { ClerkProvider } from "@clerk/nextjs/app-beta";
 
 
 
@@ -12,20 +13,23 @@ export default function RootLayout({
 }) {
 
   return (
-    <html lang="en" className="font-display">
-      <head>
-        <title>Planetfall</title>
-        <meta name="description" content="Track, measure and share your API's performance" />
-        <link rel="icon" href="/logo.svg" />
-      </head>
+    <ClerkProvider>
+
+      <html lang="en" className="font-display">
+        <head>
+          <title>Planetfall</title>
+          <meta name="description" content="Track, measure and share your API's performance" />
+          <link rel="icon" href="/logo.svg" />
+        </head>
 
 
-      <body className="bg-black" >
+        <body className="bg-black" >
 
 
-        {children}
-      </body>
-    </html>
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
 

@@ -92,7 +92,7 @@ export const Hero: React.FC = (): JSX.Element => {
             </p>
             <div className="mt-10 max-w-xs mx-auto sm:max-w-none sm:inline-flex sm:justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <div>
-                <div className="text-gray-900 border rounded  py-2 border-white   bg-gradient-to-tr drop-shadow-radiant from-gray-100 to-gray-50 hover:bg-white px-10 hover:text-primary-900 duration-1000">
+                <div className="text-gray-900 border rounded  py-2 border-white bg-gradient-to-tr drop-shadow-launch from-slate-100 to-white  px-10 hover:text-primary-800 duration-1000 transition-all">
                   Launching soon
                 </div>
                 {

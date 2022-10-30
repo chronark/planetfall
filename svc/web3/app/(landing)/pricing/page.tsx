@@ -1,9 +1,7 @@
 import React from "react";
 
-import { Footer, Pricing } from "../../../components/landing";
-import Head from "next/head";
-
-function Home() {
+import {Pricing} from "../pricing"
+export default function PricingPage() {
   return (
     
           <Pricing />
@@ -11,4 +9,3 @@ function Home() {
   );
 }
 
-export default Home;

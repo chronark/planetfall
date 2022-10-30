@@ -1,28 +1,27 @@
-import React, { Fragment } from "react";
-import { CheckIcon, MinusIcon } from "@heroicons/react/24/solid";
+import React from "react";
+import { db } from "@planetfall/db"
+import { asyncComponent } from "lib/api/component";
 
-export type StatsProps = {
-  checks: number;
-  endpoints: number;
-  teams: number;
-};
-export const Stats: React.FC<StatsProps> = (
-  { checks, endpoints, teams },
-): JSX.Element => {
-  const stats = [
+export const revalidate = 60 * 60 // revalidate every hour
+
+export const Stats = asyncComponent(async () => {
+  const rng = Math.random()
+  console.time("stats"+rng)
+  const stats = await Promise.all([
     {
       label: "Teams",
-      value: teams,
+      value: await db.team.count(),
     },
     {
       label: "APIs",
-      value: endpoints,
+      value: await db.endpoint.count(),
     },
-    {
-      label: "Ø Checks Per Second",
-      value: checks,
-    },
-  ];
+    //  {
+    //    label: "Ø Checks Per Second",
+    //    value: await db.check.count() / 24 / 60 / 60,
+    //  },
+  ])
+  console.timeEnd("stats"+rng)
   return (
     <section id="stats">
       <div className="relative py-16 sm:py-24 lg:py-32">
@@ -44,4 +43,4 @@ export const Stats: React.FC<StatsProps> = (
       </div>
     </section>
   );
-};
+})

@@ -26,15 +26,22 @@ module.exports = {
       "9xl": ["8rem", { lineHeight: "1" }],
     },
     extend: {
+      backgroundImage: {
+        'gradient-feature': 'radial-gradient(50% 50% at 50% 0%, var(--tw-gradient-stops))',
+        'gradient-feature-inner': 'radial-gradient(30% 30% at 50% 0%, var(--tw-gradient-stops))',
+      },
       dropShadow:{
         "launch": [
-          "0 10px 60px rgba(219, 227, 248, 0.6)",
-          "0 10px 20px rgba(219, 227, 248, 0.2)"
-        ],
-        "radiant": [
           "0 10px 80px rgba(219, 227, 248, 0.9)",
           "0 10px 10px rgba(219, 227, 248, 0.6)"
-        ]
+        ],
+        "cta": [
+          "0 10px 50px rgba(219, 227, 248, 0.6)",
+        ],
+        "feature": [
+          "0 10px 80px rgba(219, 227, 248, 0.9)",
+        ],
+      
       },
       boxShadow: {
         ambient: "0 35px 120px -10px rgba(51, 102, 255, 0.03)",

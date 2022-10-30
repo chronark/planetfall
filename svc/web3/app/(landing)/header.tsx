@@ -1,16 +1,18 @@
 import React from "react";
 import Link from "next/link";
-import { Logo } from "../logo";
+import { Logo } from "../components/logo";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline"
+import { asyncComponent } from "lib/api/component";
+import { auth } from "@clerk/nextjs/app-beta";
 
+export const Header = asyncComponent(async () => {
 
+   const {sessionId} = auth()
 
-
-export function Header({ session }: { session: any }) {
-
+  const isSignedIn = !!sessionId
   return (
     <header
-      className="fixed top-0  w-full z-50  transition-shadow duration-500 bg-black/95 backdrop-blur [@supports(backdrop-filter:blur(0))]:bg-black/50"
+      className="fixed top-0  w-full z-50   backdrop-blur"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -49,18 +51,18 @@ export function Header({ session }: { session: any }) {
                 </Link>
               </li>
 
-              {/* <li>
-                <Link href={session ? "/home" : "/auth/sign-in"}>
+              <li>
+                <Link href={isSignedIn ? "/home" : "/auth/sign-in"}>
                   <div className="transition-all hover:cursor-pointer whitespace-nowrap font-medium inline-flex items-center justify-center leading-snug duration-300 ease-in-out    text-gray-200  hover:text-primary-100  shadow-sm group ">
-                    {session ? "Dashboard" : "Sign in"}
+                    {isSignedIn ? "Dashboard" : "Sign in"}
                     <ArrowLongRightIcon className="hidden md:block w-6 h-6 group-hover:text-primary-800  group-hover:trangray-x-1 transition-transform duration-150 ease-out ml-1" />
                   </div>
                 </Link>
-              </li> */}
+              </li>
             </ul>
           </nav>
         </div>
       </div>
     </header>
   );
-};
+})
