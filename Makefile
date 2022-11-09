@@ -33,7 +33,7 @@ build-scheduler:
 
 
 dev: rm build
-	npx turbo run dev --filter=!scheduler
+	npx turbo run dev 
 
 fmt: rm
 	deno fmt

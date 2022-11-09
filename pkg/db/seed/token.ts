@@ -1,4 +1,4 @@
-import { Check, Platform, Prisma, PrismaClient } from "@prisma/client";
+import {  PrismaClient } from "@prisma/client";
 
 async function main() {
   const db = new PrismaClient();

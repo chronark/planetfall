@@ -1,6 +1,7 @@
 import { PrismaClient } from "@planetfall/db";
 import { Logger } from "./logger";
 import Stripe from "stripe";
+import { clerkClient } from "@clerk/clerk-sdk-node";
 
 export class Billing {
   // Map of endpoint id -> clearInterval function
@@ -23,40 +24,46 @@ export class Billing {
   public async run(): Promise<void> {
     this.logger.info("Collecting billing information");
 
-    const teams = await this.db.team.findMany({
-      where: {
-        stripeSubscriptionId: {
-          not: null,
-        },
-      },
-    });
+
+    const teams = await clerkClient.organizations.getOrganizationList()
+
     this.logger.info("Collecting billing", {
       teams: teams.length,
     });
 
     for (const t of teams) {
       try {
-        const usage = await this.db.check.count({
-          where: {
-            time: {
-              gte: t.stripeCurrentBillingPeriodStart!,
-              lte: t.stripeCurrentBillingPeriodEnd!,
-            },
-            endpoint: {
-              teamId: t.id,
-            },
-          },
-        });
+        const plan = await this.db.plan.findUnique({ where: { orgId: t.id } })
+        if (!plan) {
+          continue
+        }
+        if (!plan.stripeSubscriptionId) {
+          continue
+        }
+        const usage = 0
+
+
+        //  const usage = await this.db.check.count({
+        //    where: {
+        //      time: {
+        //        gte: t.stripeCurrentBillingPeriodStart!,
+        //        lte: t.stripeCurrentBillingPeriodEnd!,
+        //      },
+        //      endpoint: {
+        //        teamId: t.id,
+        //      },
+        //    },
+        //  });
         this.logger.info("Team usage report", {
           teamId: t.id,
-          plan: t.plan,
+          plan: plan?.plan,
           usage,
-          billingPeriodStart: t.stripeCurrentBillingPeriodStart,
-          billingPeriodEnd: t.stripeCurrentBillingPeriodEnd,
+          billingPeriodStart: plan.stripeCurrentBillingPeriodStart,
+          billingPeriodEnd: plan.stripeCurrentBillingPeriodEnd,
         });
 
         const sub = await this.stripe.subscriptions.retrieve(
-          t.stripeSubscriptionId!,
+          plan.stripeSubscriptionId!,
         );
 
         const itemId = sub.items.data.find((i) =>

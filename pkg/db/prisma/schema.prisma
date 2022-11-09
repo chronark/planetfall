@@ -14,7 +14,6 @@ model Token {
   id        String @id
   tokenHash String @unique
 
-  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
   expires DateTime?
 
@@ -67,8 +66,7 @@ model Endpoint {
   id        String   @id
   method    Method
   name      String?
-  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  teamId    String
+  orgId    String
   url       String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -93,7 +91,6 @@ model Endpoint {
   assertions Json?
 
   statusPages StatusPage[]
-  checks      Check[]
 }
 
 model VerificationRequest {
@@ -112,24 +109,10 @@ model StatusPage {
   slug      String     @unique
   name      String
   endpoints Endpoint[]
-  team      Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  teamId    String
+  orgId    String
 }
 
-model User {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  id     String  @id
-  name   String
-  email  String  @unique
-  image  String?
-  tokens Token[]
-
-  teams Membership[]
-}
-
-enum Plan {
+enum PlanType {
   DISABLED // teams can not be free and are therefore disabled
   FREE // only when a user removes their subscription
   PERSONAL // No flat fee, just pay as you go
@@ -137,23 +120,15 @@ enum Plan {
   ENTERPRISE
 }
 
-model Team {
-  id       String  @id
-  plan     Plan
-  personal Boolean
-
-  name String
-  slug String @unique
+model Plan {
+  orgId String   @id
+  plan  PlanType
 
   stripeCustomerId                String    @unique
   stripeSubscriptionId            String?   @unique
   stripeCurrentBillingPeriodStart DateTime?
   stripeCurrentBillingPeriodEnd   DateTime?
   stripeTrialExpires              DateTime?
-
-  members     Membership[]
-  endpoints   Endpoint[]
-  statusPages StatusPage[]
 
   // QUOTA DEFINITIONS 
   // How long checks are displayed
@@ -165,61 +140,4 @@ model Team {
   maxEndpoints       Int
   minInterval        Int // [milliseconds]
   maxTimeout         Int // [milliseconds]
-
-  @@index([slug])
-}
-
-enum Role {
-  OWNER
-  ADMIN
-  FINANCE
-  READ
-  READWRITE
-}
-
-model Membership {
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  teamId String
-  role   Role
-
-  @@id([userId, teamId])
-}
-
-model Check {
-  // For repeated cold->hot checks
-  runId      String? 
-  id         String   @id
-  endpoint   Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
-  endpointId String
-  latency    Int?
-  time       DateTime
-
-  // Populated if there is an error, like assertion error or timeout
-  error  String?
-  // The HTTP response status
-  status Int?
-  // Raw http response body
-  // Encoded in base64
-  body   String? @db.VarChar(10000)
-
-  // http response headers as {key: value} object
-  headers  Json?
-  regionId String
-
-  // Timing information about the request
-  // {
-  //  dnsStart: number,
-  //  dnsDone: number,
-  //  connectStart: number,
-  //  connectDone: number,
-  //  firstByteStart: number,
-  //  firstByteDone: number,
-  //  tlsHandshakeStart: number,
-  //  tlsHandshakeDone: number
-  //}
-  timing Json?
-
-  @@index([endpointId])
 }

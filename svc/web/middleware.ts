@@ -1,4 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+
 import { withClerkMiddleware } from "@clerk/nextjs/server";
 
 export const config = {
@@ -37,10 +39,11 @@ function middleware(req: NextRequest) {
       return NextResponse.next();
 
     default:
+      
       url.pathname = `/_statuspages/${subdomain}`;
       break;
   }
   return NextResponse.rewrite(url);
 }
 
-export default withClerkMiddleware(middleware)
+export default withClerkMiddleware(middleware);

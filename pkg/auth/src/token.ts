@@ -1,10 +1,8 @@
 import { randomBytes } from "node:crypto";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 import baseX from "base-x";
 export function newToken(prefix?: string): { token: string; hash: string } {
   const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
-
 
   let token = baseX(alphabet).encode(randomBytes(32));
   if (prefix) {
@@ -17,5 +15,5 @@ export function newToken(prefix?: string): { token: string; hash: string } {
 }
 
 export function verifyToken(token: string, hash: string): boolean {
-  return bcrypt.compareSync(token, hash)
+  return bcrypt.compareSync(token, hash);
 }

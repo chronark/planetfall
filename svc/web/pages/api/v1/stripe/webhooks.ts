@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { Readable } from "node:stream";
 import { PrismaClient } from "@planetfall/db";
 import { z } from "zod";
-import { DEFAULT_QUOTA } from "@planetfall/svc/web/plans";
+import { DEFAULT_QUOTA } from "plans";
 
 // Stripe requires the raw body to construct the event.
 export const config = {
@@ -60,7 +60,7 @@ export default async function webhookHandler(
       case "customer.subscription.updated":
         const newSubscription = event.data
           .object as Stripe.Subscription;
-        await db.team.update({
+        await db.plan.update({
           where: {
             stripeCustomerId: newSubscription.customer.toString(),
           },
@@ -88,7 +88,7 @@ export default async function webhookHandler(
         if (!invoice.customer) {
           throw new Error("customer is null");
         }
-        await db.team.update({
+        await db.plan.update({
           where: {
             stripeCustomerId: invoice.customer.toString(),
           },
@@ -110,16 +110,16 @@ export default async function webhookHandler(
         const subscription = event.data.object as Stripe.Subscription;
         console.log("subscription deleted", subscription);
 
-        const team = await db.team.findUnique({
+        const plan = await db.plan.findUnique({
           where: {
             stripeCustomerId: subscription.customer.toString(),
           },
         });
-        if (!team) {
-          throw new Error("team does not exist");
+        if (!plan) {
+          throw new Error("plan does not exist");
         }
-        if (team.personal) {
-          await db.team.update({
+        if (plan.plan === "PERSONAL") {
+          await db.plan.update({
             where: {
               stripeCustomerId: subscription.customer.toString(),
             },
@@ -136,7 +136,7 @@ export default async function webhookHandler(
             },
           });
         } else {
-          await db.team.update({
+          await db.plan.update({
             where: {
               stripeCustomerId: subscription.customer.toString(),
             },

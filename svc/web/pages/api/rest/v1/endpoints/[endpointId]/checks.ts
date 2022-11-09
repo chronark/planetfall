@@ -1,17 +1,10 @@
-import { Check, PrismaClient } from "@planetfall/db";
+import { PrismaClient } from "@planetfall/db";
 import { Permission } from "@planetfall/permissions";
-import CheckableTag from "antd/lib/tag/CheckableTag";
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from "node:crypto";
 import { z } from "zod";
-
-class ApiError extends Error {
-  public readonly status: number;
-  constructor(opts: { status: number; message: string }) {
-    super(opts.message);
-    this.status = opts.status;
-  }
-}
+import { ApiError } from "lib/api/error";
+import type { ApiResponse } from "lib/api/response";
 
 const input = z.object({
   method: z.enum(["GET"]),
@@ -50,35 +43,24 @@ const input = z.object({
       .optional(),
   }),
 });
+export type Input = z.infer<typeof input>;
+export type Output = ApiResponse<{
+  id: string;
+  endpointId: string;
+  latency?: number;
+  time: number;
 
-type Res =
-  | {
-    data: {
-      id: string;
-      endpointId: string;
-      latency?: number;
-      time: number;
+  error?: string;
+  status?: number;
+  body?: string;
 
-      error?: string;
-      status?: number;
-      body?: string;
-
-      headers?: Record<string, string>;
-      regionId: string;
-    }[];
-    error?: never;
-  }
-  | {
-    data?: never;
-    error: {
-      code: string;
-      message: string;
-    };
-  };
+  headers?: Record<string, string>;
+  regionId: string;
+}[]>;
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Res>,
+  res: NextApiResponse<Output>,
 ): Promise<void> {
   try {
     const authorization = req.headers.authorization;
@@ -120,53 +102,49 @@ export default async function handler(
       where: {
         id: request.data.query.endpointId,
       },
-      include: {
-        team: {
-          include: { members: true },
-        },
-      },
+      
     });
     if (!endpoint) {
       throw new ApiError({ status: 404, message: "endpoint not found" });
     }
+    throw new ApiError({status:500, message: "TODO:"})
+    // const user = endpoint.team.members.find((m) => m.userId === token.userId);
+    // if (!user) {
+    //   throw new ApiError({
+    //     status: 401,
+    //     message: "user does not belong to team",
+    //   });
+    // }
 
-    const user = endpoint.team.members.find((m) => m.userId === token.userId);
-    if (!user) {
-      throw new ApiError({
-        status: 401,
-        message: "user does not belong to team",
-      });
-    }
+    // const checks = await db.check.findMany({
+    //   where: {
+    //     endpointId: request.data.query.endpointId,
+    //     regionId: request.data.query.region,
+    //     time: {
+    //       gte: request.data.query.since
+    //         ? new Date(request.data.query.since)
+    //         : undefined,
+    //     },
+    //   },
+    //   orderBy: {
+    //     time: "desc",
+    //   },
+    //   take: request.data.query.limit || 1000,
+    // });
 
-    const checks = await db.check.findMany({
-      where: {
-        endpointId: request.data.query.endpointId,
-        regionId: request.data.query.region,
-        time: {
-          gte: request.data.query.since
-            ? new Date(request.data.query.since)
-            : undefined,
-        },
-      },
-      orderBy: {
-        time: "desc",
-      },
-      take: request.data.query.limit || 1000,
-    });
-
-    res.json({
-      data: checks.map((c) => ({
-        ...c,
-        headers: c.headers !== null
-          ? c.headers as Record<string, string>
-          : undefined,
-        body: c.body ?? undefined,
-        time: c.time.getTime(),
-        latency: c.latency !== null ? c.latency : undefined,
-        error: c.error ?? undefined,
-        status: c.status ?? undefined,
-      })),
-    });
+    // res.json({
+    //   data: checks.map((c) => ({
+    //     ...c,
+    //     headers: c.headers !== null
+    //       ? c.headers as Record<string, string>
+    //       : undefined,
+    //     body: c.body ?? undefined,
+    //     time: c.time.getTime(),
+    //     latency: c.latency !== null ? c.latency : undefined,
+    //     error: c.error ?? undefined,
+    //     status: c.status ?? undefined,
+    //   })),
+    // });
   } catch (e) {
     if (e instanceof ApiError) {
       console.error(e.message);

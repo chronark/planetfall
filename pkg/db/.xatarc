@@ -1,0 +1,8 @@
+{
+  "databaseURL": "https://Andreas-Thomas-s-workspace-kmog9h.eu-west-1.xata.sh/db/planetfall",
+  "codegen": {
+    "output": "src/xata.js",
+    "moduleType": "esm",
+    "declarations": true
+  }
+}

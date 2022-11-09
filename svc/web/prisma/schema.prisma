@@ -1,0 +1,143 @@
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+model Token {
+  id        String @id
+  tokenHash String @unique
+
+  userId  String
+  expires DateTime?
+
+  permissions Json
+}
+
+enum Method {
+  GET
+  POST
+  PUT
+  DELETE
+}
+
+enum Platform {
+  vercel
+  aws
+}
+
+model Region {
+  id       String   @id
+  name     String
+  platform Platform
+  region   String
+
+  // Url where the lambda function for this region is reachable
+  url       String     @unique
+  endpoints Endpoint[]
+
+  @@unique([platform, region])
+}
+
+// model Deployment {
+//   region Region @relation(fields: [platform, region], references: [platform, region])
+//   platform String
+//   region String
+
+//   Endpoint   Endpoint? @relation(fields: [endpointId], references: [id])
+//   endpointId String?
+// }
+
+enum Distribution {
+  // Each check triggers 1 random region
+  RANDOM
+
+  // Each check triggers all selected regions
+  ALL
+}
+
+model Endpoint {
+  id        String   @id
+  method    Method
+  name      String?
+  teamId    String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Interval in milliseconds
+  interval      Int
+  active        Boolean
+  // Milliseconds
+  degradedAfter Int?
+
+  // Timeout after which we cancel the request
+  // This counts as a failed request
+  timeout      Int?
+  distribution Distribution
+  // string[] of region Ids
+  regions      Region[]
+  // json encoded map
+  // { KEY: VALUE}
+  headers      Json?
+  body         String?
+
+  assertions Json?
+
+  statusPages StatusPage[]
+}
+
+model VerificationRequest {
+  // usually email
+  identifier String
+  otp        String
+  expires    DateTime
+
+  createdAt DateTime @default(now())
+
+  @@unique([identifier, otp])
+}
+
+model StatusPage {
+  id        String     @id
+  slug      String     @unique
+  name      String
+  endpoints Endpoint[]
+  teamId    String
+}
+
+enum PlanType {
+  DISABLED // teams can not be free and are therefore disabled
+  FREE // only when a user removes their subscription
+  PERSONAL // No flat fee, just pay as you go
+  PRO // With teams and other goodies, with flat fee + payg
+  ENTERPRISE
+}
+
+model Plan {
+  orgId String   @id
+  plan  PlanType
+
+  stripeCustomerId                String    @unique
+  stripeSubscriptionId            String?   @unique
+  stripeCurrentBillingPeriodStart DateTime?
+  stripeCurrentBillingPeriodEnd   DateTime?
+  stripeTrialExpires              DateTime?
+
+  // QUOTA DEFINITIONS 
+  // How long checks are displayed
+  // we always store at least 1 month for billing
+  retention Int // [milliseconds]
+
+  // How many checks may be done per month
+  maxMonthlyRequests Int
+  maxEndpoints       Int
+  minInterval        Int // [milliseconds]
+  maxTimeout         Int // [milliseconds]
+}

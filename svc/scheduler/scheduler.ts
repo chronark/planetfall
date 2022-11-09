@@ -29,42 +29,35 @@ export class Scheduler {
 
     const want: Record<string, Endpoint> = {};
 
-    const teams = await this.db.team.findMany({
+    const plans = await this.db.plan.findMany({
       where: {
         plan: {
           notIn: ["DISABLED"],
         },
       },
-      include: {
-        endpoints: true,
-      },
     });
-
-    for (const t of teams) {
-      const since = t.stripeCurrentBillingPeriodStart ??
+    for (const p of plans) {
+      const since = p.stripeCurrentBillingPeriodStart ??
         new Date(now.getUTCFullYear(), now.getUTCMonth());
-      const usage = await this.db.check.count({
-        where: {
-          time: {
-            gte: since,
-          },
-          endpoint: {
-            teamId: t.id,
-          },
-        },
-      });
-      if (usage > t.maxMonthlyRequests) {
+      const usage = 0 // FIXME:
+      if (usage > p.maxMonthlyRequests) {
         this.logger.info("team has exceeded monthly requests", {
-          teamId: t.id,
-          teamSlug: t.slug,
-          maxMonthlyRequests: t.maxMonthlyRequests,
+          orgId: p.orgId,
+          maxMonthlyRequests: p.maxMonthlyRequests,
           since,
           usage,
         });
         break;
       }
 
-      for (const e of t.endpoints) {
+
+      const endpoints = await this.db.endpoint.findMany({
+        where: {
+          orgId: p.orgId
+        }
+      })
+
+      for (const e of endpoints) {
         want[e.id] = e;
       }
     }
@@ -150,7 +143,6 @@ export class Scheduler {
           endpointId: endpoint.id,
           regionId: region.id,
         });
-
         const res = await fetch(region.url, {
           method: "POST",
           headers: {
@@ -222,16 +214,14 @@ export class Scheduler {
           timing: c.timing,
         }));
 
-        await this.db.check.createMany({
-          data,
-        });
+
 
         await this.tinybird.publishChecks(data.map((c) => ({
           source: "scheduler",
           id: c.id,
           runId: c.runId,
           endpointId: c.endpointId,
-          teamId: endpoint.teamId,
+          teamId: endpoint.orgId,
           latency: c.latency,
           time: c.time,
           status: c.status,

@@ -1,4 +1,3 @@
-import { Plan } from "@planetfall/db";
 import ms from "ms";
 
 export type Quota = {
@@ -22,7 +21,7 @@ export const DEFAULT_QUOTA: Record<Tier, Quota> = {
     minInterval: ms("10s"),
     maxTimeout: ms("2s"),
   },
-  [Plan.PERSONAL]: {
+  ["PERSONAL"]: {
     retention: ms("1d"),
     includedRequests: 100_000,
 
@@ -31,7 +30,7 @@ export const DEFAULT_QUOTA: Record<Tier, Quota> = {
     minInterval: ms("10s"),
     maxTimeout: ms("5s"),
   },
-  [Plan.PRO]: {
+  PRO: {
     retention: ms("7d"),
     includedRequests: 100_000,
     maxMonthlyRequests: 5_000_000,
@@ -39,7 +38,7 @@ export const DEFAULT_QUOTA: Record<Tier, Quota> = {
     minInterval: ms("1s"),
     maxTimeout: ms("10s"),
   },
-  [Plan.ENTERPRISE]: {
+  ENTERPRISE: {
     retention: ms("90d"),
     includedRequests: 1_000_000,
     maxMonthlyRequests: 100_000_000,

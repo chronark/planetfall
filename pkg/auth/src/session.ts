@@ -11,7 +11,3 @@ export const options: IronSessionOptions = {
     secure: !!process.env.VERCEL,
   },
 };
-
-
-
-
