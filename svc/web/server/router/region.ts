@@ -3,10 +3,6 @@ import { t } from "../trpc";
 
 export const regionRouter = t.router({
   list: t.procedure.query(async ({ ctx }) => {
-    if (!ctx.req.session.user?.id) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    }
-    const regions = await ctx.db.region.findMany();
-    return regions;
-  }),
+    return await ctx.db.region.findMany();
+    }),
 });
