@@ -47,9 +47,7 @@ export const getStaticProps: GetStaticProps<StatsProps> = async () => {
   const props = {
     teams: await db.team.count(),
     endpoints: await db.endpoint.count(),
-    checks: await db.check.count({
-      where: { time: { gte: new Date(Date.now() - 60 * 60 * 1000) } },
-    }) / 60 / 60,
+    checks: -1
   };
 
   await db.$disconnect();
