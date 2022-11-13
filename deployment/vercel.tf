@@ -62,12 +62,6 @@ resource "vercel_project" "web" {
       value  = var.stripe_product_id_personal
       target = ["production"]
     },
-
-    {
-      key    = "DOCS_URL"
-      value  = "https://${vercel_project_domain.docs.domain}"
-      target = ["production", "preview"]
-    },
     {
       key    = "TINYBIRD_TOKEN"
       value  = var.tinybird_token
@@ -100,29 +94,6 @@ resource "vercel_project" "web" {
 
 
 
-
-resource "vercel_project" "docs" {
-  name      = "docs"
-  team_id   = var.vercel_team_id
-  framework = "nextjs"
-
-
-  build_command  = "cd ../.. && npx turbo run build --filter=docs"
-  root_directory = "svc/docs"
-
-  git_repository = {
-    repo = "chronark/planetfall"
-    type = "github"
-  }
-
-
-}
-
-resource "vercel_project_domain" "docs" {
-  project_id = vercel_project.docs.id
-  team_id    = var.vercel_team_id
-  domain     = "planetfall-docs.vercel.app"
-}
 
 
 resource "vercel_dns_record" "sendgrid_url9477" {
@@ -253,13 +224,5 @@ resource "vercel_deployment" "web" {
   path_prefix = data.vercel_project_directory.planetfall.path
   production  = true
 
-
-}
-resource "vercel_deployment" "docs" {
-  project_id  = vercel_project.docs.id
-  team_id     = var.vercel_team_id
-  files       = data.vercel_project_directory.planetfall.files
-  path_prefix = data.vercel_project_directory.planetfall.path
-  production  = true
 
 }
