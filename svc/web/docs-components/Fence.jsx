@@ -2,15 +2,15 @@ import { Fragment } from "react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 
 export function Fence({ children, language }) {
-  return (
-    <Highlight
-      {...defaultProps}
-      code={children.trimEnd()}
-      language={language}
-      theme={undefined}
-    >
-      {({ className, style, tokens, getTokenProps }) => (
-        <pre className={className} style={style}>
+	return (
+		<Highlight
+			{...defaultProps}
+			code={children.trimEnd()}
+			language={language}
+			theme={undefined}
+		>
+			{({ className, style, tokens, getTokenProps }) => (
+				<pre className={className} style={style}>
 					<code>
 						{tokens.map((line, lineIndex) => (
 							<Fragment key={lineIndex}>
@@ -23,8 +23,8 @@ export function Fence({ children, language }) {
 							</Fragment>
 						))}
 					</code>
-        </pre>
-      )}
-    </Highlight>
-  );
+				</pre>
+			)}
+		</Highlight>
+	);
 }

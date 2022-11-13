@@ -8,14 +8,14 @@ import { Pricing } from "./pricing";
 import { Stats } from "./stats";
 
 export default async function LandingPage() {
-  return (
-    <div className="grow">
-      <Hero />
+	return (
+		<div className="grow">
+			<Hero />
 
-      <Stats />
-      <Features />
-      <Cta />
-      <Pricing />
-    </div>
-  );
+			<Stats />
+			<Features />
+			<Cta />
+			<Pricing />
+		</div>
+	);
 }
