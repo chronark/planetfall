@@ -4,46 +4,43 @@ import { NextResponse } from "next/server";
 import { withClerkMiddleware } from "@clerk/nextjs/server";
 
 export const config = {
-  matcher: [
-    /*
-     * Match all paths except for:
-     * 1. /api routes
-     * 2. /_next (Next.js internals)
-     * 3. /static (inside /public)
-     * 4. all root files inside /public (e.g. /favicon.ico)
-     */
-    "/((?!api|_next|static|[\\w-]+\\.\\w+).*)",
-  ],
+	matcher: [
+		"/((?!.*\\.).*)"
+	],
 };
 
 function middleware(req: NextRequest) {
-  const url = req.nextUrl.clone();
 
-  if (url.pathname.startsWith("/docs")) {
-    return NextResponse.rewrite(
-      `${process.env.DOCS_URL ?? "http://localhost:3001"}${url.pathname}`,
-    );
-  }
+	const url = req.nextUrl.clone();
 
-  // Get hostname of request (e.g. planetfall.io, demo.localhost:3000)
-  const hostname = req.headers.get("host") || "planetfall.io";
+	if (url.pathname.startsWith("/docs")) {
+		return NextResponse.rewrite(
+			`${process.env.DOCS_URL ?? "http://localhost:3001"}${url.pathname}`,
+		);
+	}
 
-  const subdomain = hostname
-    .replace(`localhost:3000`, "")
-    .replace(`planetfall.io`, "")
-    .replace(process.env.VERCEL_URL ?? "", "")
-    .replace(/\.$/, "");
+	// Get hostname of request (e.g. planetfall.io, demo.localhost:3000)
+	const hostname = req.headers.get("host") || "planetfall.io";
+	let subdomain = hostname
+		.replace("localhost:3000", "")
+		.replace("planetfall.io", "")
+		.replace(process.env.VERCEL_URL ?? "", "")
+		.replace(/^\./, "");
+	if (subdomain.endsWith(".ngrok.io")) {
+		subdomain = "";
+	}
 
-  switch (subdomain) {
-    case "":
-      return NextResponse.next();
+	if (subdomain !== "") {
+		url.pathname = `/_statuspages/${subdomain}`;
+		console.log("MW: rewriting: ", url.toString())
+		for (const key of url.searchParams.keys()) {
+			url.searchParams.delete(key);
+		}
 
-    default:
-      
-      url.pathname = `/_statuspages/${subdomain}`;
-      break;
-  }
-  return NextResponse.rewrite(url);
+		return NextResponse.rewrite(url);
+	}
+
+	return NextResponse.next();
 }
 
 export default withClerkMiddleware(middleware);

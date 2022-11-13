@@ -1,39 +1,38 @@
-"use client"
+"use client";
 import React, { MouseEvent, useState } from "react";
 import {
-  ButtonControllerProps,
-  Controller,
-  LinkControllerProps,
+	ButtonControllerProps,
+	Controller,
+	LinkControllerProps,
 } from "./controller";
 import { ButtonStyle, ButtonStyleProps } from "./style";
 
 export function Button(
-  props: ButtonStyleProps & ButtonControllerProps,
+	props: ButtonStyleProps & ButtonControllerProps,
 ): JSX.Element;
 export function Button(
-  props: ButtonStyleProps & LinkControllerProps,
+	props: ButtonStyleProps & LinkControllerProps,
 ): JSX.Element;
 export function Button(
-  props: ButtonStyleProps & (ButtonControllerProps | LinkControllerProps),
+	props: ButtonStyleProps & (ButtonControllerProps | LinkControllerProps),
 ): JSX.Element {
-  const [isLoading, setIsLoading] = useState(false);
-  const onClick = async (e?: MouseEvent<HTMLButtonElement>): Promise<void> => {
-    if ("onClick" in props && props.onClick !== undefined) {
-      setIsLoading(true);
-      await props.onClick(e);
-      setIsLoading(false);
-    }
-  };
-  return (
-    <Controller
-      {...props}
-      disabled={props.disabled || isLoading}
-      onClick={onClick}
-    >
-      <ButtonStyle {...props} loading={isLoading} disabled={isLoading} />
-    </Controller>
-  );
+	const [isLoading, setIsLoading] = useState(false);
+	const onClick = async (e?: MouseEvent<HTMLButtonElement>): Promise<void> => {
+		if ("onClick" in props && props.onClick !== undefined) {
+			setIsLoading(true);
+			await props.onClick(e);
+			setIsLoading(false);
+		}
+	};
+	return (
+		<Controller
+			{...props}
+			disabled={props.disabled || isLoading}
+			onClick={onClick}
+		>
+			<ButtonStyle {...props} loading={isLoading} disabled={isLoading} />
+		</Controller>
+	);
 }
 
-
-export default Button
+export default Button;

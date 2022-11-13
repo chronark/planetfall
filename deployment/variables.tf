@@ -53,11 +53,6 @@ variable "stripe_product_id_personal" {
   type = string
 }
 
-variable "iron_session_secret" {
-  type      = string
-  sensitive = true
-}
-
 
 variable "sendgrid_api_key" {
   type      = string
@@ -74,6 +69,29 @@ variable "axiom_token" {
 
 
 variable "tinybird_token" {
+  type = string
+  sensitive = true
+}
+
+
+variable "clerk_frontend_api" {
+  type = string
+  sensitive = true
+}
+
+
+variable "clerk_api_key" {
+  type = string
+  sensitive = true
+}
+
+
+variable "clerk_jwt_key" {
+  type = string
+  sensitive = true
+}
+
+variable "clerk_webhook_secret" {
   type = string
   sensitive = true
 }

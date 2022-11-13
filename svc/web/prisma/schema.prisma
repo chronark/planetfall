@@ -11,13 +11,16 @@ generator client {
 }
 
 model Token {
-  id        String @id
-  tokenHash String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // Fetch token by a clerk session id
+  name      String
+  hash      String   @id
 
   userId  String
   expires DateTime?
 
-  permissions Json
+  permissions String
 }
 
 enum Method {
@@ -25,6 +28,66 @@ enum Method {
   POST
   PUT
   DELETE
+}
+
+enum MemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model Membership {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String // from clerk
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
+
+  role MemberRole
+
+  @@id([userId, teamId])
+}
+
+enum Plan {
+  DISABLED // non-personal teams can not be free and are therefore disabled
+  FREE // for new personal teams
+  PRO // No flat fee, just pay as you go
+  ENTERPRISE
+}
+
+model Team {
+  id         String   @id
+  isPersonal Boolean
+  name       String
+  slug       String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  members Membership[]
+
+  plan Plan
+
+  stripeCustomerId                String    @unique
+  stripeSubscriptionId            String?   @unique
+  stripeCurrentBillingPeriodStart DateTime?
+  stripeCurrentBillingPeriodEnd   DateTime?
+  stripeTrialExpires              DateTime?
+
+  // QUOTA DEFINITIONS 
+  // How long checks are displayed
+  // we always store at least 1 month for billing
+  retention Int // [milliseconds]
+
+  // How many checks may be done per month
+  maxMonthlyRequests Int
+  maxEndpoints       Int
+  minInterval        Int // [milliseconds]
+  maxTimeout         Int // [milliseconds]
+  endpoints          Endpoint[]
+  pages              StatusPage[]
+
+  @@index([slug])
 }
 
 enum Platform {
@@ -65,8 +128,9 @@ enum Distribution {
 model Endpoint {
   id        String   @id
   method    Method
-  name      String?
+  name      String
   teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   url       String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -90,7 +154,7 @@ model Endpoint {
 
   assertions Json?
 
-  statusPages StatusPage[]
+  pages StatusPage[]
 }
 
 model VerificationRequest {
@@ -110,34 +174,5 @@ model StatusPage {
   name      String
   endpoints Endpoint[]
   teamId    String
-}
-
-enum PlanType {
-  DISABLED // teams can not be free and are therefore disabled
-  FREE // only when a user removes their subscription
-  PERSONAL // No flat fee, just pay as you go
-  PRO // With teams and other goodies, with flat fee + payg
-  ENTERPRISE
-}
-
-model Plan {
-  orgId String   @id
-  plan  PlanType
-
-  stripeCustomerId                String    @unique
-  stripeSubscriptionId            String?   @unique
-  stripeCurrentBillingPeriodStart DateTime?
-  stripeCurrentBillingPeriodEnd   DateTime?
-  stripeTrialExpires              DateTime?
-
-  // QUOTA DEFINITIONS 
-  // How long checks are displayed
-  // we always store at least 1 month for billing
-  retention Int // [milliseconds]
-
-  // How many checks may be done per month
-  maxMonthlyRequests Int
-  maxEndpoints       Int
-  minInterval        Int // [milliseconds]
-  maxTimeout         Int // [milliseconds]
+  team      Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }

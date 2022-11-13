@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "format": "deno fmt",
+    "fmt": "rome check . --apply-suggested && rome format . --write",
     "test": "turbo run test"
   },
   "keywords": [],
@@ -21,6 +21,7 @@
     "@planetfall/eslint": "*",
     "next": "^13.0.2",
     "prettier": "^2.7.1",
+    "rome": "^10.0.0",
     "turbo": "^1.5.3"
   },
   "prisma": {
