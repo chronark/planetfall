@@ -5,7 +5,15 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsup"
+  },
+  "tsup": {
+    "entry": ["src/index.ts"],
+    "splitting": false,
+    "sourcemap": true,
+    "format": ["cjs", "esm"],
+    "dts": true,
+    "clean": true
   },
   "keywords": [],
   "author": "Andreas Thomas",
@@ -13,6 +21,7 @@
   "devDependencies": {
     "@planetfall/tsconfig": "*",
     "@types/bcrypt": "^5.0.0",
+    "tsup": "^6.4.0",
     "typescript": "^4.8.3"
   },
   "dependencies": {

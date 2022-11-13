@@ -15,18 +15,18 @@ s.syncEndpoints();
 setInterval(() => s.syncEndpoints(), 60 * 1000);
 
 const server = http.createServer((_req, res) => {
-	logger.info("Incoming health check");
-	res.writeHead(200);
-	res.end("OK");
+  logger.info("Incoming health check");
+  res.writeHead(200);
+  res.end("OK");
 });
 server.listen(process.env.PORT ?? 8000);
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 if (!stripeSecretKey) {
-	logger.warn("BILLING IS NOT ENABLED");
+  logger.warn("BILLING IS NOT ENABLED");
 }
 
 if (stripeSecretKey) {
-	const billing = new Billing({ logger, stripeSecretKey });
-	setInterval(() => billing.run(), 60_000);
+  const billing = new Billing({ logger, stripeSecretKey });
+  setInterval(() => billing.run(), 60_000);
 }

@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 
 export default async function Page(props: {
-	params: { teamSlug: string };
+  params: { teamSlug: string };
 }) {
-	redirect(`/${props.params.teamSlug}/endpoints`);
+  redirect(`/${props.params.teamSlug}/endpoints`);
 
-	return <div>A</div>;
+  return <div>A</div>;
 }
