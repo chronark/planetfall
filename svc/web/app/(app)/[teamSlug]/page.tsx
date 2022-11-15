@@ -5,5 +5,5 @@ export default async function Page(props: {
 }) {
 	redirect(`/${props.params.teamSlug}/endpoints`);
 
-	return <div>A</div>;
+	return <></>;
 }

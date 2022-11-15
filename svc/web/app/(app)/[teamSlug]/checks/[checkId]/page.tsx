@@ -1,10 +1,8 @@
 import PageHeader from "@/components/page/header";
-import { clerkClient } from "@clerk/clerk-sdk-node";
 import { notFound, redirect } from "next/navigation";
 import { Client as Tinybird } from "@planetfall/tinybird";
 
 import Button from "@/components/button/button";
-import { currentUser } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
 import { Stats } from "@/components/stats";
 import { Heading } from "@/components/heading";
@@ -13,7 +11,7 @@ import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { Text } from "@/components/text";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { HeaderTable } from "./header-table";
-// import Confirm from "@/components/confirm/confirm";
+import { getSession } from "lib/auth";
 
 type Timings = {
 	dnsStart: number;
@@ -198,14 +196,14 @@ export default async function Page(props: {
 	const check = await new Tinybird().getCheckById(props.params.checkId);
 
 	if (!check) {
+		console.warn(__filename, "User not found");
 		notFound();
 		return;
 	}
 
-	const user = await currentUser();
-	if (!user) {
+	const session = await getSession();
+	if (!session) {
 		redirect("/auth/sign-in");
-		return;
 	}
 
 	const endpoint = check.endpointId

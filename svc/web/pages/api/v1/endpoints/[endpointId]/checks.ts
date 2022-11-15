@@ -1,7 +1,5 @@
-import { db, PrismaClient } from "@planetfall/db";
-import {} from "@planetfall/auth";
+import { db } from "@planetfall/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import crypto from "node:crypto";
 import { z } from "zod";
 import { ApiError, ApiResponse, getRole } from "lib/api";
 
@@ -66,7 +64,7 @@ export default async function handler(
 	res: NextApiResponse<Output>,
 ): Promise<void> {
 	try {
-		const role = await getRole(req);
+		const { role } = await getRole(req, res);
 		const auth = role.authorize({ check: ["read"] });
 		if (!auth.success) {
 			throw new ApiError({

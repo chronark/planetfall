@@ -1,19 +1,13 @@
 import PageHeader from "@/components/page/header";
-import { clerkClient } from "@clerk/clerk-sdk-node";
 import { notFound, redirect } from "next/navigation";
-import { Client as Tinybird } from "@planetfall/tinybird";
-
-import Button from "@/components/button/button";
-import { EndpointsTable } from "../table";
-import { currentUser } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
 import { Form } from "./form";
+import { getSession } from "lib/auth";
 
 export default async function Page(props: { params: { teamSlug: string } }) {
-	const user = await currentUser();
-	if (!user) {
+	const { session } = await getSession();
+	if (!session) {
 		redirect("/auth/sign-in");
-		return;
 	}
 
 	const team = await db.team.findUnique({
@@ -21,6 +15,8 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 		include: { endpoints: true },
 	});
 	if (!team) {
+		console.warn(__filename, "Team not found");
+
 		notFound();
 	}
 

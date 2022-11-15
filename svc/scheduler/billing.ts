@@ -1,7 +1,6 @@
 import { PrismaClient } from "@planetfall/db";
 import { Logger } from "./logger";
 import Stripe from "stripe";
-import { clerkClient } from "@clerk/clerk-sdk-node";
 
 export class Billing {
 	// Map of endpoint id -> clearInterval function

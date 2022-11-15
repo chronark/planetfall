@@ -1,21 +1,20 @@
-import { auth, clerkClient, currentUser } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
 import { asyncComponent } from "lib/api/component";
+import { getSession } from "lib/auth";
 import { redirect } from "next/navigation";
-import { useImperativeHandle } from "react";
-import slugify from "slugify";
 
 export default asyncComponent(async () => {
-	const { userId } = auth();
-	if (!userId) {
+	const { session } = await getSession();
+	if (!session) {
 		redirect("/auth/sign-in");
 	}
+
 	const team = await db.team.findFirst({
 		where: {
 			isPersonal: true,
 			members: {
 				some: {
-					userId,
+					userId: session.user.id,
 				},
 			},
 		},

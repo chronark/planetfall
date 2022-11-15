@@ -1,7 +1,6 @@
 import React from "react";
 import { db } from "@planetfall/db";
 import { asyncComponent } from "lib/api/component";
-import { clerkClient } from "@clerk/clerk-sdk-node";
 
 export const revalidate = 60 * 60; // revalidate every hour
 

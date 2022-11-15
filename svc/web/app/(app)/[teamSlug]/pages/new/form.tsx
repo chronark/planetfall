@@ -58,9 +58,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 				throw new Error(res.error.message);
 			}
 
-			console.log("AAAAAAA");
 			const url = `https://${data.slug.toLowerCase()}.planetfall.io`;
-			console.log({ url });
 			router.push(url);
 		} catch (err) {
 			console.error(err);

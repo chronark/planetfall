@@ -13,7 +13,7 @@ type Member = {
 	user: {
 		name: string;
 		email: string;
-		image: string;
+		image: string | null;
 	};
 };
 type Props = {
@@ -30,7 +30,7 @@ export const TeamTable: React.FC<Props> = ({ members }) => {
 				<div className="flex items-center">
 					<img
 						className="h-10 w-10 rounded-full"
-						src={info.getValue().image}
+						src={info.getValue().image ?? ""}
 						alt=""
 					/>
 					<span className="ml-3 text-sm font-medium text-gray-900">

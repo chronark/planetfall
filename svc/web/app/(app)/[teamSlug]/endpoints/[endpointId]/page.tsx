@@ -1,24 +1,21 @@
 import PageHeader from "@/components/page/header";
-import { clerkClient } from "@clerk/clerk-sdk-node";
 import { notFound, redirect } from "next/navigation";
 import { Client as Tinybird } from "@planetfall/tinybird";
 
-import Button from "@/components/button/button";
-import { currentUser } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
 import { Stats } from "@/components/stats";
 import { ErrorsTable } from "./errors-table";
 import { Heading } from "@/components/heading";
 import { LatestTable } from "./latest-table";
 import { DeleteButton } from "./delete";
+import { getSession } from "lib/auth";
 // import Confirm from "@/components/confirm/confirm";
 export default async function Page(props: {
 	params: { teamSlug: string; endpointId: string };
 }) {
-	const user = await currentUser();
-	if (!user) {
+	const { session } = await getSession();
+	if (!session) {
 		redirect("/auth/sign-in");
-		return;
 	}
 
 	const endpoint = await db.endpoint.findUnique({
@@ -39,7 +36,7 @@ export default async function Page(props: {
 
 	if (
 		endpoint.team.slug !== props.params.teamSlug ||
-		!endpoint.team.members.find((m) => m.userId === user.id)
+		!endpoint.team.members.find((m) => m.userId === session.user.id)
 	) {
 		throw new Error("Access denied");
 	}
@@ -53,6 +50,8 @@ export default async function Page(props: {
 	]);
 
 	if (!stats) {
+		console.warn(__filename, "Stats not found");
+
 		notFound();
 		return;
 	}

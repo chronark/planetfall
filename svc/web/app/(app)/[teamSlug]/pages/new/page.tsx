@@ -1,12 +1,12 @@
 import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
-import { currentUser } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
 import { Form } from "./form";
+import { getSession } from "lib/auth";
 
 export default async function Page(props: { params: { teamSlug: string } }) {
-	const user = await currentUser();
-	if (!user) {
+	const { session } = await getSession();
+	if (!session) {
 		redirect("/auth/sign-in");
 		return;
 	}
@@ -16,6 +16,8 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 		include: { endpoints: true },
 	});
 	if (!team) {
+		console.warn(__filename, "Team not found");
+
 		notFound();
 	}
 

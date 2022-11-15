@@ -36,7 +36,7 @@ dev: rm build
 	npx turbo run dev 
 
 fmt: rm
-	deno fmt
+	yarn fmt
 
 
 tinybird:

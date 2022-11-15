@@ -13,7 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "@axiomhq/axiom-node": "^0.8.0",
-    "@clerk/clerk-sdk-node": "^4.4.6",
     "@planetfall/assertions": "*",
     "@planetfall/db": "*",
     "@planetfall/id": "*",

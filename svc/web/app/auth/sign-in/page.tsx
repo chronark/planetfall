@@ -1,16 +1,16 @@
+import { getSession } from "lib/auth";
 import { redirect } from "next/navigation";
-import { currentUser, SignIn } from "@clerk/nextjs/app-beta";
-import slugify from "slugify";
+import { Form } from "./form";
 
 export default async function SignInPage() {
-	const user = await currentUser();
-	if (user) {
-		redirect(`/${slugify(user.username!)}`);
+	const session = await getSession();
+	if (session) {
+		redirect("/home");
 	}
 
 	return (
 		<div className="flex items-center justify-center">
-			<SignIn />
+			<Form />
 		</div>
 	);
 }

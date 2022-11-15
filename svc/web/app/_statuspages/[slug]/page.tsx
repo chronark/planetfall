@@ -78,6 +78,7 @@ export default async function Page(props: { params: { slug: string } }) {
 			},
 		},
 	});
+	console.log({ statusPage, props });
 	if (!statusPage) {
 		return null;
 	}

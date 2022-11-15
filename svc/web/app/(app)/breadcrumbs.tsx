@@ -11,7 +11,6 @@ export type Props = {
 
 export const Breadcrumbs: React.FC<Props> = ({ teamSwitcher }) => {
 	// const segments = useSelectedLayoutSegments();
-	// console.log({ segments })
 	return (
 		<ul role="list" className="flex items-center">
 			<li key="home" className="pr-2">

@@ -3,11 +3,15 @@ import Link from "next/link";
 import { Logo } from "../components/logo";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import { asyncComponent } from "lib/api/component";
-import { auth } from "@clerk/nextjs/app-beta";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getSession } from "lib/auth";
 
 export const Header = asyncComponent(async () => {
-	// const { sessionId } = auth();
-	const isSignedIn = false; //sessionId !== null;
+	const session = await getSession();
+
+	console.log("nav", { session });
+
+	const isSignedIn = !!session.session;
 	return (
 		<header className="fixed top-0  w-full z-50   backdrop-blur">
 			<div className="container mx-auto">

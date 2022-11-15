@@ -2,9 +2,9 @@ const withMarkdoc = require("@markdoc/next.js")();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	pageExtensions: ["mdx", "md", "tsx", "jsx"],
+	pageExtensions: ["tsx", "ts", "jsx", "mdx", "md"],
 	images: {
-		domains: ["images.clerk.dev", "www.gravatar.com"],
+		domains: ["www.gravatar.com", "avatars.githubusercontent.com"],
 	},
 	experimental: {
 		appDir: true,

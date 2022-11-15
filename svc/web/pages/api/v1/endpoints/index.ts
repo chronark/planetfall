@@ -3,11 +3,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import crypto from "node:crypto";
 import { object, z } from "zod";
 import { ApiError } from "lib/api/error";
-import { getAuth } from "@clerk/nextjs/server";
 
 import type { ApiResponse } from "lib/api/response";
 import { withMiddleware, withRecoverer } from "lib/api/middleware";
 import { newId } from "@planetfall/id";
+import { getRole } from "lib/api";
 
 const input = z.object({
 	method: z.enum(["POST"]),
@@ -25,7 +25,7 @@ const input = z.object({
 		interval: z.number().int().positive(),
 		regionIds: z.array(z.string()).min(1),
 		distribution: z.enum(["ALL", "RANDOM"]),
-		teamSlug: z.string(),
+		teamId: z.string(),
 		statusAssertions: z
 			.array(
 				z.object({
@@ -45,12 +45,14 @@ async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<Output>,
 ): Promise<void> {
-	const auth = getAuth(req);
-
-	if (!auth.sessionId) {
-		throw new ApiError({ status: 403, message: "Missing auth" });
+	const { role } = await getRole(req, res);
+	const auth = role.authorize({ endpoint: ["create"] });
+	if (!auth.success) {
+		throw new ApiError({
+			status: 401,
+			message: auth.error,
+		});
 	}
-
 	const request = input.safeParse(req);
 	if (!request.success) {
 		throw new ApiError({
@@ -60,7 +62,7 @@ async function handler(
 	}
 	const team = await db.team.findUnique({
 		where: {
-			slug: request.data.body.teamSlug,
+			id: request.data.body.teamId,
 		},
 	});
 	if (!team) {

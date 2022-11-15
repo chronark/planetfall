@@ -1,12 +1,11 @@
 import PageHeader from "@/components/page/header";
-import { clerkClient } from "@clerk/clerk-sdk-node";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { TeamTable } from "./table";
-import { auth } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
+import { getSession } from "lib/auth";
 export default async function Page(props: { params: { teamSlug: string } }) {
-	const { userId } = auth();
-	if (!userId) {
+	const { session } = await getSession();
+	if (!session) {
 		redirect("/auth/sign-in");
 	}
 
@@ -15,38 +14,26 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 			slug: props.params.teamSlug,
 		},
 		include: {
-			members: true,
+			members: {
+				include: {
+					user: true,
+				},
+			},
 		},
 	});
 	if (!team) {
 		redirect("/home");
 	}
-	if (!team.members.some((m) => m.userId === userId)) {
+	if (!team.members.some((m) => m.userId === session.user.id)) {
 		redirect("/home");
 	}
-
-	const members = team.isPersonal
-		? []
-		: await Promise.all(
-				team.members.map(async (m) => {
-					const user = await clerkClient.users.getUser(m.userId);
-					return {
-						role: m.role,
-						user: {
-							name: user.username!,
-							email: user.emailAddresses[0].emailAddress,
-							image: user.profileImageUrl,
-						},
-					};
-				}),
-		  );
 
 	return (
 		<div>
 			<PageHeader sticky={true} title={team.name} />
 			<main className="container mx-auto">
-				{members.length > 0 ? (
-					<TeamTable members={members} />
+				{team.members.length > 0 ? (
+					<TeamTable members={team.members} />
 				) : (
 					<div className="text-center text-slate-500">No members</div>
 				)}

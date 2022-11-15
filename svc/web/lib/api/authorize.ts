@@ -1,10 +1,22 @@
 import { ApiError } from "./error";
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@planetfall/db";
 import { Role } from "@chronark/access";
-import { hashToken, Statements } from "@planetfall/auth";
+import { hashToken, roles, Statements } from "@planetfall/auth";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 
-export async function getRole(req: NextApiRequest) {
+export async function getRole(req: NextApiRequest, res: NextApiResponse) {
+	const session = await unstable_getServerSession(req, res, authOptions);
+	if (session) {
+		console.log("Session", session, roles.root);
+
+		return {
+			role: roles.root,
+			userId: session.user.id,
+		};
+	}
+
 	const authHeader = req.headers.authorization;
 	if (!authHeader) {
 		throw new ApiError({
@@ -15,8 +27,12 @@ export async function getRole(req: NextApiRequest) {
 	if (!authHeader.startsWith("Bearer ")) {
 		throw new ApiError({ status: 401, message: "expected bearer token" });
 	}
-	const hash = hashToken(authHeader.replace(/^Bearer/, ""));
 
+	const bearerToken = authHeader.replace(/^Bearer/, "");
+	console.log({ bearerToken });
+	const hash = hashToken(bearerToken);
+
+	console.log({ hash });
 	const token = await db.token.findUnique({ where: { hash } });
 	if (!token) {
 		throw new ApiError({ status: 401, message: "token not found" });
@@ -33,5 +49,8 @@ export async function getRole(req: NextApiRequest) {
 		throw new ApiError({ status: 401, message: "token not found" });
 	}
 
-	return Role.fromString<Statements>(token.permissions);
+	return {
+		role: Role.fromString<Statements>(token.permissions),
+		userId: token.userId,
+	};
 }

@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import type { Input, Output } from "pages/api/rest/v1/checks";
+import type { Input, Output } from "pages/api/v1/checks";
 import { BarChart } from "@tremor/react";
 import { Trace } from "@/components/trace";
 import { Stats } from "@/components/stats";
@@ -45,7 +45,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 
 	async function runCheck(input: Input["body"]): Promise<void> {
 		setIsLoading(true);
-		const res = await fetch("/api/rest/v1/checks", {
+		const res = await fetch("/api/v1/play", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

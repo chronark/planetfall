@@ -9,8 +9,9 @@ import { MinusSmallIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/button";
 import { Loading } from "@/components/loading";
 import { useRouter } from "next/navigation";
-import type { Input as Req, Output as Res } from "pages/api/v1/endpoints";
+import type { Input as Req, Output as Res } from "pages/api/v1/endpoints/";
 import { mutate } from "lib/api/call";
+import type { Session } from "next-auth";
 type Props = {
 	teamId: string;
 	teamSlug: string;
@@ -77,7 +78,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 				interval: data.interval * 1000,
 				regionIds: selectedRegions,
 				distribution: data.distribution,
-				teamSlug,
+				teamId,
 				statusAssertions: data.statusAssertions,
 			});
 

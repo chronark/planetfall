@@ -1,12 +1,12 @@
 import { asyncComponent } from "lib/api/component";
 import { UserButton } from "./user-button";
-import { currentUser } from "@clerk/nextjs/app-beta";
 import { notFound, redirect } from "next/navigation";
 import { NavLink } from "./navlink";
-import { clerkClient } from "@clerk/nextjs/server";
 import { TeamSwitcher } from "./team-switcher";
 import { Breadcrumbs } from "./breadcrumbs";
+
 import { db } from "@planetfall/db";
+import { getSession } from "lib/auth";
 
 const userNavigation = [
 	{ name: "Settings", href: "/settings" },
@@ -18,8 +18,9 @@ export type NavbarProps = {
 };
 
 export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
-	const user = await currentUser();
-	if (!user) {
+	const { session } = await getSession();
+
+	if (!session) {
 		redirect("/auth/sign-in");
 	}
 
@@ -28,10 +29,15 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 		{ name: "Pages", href: `/${props.teamSlug}/pages` },
 		{ name: "Settings", href: `/${props.teamSlug}/settings` },
 	];
+	const user = await db.user.findUnique({ where: { id: session.user.id } });
+	if (!user) {
+		console.warn(__filename, "User not found");
+		notFound();
+	}
 
 	const teams = await db.team.findMany({
 		where: {
-			members: { some: { userId: user.id } },
+			members: { some: { userId: session.user.id } },
 		},
 	});
 
@@ -60,9 +66,9 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 					/>
 					<UserButton
 						user={{
-							email: user.emailAddresses[0].emailAddress,
-							name: user.username ?? "",
-							image: user.profileImageUrl,
+							email: user.email,
+							name: user.name,
+							image: user.image,
 						}}
 					/>
 				</div>

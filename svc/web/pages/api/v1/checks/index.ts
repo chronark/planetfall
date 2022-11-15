@@ -6,8 +6,6 @@ import { z } from "zod";
 import { ApiError } from "lib/api/error";
 import type { ApiResponse } from "lib/api/response";
 import { newId } from "@planetfall/id";
-import { Client as Tinybird } from "@planetfall/tinybird";
-import { auth } from "@clerk/nextjs/app-beta";
 
 const input = z.object({
 	method: z.enum(["POST"]),
@@ -58,7 +56,7 @@ export default async function handler(
 	res: NextApiResponse<Output>,
 ): Promise<void> {
 	try {
-		const role = await getRole(req);
+		const { role } = await getRole(req, res);
 		const auth = role.authorize({ check: ["trigger"] });
 		if (!auth.success) {
 			throw new ApiError({ status: 403, message: "Forbidden" });
