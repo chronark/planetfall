@@ -28,8 +28,8 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 	}
 	return (
 		<div className="flex flex-col w-full gap-4 md:gap-0">
-			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-slate-100">
-				<div className="flex justify-between w-1/2 text-sm text-slate-500 whitespace-nowrap ">
+			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-zinc-100">
+				<div className="flex justify-between w-1/2 text-sm text-zinc-500 whitespace-nowrap ">
 					<span>DNS</span>
 					<span>
 						{(timings.dnsDone - timings.dnsStart).toLocaleString()} ms
@@ -46,8 +46,8 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-slate-100">
-				<div className="flex justify-between w-1/2 text-sm text-slate-500 whitespace-nowrap ">
+			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-zinc-100">
+				<div className="flex justify-between w-1/2 text-sm text-zinc-500 whitespace-nowrap ">
 					<span>Connection</span>
 					<span>
 						{(timings.connectDone - timings.connectStart).toLocaleString()} ms
@@ -69,8 +69,8 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-slate-100">
-				<div className="flex justify-between w-1/2 text-sm text-slate-500 whitespace-nowrap ">
+			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-zinc-100">
+				<div className="flex justify-between w-1/2 text-sm text-zinc-500 whitespace-nowrap ">
 					<span>TLS</span>
 					<span>
 						{(
@@ -95,8 +95,8 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-slate-100">
-				<div className="flex justify-between w-1/2 text-sm text-slate-500 whitespace-nowrap ">
+			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-zinc-100">
+				<div className="flex justify-between w-1/2 text-sm text-zinc-500 whitespace-nowrap ">
 					<span>TTFB</span>
 					<span>
 						{(timings.firstByteDone - timings.firstByteStart).toLocaleString()}{" "}
@@ -119,8 +119,8 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-slate-100">
-				<div className="flex justify-between w-1/2 text-sm text-slate-500 whitespace-nowrap ">
+			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-zinc-100">
+				<div className="flex justify-between w-1/2 text-sm text-zinc-500 whitespace-nowrap ">
 					<span>Transfer</span>
 					<span>
 						{(timings.transferDone - timings.transferStart).toLocaleString()} ms

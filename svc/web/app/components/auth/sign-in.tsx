@@ -7,7 +7,7 @@ import { Button } from "../button";
 export const SignIn: React.FC = () => {
 	const [loading, setLoading] = useState(false);
 	return (
-		<div className="flex flex-col min-h-screen justify-center bg-gradient-to-tr from-black  to-[#060823]">
+		<div className="flex flex-col justify-center min-h-screen bg-black bg-gradient-to-tr from-primary-900/20 to-primary-700/20">
 			<div className="absolute">
 				<svg
 					className="inset-0 w-screen fill-transparent h-screen [mask-image:linear-gradient(to_bottom,white_15%,transparent_95%)]"
@@ -41,7 +41,7 @@ export const SignIn: React.FC = () => {
 			</div>
 			<main className="relative h-full">
 				<div className="flex items-center justify-center">
-					<div className="drop-shadow-cta hover:drop-shadow-none duration-1000">
+					<div className="duration-1000 drop-shadow-cta hover:drop-shadow-none">
 						<Button
 							loading={loading}
 							size="lg"

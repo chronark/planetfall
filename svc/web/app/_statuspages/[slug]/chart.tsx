@@ -10,7 +10,7 @@ import { Heading } from "@/components/heading";
 
 const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
 	return (
-		<div className="flex items-center text-sm text-slate-500 space-x-1 whitespace-nowrap">
+		<div className="flex items-center text-sm text-zinc-500 space-x-1 whitespace-nowrap">
 			<span className="flex-shrink-0 font-semibold">{label}:</span>
 			<span>{value.toLocaleString()} ms</span>
 		</div>
@@ -38,10 +38,10 @@ export const Row: React.FC<{
 	const [expanded, setExpanded] = useState(false);
 
 	return (
-		<div className="my-16 list-none border-t  sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded hover:border-slate-800 duration-1000">
-			<div className="flex flex-col items-start justify-between px-4 py-5 border-b gap-2 lg:flex-row border-slate-200  sm:px-6 md:items-center">
+		<div className="my-16 list-none border-t  sm:border border-zinc-300 sm:border-zinc-100 sm:shadow-ambient md:rounded hover:border-zinc-800 duration-1000">
+			<div className="flex flex-col items-start justify-between px-4 py-5 border-b gap-2 lg:flex-row border-zinc-200  sm:px-6 md:items-center">
 				<div className="lg:w-1/2">
-					<span className="text-lg font-medium leading-6 text-slate-900">
+					<span className="text-lg font-medium leading-6 text-zinc-900">
 						{endpoint.name ?? endpoint.url}
 					</span>
 				</div>
@@ -90,10 +90,10 @@ export const Row: React.FC<{
 						className="absolute inset-0 flex items-center"
 						aria-hidden="true"
 					>
-						<div className="w-full border-t border-slate-200" />
+						<div className="w-full border-t border-zinc-200" />
 					</div>
 					<div className="relative flex justify-center">
-						<span className="px-2 bg-white  text-slate-500 hover:text-primary-500">
+						<span className="px-2 bg-white  text-zinc-500 hover:text-primary-500">
 							{expanded ? (
 								<MinusIcon className="w-6 h-6" />
 							) : (
@@ -217,7 +217,7 @@ const Chart: React.FC<{
 
 						if (bucket.time === "") {
 							cn.push(
-								"bg-slate-50 border border-slate-300 hover:bg-slate-200 animate-pulse",
+								"bg-zinc-50 border border-zinc-300 hover:bg-zinc-200 animate-pulse",
 							);
 						} else if (bucketErrors > 0) {
 							cn.push("bg-red-400 border border-red-600 hover:bg-red-100");
@@ -245,15 +245,15 @@ const Chart: React.FC<{
 										{bucket.time !== "" ? (
 											<>
 												<div className="max-w-xl px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
-													<dt className="text-sm font-medium truncate text-slate-500">
+													<dt className="text-sm font-medium truncate text-zinc-500">
 														{start.toLocaleDateString()}
 													</dt>
-													<dt className="text-sm font-medium truncate text-slate-500" />
-													<dt className="text-sm font-medium truncate text-slate-500">
+													<dt className="text-sm font-medium truncate text-zinc-500" />
+													<dt className="text-sm font-medium truncate text-zinc-500">
 														{/* {bucket.region} */}
 													</dt>
 													<div>
-														<h3 className="text-lg font-medium leading-6 text-slate-900">
+														<h3 className="text-lg font-medium leading-6 text-zinc-900">
 															{start.toLocaleTimeString()} -{" "}
 															{end.toLocaleTimeString()}
 														</h3>
@@ -284,26 +284,26 @@ const Chart: React.FC<{
                                                                     ? (
                                                                         <div>
                                                                             <Heading h3>Errors</Heading>
-                                                                            <ul className="divide-y divide-slate-100">
+                                                                            <ul className="divide-y divide-zinc-100">
                                                                                 {bucketErrors.map((err, i) => (
                                                                                     <li
                                                                                         key={i}
-                                                                                        className="relative py-3 bg-white hover:bg-slate-50 "
+                                                                                        className="relative py-3 bg-white hover:bg-zinc-50 "
                                                                                     >
                                                                                         <div className="flex justify-between space-x-3">
                                                                                             <time
                                                                                                 dateTime={new Date(err.time)
                                                                                                     .toLocaleString()}
-                                                                                                className="text-sm font-medium truncate text-slate-900"
+                                                                                                className="text-sm font-medium truncate text-zinc-900"
                                                                                             >
                                                                                                 {new Date(err.time)
                                                                                                     .toLocaleString()}
                                                                                             </time>
-                                                                                            <span className="flex-shrink-0 text-sm whitespace-nowrap text-slate-500">
+                                                                                            <span className="flex-shrink-0 text-sm whitespace-nowrap text-zinc-500">
                                                                                                 {err.region}
                                                                                             </span>
                                                                                         </div>
-                                                                                        <span className="text-sm text-slate-600 line-clamp-2">
+                                                                                        <span className="text-sm text-zinc-600 line-clamp-2">
                                                                                             {err.error}
                                                                                         </span>
                                                                                     </li>

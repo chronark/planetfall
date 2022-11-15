@@ -66,22 +66,22 @@ export function MobileNavigation({ navigation }) {
 				className="relative"
 				aria-label="Open navigation"
 			>
-				<MenuIcon className="w-6 h-6 stroke-slate-500" />
+				<MenuIcon className="w-6 h-6 stroke-zinc-500" />
 			</button>
 			<Dialog
 				open={isOpen}
 				onClose={setIsOpen}
-				className="fixed inset-0 z-50 flex items-start pr-10 overflow-y-auto bg-slate-900/50 backdrop-blur lg:hidden"
+				className="fixed inset-0 z-50 flex items-start pr-10 overflow-y-auto bg-zinc-900/50 backdrop-blur lg:hidden"
 				aria-label="Navigation"
 			>
-				<Dialog.Panel className="w-full max-w-xs min-h-full px-4 pt-5 pb-12 bg-white dark:bg-slate-900 sm:px-6">
+				<Dialog.Panel className="w-full max-w-xs min-h-full px-4 pt-5 pb-12 bg-white dark:bg-zinc-900 sm:px-6">
 					<div className="flex items-center">
 						<button
 							type="button"
 							onClick={() => setIsOpen(false)}
 							aria-label="Close navigation"
 						>
-							<CloseIcon className="w-6 h-6 stroke-slate-500" />
+							<CloseIcon className="w-6 h-6 stroke-zinc-500" />
 						</button>
 						<Link href="/" className="ml-6" aria-label="Home page">
 							<Logo />

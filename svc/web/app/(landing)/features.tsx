@@ -11,7 +11,7 @@ const features: Feature[] = [
 	{
 		title: "Gain Insights into the Performance of your API",
 		description:
-			"Synthetic API monitoring for your APIs. Monitor the latency of your APIs from around the planet.",
+			"Synthetic monitoring for your APIs. Monitor the latency of your APIs from around the planet.",
 		bullets: [
 			{
 				title: "22 Regions",
@@ -86,14 +86,14 @@ const features: Feature[] = [
 const Feature: React.FC<{ feature: Feature }> = ({ feature }) => {
 	return (
 		<div className="container mx-auto text-center lg:px-8">
-			{/* <h2 className="text-lg font-semibold text-primary-600"></h2> */}
+			{/* <h2 className="text-lg font-semibold text-zinc-600"></h2> */}
 			<div className="w-full h-6 max-w-md mx-auto drop-shadow-radiant" />
 
-			<h3 className="py-2 mt-2 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-t from-primary-100/80 to-white md:text-6xl">
+			<h3 className="py-2 mt-2 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-t from-zinc-100/80 to-white md:text-6xl">
 				{feature.title}
 			</h3>
 			{feature.image ? (
-				<div className="mx-auto mt-4 overflow-hidden border rounded md:mt-8 lg:mt-16 border-primary-600 drop-shadow-feature">
+				<div className="mx-auto mt-4 overflow-hidden border rounded md:mt-8 lg:mt-16 border-zinc-600 drop-shadow-feature">
 					<Image
 						src={feature.image}
 						width={1920}
@@ -102,7 +102,7 @@ const Feature: React.FC<{ feature: Feature }> = ({ feature }) => {
 					/>
 				</div>
 			) : null}
-			<p className="mx-auto mt-4 text-lg md:mt-8 lg:mt-16 max-w-prose text-slate-200">
+			<p className="mx-auto mt-4 text-lg md:mt-8 lg:mt-16 max-w-prose text-zinc-200">
 				{feature.description}
 			</p>
 			<div className="mt-12">
@@ -110,11 +110,11 @@ const Feature: React.FC<{ feature: Feature }> = ({ feature }) => {
 					{feature.bullets.map((b, i) => (
 						<div
 							key={b.title}
-							className=" bg-gradient-feature from-primary-600/50 to-transparent drop-shadow-feature"
+							className=" bg-gradient-feature from-zinc-600/50 to-transparent drop-shadow-feature"
 						>
-							<div className="p-4 bg-gradient-feature-inner from-primary-400/20 to-transparent">
-								<dt className="font-medium text-slate-100">{b.title}</dt>
-								<dd className="mt-2 text-sm text-slate-400">{b.description}</dd>
+							<div className="p-4 bg-gradient-feature-inner from-zinc-400/20 to-transparent">
+								<dt className="font-medium text-zinc-100">{b.title}</dt>
+								<dd className="mt-2 text-sm text-zinc-400">{b.description}</dd>
 							</div>
 						</div>
 					))}

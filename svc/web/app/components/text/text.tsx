@@ -61,7 +61,7 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
 					"truncate text-ellipsis whitespace-nowrap": truncate,
 				},
 				align,
-				color ?? "text-slate-700",
+				color ?? "text-zinc-700",
 			)}
 		>
 			{children}

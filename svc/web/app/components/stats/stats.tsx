@@ -13,7 +13,7 @@ export const Stats: React.FC<StatsProps> = ({
 }): JSX.Element => {
 	return (
 		<div className="flex flex-col p-4">
-			<Text color="text-slate-500">{label}</Text>
+			<Text color="text-zinc-500">{label}</Text>
 			<div className="flex items-baseline gap-2">
 				<span
 					className={`text-2xl md:text-4xl ${
@@ -23,7 +23,7 @@ export const Stats: React.FC<StatsProps> = ({
 							? "text-amber-500"
 							: status === "error"
 							? "text-rose-500"
-							: "text-slate-800"
+							: "text-zinc-800"
 					}`}
 				>
 					{value}

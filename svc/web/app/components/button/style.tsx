@@ -62,20 +62,20 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
 				 * type
 				 */
 				!disabled && {
-					"bg-slate-800 text-slate-50 hover:bg-slate-50 hover:text-slate-900 border-slate-700 ":
+					"bg-zinc-800 text-zinc-50 hover:bg-zinc-50 hover:text-zinc-900 border-zinc-700 ":
 						type === "primary",
-					"bg-white text-slate-900 border-slate-700 hover:bg-slate-900 hover:text-slate-50":
+					"bg-white text-zinc-900 border-zinc-700 hover:bg-zinc-900 hover:text-zinc-50":
 						type === "secondary",
-					"bg-white text-slate-900 border-slate-700 border-dashed hover:bg-slate-700 hover:text-slate-50":
+					"bg-white text-zinc-900 border-zinc-700 border-dashed hover:bg-zinc-700 hover:text-zinc-50":
 						type === "tertiary",
 
 					"bg-white0 text-red-500 border-red-500 hover:bg-red-50 hover:text-red-600":
 						type === "alert",
 				},
 				disabled && {
-					"bg-slate-900 text-slate-400": type === "primary",
-					"bg-white text-slate-600 border-slate-60": type === "secondary",
-					"bg-red-200 text-slate-white border-red-200": type === "alert",
+					"bg-zinc-900 text-zinc-400": type === "primary",
+					"bg-white text-zinc-600 border-zinc-60": type === "secondary",
+					"bg-red-200 text-zinc-white border-red-200": type === "alert",
 				},
 				{ "block w-full": block },
 			)}

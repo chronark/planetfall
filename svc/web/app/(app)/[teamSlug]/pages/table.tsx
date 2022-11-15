@@ -34,7 +34,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 		accessor("name", {
 			header: "Name",
 			cell: (info) => (
-				<span className="text-sm text-slate-900">{info.getValue()}</span>
+				<span className="text-sm text-zinc-900">{info.getValue()}</span>
 			),
 		}),
 		accessor("endpoints", {
@@ -45,7 +45,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 						<li key={endpoint.id}>
 							<Link
 								href={`/${teamSlug}/endpoints/${endpoint.id}`}
-								className="px-2 py-1 border rounded border-slate-300 bg-slate-50 hover:bg-white hover:border-slate-600"
+								className="px-2 py-1 border rounded border-zinc-300 bg-zinc-50 hover:bg-white hover:border-zinc-600"
 							>
 								{endpoint.name}
 							</Link>
@@ -60,7 +60,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 			cell: (info) => (
 				<Link
 					target="_blank"
-					className="text-slate-500 hover:text-primary-600 duration-500 hover:underline"
+					className="text-zinc-500 hover:text-primary-600 duration-500 hover:underline"
 					href={`${protocol}://${info.getValue()}.${host}`}
 				>
 					{`${protocol}://${info.getValue()}.${host}`}
@@ -84,7 +84,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 							<th
 								key={header.id}
 								className={classNames(
-									"sticky px-4 bg-white z-10  border-t border-b border-slate-400  py-3.5 text-left text-sm font-semibold text-slate-900",
+									"sticky px-4 bg-white z-10  border-t border-b border-zinc-400  py-3.5 text-left text-sm font-semibold text-zinc-900",
 									{
 										"rounded-l border-l": i === 0,
 										"rounded-r border-r ": i + 1 === headerGroup.headers.length,
@@ -108,7 +108,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 						{row.getVisibleCells().map((cell) => (
 							<td
 								key={cell.id}
-								className="px-3 py-2 text-sm whitespace-nowrap text-slate-500"
+								className="px-3 py-2 text-sm whitespace-nowrap text-zinc-500"
 							>
 								{flexRender(cell.column.columnDef.cell, cell.getContext())}
 							</td>

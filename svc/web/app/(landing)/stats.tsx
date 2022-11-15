@@ -51,10 +51,10 @@ export const Stats = asyncComponent(async () => {
 							key={label}
 							className="flex items-center justify-between px-4 py-3 overflow-hidden rounded m sm:flex-col gap-2"
 						>
-							<dt className="text-lg text-center  leading-6 text-slate-500">
+							<dt className="text-lg text-center  leading-6 text-zinc-500">
 								{label}
 							</dt>
-							<dd className="text-2xl font-bold tracking-tight text-center  sm:text-5xl text-slate-100">
+							<dd className="text-2xl font-bold tracking-tight text-center  sm:text-5xl text-zinc-100">
 								{value.toLocaleString(undefined, { maximumFractionDigits: 2 })}
 							</dd>
 						</div>

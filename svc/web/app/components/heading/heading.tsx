@@ -46,7 +46,7 @@ export const Heading: React.FC<PropsWithChildren<HeadingProps>> = ({
 		heading,
 		{
 			className: cn(
-				"text-slate-900 text-left",
+				"text-zinc-900 text-left",
 				{
 					"text-6xl font-black": heading === "h1",
 					"text-5xl font-bold": heading === "h2",

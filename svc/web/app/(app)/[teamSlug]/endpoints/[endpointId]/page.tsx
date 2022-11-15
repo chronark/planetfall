@@ -11,6 +11,11 @@ import { LatestTable } from "./latest-table";
 import { DeleteButton } from "./delete";
 import { getSession } from "lib/auth";
 // import Confirm from "@/components/confirm/confirm";
+
+
+export const revalidate = 5
+
+
 export default async function Page(props: {
 	params: { teamSlug: string; endpointId: string };
 }) {
@@ -80,7 +85,7 @@ export default async function Page(props: {
 					// 	</div>
 					// ) : (
 					// 	<div className="flex items-center justify-center w-6 h-6 mr-2">
-					// 		<span className="relative inline-flex w-2 h-2 rounded-full bg-slate-500" />
+					// 		<span className="relative inline-flex w-2 h-2 rounded-full bg-zinc-500" />
 					// 	</div>
 					// ),
 
@@ -116,7 +121,7 @@ export default async function Page(props: {
 				]}
 			/>
 			<main className="container mx-auto divide-y">
-				<div className="flex items-center justify-between w-full pb-4 gap-2 md:gap-4 lg:gap-8 md:pb-8 lg:pb-16">
+				<div className="flex items-center justify-between w-full gap-2 pb-4 md:gap-4 lg:gap-8 md:pb-8 lg:pb-16">
 					<Stats
 						label="Availability"
 						status={
@@ -191,14 +196,14 @@ export default async function Page(props: {
 				</div>
 
 				{errors.length > 0 ? (
-					<div className="py-4  md:py-8 lg:py-16">
+					<div className="py-4 md:py-8 lg:py-16">
 						<Heading h3={true}>Errors</Heading>
 						<ErrorsTable errors={errors} />
 					</div>
 				) : null}
 
 				{latestChecks.length > 0 ? (
-					<div className="py-4  md:py-8 lg:py-16">
+					<div className="py-4 md:py-8 lg:py-16">
 						<Heading h3={true}>Latest Checks</Heading>
 						<LatestTable
 							teamSlug={props.params.teamSlug}

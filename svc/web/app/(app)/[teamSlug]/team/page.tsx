@@ -37,7 +37,7 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				{team.members.length > 0 ? (
 					<TeamTable members={team.members} />
 				) : (
-					<div className="text-center text-slate-500">No members</div>
+					<div className="text-center text-zinc-500">No members</div>
 				)}
 			</main>
 		</div>

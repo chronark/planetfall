@@ -47,7 +47,7 @@ export const HeaderTable: React.FC<Props> = ({ header }): JSX.Element => {
 							<th
 								key={header.id}
 								className={classNames(
-									"sticky px-4 bg-white z-10  border-t border-b border-slate-400  py-3.5 text-left text-sm font-semibold text-slate-900",
+									"sticky px-4 bg-white z-10  border-t border-b border-zinc-400  py-3.5 text-left text-sm font-semibold text-zinc-900",
 									{
 										"rounded-l border-l": i === 0,
 										"rounded-r border-r ": i + 1 === headerGroup.headers.length,
@@ -71,7 +71,7 @@ export const HeaderTable: React.FC<Props> = ({ header }): JSX.Element => {
 						{row.getVisibleCells().map((cell) => (
 							<td
 								key={cell.id}
-								className="px-3 py-2 text-sm whitespace-nowrap text-slate-500"
+								className="px-3 py-2 text-sm whitespace-nowrap text-zinc-500"
 							>
 								{flexRender(cell.column.columnDef.cell, cell.getContext())}
 							</td>

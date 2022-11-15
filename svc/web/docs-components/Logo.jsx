@@ -1,6 +1,6 @@
 export function Logo() {
 	return (
-		<div className="flex items-center gap-2 text-slate-900  dark:text-primary-100">
+		<div className="flex items-center gap-2 text-zinc-900  dark:text-primary-100">
 			<svg
 				className="fill-current w-9 h-9"
 				viewBox="0 0 256 256"

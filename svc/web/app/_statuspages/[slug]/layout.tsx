@@ -14,8 +14,8 @@ export default async function ({ children }: { children: React.ReactNode }) {
 						<div className="mr-4 shrink-0">
 							<Link href="/" aria-label="Planetfall">
 								<div className="flex items-center gap-2 group ">
-									<Logo className="w-10 h-10 group-hover:text-black text-slate-900 duration-500" />
-									<span className="text-2xl font-semibold group-hover:text-black text-slate-900 duration-500">
+									<Logo className="w-10 h-10 group-hover:text-black text-zinc-900 duration-500" />
+									<span className="text-2xl font-semibold group-hover:text-black text-zinc-900 duration-500">
 										Planetfall
 									</span>
 								</div>
@@ -42,10 +42,10 @@ export default async function ({ children }: { children: React.ReactNode }) {
 			</header>
 			<main>{children}</main>
 			<footer className="inset-x-0 bottom-0 py-16 border-t">
-				<p className="text-center text-slate-400">
+				<p className="text-center text-zinc-400">
 					Powered by{" "}
 					<Link
-						className="font-medium text-primary-400 hover:text-slate-600"
+						className="font-medium text-primary-400 hover:text-zinc-600"
 						href="https://planetfall.io"
 					>
 						planetfall.io

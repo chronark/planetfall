@@ -49,7 +49,7 @@ export const Confirm: React.FC<ConfirmProps> = (props): JSX.Element => {
 				>
 					<AlertDialog.Overlay
 						forceMount={true}
-						className="fixed inset-0 z-20 bg-slate-900/50"
+						className="fixed inset-0 z-20 bg-zinc-900/50"
 					/>
 				</Transition.Child>
 				<Transition.Child
@@ -78,7 +78,7 @@ export const Confirm: React.FC<ConfirmProps> = (props): JSX.Element => {
 							<p className="text-left">{props.description}</p>
 						</AlertDialog.Description>
 
-						<div className="flex justify-end pt-4 border-t space-x-2 border-slate-200 ">
+						<div className="flex justify-end pt-4 border-t space-x-2 border-zinc-200 ">
 							<AlertDialog.Cancel>
 								<Button type="secondary">Cancel</Button>
 							</AlertDialog.Cancel>

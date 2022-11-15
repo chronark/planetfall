@@ -123,7 +123,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 							<ul className="flex flex-wrap items-center justify-end grow gap-8">
 								<li className="hidden md:block">
 									<Link
-										className="flex items-center px-3 py-2 font-medium text-slate-500 hover:text-slate-700 lg:px-5 transition duration-150 ease-in-out"
+										className="flex items-center px-3 py-2 font-medium text-zinc-500 hover:text-zinc-700 lg:px-5 transition duration-150 ease-in-out"
 										href="/docs"
 									>
 										Docs
@@ -131,7 +131,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 								</li>
 								<li className="hidden md:block">
 									<Link
-										className="flex items-center px-3 py-2 font-medium text-slate-500 hover:text-slate-700 lg:px-5 transition duration-150 ease-in-out"
+										className="flex items-center px-3 py-2 font-medium text-zinc-500 hover:text-zinc-700 lg:px-5 transition duration-150 ease-in-out"
 										href="/home"
 									>
 										Dashboard
@@ -141,7 +141,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 									<button
 										key="submit"
 										type="submit"
-										className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-slate-900 duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
+										className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 duration-300 ease-in-out md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900  shadow-sm group"
 									>
 										{isLoading ? <Loading /> : "Check"}
 									</button>
@@ -199,7 +199,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 										<Tabs.Trigger
 											key={r.region.id}
 											value={r.region.id}
-											className="border-b border-transparent text-slate-700 radix-state-active:text-slate-900 radix-state-active:border-slate-800"
+											className="border-b border-transparent text-zinc-700 radix-state-active:text-zinc-900 radix-state-active:border-zinc-800"
 										>
 											{r.region.name}
 										</Tabs.Trigger>
@@ -218,7 +218,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 													key={i}
 													className={`${
 														r.checks.length > 1 ? "w-1/2" : "w-full"
-													} p-4 flex flex-col divide-y divide-slate-200`}
+													} p-4 flex flex-col divide-y divide-zinc-200`}
 												>
 													<div className="flex flex-col items-center justify-between">
 														{r.checks.length > 1 ? (
@@ -226,7 +226,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 																<Heading h3={true}>
 																	{i === 0 ? "Cold" : "Hot"}
 																</Heading>
-																<span className="text-sm text-slate-500">
+																<span className="text-sm text-zinc-500">
 																	{new Date(c.time).toISOString()}
 																</span>
 															</>
@@ -248,13 +248,13 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 													</div>
 													<div className="py-4 md:py-8">
 														<Heading h4={true}>Response Header</Heading>
-														<pre className="p-2 rounded bg-slate-50">
+														<pre className="p-2 rounded bg-zinc-50">
 															{JSON.stringify(c.headers, null, 2)}
 														</pre>
 													</div>
 													<div className="py-4 md:py-8">
 														<Heading h4={true}>Response Body</Heading>
-														<pre className="p-2 rounded bg-slate-50">
+														<pre className="p-2 rounded bg-zinc-50">
 															{atob(c.body ?? "")}
 														</pre>
 													</div>
@@ -274,19 +274,19 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 					<div className="space-y-8  sm:space-y-5 lg:space-y-24">
 						<div className="space-y-6 sm:space-y-5">
 							<div>
-								<h3 className="text-lg font-medium leading-6 text-slate-900">
+								<h3 className="text-lg font-medium leading-6 text-zinc-900">
 									URL
 								</h3>
-								<p className="mt-1 text-sm text-slate-500">
+								<p className="mt-1 text-sm text-zinc-500">
 									Enter the url of your endpoint and select a HTTP method
 								</p>
 							</div>
 
 							<div className="space-y-6 sm:space-y-5">
-								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
 									<label
 										htmlFor="method"
-										className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
+										className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
 									>
 										Method
 									</label>
@@ -295,7 +295,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 											<select
 												{...register("method", { required: true })}
 												className={
-													"transition-all  focus:bg-slate-50 md:px-4 md:h-12 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+													"transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
 												}
 											>
 												<option value="GET">GET</option>
@@ -306,10 +306,10 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 										</div>
 									</div>
 								</div>
-								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
 									<label
 										htmlFor="url"
-										className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
+										className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
 									>
 										URL
 									</label>
@@ -323,9 +323,9 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 														z.string().url().safeParse(v).success,
 												})}
 												placeholder="https://example.com"
-												className={`transition-all  focus:bg-slate-50 md:px-4 md:h-12  w-full ${
-													errors.url ? "border-red-500" : "border-slate-700"
-												} hover:border-slate-900 focus:border-slate-900  border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+												className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${
+													errors.url ? "border-red-500" : "border-zinc-700"
+												} hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
 											/>
 										</div>
 										{errors.url ? (
@@ -340,20 +340,20 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 
 						<div className="space-y-6 sm:space-y-5">
 							<div>
-								<h3 className="text-lg font-medium leading-6 text-slate-900">
+								<h3 className="text-lg font-medium leading-6 text-zinc-900">
 									Repeat
 								</h3>
-								<p className="mt-1 text-sm text-slate-500">
+								<p className="mt-1 text-sm text-zinc-500">
 									Send 2 requests to your API in rapid succession to simulate
 									cold and hot functions or caches.
 								</p>
 							</div>
 
 							<div className="space-y-6 sm:space-y-5">
-								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
+								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
 									<label
 										htmlFor="repeat"
-										className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
+										className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
 									>
 										Repeat
 									</label>
@@ -362,7 +362,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 											<select
 												{...register("repeat", { required: false })}
 												className={
-													"transition-all  focus:bg-slate-50 md:px-4 md:h-12 w-full border-slate-900 border rounded hover:bg-slate-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+													"transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
 												}
 											>
 												<option value="false">No</option>
@@ -373,16 +373,16 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 								</div>
 							</div>
 						</div>
-						<div className="pt-8 space-y-6 divide-y divide-slate-200 sm:space-y-5 sm:pt-10">
+						<div className="pt-8 space-y-6 divide-y divide-zinc-200 sm:space-y-5 sm:pt-10">
 							<div>
-								<h3 className="text-lg font-medium leading-6 text-slate-900">
+								<h3 className="text-lg font-medium leading-6 text-zinc-900">
 									Regions
 								</h3>
-								<p className="max-w-2xl mt-1 text-sm text-slate-500">
+								<p className="max-w-2xl mt-1 text-sm text-zinc-500">
 									Select the regions from where we should call your API.
 								</p>
 							</div>
-							<div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
+							<div className="space-y-6 divide-y divide-zinc-200 sm:space-y-5">
 								<div className="pt-6 sm:pt-5">
 									<div role="group" aria-labelledby="label-email">
 										<div className="sm:grid sm:items-baseline sm:gap-4">
@@ -392,10 +392,10 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 														<button
 															type="button"
 															key={r.id}
-															className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-slate-700 ${
+															className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-zinc-700 ${
 																selectedRegions.includes(r.id)
-																	? "border-slate-900 bg-slate-50"
-																	: "border-slate-300"
+																	? "border-zinc-900 bg-zinc-50"
+																	: "border-zinc-300"
 															}`}
 															onClick={() => {
 																if (selectedRegions.includes(r.id)) {

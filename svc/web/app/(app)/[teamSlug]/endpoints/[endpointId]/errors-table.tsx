@@ -26,7 +26,7 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 		accessor("status", {
 			header: "Status",
 			cell: (info) => (
-				<span className="px-2 py-0.5 bg-slate-50 border-slate-200 rounded border">
+				<span className="px-2 py-0.5 bg-zinc-50 border-zinc-200 rounded border">
 					{info.getValue()}
 				</span>
 			),
@@ -64,7 +64,7 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 							<th
 								key={header.id}
 								className={classNames(
-									"sticky px-4 bg-white z-10  border-t border-b border-slate-400  py-3.5 text-left text-sm font-semibold text-slate-900",
+									"sticky px-4 bg-white z-10  border-t border-b border-zinc-400  py-3.5 text-left text-sm font-semibold text-zinc-900",
 									{
 										"rounded-l border-l": i === 0,
 										"rounded-r border-r ": i + 1 === headerGroup.headers.length,
@@ -88,7 +88,7 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 						{row.getVisibleCells().map((cell) => (
 							<td
 								key={cell.id}
-								className="px-3 py-2 text-sm whitespace-nowrap text-slate-500"
+								className="px-3 py-2 text-sm whitespace-nowrap text-zinc-500"
 							>
 								{flexRender(cell.column.columnDef.cell, cell.getContext())}
 							</td>

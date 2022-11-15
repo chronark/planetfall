@@ -19,8 +19,8 @@ export const Header = asyncComponent(async () => {
 						{/* Logo */}
 						<Link href="/" aria-label="Planetfall">
 							<div className="flex items-center gap-2 group ">
-								<Logo className="w-10 h-10 group-hover:text-white text-primary-100 duration-500" />
-								<span className="text-2xl font-semibold group-hover:text-white text-primary-100 duration-500">
+								<Logo className="w-10 h-10 group-hover:text-white text-zinc-100 duration-500" />
+								<span className="text-2xl font-semibold group-hover:text-white text-zinc-100 duration-500">
 									Planetfall
 								</span>
 							</div>
@@ -56,9 +56,9 @@ export const Header = asyncComponent(async () => {
 
 							<li>
 								<Link href={isSignedIn ? "/home" : "/auth/sign-in"}>
-									<div className="inline-flex items-center justify-center font-medium leading-snug text-gray-200 transition-all hover:cursor-pointer whitespace-nowrap duration-300 ease-in-out  hover:text-primary-100 shadow-sm group">
+									<div className="inline-flex items-center justify-center font-medium leading-snug text-gray-200 transition-all hover:cursor-pointer whitespace-nowrap duration-300 ease-in-out  hover:text-zinc-100 shadow-sm group">
 										{isSignedIn ? "Dashboard" : "Sign in"}
-										<ArrowLongRightIcon className="hidden w-6 h-6 ml-1 md:block group-hover:text-primary-100  group-hover:trangray-x-1 transition-transform duration-150 ease-out" />
+										<ArrowLongRightIcon className="hidden w-6 h-6 ml-1 md:block group-hover:text-zinc-100  group-hover:trangray-x-1 transition-transform duration-150 ease-out" />
 									</div>
 								</Link>
 							</li>

@@ -9,7 +9,10 @@ import { Stats } from "./stats";
 
 export default async function LandingPage() {
 	return (
-		<div className="grow">
+		<div className="relative grow">
+			
+
+
 			<Hero />
 			<Stats />
 			<Features />
