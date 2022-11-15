@@ -1,4 +1,3 @@
-export { PrismaClient as EdgeClient } from "@prisma/client/edge";
 export * from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 

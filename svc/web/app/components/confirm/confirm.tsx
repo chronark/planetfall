@@ -78,7 +78,7 @@ export const Confirm: React.FC<ConfirmProps> = (props): JSX.Element => {
 							<p className="text-left">{props.description}</p>
 						</AlertDialog.Description>
 
-						<div className="pt-4 flex justify-end space-x-2 border-t border-slate-200 ">
+						<div className="flex justify-end pt-4 border-t space-x-2 border-slate-200 ">
 							<AlertDialog.Cancel>
 								<Button type="secondary">Cancel</Button>
 							</AlertDialog.Cancel>

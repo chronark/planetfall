@@ -74,21 +74,26 @@ const features: Feature[] = [
 				description:
 					"Use preview branches and add monitoring within your CI pipeline",
 			},
+			{
+				title: "Integrate",
+				description:
+					"Use our API to integrate Planetfall into your monitoring stack",
+			},
 		],
 	},
 ];
 
 const Feature: React.FC<{ feature: Feature }> = ({ feature }) => {
 	return (
-		<div className="min-h-screen mx-auto text-center container lg:px-8">
+		<div className="container mx-auto text-center lg:px-8">
 			{/* <h2 className="text-lg font-semibold text-primary-600"></h2> */}
-			<div className="w-full max-w-md h-6 mx-auto drop-shadow-radiant" />
+			<div className="w-full h-6 max-w-md mx-auto drop-shadow-radiant" />
 
-			<h3 className="mt-2 text-4xl font-bold text-transparent bg-clip-text py-2 bg-gradient-to-t from-primary-100 to-white md:text-6xl">
+			<h3 className="py-2 mt-2 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-t from-primary-100/80 to-white md:text-6xl">
 				{feature.title}
 			</h3>
 			{feature.image ? (
-				<div className="mx-auto  mt-4 md:mt-8 lg:mt-16 border rounded overflow-hidden border-primary-600 drop-shadow-feature">
+				<div className="mx-auto mt-4 overflow-hidden border rounded md:mt-8 lg:mt-16 border-primary-600 drop-shadow-feature">
 					<Image
 						src={feature.image}
 						width={1920}
@@ -97,15 +102,15 @@ const Feature: React.FC<{ feature: Feature }> = ({ feature }) => {
 					/>
 				</div>
 			) : null}
-			<p className="mx-auto mt-4 md:mt-8 lg:mt-16 max-w-prose  text-slate-200 text-xl">
+			<p className="mx-auto mt-4 text-lg md:mt-8 lg:mt-16 max-w-prose text-slate-200">
 				{feature.description}
 			</p>
 			<div className="mt-12">
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
+				<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
 					{feature.bullets.map((b, i) => (
 						<div
 							key={b.title}
-							className=" bg-gradient-feature from-primary-600/50  to-transparent drop-shadow-feature "
+							className=" bg-gradient-feature from-primary-600/50 to-transparent drop-shadow-feature"
 						>
 							<div className="p-4 bg-gradient-feature-inner from-primary-400/20 to-transparent">
 								<dt className="font-medium text-slate-100">{b.title}</dt>
@@ -122,7 +127,7 @@ const Feature: React.FC<{ feature: Feature }> = ({ feature }) => {
 export function Features(): JSX.Element {
 	return (
 		<section id="features">
-			<div className="relative py-16 sm:py-24 lg:py-32 space-y-8 md:space-y-16 lg:space-y-32">
+			<div className="relative py-16 space-y-8 sm:py-24 lg:py-32 md:space-y-16 lg:space-y-32">
 				{features.map((f) => (
 					<Feature key={f.title} feature={f} />
 				))}

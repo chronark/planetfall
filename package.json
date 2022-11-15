@@ -11,21 +11,22 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "fmt": "rome check . --apply-suggested && rome format . --write",
+    "fmt": "npx rome@latest check . --apply-suggested && npx rome@latest format . --write",
     "test": "turbo run test"
   },
   "keywords": [],
   "author": "Andreas Thomas",
   "license": "ISC",
   "devDependencies": {
-    "@planetfall/eslint": "*",
     "next": "^13.0.2",
     "prettier": "^2.7.1",
-    "rome": "^10.0.0",
     "turbo": "^1.5.3"
   },
   "prisma": {
     "schema": "pkg/db/prisma/schema.prisma"
   },
-  "packageManager": "yarn@1.22.19"
+  "headwind.classRegex": {
+    "html": "\\bclass\\s*=\\s*[\\\"\\'](https://github.com/heybourn/headwind/blob/master/[_a-zA-Z0-9\\s\\-\\:\\/]+)[\\\"\\']",
+    "javascriptreact": "(?:\\bclassName\\s*=\\s*[\\\"\\'](https://github.com/heybourn/headwind/blob/master/[_a-zA-Z0-9\\s\\-\\:\\/]+)[\\\"\\'])|(?:\\btw\\s*`([_a-zA-Z0-9\\s\\-\\:\\/]*)`)"
+}
 }

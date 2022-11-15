@@ -11,29 +11,37 @@ type Tier = "Free" | "Pro" | "Enterprise";
 const tiers: {
 	name: Tier;
 	href: string;
-	monthlyPrice: number;
+	monthlyPrice:
+		| {
+				requests: number;
+				price: number;
+		  }
+		| string;
 	description: string;
 	cta: string;
 }[] = [
 	{
 		name: "Free",
 		href: "/auth/sign-in",
-		monthlyPrice: 0,
+		monthlyPrice: "$0",
 		description: "No credit card required",
 		cta: "Start for free",
 	},
 	{
 		name: "Pro",
 		href: "/auth/sign-in",
-		monthlyPrice: 0,
-		description: "For everyone, no minimum commitment",
+		monthlyPrice: {
+			requests: 10000,
+			price: 1,
+		},
+		description: "Pay as you go",
 		cta: "Start for free",
 	},
 
 	{
 		name: "Enterprise",
 		href: "mailto:support@planetfall.io",
-		monthlyPrice: -1,
+		monthlyPrice: "Contact us",
 		description: "For large-scale APIs",
 		cta: "Contact us",
 	},
@@ -164,38 +172,39 @@ export const Pricing: React.FC = (): JSX.Element => {
 	return (
 		<section id="pricing">
 			<div className="relative py-16 sm:py-24 lg:py-32">
-				<div className="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
+				<div className="max-w-md px-4 mx-auto text-center sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
 					<p className="mt-2 text-3xl font-bold tracking-tight text-slate-100 sm:text-4xl">
 						Transparent pricing
 					</p>
-					<p className="mx-auto mt-5 max-w-prose text-xl text-slate-400">
+					<p className="mx-auto mt-5 text-xl max-w-prose text-slate-400">
 						Start for free, then upgrade as you grow.
 					</p>
 				</div>
 				<div className="mt-12">
-					<div className="mx-auto max-w-7xl py-16 sm:py-24 sm:px-6 lg:px-8">
+					<div className="py-16 mx-auto max-w-7xl sm:py-24 sm:px-6 lg:px-8">
 						{/* xs to lg */}
-						<div className="mx-auto px-4 max-w-2xl space-y-16 lg:hidden">
+						<div className="max-w-2xl px-4 mx-auto space-y-16 lg:hidden">
 							{tiers.map((tier, tierIdx) => (
 								<section key={tier.name}>
-									<div className="mb-8 px-4">
+									<div className="px-4 mb-8">
 										<h2 className="text-lg font-medium leading-6 text-slate-100">
 											{tier.name}
 										</h2>
 										<p className="mt-4">
-											{tier.monthlyPrice >= 0 ? (
+											{typeof tier.monthlyPrice === "string" ? (
+												<span className="text-4xl font-bold tracking-tight text-slate-100">
+													{tier.monthlyPrice}
+												</span>
+											) : (
 												<>
 													<span className="text-4xl font-bold tracking-tight text-slate-100">
-														${tier.monthlyPrice}
+														${tier.monthlyPrice.price}
 													</span>
 													<span className="text-base font-medium text-slate-100">
-														/mo
+														/{tier.monthlyPrice.requests.toLocaleString()}{" "}
+														Requests
 													</span>
 												</>
-											) : (
-												<span className="text-4xl font-bold tracking-tight text-slate-100">
-													Contact Us
-												</span>
 											)}
 										</p>
 										<p className="mt-4 text-sm text-slate-500">
@@ -203,7 +212,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 										</p>
 										<a
 											href={tier.href}
-											className="block w-full rounded border border-slate-100 duration-300 bg-slate-100 py-2 text-center text-sm font-semibold text-slate-900 hover:bg-white "
+											className="block w-full py-2 text-sm font-semibold text-center duration-300 border rounded border-slate-100 bg-slate-100 text-slate-900 hover:bg-white "
 										>
 											{tier.cta}
 										</a>
@@ -211,7 +220,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 
 									{sections.map((section) => (
 										<table key={section.name} className="w-full">
-											<caption className="rounded bg-slate-50 py-3 px-4 text-left text-sm font-medium text-slate-900">
+											<caption className="px-4 py-3 text-sm font-medium text-left rounded bg-slate-50 text-slate-900">
 												{section.name}
 											</caption>
 											<thead>
@@ -228,26 +237,26 @@ export const Pricing: React.FC = (): JSX.Element => {
 												{section.features.map((feature) => (
 													<tr key={feature.name}>
 														<th
-															className="py-5 px-4 text-left text-sm font-normal text-slate-500"
+															className="px-4 py-5 text-sm font-normal text-left text-slate-500"
 															scope="row"
 														>
 															{feature.name}
 														</th>
 														<td className="py-5 pr-4">
 															{typeof feature.tiers[tier.name] === "string" ? (
-																<span className="block text-right text-sm text-slate-400">
+																<span className="block text-sm text-right text-slate-400">
 																	{feature.tiers[tier.name]}
 																</span>
 															) : (
 																<>
 																	{feature.tiers[tier.name] === true ? (
 																		<CheckIcon
-																			className="ml-auto h-5 w-5 text-emerald-500"
+																			className="w-5 h-5 ml-auto text-emerald-500"
 																			aria-hidden="true"
 																		/>
 																	) : (
 																		<MinusIcon
-																			className="ml-auto h-5 w-5 text-slate-400"
+																			className="w-5 h-5 ml-auto text-slate-400"
 																			aria-hidden="true"
 																		/>
 																	)}
@@ -274,7 +283,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 									>
 										<a
 											href={tier.href}
-											className="block w-full rounded border border-slate-100 duration-300 bg-slate-100 py-2 text-center text-sm font-semibold text-slate-900 hover:bg-white "
+											className="block w-full py-2 text-sm font-semibold text-center duration-300 border rounded border-slate-100 bg-slate-100 text-slate-900 hover:bg-white "
 										>
 											{tier.cta}
 										</a>
@@ -285,12 +294,12 @@ export const Pricing: React.FC = (): JSX.Element => {
 
 						{/* lg+ */}
 						<div className="hidden lg:block">
-							<table className="h-px w-full table-fixed">
+							<table className="w-full h-px table-fixed">
 								<caption className="sr-only">Pricing plan comparison</caption>
 								<thead>
 									<tr>
 										<th
-											className="w-1/4 px-6 pb-4 text-left text-sm font-medium text-slate-100"
+											className="w-1/4 px-6 pb-4 text-sm font-medium text-left text-slate-100"
 											scope="col"
 										>
 											<span className="sr-only">Feature by</span>
@@ -299,7 +308,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 										{tiers.map((tier) => (
 											<th
 												key={tier.name}
-												className="lg:w-1/4 px-6 pb-4 text-left text-lg font-medium leading-6 text-slate-100"
+												className="px-6 pb-4 text-lg font-medium leading-6 text-left lg:w-1/4 text-slate-100"
 												scope="col"
 											>
 												{tier.name}
@@ -307,10 +316,10 @@ export const Pricing: React.FC = (): JSX.Element => {
 										))}
 									</tr>
 								</thead>
-								<tbody className="divide-y divide-slate-800 border-t border-slate-800">
+								<tbody className="border-t divide-y divide-slate-800 border-slate-800">
 									<tr>
 										<th
-											className="py-8 px-6 text-left align-top text-sm font-medium text-slate-100"
+											className="px-6 py-8 text-sm font-medium text-left align-top text-slate-100"
 											scope="row"
 										>
 											Pricing
@@ -318,23 +327,24 @@ export const Pricing: React.FC = (): JSX.Element => {
 										{tiers.map((tier) => (
 											<td
 												key={tier.name}
-												className="h-full  py-8 px-6 align-top "
+												className="h-full px-6 py-8 align-top "
 											>
-												<div className="relative table h-full w-full">
+												<div className="relative table w-full h-full">
 													<p>
-														{tier.monthlyPrice >= 0 ? (
+														{typeof tier.monthlyPrice === "string" ? (
+															<span className="text-4xl font-bold tracking-tight text-slate-100">
+																{tier.monthlyPrice}
+															</span>
+														) : (
 															<>
 																<span className="text-4xl font-bold tracking-tight text-slate-100">
-																	${tier.monthlyPrice}
+																	${tier.monthlyPrice.price}
 																</span>
-																<span className="text-base font-medium text-slate-400">
-																	/mo
+																<span className="text-base font-medium text-slate-100">
+																	/{tier.monthlyPrice.requests.toLocaleString()}{" "}
+																	Requests
 																</span>
 															</>
-														) : (
-															<span className="text-4xl font-bold tracking-tight text-slate-100">
-																Contact Us
-															</span>
 														)}
 													</p>
 													<p className="mt-4 mb-16 text-sm text-slate-400">
@@ -342,7 +352,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 													</p>
 													<a
 														href={tier.href}
-														className="block w-full rounded border border-slate-100 duration-300 bg-slate-100 py-2 text-center text-sm font-semibold text-slate-900 hover:bg-white "
+														className="block w-full py-2 text-sm font-semibold text-center duration-300 border rounded border-slate-100 bg-slate-100 text-slate-900 hover:bg-white "
 													>
 														{tier.cta}
 													</a>
@@ -354,7 +364,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 										<Fragment key={section.name}>
 											<tr>
 												<th
-													className="bg-slate-900 py-3 pl-6 text-left text-sm font-medium text-slate-100"
+													className="py-3 pl-6 text-sm font-medium text-left bg-slate-900 text-slate-100"
 													colSpan={5}
 													scope="colgroup"
 												>
@@ -364,7 +374,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 											{section.features.map((feature) => (
 												<tr key={feature.name}>
 													<th
-														className="py-5 px-6 text-left text-sm font-normal text-slate-400"
+														className="px-6 py-5 text-sm font-normal text-left text-slate-400"
 														scope="row"
 													>
 														{feature.name}
@@ -372,7 +382,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 													{tiers.map((tier) => (
 														<td
 															key={tier.name}
-															className="py-5 px-6  text-center"
+															className="px-6 py-5 text-center "
 														>
 															{typeof feature.tiers[tier.name] === "string" ? (
 																<span className="block text-sm text-slate-300">
@@ -382,12 +392,12 @@ export const Pricing: React.FC = (): JSX.Element => {
 																<div className="flex justify-center">
 																	{feature.tiers[tier.name] === true ? (
 																		<CheckIcon
-																			className="h-5 w-5 text-sky-400"
+																			className="w-5 h-5 text-sky-400"
 																			aria-hidden="true"
 																		/>
 																	) : (
 																		<MinusIcon
-																			className="h-5 w-5 text-slate-400"
+																			className="w-5 h-5 text-slate-400"
 																			aria-hidden="true"
 																		/>
 																	)}
@@ -416,7 +426,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 											<td key={tier.name} className="px-6 pt-5">
 												<a
 													href={tier.href}
-													className="block w-full rounded border border-slate-100 duration-300 bg-slate-100 py-2 text-center text-sm font-semibold text-slate-900 hover:bg-white "
+													className="block w-full py-2 text-sm font-semibold text-center duration-300 border rounded border-slate-100 bg-slate-100 text-slate-900 hover:bg-white "
 												>
 													{tier.cta}
 												</a>

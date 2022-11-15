@@ -10,7 +10,7 @@ import { getSession } from "lib/auth";
 export default async function Page(props: { params: { teamSlug: string } }) {
 	const session = await getSession();
 	if (!session) {
-		return <SignIn/>;
+		return <SignIn />;
 	}
 
 	const team = await db.team.findUnique({

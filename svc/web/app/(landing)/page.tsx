@@ -11,7 +11,6 @@ export default async function LandingPage() {
 	return (
 		<div className="grow">
 			<Hero />
-
 			<Stats />
 			<Features />
 			<Cta />

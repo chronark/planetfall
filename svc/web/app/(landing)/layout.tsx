@@ -9,6 +9,7 @@ export default async function Landing({
 	return (
 		<div className="flex flex-col min-h-screen overflow-hidden bg-gradient-to-tr from-black to-[#060823]">
 			<Header />
+
 			<main>{children}</main>
 			<Footer />
 		</div>

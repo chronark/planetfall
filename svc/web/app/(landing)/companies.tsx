@@ -6,7 +6,7 @@ export const Companies: React.FC = (): JSX.Element => {
 			<div className="relative py-16 sm:py-24 lg:py-32">
 				<div className="py-6 border-b border-slate-800">
 					{/* Items */}
-					<div className="max-w-sm md:max-w-5xl mx-auto grid gap-2 grid-cols-4 md:grid-cols-5">
+					<div className="max-w-sm mx-auto md:max-w-5xl grid gap-2 grid-cols-4 md:grid-cols-5">
 						{/* Item */}
 						<div
 							className="flex items-center justify-center py-2 col-span-2 md:col-auto"

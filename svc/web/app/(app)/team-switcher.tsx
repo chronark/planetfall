@@ -23,14 +23,14 @@ export const TeamSwitcher: React.FC<Props> = ({
 
 	return (
 		<Popover.Root>
-			<Popover.Trigger className="rounded px-2 py-1 mx-2 hover:bg-slate-100 flex justify-between items-center gap-4">
+			<Popover.Trigger className="flex items-center justify-between px-2 py-1 mx-2 rounded hover:bg-slate-100 gap-4">
 				<span>{currentTeam?.name}</span>
 				<ChevronUpDownIcon className="w-4 h-4" />
 			</Popover.Trigger>
 			<Popover.Portal>
 				<Popover.Content
 					sideOffset={5}
-					className="border p-4 rounded shadow-lg bg-white z-30 divide-y divide-slate-200"
+					className="z-30 p-4 bg-white border rounded shadow-lg divide-y divide-slate-200"
 				>
 					<div className="py-2">
 						<h3 className="px-3 text-xs font-medium text-slate-500">

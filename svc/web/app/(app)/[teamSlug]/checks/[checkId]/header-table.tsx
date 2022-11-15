@@ -71,7 +71,7 @@ export const HeaderTable: React.FC<Props> = ({ header }): JSX.Element => {
 						{row.getVisibleCells().map((cell) => (
 							<td
 								key={cell.id}
-								className="whitespace-nowrap px-3 py-2 text-sm text-slate-500"
+								className="px-3 py-2 text-sm whitespace-nowrap text-slate-500"
 							>
 								{flexRender(cell.column.columnDef.cell, cell.getContext())}
 							</td>

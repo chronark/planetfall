@@ -9,12 +9,12 @@ export default async function AppLayout(props: {
 }) {
 	const session = await getSession();
 	if (!session) {
-		return <SignIn/>;
+		return <SignIn />;
 	}
 
 	console.log(__filename, { session });
 	return (
-		<div className="bg-white min-h-screen">
+		<div className="min-h-screen bg-white">
 			<DesktopNavbar teamSlug={props.params.teamSlug} />
 
 			<main>{props.children}</main>

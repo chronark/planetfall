@@ -32,14 +32,14 @@ export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
 				},
 			)}
 		>
-			<div className="w-full sm:flex sm:items-center sm:justify-between container mx-auto">
+			<div className="container w-full mx-auto sm:flex sm:items-center sm:justify-between">
 				<div>
 					<h1 className="text-4xl font-semibold text-slate-900">
 						{props.title}
 					</h1>
 					<p className="mt-2 text-sm text-slate-700">{props.description}</p>
 				</div>
-				<div className="mt-3 sm:mt-0 sm:ml-4 flex items-center gap-2">
+				<div className="flex items-center mt-3 sm:mt-0 sm:ml-4 gap-2">
 					{props.actions?.map((a, i) => (
 						<div key={i}>{a}</div>
 					))}

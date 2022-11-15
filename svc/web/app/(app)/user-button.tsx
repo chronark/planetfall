@@ -18,32 +18,32 @@ type Props = {
 };
 
 export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
-	const router = useRouter()
+	const router = useRouter();
 	return (
 		<Popover.Root>
-			<Popover.Trigger className="flex items-center justify-between gap-4 px-2 py-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded duration-500">
+			<Popover.Trigger className="flex items-center justify-between px-2 py-1 rounded gap-4 text-slate-500 hover:text-slate-800 hover:bg-slate-100 duration-500">
 				<span className="text-sm ">{user.name}</span>
 
 				<Image
 					src={user.image ?? ""}
 					width={64}
 					height={64}
-					className="rounded-full h-8 w-8"
+					className="w-8 h-8 rounded-full"
 					alt="User profile image"
 				/>
 			</Popover.Trigger>
 			<Popover.Portal>
-				<Popover.Content className="border flex flex-col items-start rounded shadow-lg w-full bg-white z-30 divide-y divide-slate-200">
+				<Popover.Content className="z-30 flex flex-col items-start w-full bg-white border rounded shadow-lg divide-y divide-slate-200">
 					<div // href="/settings"
-						className="rounded px-3 py-1 text-sm font-medium text-slate-400"
+						className="px-3 py-1 text-sm font-medium rounded text-slate-400"
 					>
 						Settings
 					</div>
 					<button
-						className="rounded px-3 py-1 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+						className="px-3 py-1 text-sm font-medium rounded text-slate-600 hover:bg-slate-100 hover:text-slate-900"
 						onClick={async () => {
-							await signOut({ redirect: false })
-							router.push("/")
+							await signOut({ redirect: false });
+							router.push("/");
 						}}
 					>
 						Sign Out

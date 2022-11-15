@@ -29,7 +29,7 @@ export const TeamTable: React.FC<Props> = ({ members }) => {
 			cell: (info) => (
 				<div className="flex items-center">
 					<img
-						className="h-10 w-10 rounded-full"
+						className="w-10 h-10 rounded-full"
 						src={info.getValue().image ?? ""}
 						alt=""
 					/>
@@ -42,7 +42,7 @@ export const TeamTable: React.FC<Props> = ({ members }) => {
 		accessor("role", {
 			header: "Role",
 			cell: (info) => (
-				<span className="px-2 py-1 bg-slate-50 border border-slate-300 text-slate-900 ">
+				<span className="px-2 py-1 border bg-slate-50 border-slate-300 text-slate-900 ">
 					{info.getValue()}
 				</span>
 			),
@@ -88,7 +88,7 @@ export const TeamTable: React.FC<Props> = ({ members }) => {
 						{row.getVisibleCells().map((cell) => (
 							<td
 								key={cell.id}
-								className="whitespace-nowrap px-3 py-2 text-sm text-slate-500"
+								className="px-3 py-2 text-sm whitespace-nowrap text-slate-500"
 							>
 								{flexRender(cell.column.columnDef.cell, cell.getContext())}
 							</td>

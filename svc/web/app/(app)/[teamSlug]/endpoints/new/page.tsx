@@ -8,7 +8,7 @@ import { SignIn } from "@/components/auth/sign-in";
 export default async function Page(props: { params: { teamSlug: string } }) {
 	const { session } = await getSession();
 	if (!session) {
-		return <SignIn/>;
+		return <SignIn />;
 	}
 
 	const team = await db.team.findUnique({
@@ -30,7 +30,7 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				title="Create a new endpoint"
 				description={undefined}
 			/>
-			<div className="container mx-auto pb-20">
+			<div className="container pb-20 mx-auto">
 				<Form teamId={team.id} teamSlug={team.slug} regions={regions} />
 			</div>
 		</div>

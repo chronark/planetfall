@@ -8,7 +8,7 @@ import { SignIn } from "@/components/auth/sign-in";
 export default async function Page(props: { params: { teamSlug: string } }) {
 	const { session } = await getSession();
 	if (!session) {
-		return <SignIn/>;
+		return <SignIn />;
 		return;
 	}
 
@@ -29,7 +29,7 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				title="Create a new Status Page"
 				description={undefined}
 			/>
-			<div className="container mx-auto pb-20">
+			<div className="container pb-20 mx-auto">
 				<Form
 					teamId={team.id}
 					teamSlug={team.slug}

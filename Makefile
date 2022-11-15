@@ -5,8 +5,8 @@ rm:
 	rm -rf ./**/node_modules; rm -rf ./**/dist; rm -rf ./**/.next; rm -rf ./**/.turbo
 
 build: rm
-	yarn install
-	yarn build
+	pnpm install
+	pnpm build
 
 build-proxy: export GOOS=linux
 build-proxy: export GOARCH=amd64
@@ -18,7 +18,7 @@ build-proxy:
 	# zip ./dist/function.v2.zip ./dist/main
 
 deploy: build-proxy build-scheduler
-	terraform -chdir=deployment init
+	terraform -chdir=deployment init -upgrade
 	terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
 	cd svc/scheduler && flyctl deploy --image ${SCHEDULER_TAG}
 
@@ -33,10 +33,10 @@ build-scheduler:
 
 
 dev: rm build
-	npx turbo run dev 
+	pnpm turbo run dev 
 
 fmt: rm
-	yarn fmt
+	pnpm fmt
 
 
 tinybird:

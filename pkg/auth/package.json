@@ -11,7 +11,7 @@
   "author": "Andreas Thomas",
   "license": "ISC",
   "devDependencies": {
-    "@planetfall/tsconfig": "*",
+    "@planetfall/tsconfig": "workspace:*",
     "@types/bcrypt": "^5.0.0",
     "typescript": "^4.8.3"
   },

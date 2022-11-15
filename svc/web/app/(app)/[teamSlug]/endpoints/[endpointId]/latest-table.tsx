@@ -30,14 +30,14 @@ export const LatestTable: React.FC<Props> = ({
 			header: "Success",
 			cell: (info) =>
 				info.getValue() ? (
-					<div className="flex h-6 w-6 items-center justify-center mr-2">
-						<span className="animate-ping-slow absolute inline-flex h-4 w-4 rounded-full bg-rose-400 opacity-50" />
-						<span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500" />
+					<div className="flex items-center justify-center w-6 h-6 mr-2">
+						<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 animate-ping-slow bg-rose-400" />
+						<span className="relative inline-flex w-2 h-2 rounded-full bg-rose-500" />
 					</div>
 				) : (
-					<div className="flex h-6 w-6 items-center justify-center mr-2">
-						<span className="absolute inline-flex h-4 w-4 rounded-full bg-emerald-400 opacity-50" />
-						<span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+					<div className="flex items-center justify-center w-6 h-6 mr-2">
+						<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 bg-emerald-400" />
+						<span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
 					</div>
 				),
 		}),
@@ -119,7 +119,7 @@ export const LatestTable: React.FC<Props> = ({
 						{row.getVisibleCells().map((cell) => (
 							<td
 								key={cell.id}
-								className="whitespace-nowrap px-3 py-2 text-sm text-slate-500"
+								className="px-3 py-2 text-sm whitespace-nowrap text-slate-500"
 							>
 								{flexRender(cell.column.columnDef.cell, cell.getContext())}
 							</td>

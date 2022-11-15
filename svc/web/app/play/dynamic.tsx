@@ -103,27 +103,27 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 
 	return (
 		<form onSubmit={handleSubmit(submit)}>
-			<header className="fixed top-0  w-full z-50   backdrop-blur">
+			<header className="fixed top-0 z-50 w-full  backdrop-blur">
 				<div className="container mx-auto">
 					<div className="flex items-center justify-between h-16 md:h-20">
 						{/* Site branding */}
-						<div className="shrink-0 mr-4">
+						<div className="mr-4 shrink-0">
 							{/* Logo */}
 							<Link href="/" aria-label="Planetfall">
 								<div className="flex items-center gap-2 group ">
 									<Logo className="w-10 h-10 group-hover:text-black text-primary-900 duration-500" />
-									<span className="font-semibold text-2xl group-hover:text-black text-primary-900 duration-500">
+									<span className="text-2xl font-semibold group-hover:text-black text-primary-900 duration-500">
 										Planetfall
 									</span>
 								</div>
 							</Link>
 						</div>
 						{/* Desktop navigation */}
-						<nav className="flex grow items-center">
-							<ul className="flex grow justify-end flex-wrap items-center gap-8">
+						<nav className="flex items-center grow">
+							<ul className="flex flex-wrap items-center justify-end grow gap-8">
 								<li className="hidden md:block">
 									<Link
-										className="font-medium text-slate-500 hover:text-slate-700 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+										className="flex items-center px-3 py-2 font-medium text-slate-500 hover:text-slate-700 lg:px-5 transition duration-150 ease-in-out"
 										href="/docs"
 									>
 										Docs
@@ -131,7 +131,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 								</li>
 								<li className="hidden md:block">
 									<Link
-										className="font-medium text-slate-500 hover:text-slate-700 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+										className="flex items-center px-3 py-2 font-medium text-slate-500 hover:text-slate-700 lg:px-5 transition duration-150 ease-in-out"
 										href="/home"
 									>
 										Dashboard
@@ -141,7 +141,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 									<button
 										key="submit"
 										type="submit"
-										className="transition-all hover:cursor-pointer whitespace-nowrap md:px-4 py-2 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
+										className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-slate-900 duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
 									>
 										{isLoading ? <Loading /> : "Check"}
 									</button>
@@ -151,7 +151,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 					</div>
 				</div>
 			</header>
-			<div className="min-h-screen container mx-auto mt-24 -pt-24 pb-20">
+			<div className="container min-h-screen pb-20 mx-auto mt-24 -pt-24">
 				{checks ? (
 					<div className="pb-32 mb-32 border-b">
 						<PageHeader title={getValues().url} />
@@ -194,7 +194,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 							) : null}
 
 							<Tabs.Root defaultValue={checks[0].region.id}>
-								<Tabs.List className="flex justify-center items-center space-x-4">
+								<Tabs.List className="flex items-center justify-center space-x-4">
 									{checks?.map((r) => (
 										<Tabs.Trigger
 											key={r.region.id}
@@ -209,7 +209,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 									<Tabs.Content
 										key={r.region.id}
 										value={r.region.id}
-										className="flex flex-col md:flex-row justify-between divide-y md:divide-y-0  w-full"
+										className="flex flex-col justify-between w-full md:flex-row divide-y md:divide-y-0 "
 									>
 										{r.checks
 											.sort((a, b) => a.time - b.time)
@@ -220,13 +220,13 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 														r.checks.length > 1 ? "w-1/2" : "w-full"
 													} p-4 flex flex-col divide-y divide-slate-200`}
 												>
-													<div className="flex flex-col justify-between items-center">
+													<div className="flex flex-col items-center justify-between">
 														{r.checks.length > 1 ? (
 															<>
 																<Heading h3={true}>
 																	{i === 0 ? "Cold" : "Hot"}
 																</Heading>
-																<span className="text-slate-500 text-sm">
+																<span className="text-sm text-slate-500">
 																	{new Date(c.time).toISOString()}
 																</span>
 															</>
@@ -248,13 +248,13 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 													</div>
 													<div className="py-4 md:py-8">
 														<Heading h4={true}>Response Header</Heading>
-														<pre className="rounded p-2 bg-slate-50">
+														<pre className="p-2 rounded bg-slate-50">
 															{JSON.stringify(c.headers, null, 2)}
 														</pre>
 													</div>
 													<div className="py-4 md:py-8">
 														<Heading h4={true}>Response Body</Heading>
-														<pre className="rounded p-2 bg-slate-50">
+														<pre className="p-2 rounded bg-slate-50">
 															{atob(c.body ?? "")}
 														</pre>
 													</div>
@@ -286,7 +286,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 									<label
 										htmlFor="method"
-										className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+										className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 									>
 										Method
 									</label>
@@ -309,7 +309,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 									<label
 										htmlFor="url"
-										className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+										className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 									>
 										URL
 									</label>
@@ -353,7 +353,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 									<label
 										htmlFor="repeat"
-										className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+										className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 									>
 										Repeat
 									</label>
@@ -373,12 +373,12 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 								</div>
 							</div>
 						</div>
-						<div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
+						<div className="pt-8 space-y-6 divide-y divide-slate-200 sm:space-y-5 sm:pt-10">
 							<div>
 								<h3 className="text-lg font-medium leading-6 text-slate-900">
 									Regions
 								</h3>
-								<p className="mt-1 max-w-2xl text-sm text-slate-500">
+								<p className="max-w-2xl mt-1 text-sm text-slate-500">
 									Select the regions from where we should call your API.
 								</p>
 							</div>

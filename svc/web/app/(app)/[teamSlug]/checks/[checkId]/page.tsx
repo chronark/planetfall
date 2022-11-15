@@ -34,14 +34,14 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 	return (
 		<div className="transition-all duration-500">
 			{timings.dnsDone > 0 ? (
-				<div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
-					<div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-slate-100">
+					<div className="flex justify-between w-1/5 text-sm text-slate-500 whitespace-nowrap ">
 						<span>DNS</span>
 						<span>
 							{(timings.dnsDone - timings.dnsStart).toLocaleString()} ms
 						</span>
 					</div>
-					<div className="w-4/5 flex">
+					<div className="flex w-4/5">
 						<div
 							style={{
 								width: `${
@@ -58,14 +58,14 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 			) : null}
 
 			{timings.connectDone > 0 ? (
-				<div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
-					<div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-slate-100">
+					<div className="flex justify-between w-1/5 text-sm text-slate-500 whitespace-nowrap ">
 						<span>Connection</span>
 						<span>
 							{(timings.connectDone - timings.connectStart).toLocaleString()} ms
 						</span>
 					</div>
-					<div className="w-4/5 flex">
+					<div className="flex w-4/5">
 						<div
 							style={{
 								width: `${
@@ -88,8 +88,8 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 				</div>
 			) : null}
 			{timings.tlsHandshakeDone > 0 ? (
-				<div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
-					<div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-slate-100">
+					<div className="flex justify-between w-1/5 text-sm text-slate-500 whitespace-nowrap ">
 						<span>TLS</span>
 						<span>
 							{(
@@ -98,7 +98,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 							ms
 						</span>
 					</div>
-					<div className="w-4/5 flex">
+					<div className="flex w-4/5">
 						<div
 							style={{
 								width: `${
@@ -124,8 +124,8 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 				</div>
 			) : null}
 			{timings.firstByteDone > 0 ? (
-				<div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
-					<div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-slate-100">
+					<div className="flex justify-between w-1/5 text-sm text-slate-500 whitespace-nowrap ">
 						<span>Waiting for response</span>
 						<span>
 							{(
@@ -134,7 +134,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 							ms
 						</span>
 					</div>
-					<div className="w-4/5 flex">
+					<div className="flex w-4/5">
 						<div
 							style={{
 								width: `${
@@ -157,15 +157,15 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 				</div>
 			) : null}
 			{timings.transferDone > 0 ? (
-				<div className="flex w-full gap-4 items-center py-1 duration-500 hover:bg-slate-100 rounded">
-					<div className="w-1/5 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-slate-100">
+					<div className="flex justify-between w-1/5 text-sm text-slate-500 whitespace-nowrap ">
 						<span>Transfer</span>
 						<span>
 							{(timings.transferDone - timings.transferStart).toLocaleString()}{" "}
 							ms
 						</span>
 					</div>
-					<div className="w-4/5 flex">
+					<div className="flex w-4/5">
 						<div
 							style={{
 								width: `${
@@ -204,7 +204,7 @@ export default async function Page(props: {
 
 	const session = await getSession();
 	if (!session) {
-		return <SignIn/>;
+		return <SignIn />;
 	}
 
 	const endpoint = check.endpointId
@@ -236,14 +236,14 @@ export default async function Page(props: {
 				]}
 			/>
 			<main className="container mx-auto divide-y">
-				<div className="w-full flex justify-between items-center gap-2 md:gap-4 lg:gap-8">
+				<div className="flex items-center justify-between w-full gap-2 md:gap-4 lg:gap-8">
 					<Stats
 						label={check.error ? "Error" : "Success"}
 						value={
 							check.error ? (
-								<ExclamationCircleIcon className="m-1 w-8 h-8" />
+								<ExclamationCircleIcon className="w-8 h-8 m-1" />
 							) : (
-								<CheckIcon className="m-1 w-8 h-8" />
+								<CheckIcon className="w-8 h-8 m-1" />
 							)
 						}
 						status={check.error ? "error" : "success"}
@@ -275,21 +275,21 @@ export default async function Page(props: {
 				</div>
 
 				{check.timing ? (
-					<div className="py-4 md:py-8 lg:py-16 flex flex-col space-y-4">
+					<div className="flex flex-col py-4 md:py-8 lg:py-16 space-y-4">
 						<Heading h2={true}>Trace</Heading>
 
 						<DNS timings={JSON.parse(check.timing) as Timings} />
 					</div>
 				) : null}
 				{check.error ? (
-					<div className="py-4 md:py-8 lg:py-16  flex flex-col space-y-4">
+					<div className="flex flex-col py-4 md:py-8 lg:py-16  space-y-4">
 						<Heading h2={true}>Error</Heading>
 
 						<Text>{check.error}</Text>
 					</div>
 				) : null}
 
-				<div className="py-4 md:py-8 lg:py-16 flex flex-col space-y-4">
+				<div className="flex flex-col py-4 md:py-8 lg:py-16 space-y-4">
 					<Heading h2={true}>Response Header</Heading>
 
 					<HeaderTable
@@ -299,10 +299,10 @@ export default async function Page(props: {
 					/>
 				</div>
 				{check.body ? (
-					<div className="py-4 md:py-8 lg:py-16 flex flex-col space-y-4">
+					<div className="flex flex-col py-4 md:py-8 lg:py-16 space-y-4">
 						<Heading h2={true}>Response Body</Heading>
 
-						<code className="md:px-4 px-2 py-1 md:py-3  w-full flex flex-grow  border rounded">
+						<code className="flex flex-grow w-full px-2 py-1 border rounded md:px-4 md:py-3 ">
 							{atob(check.body)}
 						</code>
 					</div>

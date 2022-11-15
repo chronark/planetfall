@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export default asyncComponent(async () => {
 	const { session } = await getSession();
 	if (!session) {
-		return <SignIn/>
+		return <SignIn />;
 	}
 
 	const team = await db.team.findFirst({
@@ -21,7 +21,7 @@ export default asyncComponent(async () => {
 		},
 	});
 	if (!team) {
-		return <SignIn/>;
+		return <SignIn />;
 	}
 	redirect(`/${team.slug}`);
 });

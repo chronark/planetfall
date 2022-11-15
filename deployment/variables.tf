@@ -74,7 +74,7 @@ variable "tinybird_token" {
 }
 
 
-variable "github_outh_id" {
+variable "github_oauth_id" {
   type = string
 }
 

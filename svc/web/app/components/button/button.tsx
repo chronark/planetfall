@@ -16,7 +16,7 @@ export function Button(
 export function Button(
 	props: ButtonStyleProps & (ButtonControllerProps | LinkControllerProps),
 ): JSX.Element {
-	const [isLoading, setIsLoading] = useState(props.loading??false);
+	const [isLoading, setIsLoading] = useState(props.loading ?? false);
 	const onClick = async (e?: MouseEvent<HTMLButtonElement>): Promise<void> => {
 		if ("onClick" in props && props.onClick !== undefined) {
 			setIsLoading(true);

@@ -27,6 +27,8 @@ module.exports = {
 		},
 		extend: {
 			backgroundImage: {
+				"gradient-divider":
+					"radial-gradient(50% 30% at 50% 0%, var(--tw-gradient-stops))",
 				"gradient-feature":
 					"radial-gradient(50% 50% at 50% 0%, var(--tw-gradient-stops))",
 				"gradient-feature-inner":
@@ -114,7 +116,7 @@ module.exports = {
 			},
 
 			fontFamily: {
-				sans: ["Inter", ...defaultTheme.fontFamily.sans],
+				sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
 				display: ["PangeaAfrikan-Regular", ...defaultTheme.fontFamily.sans],
 			},
 
@@ -253,5 +255,9 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [require("@tailwindcss/typography"), require("tailwindcss-radix")()],
+	plugins: [
+		require("@tailwindcss/typography"),
+		require("tailwindcss-radix")(),
+		require("tailwindcss-debug-screens"),
+	],
 };

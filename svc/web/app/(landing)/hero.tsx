@@ -10,7 +10,7 @@ const Rings: React.FC = (): JSX.Element => {
 				viewBox="0 0 1026 1026"
 				fill="none"
 				aria-hidden="true"
-				className="inset-0 h-full w-full animate-spin-forward-slow"
+				className="inset-0 w-full h-full animate-spin-forward-slow"
 			>
 				<path
 					d="M1025 513c0 282.77-229.23 512-512 512S1 795.77 1 513 230.23 1 513 1s512 229.23 512 512Z"
@@ -41,7 +41,7 @@ const Rings: React.FC = (): JSX.Element => {
 				viewBox="0 0 1026 1026"
 				fill="none"
 				aria-hidden="true"
-				className="absolute inset-0 h-full w-full animate-spin-reverse-slower"
+				className="absolute inset-0 w-full h-full animate-spin-reverse-slower"
 			>
 				<path
 					d="M913 513c0 220.914-179.086 400-400 400S113 733.914 113 513s179.086-400 400-400 400 179.086 400 400Z"
@@ -78,23 +78,23 @@ export const Hero: React.FC = (): JSX.Element => {
 		>
 			<Rings />
 
-			<div className="relative max-w-6xl mx-auto px-4 sm:px-6 min-h-screen">
+			<div className="relative max-w-6xl min-h-screen px-4 mx-auto sm:px-6">
 				<div className="pt-32 md:pt-40">
-					<div className="mx-auto text-center">
-						<h1 className="font-display text-5xl xl:whitespace-nowrap font-extrabold  tracking-wider text-transparent bg-clip-text bg-gradient-to-tl from-primary-200  via-white to-primary-100">
-							Planet-wide Service and Latency Analysis
+					<div className="flex flex-col items-center text-center">
+						<h1 className="max-w-lg md:max-w-xl lg:max-w-4xl xl:max-w-6xl text-center font-extrabold tracking-[-0.02em] py-4  text-[40px] md:text-6xl lg:text-7xl xl:text-8xl   text-transparent bg-clip-text bg-gradient-to-t from-primary-100/80  to-white">
+							Global Latency Monitoring
 						</h1>
-						<p className="text-xl text-slate-300 mt-6">
+						<p className="max-w-lg mt-6 text-lg font-light md:max-w-xl lg:max-w-4xl xl:max-w-6xl text-slate-300">
 							Track, measure and share the latency and performance of your APIs
 							from across the planet.
 						</p>
-						<div className="mt-10 max-w-xs mx-auto sm:max-w-none sm:inline-flex sm:justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+						<div className="max-w-xs mx-auto mt-10 space-y-4 sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4">
 							<div>
-								<div className="text-gray-900 border   rounded  py-2 border-white bg-gradient-to-tr drop-shadow-launch from-slate-100 to-white  px-10 hover:text-primary-800 duration-1000 transition-all">
+								<div className="px-10 py-2 text-gray-900 transition-all duration-1000 border border-white rounded bg-gradient-to-tr drop-shadow-launch from-slate-100 to-white hover:text-primary-800">
 									Launching soon
 								</div>
 								{/* <Link href="/auth/sign-in">
-                  <div className="hover:cursor-pointer px-4 hover:px-6 hover:shadow-lg transition-all py-3 font-medium inline-flex items-center justify-center border border-slate-900 rounded leading-snug duration-300 ease-in-out  bg-slate-900 text-slate-50 hover:bg-slate-50 hover:text-slate-900  w-full shadow-sm group">
+                  <div className="inline-flex items-center justify-center w-full px-4 py-3 font-medium leading-snug transition-all duration-300 ease-in-out border rounded shadow-sm hover:cursor-pointer hover:px-6 hover:shadow-lg border-slate-900 bg-slate-900 text-slate-50 hover:bg-slate-50 hover:text-slate-900 group">
                     Get Started for free
                   </div>
                 </Link> */}

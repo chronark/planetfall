@@ -25,10 +25,8 @@ function middleware(req: NextRequest) {
 	if (subdomain !== "") {
 		url.pathname = `/_statuspages/${subdomain}`;
 		return NextResponse.rewrite(url);
-
 	}
 	return NextResponse.next();
-
 }
 
 export default middleware;

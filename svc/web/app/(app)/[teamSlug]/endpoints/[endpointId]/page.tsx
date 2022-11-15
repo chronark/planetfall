@@ -16,7 +16,7 @@ export default async function Page(props: {
 }) {
 	const { session } = await getSession();
 	if (!session) {
-		return <SignIn/>;
+		return <SignIn />;
 	}
 
 	const endpoint = await db.endpoint.findUnique({
@@ -74,13 +74,13 @@ export default async function Page(props: {
 				description={endpoint.id}
 				actions={[
 					// endpoint.active ? (
-					// 	<div className="flex h-6 w-6 items-center justify-center mr-2">
-					// 		<span className="animate-ping-slow absolute inline-flex h-4 w-4 rounded-full bg-emerald-400 opacity-50" />
-					// 		<span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+					// 	<div className="flex items-center justify-center w-6 h-6 mr-2">
+					// 		<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 animate-ping-slow bg-emerald-400" />
+					// 		<span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
 					// 	</div>
 					// ) : (
-					// 	<div className="flex h-6 w-6 items-center justify-center mr-2">
-					// 		<span className="relative inline-flex rounded-full h-2 w-2 bg-slate-500" />
+					// 	<div className="flex items-center justify-center w-6 h-6 mr-2">
+					// 		<span className="relative inline-flex w-2 h-2 rounded-full bg-slate-500" />
 					// 	</div>
 					// ),
 
@@ -116,7 +116,7 @@ export default async function Page(props: {
 				]}
 			/>
 			<main className="container mx-auto divide-y">
-				<div className="w-full flex justify-between items-center gap-2 md:gap-4 lg:gap-8 pb-4 md:pb-8 lg:pb-16">
+				<div className="flex items-center justify-between w-full pb-4 gap-2 md:gap-4 lg:gap-8 md:pb-8 lg:pb-16">
 					<Stats
 						label="Availability"
 						status={
@@ -191,14 +191,14 @@ export default async function Page(props: {
 				</div>
 
 				{errors.length > 0 ? (
-					<div className=" py-4 md:py-8 lg:py-16">
+					<div className="py-4  md:py-8 lg:py-16">
 						<Heading h3={true}>Errors</Heading>
 						<ErrorsTable errors={errors} />
 					</div>
 				) : null}
 
 				{latestChecks.length > 0 ? (
-					<div className=" py-4 md:py-8 lg:py-16">
+					<div className="py-4  md:py-8 lg:py-16">
 						<Heading h3={true}>Latest Checks</Heading>
 						<LatestTable
 							teamSlug={props.params.teamSlug}

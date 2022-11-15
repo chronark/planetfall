@@ -9,9 +9,7 @@ import { SignIn } from "@/components/auth/sign-in";
 import { db } from "@planetfall/db";
 import { getSession } from "lib/auth";
 
-const userNavigation = [
-	{ name: "Settings", href: "/settings" },
-];
+const userNavigation = [{ name: "Settings", href: "/settings" }];
 
 export type NavbarProps = {
 	teamSlug: string;
@@ -21,7 +19,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 	const { session } = await getSession();
 
 	if (!session) {
-		return <SignIn/>;
+		return <SignIn />;
 	}
 
 	const navigation: { name: string; href: string }[] = [
@@ -48,8 +46,8 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 
 	return (
 		<nav className="border-b border-slate-300">
-			<div className="container mx-auto pt-2">
-				<div className="flex justify-between items-center">
+			<div className="container pt-2 mx-auto">
+				<div className="flex items-center justify-between">
 					<Breadcrumbs
 						teamSlug={props.teamSlug}
 						teamSwitcher={

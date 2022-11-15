@@ -27,15 +27,15 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 		return "1%";
 	}
 	return (
-		<div className="w-full flex flex-col gap-4 md:gap-0">
-			<div className="flex flex-col md:flex-row w-full md:gap-4 md:items-center py-1 duration-500 hover:bg-slate-100 rounded">
-				<div className="w-1/2 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+		<div className="flex flex-col w-full gap-4 md:gap-0">
+			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-slate-100">
+				<div className="flex justify-between w-1/2 text-sm text-slate-500 whitespace-nowrap ">
 					<span>DNS</span>
 					<span>
 						{(timings.dnsDone - timings.dnsStart).toLocaleString()} ms
 					</span>
 				</div>
-				<div className="w-full flex">
+				<div className="flex w-full">
 					<div
 						style={{
 							width: width(timings.dnsStart, timings.dnsDone),
@@ -46,14 +46,14 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex flex-col md:flex-row w-full md:gap-4 md:items-center py-1 duration-500 hover:bg-slate-100 rounded">
-				<div className="w-1/2 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-slate-100">
+				<div className="flex justify-between w-1/2 text-sm text-slate-500 whitespace-nowrap ">
 					<span>Connection</span>
 					<span>
 						{(timings.connectDone - timings.connectStart).toLocaleString()} ms
 					</span>
 				</div>
-				<div className="w-full flex">
+				<div className="flex w-full">
 					<div
 						style={{
 							width: width(min, timings.connectStart),
@@ -69,8 +69,8 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex flex-col md:flex-row w-full md:gap-4 md:items-center py-1 duration-500 hover:bg-slate-100 rounded">
-				<div className="w-1/2 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-slate-100">
+				<div className="flex justify-between w-1/2 text-sm text-slate-500 whitespace-nowrap ">
 					<span>TLS</span>
 					<span>
 						{(
@@ -79,7 +79,7 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 						ms
 					</span>
 				</div>
-				<div className="w-full flex">
+				<div className="flex w-full">
 					<div
 						style={{
 							width: width(min, timings.tlsHandshakeStart),
@@ -95,15 +95,15 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex flex-col md:flex-row w-full md:gap-4 md:items-center py-1 duration-500 hover:bg-slate-100 rounded">
-				<div className="w-1/2 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-slate-100">
+				<div className="flex justify-between w-1/2 text-sm text-slate-500 whitespace-nowrap ">
 					<span>TTFB</span>
 					<span>
 						{(timings.firstByteDone - timings.firstByteStart).toLocaleString()}{" "}
 						ms
 					</span>
 				</div>
-				<div className="w-full flex">
+				<div className="flex w-full">
 					<div
 						style={{
 							width: width(min, timings.firstByteStart),
@@ -119,14 +119,14 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex flex-col md:flex-row w-full md:gap-4 md:items-center py-1 duration-500 hover:bg-slate-100 rounded">
-				<div className="w-1/2 flex text-sm text-slate-500 justify-between whitespace-nowrap ">
+			<div className="flex flex-col w-full py-1 rounded md:flex-row md:gap-4 md:items-center duration-500 hover:bg-slate-100">
+				<div className="flex justify-between w-1/2 text-sm text-slate-500 whitespace-nowrap ">
 					<span>Transfer</span>
 					<span>
 						{(timings.transferDone - timings.transferStart).toLocaleString()} ms
 					</span>
 				</div>
-				<div className="w-full flex">
+				<div className="flex w-full">
 					<div
 						style={{
 							width: width(min, timings.transferStart),

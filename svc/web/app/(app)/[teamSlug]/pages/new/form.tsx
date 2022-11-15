@@ -76,7 +76,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 						<h3 className="text-lg font-medium leading-6 text-slate-900">
 							Name
 						</h3>
-						<p className="mt-1 max-w-2xl text-sm text-slate-500">
+						<p className="max-w-2xl mt-1 text-sm text-slate-500">
 							Enter a name and slug for your page. The slug will be used as
 							subdomain: slug.planetfall.io
 						</p>
@@ -86,7 +86,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="url"
-								className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+								className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 							>
 								Name
 							</label>
@@ -113,7 +113,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="slug"
-								className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+								className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 							>
 								Slug
 							</label>
@@ -142,12 +142,12 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 					</div>
 				</div>
 
-				<div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
+				<div className="pt-8 space-y-6 divide-y divide-slate-200 sm:space-y-5 sm:pt-10">
 					<div>
 						<h3 className="text-lg font-medium leading-6 text-slate-900">
 							Endpoints
 						</h3>
-						<p className="mt-1 max-w-2xl text-sm text-slate-500">
+						<p className="max-w-2xl mt-1 text-sm text-slate-500">
 							Select the regions from where we should call your API. We will
 							either call your API from all regions in parallel, or one region
 							at a time.
@@ -205,14 +205,14 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 					<div className="flex justify-end gap-8">
 						<Link
 							href={`/${teamSlug}/pages`}
-							className="transition-all hover:cursor-pointer whitespace-nowrap md:px-4 py-2 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug duration-300 ease-in-out   text-slate-900 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group "
+							className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-slate-900 duration-300 ease-in-out  text-slate-900 md:hover:bg-slate-50 hover:text-slate-900 shadow-sm group"
 						>
 							Cancel
 						</Link>
 						<button
 							type="button"
 							onClick={handleSubmit(submit)}
-							className="transition-all hover:cursor-pointer whitespace-nowrap md:px-4 py-2 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
+							className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-slate-900 duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
 						>
 							{loading ? <Loading /> : "Create"}
 						</button>

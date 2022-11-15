@@ -11,7 +11,10 @@ export class Billing {
 	constructor({
 		logger,
 		stripeSecretKey,
-	}: { logger: Logger; stripeSecretKey: string }) {
+	}: {
+		logger: Logger;
+		stripeSecretKey: string;
+	}) {
 		logger.info("Billing enabled");
 		this.stripe = new Stripe(stripeSecretKey, {
 			typescript: true,

@@ -45,7 +45,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 						<li key={endpoint.id}>
 							<Link
 								href={`/${teamSlug}/endpoints/${endpoint.id}`}
-								className="border border-slate-300 rounded bg-slate-50 px-2 py-1 hover:bg-white hover:border-slate-600"
+								className="px-2 py-1 border rounded border-slate-300 bg-slate-50 hover:bg-white hover:border-slate-600"
 							>
 								{endpoint.name}
 							</Link>
@@ -60,7 +60,6 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 			cell: (info) => (
 				<Link
 					target="_blank"
-
 					className="text-slate-500 hover:text-primary-600 duration-500 hover:underline"
 					href={`${protocol}://${info.getValue()}.${host}`}
 				>
@@ -95,9 +94,9 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 								{header.isPlaceholder
 									? null
 									: flexRender(
-										header.column.columnDef.header,
-										header.getContext(),
-									)}
+											header.column.columnDef.header,
+											header.getContext(),
+									  )}
 							</th>
 						))}
 					</tr>
@@ -109,7 +108,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 						{row.getVisibleCells().map((cell) => (
 							<td
 								key={cell.id}
-								className="whitespace-nowrap px-3 py-2 text-sm text-slate-500"
+								className="px-3 py-2 text-sm whitespace-nowrap text-slate-500"
 							>
 								{flexRender(cell.column.columnDef.cell, cell.getContext())}
 							</td>
@@ -125,9 +124,9 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 								{header.isPlaceholder
 									? null
 									: flexRender(
-										header.column.columnDef.footer,
-										header.getContext(),
-									)}
+											header.column.columnDef.footer,
+											header.getContext(),
+									  )}
 							</th>
 						))}
 					</tr>

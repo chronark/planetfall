@@ -2,15 +2,15 @@ terraform {
   required_providers {
     vercel = {
       source  = "vercel/vercel"
-      version = ">=0.8.0"
+      version = ">=0.10.3"
     }
     upstash = {
       source  = "upstash/upstash"
-      version = "1.1.5"
+      version = ">=1.2.1"
     }
     aws = {
       source  = "hashicorp/aws"
-      version = "4.33.0"
+      version = ">=4.39.0"
     }
     
   }

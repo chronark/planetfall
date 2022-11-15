@@ -38,14 +38,14 @@ export const Row: React.FC<{
 	const [expanded, setExpanded] = useState(false);
 
 	return (
-		<div className=" border-t list-none sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded my-16  hover:border-slate-800 duration-1000">
-			<div className="flex-col gap-2 lg:flex-row items-start border-b border-slate-200  px-4 py-5 sm:px-6 flex justify-between md:items-center">
+		<div className="my-16 list-none border-t  sm:border border-slate-300 sm:border-slate-100 sm:shadow-ambient md:rounded hover:border-slate-800 duration-1000">
+			<div className="flex flex-col items-start justify-between px-4 py-5 border-b gap-2 lg:flex-row border-slate-200  sm:px-6 md:items-center">
 				<div className="lg:w-1/2">
 					<span className="text-lg font-medium leading-6 text-slate-900">
 						{endpoint.name ?? endpoint.url}
 					</span>
 				</div>
-				<div className="lg:w-1/2 flex gap-2 sm:gap-4 xl:gap-6 justify-between flex-wrap md:flex-nowrap items-center">
+				<div className="flex flex-wrap items-center justify-between lg:w-1/2 gap-2 sm:gap-4 xl:gap-6 md:flex-nowrap">
 					<Stat
 						label="min"
 						value={Math.round(endpoint.metrics.at(-1)?.min ?? 0)}
@@ -69,7 +69,7 @@ export const Row: React.FC<{
 				</div>
 			</div>
 
-			<div className="p-4 flex flex-col space-y-8">
+			<div className="flex flex-col p-4 space-y-8">
 				<div className="hidden lg:block">
 					<Chart
 						metrics={endpoint.metrics}
@@ -93,11 +93,11 @@ export const Row: React.FC<{
 						<div className="w-full border-t border-slate-200" />
 					</div>
 					<div className="relative flex justify-center">
-						<span className=" bg-white px-2 text-slate-500 hover:text-primary-500 ">
+						<span className="px-2 bg-white  text-slate-500 hover:text-primary-500">
 							{expanded ? (
-								<MinusIcon className="h-6 w-6" />
+								<MinusIcon className="w-6 h-6" />
 							) : (
-								<PlusIcon className="h-6 w-6" />
+								<PlusIcon className="w-6 h-6" />
 							)}
 						</span>
 					</div>
@@ -244,12 +244,12 @@ const Chart: React.FC<{
 									<HoverCard.Content>
 										{bucket.time !== "" ? (
 											<>
-												<div className="overflow-hidden max-w-xl rounded-sm bg-white px-4 py-5 shadow sm:p-6">
-													<dt className="truncate text-sm font-medium text-slate-500">
+												<div className="max-w-xl px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
+													<dt className="text-sm font-medium truncate text-slate-500">
 														{start.toLocaleDateString()}
 													</dt>
-													<dt className="truncate text-sm font-medium text-slate-500" />
-													<dt className="truncate text-sm font-medium text-slate-500">
+													<dt className="text-sm font-medium truncate text-slate-500" />
+													<dt className="text-sm font-medium truncate text-slate-500">
 														{/* {bucket.region} */}
 													</dt>
 													<div>
@@ -288,18 +288,18 @@ const Chart: React.FC<{
                                                                                 {bucketErrors.map((err, i) => (
                                                                                     <li
                                                                                         key={i}
-                                                                                        className="relative bg-white py-3 hover:bg-slate-50 "
+                                                                                        className="relative py-3 bg-white hover:bg-slate-50 "
                                                                                     >
                                                                                         <div className="flex justify-between space-x-3">
                                                                                             <time
                                                                                                 dateTime={new Date(err.time)
                                                                                                     .toLocaleString()}
-                                                                                                className="truncate text-sm font-medium text-slate-900"
+                                                                                                className="text-sm font-medium truncate text-slate-900"
                                                                                             >
                                                                                                 {new Date(err.time)
                                                                                                     .toLocaleString()}
                                                                                             </time>
-                                                                                            <span className="flex-shrink-0 whitespace-nowrap text-sm text-slate-500">
+                                                                                            <span className="flex-shrink-0 text-sm whitespace-nowrap text-slate-500">
                                                                                                 {err.region}
                                                                                             </span>
                                                                                         </div>

@@ -49,12 +49,12 @@ export const Stats = asyncComponent(async () => {
 					{stats.map(({ label, value }) => (
 						<div
 							key={label}
-							className="overflow-hidden rounded px-4 m py-3 flex sm:flex-col items-center justify-between gap-2"
+							className="flex items-center justify-between px-4 py-3 overflow-hidden rounded m sm:flex-col gap-2"
 						>
-							<dt className="text-center  text-lg leading-6  text-slate-500">
+							<dt className="text-lg text-center  leading-6 text-slate-500">
 								{label}
 							</dt>
-							<dd className="text-center text-2xl  sm:text-5xl font-bold tracking-tight text-slate-100">
+							<dd className="text-2xl font-bold tracking-tight text-center  sm:text-5xl text-slate-100">
 								{value.toLocaleString(undefined, { maximumFractionDigits: 2 })}
 							</dd>
 						</div>

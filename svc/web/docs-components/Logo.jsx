@@ -2,7 +2,7 @@ export function Logo() {
 	return (
 		<div className="flex items-center gap-2 text-slate-900  dark:text-primary-100">
 			<svg
-				className="w-9 h-9 fill-current"
+				className="fill-current w-9 h-9"
 				viewBox="0 0 256 256"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"
@@ -11,7 +11,7 @@ export function Logo() {
 				<path d="M223.321 105.737a1 1 0 0 0-1.387-.92l-87.51 36.649c-1.125.471-.588 2.163.603 1.899l87.541-19.436a.999.999 0 0 0 .783-.978l-.03-17.214ZM118.207 114.232c-.824.899.372 2.21 1.343 1.472l75.494-57.462a1 1 0 0 0-.104-1.66l-14.892-8.634a1 1 0 0 0-1.239.19l-60.602 66.094ZM203.173 62.11a.999.999 0 0 1 1.105-.071l18.485 10.672a1 1 0 0 1 .5.866v21.345a1 1 0 0 1-.614.922l-134.623 56.38c-1.082.454-1.926-1.007-.992-1.718l116.139-88.397Z" />
 				<path d="M88.026 152.224c-1.082.454-1.926-1.007-.992-1.718l116.139-88.397a.999.999 0 0 1 1.105-.07l18.485 10.672a1 1 0 0 1 .5.866v21.345a1 1 0 0 1-.614.922l-134.623 56.38Z" />
 			</svg>
-			<span className="font-semibold text-2xl ">Planetfall</span>
+			<span className="text-2xl font-semibold ">Planetfall</span>
 		</div>
 	);
 }

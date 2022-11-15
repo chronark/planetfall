@@ -115,7 +115,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<h3 className="text-lg font-medium leading-6 text-slate-900">
 							Name
 						</h3>
-						<p className="mt-1 max-w-2xl text-sm text-slate-500">
+						<p className="max-w-2xl mt-1 text-sm text-slate-500">
 							Enter a name to make it easier to find this endpoint later
 						</p>
 					</div>
@@ -124,7 +124,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="name"
-								className="sm:col-span-2 block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+								className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 							>
 								Name
 							</label>
@@ -164,7 +164,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="method"
-								className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+								className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 							>
 								Method
 							</label>
@@ -187,7 +187,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="url"
-								className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+								className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 							>
 								URL
 							</label>
@@ -215,12 +215,12 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 					</div>
 				</div>
 
-				<div className="space-y-6 pt-8 sm:space-y-5 sm:pt-10">
+				<div className="pt-8 space-y-6 sm:space-y-5 sm:pt-10">
 					<div>
 						<h3 className="text-lg font-medium leading-6 text-slate-900">
 							Request
 						</h3>
-						<p className="mt-1 max-w-2xl text-sm text-slate-500">
+						<p className="max-w-2xl mt-1 text-sm text-slate-500">
 							Configure what is being sent to your API
 						</p>
 					</div>
@@ -229,7 +229,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="body"
-								className="sm:col-span-2 block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+								className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 							>
 								Body
 							</label>
@@ -258,7 +258,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="last-name"
-								className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+								className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 							>
 								Headers
 							</label>
@@ -287,18 +287,18 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 					</div>
 				</div>
 
-				<div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
+				<div className="pt-8 space-y-6 divide-y divide-slate-200 sm:space-y-5 sm:pt-10">
 					<div>
 						<h3 className="text-lg font-medium leading-6 text-slate-900">
 							Assertions
 						</h3>
-						<p className="mt-1  text-sm text-slate-500">
+						<p className="mt-1 text-sm  text-slate-500">
 							Define validations and latency thresholds
 						</p>
 					</div>
 					<div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
-							<div className=" sm:col-span-2 ">
+							<div className=" sm:col-span-2">
 								<label
 									htmlFor="last-name"
 									className="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
@@ -310,8 +310,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 									be sent.
 								</p>
 							</div>
-							<div className="mt-1  flex sm:col-span-4 sm:mt-0">
-								<div className="group relative flex flex-grow items-stretch focus-within:z-10">
+							<div className="flex mt-1  sm:col-span-4 sm:mt-0">
+								<div className="relative flex items-stretch flex-grow group focus-within:z-10">
 									<input
 										type="number"
 										{...register("degradedAfter", {
@@ -319,10 +319,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 											min: 1,
 										})}
 										placeholder="600"
-										className="block w-full rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:h-12  border-slate-900 border border-r-0 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none "
+										className="block w-full border border-r-0 rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:h-12 border-slate-900 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none"
 									/>
 								</div>
-								<div className="relative -ml-px inline-flex items-center space-x-2 rounded-r border border-l-0 border-slate-900 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 ">
+								<div className="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium border border-l-0 rounded-r space-x-2 border-slate-900 bg-slate-50 text-slate-700 ">
 									<span>ms</span>
 								</div>
 							</div>
@@ -330,7 +330,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="status"
-								className="block text-sm sm:col-span-2 font-medium text-slate-700 sm:mt-px sm:pt-2"
+								className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 							>
 								Status
 							</label>
@@ -389,12 +389,12 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						</div>
 					</div>
 				</div>
-				<div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
+				<div className="pt-8 space-y-6 divide-y divide-slate-200 sm:space-y-5 sm:pt-10">
 					<div>
 						<h3 className="text-lg font-medium leading-6 text-slate-900">
 							Regions
 						</h3>
-						<p className="mt-1 max-w-2xl text-sm text-slate-500">
+						<p className="max-w-2xl mt-1 text-sm text-slate-500">
 							Select the regions from where we should call your API. We will
 							either call your API from all regions in parallel, or one region
 							at a time.
@@ -440,12 +440,12 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						</div>
 					</div>
 				</div>
-				<div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
+				<div className="pt-8 space-y-6 divide-y divide-slate-200 sm:space-y-5 sm:pt-10">
 					<div>
 						<h3 className="text-lg font-medium leading-6 text-slate-900">
 							Interval
 						</h3>
-						<p className="mt-1  text-sm text-slate-500">
+						<p className="mt-1 text-sm  text-slate-500">
 							How frequently should we call your API
 						</p>
 					</div>
@@ -453,12 +453,12 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="last-name"
-								className="block sm:col-span-2  text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
+								className="block pr-8 text-sm font-medium sm:col-span-2  text-slate-700 sm:mt-px sm:pt-2"
 							>
 								Interval
 							</label>
-							<div className="mt-1  flex sm:col-span-4 sm:mt-0">
-								<div className="group relative flex flex-grow items-stretch focus-within:z-10">
+							<div className="flex mt-1  sm:col-span-4 sm:mt-0">
+								<div className="relative flex items-stretch flex-grow group focus-within:z-10">
 									<input
 										type="number"
 										{...register("interval", {
@@ -466,10 +466,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 											min: 1,
 										})}
 										defaultValue={15}
-										className="block w-full rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:h-12  border-slate-900 border border-r-0 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none "
+										className="block w-full border border-r-0 rounded-none rounded-l transition-all  group-focus:bg-slate-50 md:px-4 md:h-12 border-slate-900 hover:bg-slate-50 duration-300 ease-in-out focus:outline-none"
 									/>
 								</div>
-								<div className="relative -ml-px inline-flex items-center space-x-2 rounded-r border border-l-0 border-slate-900 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 ">
+								<div className="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium border border-l-0 rounded-r space-x-2 border-slate-900 bg-slate-50 text-slate-700 ">
 									<span>s</span>
 								</div>
 							</div>
@@ -477,7 +477,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="distribution"
-								className="block sm:col-span-2 text-sm font-medium text-slate-700 sm:mt-px sm:pt-2"
+								className="block text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 							>
 								Distribution
 								<p className="mt-1 text-sm font-normal text-slate-500">
@@ -502,23 +502,23 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						</div>
 					</div>
 				</div>
-				<div className="space-y-6 divide-y divide-slate-200 pt-8 sm:space-y-5 sm:pt-10">
+				<div className="pt-8 space-y-6 divide-y divide-slate-200 sm:space-y-5 sm:pt-10">
 					<div>
 						<h3 className="text-lg font-medium leading-6 text-slate-900">
 							Summary
 						</h3>
-						<p className="mt-1  text-sm text-slate-500" />
+						<p className="mt-1 text-sm  text-slate-500" />
 					</div>
 					<div className="space-y-6 divide-y divide-slate-200 sm:space-y-5">
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-slate-200 sm:pt-5">
 							<label
 								htmlFor="last-name"
-								className="sm:col-span-2 block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2 pr-8"
+								className="block pr-8 text-sm font-medium sm:col-span-2 text-slate-700 sm:mt-px sm:pt-2"
 							>
 								Expected monthly requests
 							</label>
-							<div className="mt-1 flex sm:col-span-4 sm:mt-0">
-								<div className=" cursor-not-allowed w-full rounded transition-all  md:px-4 md:h-12 inline-flex items-center  border-slate-900 border duration-300 ease-in-out focus:outline-none ">
+							<div className="flex mt-1 sm:col-span-4 sm:mt-0">
+								<div className="inline-flex items-center w-full border rounded cursor-not-allowed  transition-all md:px-4 md:h-12 border-slate-900 duration-300 ease-in-out focus:outline-none">
 									{monthlyRequests.toLocaleString()}
 								</div>
 							</div>
@@ -531,14 +531,14 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 				<div className="flex justify-end gap-8">
 					<Link
 						href={`/${teamSlug}/endpoints`}
-						className="transition-all hover:cursor-pointer whitespace-nowrap md:px-4 py-2 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug duration-300 ease-in-out   text-slate-900 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group "
+						className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-slate-900 duration-300 ease-in-out  text-slate-900 md:hover:bg-slate-50 hover:text-slate-900 shadow-sm group"
 					>
 						Cancel
 					</Link>
 					<button
 						type="button"
 						onClick={handleSubmit(submit)}
-						className="transition-all hover:cursor-pointer whitespace-nowrap md:px-4 py-2 font-medium inline-flex items-center justify-center md:border border-slate-900 rounded leading-snug duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
+						className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-slate-900 duration-300 ease-in-out md:bg-slate-900 md:text-slate-50 md:hover:bg-slate-50 hover:text-slate-900  shadow-sm group"
 					>
 						{loading ? <Loading /> : "Create"}
 					</button>

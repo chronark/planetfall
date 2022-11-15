@@ -4,7 +4,7 @@ resource "vercel_project" "web" {
   framework = "nextjs"
 
 
-  build_command              = "cd ../.. && npx turbo run build --filter=web"
+  build_command              = "cd ../.. && pnpm turbo run build --filter=web"
   root_directory             = "svc/web"
   serverless_function_region = "fra1"
 
@@ -69,7 +69,7 @@ resource "vercel_project" "web" {
     },
     {
       key    = "GITHUB_OAUTH_ID"
-      value  = var.github_outh_id
+      value  = var.github_oauth_id
       target = ["production"]
     },
     {
