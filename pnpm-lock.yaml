@@ -25,7 +25,7 @@ importers:
       '@planetfall/tsconfig': link:../tsconfig
       '@types/node': 18.11.9
       tsx: 3.12.1
-      typescript: 4.8.4
+      typescript: 4.9.3
 
   pkg/auth:
     specifiers:
@@ -40,7 +40,7 @@ importers:
     devDependencies:
       '@planetfall/tsconfig': link:../tsconfig
       '@types/bcrypt': 5.0.0
-      typescript: 4.8.4
+      typescript: 4.9.3
 
   pkg/db:
     specifiers:
@@ -52,12 +52,12 @@ importers:
       typescript: ^4.8.3
     dependencies:
       '@prisma/client': 4.6.1_prisma@4.6.1
-      '@xata.io/client': 0.20.2_typescript@4.8.4
+      '@xata.io/client': 0.20.2_typescript@4.9.3
     devDependencies:
       '@planetfall/tsconfig': link:../tsconfig
       '@types/node': 18.11.9
       prisma: 4.6.1
-      typescript: 4.8.4
+      typescript: 4.9.3
 
   pkg/email:
     specifiers:
@@ -70,7 +70,7 @@ importers:
     devDependencies:
       '@planetfall/tsconfig': link:../tsconfig
       '@types/node': 18.11.9
-      typescript: 4.8.4
+      typescript: 4.9.3
 
   pkg/id:
     specifiers:
@@ -83,7 +83,7 @@ importers:
     devDependencies:
       '@planetfall/tsconfig': link:../tsconfig
       '@types/node': 18.11.9
-      typescript: 4.8.4
+      typescript: 4.9.3
 
   pkg/tinybird:
     specifiers:
@@ -93,7 +93,7 @@ importers:
     devDependencies:
       '@planetfall/tsconfig': link:../tsconfig
       '@types/node': 18.7.18
-      typescript: 4.8.4
+      typescript: 4.9.3
 
   pkg/tsconfig:
     specifiers: {}
@@ -129,7 +129,7 @@ importers:
       '@planetfall/tsconfig': link:../../pkg/tsconfig
       '@types/node': 18.7.18
       dotenv-cli: 6.0.0
-      typescript: 4.8.4
+      typescript: 4.9.3
 
   svc/web:
     specifiers:
@@ -1685,12 +1685,12 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@xata.io/client/0.20.2_typescript@4.8.4:
+  /@xata.io/client/0.20.2_typescript@4.9.3:
     resolution: {integrity: sha512-GT88eGcuS/6iNI9LXrQvhj7zL0SCcGu7X5cgPAxSqX9X2YeAwTcBY+BH+KcibhCphKS/eJOxlo/jaYGRvDgTQg==}
     peerDependencies:
       typescript: '>=4.5'
     dependencies:
-      typescript: 4.8.4
+      typescript: 4.9.3
     dev: false
 
   /acorn-jsx/5.3.2_acorn@8.8.1:
@@ -4493,6 +4493,12 @@ packages:
 
   /typescript/4.8.4:
     resolution: {integrity: sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
+
+  /typescript/4.9.3:
+    resolution: {integrity: sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==}
     engines: {node: '>=4.2.0'}
     hasBin: true
 
