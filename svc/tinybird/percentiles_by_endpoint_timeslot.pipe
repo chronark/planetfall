@@ -1,8 +1,0 @@
-NODE latency_per_30min
-SQL >
-
-    select checks.endpointId,time, quantiles(0.5, 0.95, 0.99)(checks.latency) as percentiles
-    from checks
-    group by checks.endpointId, timeSlot(checks.time) as time
-
-

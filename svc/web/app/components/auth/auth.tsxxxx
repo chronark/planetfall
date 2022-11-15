@@ -1,0 +1,122 @@
+import { useRouter } from "next/router";
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import JSXStyle from "styled-jsx/style";
+import type { Membership, Team, User as PUser } from "@planetfall/db";
+import { resolveSoa } from "dns";
+
+export type User = PUser & { teams: (Membership & { team: Team })[] };
+
+export type Session = {
+  userId?: string;
+  signedIn: boolean;
+  loading: boolean;
+};
+
+const Context = createContext<{
+  session: Session;
+  invalidate: () => void;
+}>({
+  session: { signedIn: false, loading: true },
+  invalidate: () => {
+    throw new Error("Implement me");
+  },
+});
+
+export type AuthProviderProps = {
+  session?: Session;
+};
+export const AuthProvider: React.FC<PropsWithChildren> = (
+  { children },
+): JSX.Element => {
+  const [session, setSession] = useState<Session>({
+    signedIn: false,
+    loading: true,
+  });
+  const [nonce, setNonce] = useState(0);
+
+  function invalidate() {
+    setNonce(nonce + 1);
+  }
+
+  useEffect(() => {
+    const run = async () => {
+      const res = await fetch("/api/v1/auth/session");
+      if (!res.ok) {
+        return;
+      }
+      const json = await res.json() as {
+        session: {
+          user: { id: string; token: string; expries: number };
+        } | null;
+      };
+      if (json.session) {
+        setSession({
+          userId: json.session.user.id,
+          signedIn: true,
+          loading: false,
+        });
+        
+      } else {
+        setSession({ signedIn: false, loading: false });
+      }
+    };
+
+    run();
+    // eslint-disable-next-line
+  }, [nonce]);
+  return (
+    <Context.Provider value={{ session, invalidate }}>
+      {children}
+    </Context.Provider>
+  );
+};
+
+export function useSession() {
+  const ctx = useContext(Context);
+
+  const signOut = ()=>{throw new Error("IMPLEMENT ME")}//trpc.auth.signOut.useMutation().mutateAsync;
+
+  return { session: ctx.session, signOut, invalidate: ctx.invalidate };
+}
+
+// export function useUser() {
+//   const ctx = useContext(Context);
+//   const { data: user, ...meta } = trpc.auth.user.useQuery(
+//     { userId: ctx.session.userId! },
+//     {
+//       enabled: ctx.session.signedIn,
+//     },
+//   );
+
+//   return { user, ...meta };
+// }
+
+export const SignedIn: React.FC<PropsWithChildren> = (
+  { children },
+): JSX.Element | null => {
+  const { session } = useSession();
+  return session.signedIn ? <>{children}</> : null;
+};
+
+export const SignedOut: React.FC<PropsWithChildren> = (
+  { children },
+): JSX.Element | null => {
+  const { session } = useSession();
+  return session.signedIn ? null : <>{children}</>;
+};
+export const RedirectToSignIn: React.FC<PropsWithChildren> = (): null => {
+  const { session } = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if (!session.signedIn && !session.loading) {
+      router.push("/auth/sign-in");
+    }
+  }, [router, session.signedIn, session.loading]);
+  return null;
+};

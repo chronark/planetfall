@@ -53,11 +53,6 @@ variable "stripe_product_id_personal" {
   type = string
 }
 
-variable "iron_session_secret" {
-  type      = string
-  sensitive = true
-}
-
 
 variable "sendgrid_api_key" {
   type      = string
@@ -77,3 +72,23 @@ variable "tinybird_token" {
   type = string
   sensitive = true
 }
+
+
+variable "github_oauth_id" {
+  type = string
+}
+
+
+
+variable "github_oauth_secret" {
+  type = string
+  sensitive = true
+}
+
+
+
+variable "nextauth_secret" {
+  type = string
+  sensitive = true
+}
+

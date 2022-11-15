@@ -1,20 +1,18 @@
-import { randomBytes, scryptSync } from "node:crypto";
+import crypto from "node:crypto";
 import baseX from "base-x";
-export function newToken(prefix?: string): { token: string; hash: string } {
-  const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
-  let token = baseX(alphabet).encode(randomBytes(32));
-  if (prefix) {
-    token = [prefix, token].join("_");
-  }
+const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
-  const hash = scryptSync(token, randomBytes(32), 32).toString("base64url");
+export async function newApiToken(): Promise<{ token: string; hash: string }> {
+	const buf = new Uint8Array(32);
+	crypto.getRandomValues(buf);
+	const token = ["api", baseX(alphabet).encode(buf)].join("_");
 
-  return { token, hash };
+	const hash = hashToken(token);
+
+	return { token, hash };
 }
 
-export function verifyToken(token: string, hash: string): boolean {
-  const salt = hash.slice(64);
-  const originalHash = hash.slice(0, 64);
-  return true;
+export function hashToken(token: string): string {
+	return crypto.createHash("sha256").update(token).digest("hex");
 }

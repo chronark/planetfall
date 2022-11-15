@@ -4,7 +4,7 @@ resource "vercel_project" "web" {
   framework = "nextjs"
 
 
-  build_command              = "cd ../.. && npx turbo run build --filter=web"
+  build_command              = "cd ../.. && pnpm turbo run build --filter=web"
   root_directory             = "svc/web"
   serverless_function_region = "fra1"
 
@@ -63,49 +63,33 @@ resource "vercel_project" "web" {
       target = ["production"]
     },
     {
-      key    = "IRON_SESSION_SECRET"
-      value  = var.iron_session_secret
-      target = ["production"]
-    },
-    {
-      key    = "DOCS_URL"
-      value  = "https://${vercel_project_domain.docs.domain}"
-      target = ["production", "preview"]
-    },
-     {
       key    = "TINYBIRD_TOKEN"
       value  = var.tinybird_token
       target = ["production", "preview"]
-    }
+    },
+    {
+      key    = "GITHUB_OAUTH_ID"
+      value  = var.github_oauth_id
+      target = ["production"]
+    },
+    {
+      key    = "GITHUB_OAUTH_SECRET"
+      value  = var.github_oauth_secret
+      target = ["production"]
+    },
+    {
+      key    = "NEXTAUTH_SECRET"
+      value  = var.nextauth_secret
+      target = ["production"]
+    },
+  
+    
   ]
 
 }
 
 
 
-
-resource "vercel_project" "docs" {
-  name      = "docs"
-  team_id   = var.vercel_team_id
-  framework = "nextjs"
-
-
-  build_command              = "cd ../.. && npx turbo run build --filter=docs"
-  root_directory             = "svc/docs"
-
-  git_repository = {
-    repo = "chronark/planetfall"
-    type = "github"
-  }
-
-
-}
-
-resource "vercel_project_domain" "docs" {
-  project_id = vercel_project.docs.id
-  team_id    = var.vercel_team_id
-  domain     = "planetfall-docs.vercel.app"
-}
 
 
 resource "vercel_dns_record" "sendgrid_url9477" {
@@ -152,6 +136,9 @@ resource "vercel_dns_record" "sendgrid_s2_domainkey" {
   value   = "s2.domainkey.u29341690.wl191.sendgrid.net"
 }
 
+
+
+
 resource "vercel_project_domain" "web" {
   project_id = vercel_project.web.id
   team_id    = var.vercel_team_id
@@ -180,13 +167,5 @@ resource "vercel_deployment" "web" {
   path_prefix = data.vercel_project_directory.planetfall.path
   production  = true
 
-
-}
-resource "vercel_deployment" "docs" {
-  project_id  = vercel_project.docs.id
-  team_id     = var.vercel_team_id
-  files       = data.vercel_project_directory.planetfall.files
-  path_prefix = data.vercel_project_directory.planetfall.path
-  production  = true
 
 }

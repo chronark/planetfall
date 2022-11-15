@@ -1,0 +1,19 @@
+VERSION 3
+
+
+SCHEMA >
+    `id` String `json:$.id`,
+    `endpointId` String `json:$.endpointId`,
+    `latency` Int16 `json:$.latency`,
+    `regionId` String `json:$.regionId`,
+    `status` Int16 `json:$.status`,
+    `teamId` String `json:$.teamId`,
+    `time` DateTime64(3) `json:$.time`,
+    `timing` String `json:$.timing`,
+    `body` String `json:$.body`,
+    `header` String `json:$.header`,
+    `error` Nullable(String) `json:$.error`
+ENGINE "MergeTree"
+ENGINE_PARTITION_KEY "toYYYYMM(time)"
+ENGINE_SORTING_KEY "time"
+ENGINE_TTL toDateTime(time) + INTERVAL 90 DAY

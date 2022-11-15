@@ -6,16 +6,17 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "npx ts-node ./main.ts"
+    "dev": "dotenv -e .env npx ts-node ./main.ts"
   },
   "keywords": [],
   "author": "Andreas Thomas",
   "license": "ISC",
   "dependencies": {
     "@axiomhq/axiom-node": "^0.8.0",
-    "@planetfall/db": "*",
-    "@planetfall/assertions": "*",
-    "@planetfall/id": "*",
+    "@planetfall/assertions": "workspace:*",
+    "@planetfall/db": "workspace:*",
+    "@planetfall/id": "workspace:*",
+    "@planetfall/tinybird": "workspace:*",
     "isomorphic-fetch": "^3.0.0",
     "kafkajs": "^2.2.0",
     "stripe": "^10.13.0",
@@ -23,9 +24,9 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
-    "@planetfall/eslint": "*",
-    "@planetfall/tsconfig": "*",
+    "@planetfall/tsconfig": "workspace:*",
     "@types/node": "18.7.18",
+    "dotenv-cli": "^6.0.0",
     "typescript": "^4.8.3"
   }
 }

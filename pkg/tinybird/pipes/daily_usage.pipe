@@ -1,0 +1,13 @@
+VERSION 2
+
+NODE usage
+SQL >
+
+    SELECT
+    teamId,
+    COUNT(*) as checks,
+    toYYYYMMDD(time) as day
+FROM checks__v2
+GROUP BY
+    teamId,
+    toYYYYMMDD(time)
