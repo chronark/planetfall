@@ -1,5 +1,4 @@
 import "./globals.css";
-import "public/fonts/css/pangea.css";
 import "@tremor/react/dist/esm/tremor.css";
 import { Inter } from "@next/font/google";
 
