@@ -18,16 +18,17 @@ function middleware(req: NextRequest) {
 	if (subdomain.endsWith(".ngrok.io")) {
 		subdomain = "";
 	}
-	switch (subdomain) {
-		case "api": {
-			url.pathname = `/api${url.pathname}`;
-			return NextResponse.rewrite(url);
-		}
-
-		default:
-			url.pathname = `/_statuspages/${subdomain}`;
-			return NextResponse.rewrite(url);
+	if (subdomain === "api") {
+		url.pathname = `/api${url.pathname}`;
+		return NextResponse.rewrite(url);
 	}
+	if (subdomain !== "") {
+		url.pathname = `/_statuspages/${subdomain}`;
+		return NextResponse.rewrite(url);
+
+	}
+	return NextResponse.next();
+
 }
 
 export default middleware;

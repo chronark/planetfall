@@ -68,26 +68,22 @@ resource "vercel_project" "web" {
       target = ["production", "preview"]
     },
     {
-      key    = "NEXT_PUBLIC_CLERK_FRONTEND_API"
-      value  = var.clerk_frontend_api
-      target = ["production", "preview"]
+      key    = "GITHUB_OAUTH_ID"
+      value  = var.github_outh_id
+      target = ["production"]
     },
     {
-      key    = "CLERK_API_KEY"
-      value  = var.clerk_api_key
-      target = ["production", "preview"]
+      key    = "GITHUB_OAUTH_SECRET"
+      value  = var.github_oauth_secret
+      target = ["production"]
     },
     {
-      key    = "CLERK_JWT_KEY"
-      value  = var.clerk_jwt_key
-      target = ["production", "preview"]
+      key    = "NEXTAUTH_SECRET"
+      value  = var.nextauth_secret
+      target = ["production"]
     },
-
-    {
-      key    = "CLERK_WEBHOOK_SECRET"
-      value  = var.clerk_webhook_secret
-      target = ["production", "preview"]
-    }
+  
+    
   ]
 
 }
@@ -139,59 +135,6 @@ resource "vercel_dns_record" "sendgrid_s2_domainkey" {
   ttl     = 60
   value   = "s2.domainkey.u29341690.wl191.sendgrid.net"
 }
-
-
-resource "vercel_dns_record" "accounts" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "accounts"
-  type    = "CNAME"
-  ttl     = 60
-  value   = "accounts.clerk.services"
-}
-
-
-resource "vercel_dns_record" "clerk" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "clerk"
-  type    = "CNAME"
-  ttl     = 60
-  value   = "frontend-api.clerk.services"
-}
-
-
-resource "vercel_dns_record" "clk_domainkey" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "clk._domainkey"
-  type    = "CNAME"
-  ttl     = 60
-  value   = "dkim1.n726fkhumtvm.clerk.services"
-}
-
-
-
-resource "vercel_dns_record" "clk2_domainkey" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "clk2._domainkey"
-  type    = "CNAME"
-  ttl     = 60
-  value   = "dkim2.n726fkhumtvm.clerk.services"
-}
-
-
-
-resource "vercel_dns_record" "clkmail" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "clkmail"
-  type    = "CNAME"
-  ttl     = 60
-  value   = "dkim2.n726fkhumtvm.clerk.services"
-}
-
 
 
 

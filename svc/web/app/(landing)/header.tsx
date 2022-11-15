@@ -9,7 +9,6 @@ import { getSession } from "lib/auth";
 export const Header = asyncComponent(async () => {
 	const session = await getSession();
 
-	console.log("nav", { session });
 
 	const isSignedIn = !!session.session;
 	return (

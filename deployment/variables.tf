@@ -74,24 +74,21 @@ variable "tinybird_token" {
 }
 
 
-variable "clerk_frontend_api" {
+variable "github_outh_id" {
+  type = string
+}
+
+
+
+variable "github_oauth_secret" {
   type = string
   sensitive = true
 }
 
 
-variable "clerk_api_key" {
+
+variable "nextauth_secret" {
   type = string
   sensitive = true
 }
 
-
-variable "clerk_jwt_key" {
-  type = string
-  sensitive = true
-}
-
-variable "clerk_webhook_secret" {
-  type = string
-  sensitive = true
-}

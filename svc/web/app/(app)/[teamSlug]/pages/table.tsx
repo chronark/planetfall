@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-table";
 import classNames from "classnames";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 
 type Page = {
 	id: string;
@@ -35,10 +34,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 		accessor("name", {
 			header: "Name",
 			cell: (info) => (
-				<div className="flex flex-col items-start text-sm font-medium text-gray-900">
-					<span>{info.getValue()}</span>
-					<span>{info.row.original.slug}</span>
-				</div>
+				<span className="text-sm text-slate-900">{info.getValue()}</span>
 			),
 		}),
 		accessor("endpoints", {
@@ -60,14 +56,16 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 		}),
 
 		accessor("slug", {
-			header: "",
+			header: "Link",
 			cell: (info) => (
-				<Button
-					type="secondary"
+				<Link
+					target="_blank"
+
+					className="text-slate-500 hover:text-primary-600 duration-500 hover:underline"
 					href={`${protocol}://${info.getValue()}.${host}`}
 				>
 					{`${protocol}://${info.getValue()}.${host}`}
-				</Button>
+				</Link>
 			),
 		}),
 	];
@@ -97,9 +95,9 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 								{header.isPlaceholder
 									? null
 									: flexRender(
-											header.column.columnDef.header,
-											header.getContext(),
-									  )}
+										header.column.columnDef.header,
+										header.getContext(),
+									)}
 							</th>
 						))}
 					</tr>
@@ -127,9 +125,9 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 								{header.isPlaceholder
 									? null
 									: flexRender(
-											header.column.columnDef.footer,
-											header.getContext(),
-									  )}
+										header.column.columnDef.footer,
+										header.getContext(),
+									)}
 							</th>
 						))}
 					</tr>

@@ -1,6 +1,7 @@
 import { getSession } from "lib/auth";
 import { redirect } from "next/navigation";
 import { DesktopNavbar } from "../navbar-desktop";
+import { SignIn } from "@/components/auth/sign-in";
 
 export default async function AppLayout(props: {
 	children: React.ReactNode;
@@ -8,7 +9,7 @@ export default async function AppLayout(props: {
 }) {
 	const session = await getSession();
 	if (!session) {
-		redirect("/auth/sign-in");
+		return <SignIn/>;
 	}
 
 	console.log(__filename, { session });

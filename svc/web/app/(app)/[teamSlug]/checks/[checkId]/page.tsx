@@ -1,6 +1,7 @@
 import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 import { Client as Tinybird } from "@planetfall/tinybird";
+import { SignIn } from "@/components/auth/sign-in";
 
 import Button from "@/components/button/button";
 import { db } from "@planetfall/db";
@@ -203,7 +204,7 @@ export default async function Page(props: {
 
 	const session = await getSession();
 	if (!session) {
-		redirect("/auth/sign-in");
+		return <SignIn/>;
 	}
 
 	const endpoint = check.endpointId

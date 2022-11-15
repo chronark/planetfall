@@ -3,11 +3,12 @@ import { notFound, redirect } from "next/navigation";
 import { db } from "@planetfall/db";
 import { Form } from "./form";
 import { getSession } from "lib/auth";
+import { SignIn } from "@/components/auth/sign-in";
 
 export default async function Page(props: { params: { teamSlug: string } }) {
 	const { session } = await getSession();
 	if (!session) {
-		redirect("/auth/sign-in");
+		return <SignIn/>;
 	}
 
 	const team = await db.team.findUnique({
