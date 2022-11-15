@@ -18,7 +18,7 @@ export default function RootLayout({
 				<title>Planetfall</title>
 				<meta
 					name="description"
-					content="Track, measure and share your API's performance"
+					content="Global Latency Monitoring"
 				/>
 				<link rel="icon" href="/logo.svg" />
 			</head>
