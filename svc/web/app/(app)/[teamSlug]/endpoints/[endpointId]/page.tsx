@@ -12,9 +12,7 @@ import { DeleteButton } from "./delete";
 import { getSession } from "lib/auth";
 // import Confirm from "@/components/confirm/confirm";
 
-
-export const revalidate = 5
-
+export const revalidate = 5;
 
 export default async function Page(props: {
 	params: { teamSlug: string; endpointId: string };

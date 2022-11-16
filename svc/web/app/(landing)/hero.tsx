@@ -73,19 +73,20 @@ const Rings: React.FC = (): JSX.Element => {
 export const Hero: React.FC = (): JSX.Element => {
 	return (
 		<section
-			className="relative w-screen mt-16 -pt-16"
+			className="relative w-screen h-screen mt-16 -pt-16"
 			style={{ minHeight: "50vh" }}
 		>
 			<Rings />
 
-			<div className="relative max-w-6xl min-h-screen px-4 mx-auto sm:px-6">
-				<div className="pt-32 md:pt-40">
-					<div className="flex flex-col items-center text-center">
-						<h1 className="max-w-lg md:max-w-xl lg:max-w-4xl xl:max-w-6xl text-center font-extrabold tracking-[-0.02em] py-4  text-[40px] md:text-6xl lg:text-7xl xl:text-8xl   text-transparent bg-clip-text bg-gradient-to-t from-zinc-100/80  to-white">
+			<div className="relative h-full max-w-6xl px-4 mx-auto sm:px-6">
+				<div className="h-full pt-32 md:pt-40">
+					<div className="flex flex-col items-center justify-center text-center h-2/3">
+						<h1 className="container text-center font-extrabold tracking-[-0.02em] py-4  text-6xl lg:text-8xl   text-transparent bg-clip-text bg-gradient-to-t from-zinc-100/80  to-white">
 							Global Latency Monitoring
 						</h1>
-						<p className="max-w-lg mt-6 text-lg font-light md:max-w-xl lg:max-w-4xl xl:max-w-6xl text-zinc-300">
-							Understand the true performance of your API by monitoring it from around the world.
+						<p className="container mt-6 text-lg font-light text-zinc-300">
+							Understand the true performance of your API by monitoring it from
+							around the world.
 						</p>
 						<div className="max-w-xs mx-auto mt-10 space-y-4 sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4">
 							<div>

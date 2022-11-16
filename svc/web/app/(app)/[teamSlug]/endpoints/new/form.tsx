@@ -152,9 +152,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 				</div>
 				<div className="space-y-6 sm:space-y-5">
 					<div>
-						<h3 className="text-lg font-medium leading-6 text-zinc-900">
-							URL
-						</h3>
+						<h3 className="text-lg font-medium leading-6 text-zinc-900">URL</h3>
 						<p className="mt-1 text-sm text-zinc-500">
 							Enter the url of your endpoint and select a HTTP method
 						</p>

@@ -152,6 +152,7 @@ importers:
       '@radix-ui/react-navigation-menu': ^1.1.1
       '@radix-ui/react-popover': ^1.0.2
       '@radix-ui/react-tabs': ^1.0.1
+      '@shopify/polaris-viz': ^7.8.1
       '@sindresorhus/slugify': ^2.1.1
       '@tailwindcss/typography': ^0.5.8
       '@tanstack/react-table': ^8.5.22
@@ -163,6 +164,9 @@ importers:
       autoprefixer: ^10.4.12
       classnames: ^2.3.2
       clsx: ^1.2.1
+      d3-array: ^3.2.0
+      d3-scale: ^4.0.2
+      d3-shape: ^3.1.0
       eslint: 8.26.0
       eslint-config-next: 13.0.0
       focus-visible: ^5.2.0
@@ -204,12 +208,16 @@ importers:
       '@radix-ui/react-navigation-menu': 1.1.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-popover': 1.0.2_yyloj25vv7zmuk3uh3z5jonzqq
       '@radix-ui/react-tabs': 1.0.1_biqbaboplfbrettd7655fr4n2y
+      '@shopify/polaris-viz': 7.8.1_biqbaboplfbrettd7655fr4n2y
       '@sindresorhus/slugify': 2.1.1
       '@tailwindcss/typography': 0.5.8_tailwindcss@3.2.4
       '@tanstack/react-table': 8.5.28_biqbaboplfbrettd7655fr4n2y
       '@tremor/react': 1.1.4_v2m5e27vhdewzwhryxwfaorcca
       classnames: 2.3.2
       clsx: 1.2.1
+      d3-array: 3.2.0
+      d3-scale: 4.0.2
+      d3-shape: 3.1.0
       focus-visible: 5.2.0
       framer-motion: 7.6.7_biqbaboplfbrettd7655fr4n2y
       ms: 2.1.3
@@ -548,6 +556,10 @@ packages:
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
+
+  /@juggle/resize-observer/3.4.0:
+    resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+    dev: false
 
   /@markdoc/markdoc/0.2.1_i2izv7j3km4zzxbpzq2d4xtojy:
     resolution: {integrity: sha512-3hr9pggv1h5Q4G50/T3MTnMsl3ejHbk0apVIwxU4x5CFCn+VQnvtJh1vgKZPvMwA+ys67SDUiZz9GD9ccg6LpQ==}
@@ -1420,6 +1432,60 @@ packages:
       '@babel/runtime': 7.20.1
     dev: false
 
+  /@react-spring/animated/9.5.5_react@18.2.0:
+    resolution: {integrity: sha512-glzViz7syQ3CE6BQOwAyr75cgh0qsihm5lkaf24I0DfU63cMm/3+br299UEYkuaHNmfDfM414uktiPlZCNJbQA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@react-spring/shared': 9.5.5_react@18.2.0
+      '@react-spring/types': 9.5.5
+      react: 18.2.0
+    dev: false
+
+  /@react-spring/core/9.5.5_react@18.2.0:
+    resolution: {integrity: sha512-shaJYb3iX18Au6gkk8ahaF0qx0LpS0Yd+ajb4asBaAQf6WPGuEdJsbsNSgei1/O13JyEATsJl20lkjeslJPMYA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@react-spring/animated': 9.5.5_react@18.2.0
+      '@react-spring/rafz': 9.5.5
+      '@react-spring/shared': 9.5.5_react@18.2.0
+      '@react-spring/types': 9.5.5
+      react: 18.2.0
+    dev: false
+
+  /@react-spring/rafz/9.5.5:
+    resolution: {integrity: sha512-F/CLwB0d10jL6My5vgzRQxCNY2RNyDJZedRBK7FsngdCmzoq3V4OqqNc/9voJb9qRC2wd55oGXUeXv2eIaFmsw==}
+    dev: false
+
+  /@react-spring/shared/9.5.5_react@18.2.0:
+    resolution: {integrity: sha512-YwW70Pa/YXPOwTutExHZmMQSHcNC90kJOnNR4G4mCDNV99hE98jWkIPDOsgqbYx3amIglcFPiYKMaQuGdr8dyQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@react-spring/rafz': 9.5.5
+      '@react-spring/types': 9.5.5
+      react: 18.2.0
+    dev: false
+
+  /@react-spring/types/9.5.5:
+    resolution: {integrity: sha512-7I/qY8H7Enwasxr4jU6WmtNK+RZ4Z/XvSlDvjXFVe7ii1x0MoSlkw6pD7xuac8qrHQRm9BTcbZNyeeKApYsvCg==}
+    dev: false
+
+  /@react-spring/web/9.5.5_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-+moT8aDX/ho/XAhU+HRY9m0LVV9y9CK6NjSRaI+30Re150pB3iEip6QfnF4qnhSCQ5drpMF0XRXHgOTY/xbtFw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@react-spring/animated': 9.5.5_react@18.2.0
+      '@react-spring/core': 9.5.5_react@18.2.0
+      '@react-spring/shared': 9.5.5_react@18.2.0
+      '@react-spring/types': 9.5.5
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
   /@rushstack/eslint-patch/1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
     dev: true
@@ -1449,6 +1515,41 @@ packages:
       '@sendgrid/helpers': 7.7.0
     transitivePeerDependencies:
       - debug
+    dev: false
+
+  /@shopify/polaris-viz-core/7.8.1_react@18.2.0:
+    resolution: {integrity: sha512-GHHDAqGuNKEI0et/CfRJ/IdiJCA2K0USkaWdwRcF5BmAzOlykUUcMCeo4NJbvWCeWexPiSuZ2N4ooow2FCFyjg==}
+    peerDependencies:
+      react: ^16.8.6 || ^17.0.0
+    dependencies:
+      '@react-spring/animated': 9.5.5_react@18.2.0
+      '@react-spring/core': 9.5.5_react@18.2.0
+      d3-array: 3.2.0
+      d3-color: 3.1.0
+      d3-path: 3.0.1
+      d3-scale: 4.0.2
+      d3-shape: 3.1.0
+      react: 18.2.0
+    dev: false
+
+  /@shopify/polaris-viz/7.8.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-0Ug8JwgXZ/Cg3ySn2Hf6T7/uHlRWuhQ8cTRj3isThxD7pSRxXjV35KIk7OUDNRgQXhNJkmxDhBITvKHJrMo/Ig==}
+    peerDependencies:
+      react: ^16.8.6 || ^17.0.0
+      react-dom: ^16.8.6 || ^17.0.0
+    dependencies:
+      '@juggle/resize-observer': 3.4.0
+      '@react-spring/web': 9.5.5_biqbaboplfbrettd7655fr4n2y
+      '@shopify/polaris-viz-core': 7.8.1_react@18.2.0
+      d3-array: 3.2.0
+      d3-color: 3.1.0
+      d3-path: 3.0.1
+      d3-scale: 4.0.2
+      d3-shape: 3.1.0
+      fast-deep-equal: 3.1.3
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      use-debounce: 8.0.2_react@18.2.0
     dev: false
 
   /@sindresorhus/slugify/2.1.1:
@@ -2054,8 +2155,20 @@ packages:
       internmap: 1.0.1
     dev: false
 
+  /d3-array/3.2.0:
+    resolution: {integrity: sha512-3yXFQo0oG3QCxbF06rMPFyGRMGJNS7NvsV1+2joOjbBE+9xvWQ8+GcMJAjRCzw06zQ3/arXeJgbPYcjUCuC+3g==}
+    engines: {node: '>=12'}
+    dependencies:
+      internmap: 1.0.1
+    dev: false
+
   /d3-color/2.0.0:
     resolution: {integrity: sha512-SPXi0TSKPD4g9tw0NMZFnR95XVgUZiBH+uUTqQuDu1OsE2zomHU7ho0FISciaPvosimixwHFl3WHLGabv6dDgQ==}
+    dev: false
+
+  /d3-color/3.1.0:
+    resolution: {integrity: sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==}
+    engines: {node: '>=12'}
     dev: false
 
   /d3-format/2.0.0:
@@ -2072,6 +2185,11 @@ packages:
     resolution: {integrity: sha512-ZwZQxKhBnv9yHaiWd6ZU4x5BtCQ7pXszEV9CU6kRgwIQVQGLMv1oiL4M+MK/n79sYzsj+gcgpPQSctJUsLN7fA==}
     dev: false
 
+  /d3-path/3.0.1:
+    resolution: {integrity: sha512-gq6gZom9AFZby0YLduxT1qmrp4xpBA1YZr19OI717WIdKE2OM5ETq5qrHLb301IgxhLwcuxvGZVLeeWc/k1I6w==}
+    engines: {node: '>=12'}
+    dev: false
+
   /d3-scale/3.3.0:
     resolution: {integrity: sha512-1JGp44NQCt5d1g+Yy+GeOnZP7xHo0ii8zsQp6PGzd+C1/dl0KGsp9A7Mxwp+1D1o4unbTTxVdU/ZOIEBoeZPbQ==}
     dependencies:
@@ -2082,10 +2200,28 @@ packages:
       d3-time-format: 3.0.0
     dev: false
 
+  /d3-scale/4.0.2:
+    resolution: {integrity: sha512-GZW464g1SH7ag3Y7hXjf8RoUuAFIqklOAq3MRl4OaWabTFJY9PN/E1YklhXLh+OQ3fM9yS2nOkCoS+WLZ6kvxQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-array: 3.2.0
+      d3-format: 2.0.0
+      d3-interpolate: 2.0.1
+      d3-time: 2.1.1
+      d3-time-format: 3.0.0
+    dev: false
+
   /d3-shape/2.1.0:
     resolution: {integrity: sha512-PnjUqfM2PpskbSLTJvAzp2Wv4CZsnAgTfcVRTwW03QR3MkXF8Uo7B1y/lWkAsmbKwuecto++4NlsYcvYpXpTHA==}
     dependencies:
       d3-path: 2.0.0
+    dev: false
+
+  /d3-shape/3.1.0:
+    resolution: {integrity: sha512-tGDh1Muf8kWjEDT/LswZJ8WF85yDZLvVJpYU9Nq+8+yW1Z5enxrmXOhTArlkaElU+CTn0OTVNli+/i+HP45QEQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-path: 3.0.1
     dev: false
 
   /d3-time-format/3.0.0:
@@ -4547,6 +4683,15 @@ packages:
       '@types/react': 18.0.23
       react: 18.2.0
       tslib: 2.4.1
+    dev: false
+
+  /use-debounce/8.0.2_react@18.2.0:
+    resolution: {integrity: sha512-4yCQ4FmlmYNpcHXJk1E19chO1X58fH4+QrwKpa5nkx3d7szHR3MjheRgECLvHivp3ClUqEom+SHOGB9zBz+qlw==}
+    engines: {node: '>= 10.0.0'}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /use-isomorphic-layout-effect/1.1.2_i2izv7j3km4zzxbpzq2d4xtojy:

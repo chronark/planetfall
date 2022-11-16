@@ -16,10 +16,7 @@ export default function RootLayout({
 		<html lang="en" className={inter.variable}>
 			<head>
 				<title>Planetfall</title>
-				<meta
-					name="description"
-					content="Global Latency Monitoring"
-				/>
+				<meta name="description" content="Global Latency Monitoring" />
 				<link rel="icon" href="/logo.svg" />
 			</head>
 

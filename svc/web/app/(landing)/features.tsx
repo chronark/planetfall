@@ -1,17 +1,22 @@
+import classNames from "classnames";
 import Image from "next/image";
 import React from "react";
 
+import { ApiSnippet } from "./features/api-snippet";
 type Feature = {
+	hash: string;
 	title: string;
-	image?: string;
+	image: React.ReactNode;
 	description: string;
 	bullets: { title: string; description: string }[];
 };
 const features: Feature[] = [
 	{
+		hash: "insights",
 		title: "Gain Insights into the Performance of your API",
 		description:
 			"Synthetic monitoring for your APIs. Monitor the latency of your APIs from around the planet.",
+		image: <div>Hello</div>,
 		bullets: [
 			{
 				title: "22 Regions",
@@ -35,10 +40,18 @@ const features: Feature[] = [
 		],
 	},
 	{
+		hash: "statuspage",
 		title: "Public Statuspage",
 		description:
 			"Group your APIs together and share their performance publicly with your customers",
-		image: "/img/landing/statuspage.png",
+		image: (
+			<Image
+				src="/img/landing/statuspage.png"
+				width={1920}
+				height={1080}
+				alt="Feature screenshot"
+			/>
+		),
 		bullets: [
 			{
 				title: "Free",
@@ -55,9 +68,12 @@ const features: Feature[] = [
 		],
 	},
 	{
+		hash: "alerts",
 		title: "Alerts",
 		description:
-			"Receive instant alerts when your API goes down or experiences degraded performance",
+			"Receive realtime alerts when your API goes down or experiences degraded performance",
+		image: <div>Hello</div>,
+
 		bullets: [
 			{ title: "Webhook", description: "" },
 			{ title: "Email", description: "" },
@@ -65,8 +81,12 @@ const features: Feature[] = [
 		],
 	},
 	{
+		hash: "api",
 		title: "API",
-		description: "Manage all your endpoints and pages via REST API",
+		description:
+			"Manage all your endpoints and pages via REST API or create your own integration with our API",
+		image: <ApiSnippet />,
+
 		bullets: [
 			{ title: "API", description: "Integrate Planetfall into your dashboard" },
 			{
@@ -83,38 +103,72 @@ const features: Feature[] = [
 	},
 ];
 
-const Feature: React.FC<{ feature: Feature }> = ({ feature }) => {
+const Feature: React.FC<{ feature: Feature; i: number }> = ({ feature, i }) => {
 	return (
-		<div className="container mx-auto text-center lg:px-8">
+		<div className="container mx-auto text-center lg:px-8" id={feature.hash}>
 			{/* <h2 className="text-lg font-semibold text-zinc-600"></h2> */}
 			<div className="w-full h-6 max-w-md mx-auto drop-shadow-radiant" />
 
 			<h3 className="py-2 mt-2 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-t from-zinc-100/80 to-white md:text-6xl">
 				{feature.title}
 			</h3>
-			{feature.image ? (
-				<div className="mx-auto mt-4 overflow-hidden border rounded md:mt-8 lg:mt-16 border-zinc-600 drop-shadow-feature">
-					<Image
-						src={feature.image}
-						width={1920}
-						height={1080}
-						alt="Feature screenshot"
-					/>
-				</div>
-			) : null}
 			<p className="mx-auto mt-4 text-lg md:mt-8 lg:mt-16 max-w-prose text-zinc-200">
 				{feature.description}
 			</p>
-			<div className="mt-12">
-				<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
-					{feature.bullets.map((b, i) => (
+			<div
+				className={classNames(
+					"flex items-center justify-center md:mt-8 lg:mt-16",
+					{
+						"flex-row-reverse": i % 2 === 1,
+					},
+				)}
+			>
+				<div className="z-10 w-3/5 mx-auto border rounded drop-shadow-feature border-zinc-300/20">
+					{feature.image}
+				</div>
+
+				<div className="grid w-2/5 grid-cols-1 gap-4 lg:gap-8">
+					{feature.bullets.map((b) => (
 						<div
 							key={b.title}
-							className=" bg-gradient-feature from-zinc-600/50 to-transparent drop-shadow-feature"
+							className={classNames(
+								" from-zinc-600/50 to-transparent drop-shadow-feature",
+								{
+									"bg-gradient-to-r": i % 2 === 0,
+									"bg-gradient-to-l": i % 2 === 1,
+								},
+							)}
 						>
-							<div className="p-4 bg-gradient-feature-inner from-zinc-400/20 to-transparent">
-								<dt className="font-medium text-zinc-100">{b.title}</dt>
-								<dd className="mt-2 text-sm text-zinc-400">{b.description}</dd>
+							<div
+								className={classNames(
+									"absolute w-full h-px -top-px from-zinc-400/0 via-zinc-400/70  to-zinc-400/0",
+									{
+										"bg-gradient-to-r right-20": i % 2 === 0,
+										"bg-gradient-to-l left-20": i % 2 === 1,
+									},
+								)}
+							/>
+							<div
+								className={classNames(
+									"absolute w-full h-px -bottom-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0",
+									{
+										"bg-gradient-to-r right-20": i % 2 === 0,
+										"bg-gradient-to-l left-20": i % 2 === 1,
+									},
+								)}
+							/>
+
+							<div
+								className={classNames(
+									"p-4 from-zinc-300/20  to-transparent '",
+									{
+										"bg-gradient-feature-tr text-left": i % 2 === 0,
+										"bg-gradient-feature-tl text-right": i % 2 === 1,
+									},
+								)}
+							>
+								<dt className=" text-zinc-100">{b.title}</dt>
+								<dd className="mt-2 text-sm text-zinc-300">{b.description}</dd>
 							</div>
 						</div>
 					))}
@@ -128,8 +182,8 @@ export function Features(): JSX.Element {
 	return (
 		<section id="features">
 			<div className="relative py-16 space-y-8 sm:py-24 lg:py-32 md:space-y-16 lg:space-y-32">
-				{features.map((f) => (
-					<Feature key={f.title} feature={f} />
+				{features.map((f, i) => (
+					<Feature key={f.title} feature={f} i={i} />
 				))}
 			</div>
 		</section>
