@@ -161,6 +161,8 @@ importers:
       '@types/node': 18.11.6
       '@types/react': 18.0.23
       '@types/react-dom': 18.0.7
+      '@upstash/ratelimit': ^0.1.5
+      '@upstash/redis': ^1.16.1
       autoprefixer: ^10.4.12
       classnames: ^2.3.2
       clsx: ^1.2.1
@@ -170,7 +172,7 @@ importers:
       eslint: 8.26.0
       eslint-config-next: 13.0.0
       focus-visible: ^5.2.0
-      framer-motion: ^7.6.4
+      framer-motion: ^7.6.7
       ms: ^2.1.3
       next: 13.0.3-canary.0
       next-auth: ^4.16.4
@@ -180,6 +182,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       react-hook-form: ^7.38.0
+      react-intersection-observer: ^9.4.1
       slugify: ^1.6.5
       stripe: ^10.16.0
       svix: ^0.70.0
@@ -213,6 +216,8 @@ importers:
       '@tailwindcss/typography': 0.5.8_tailwindcss@3.2.4
       '@tanstack/react-table': 8.5.28_biqbaboplfbrettd7655fr4n2y
       '@tremor/react': 1.1.4_v2m5e27vhdewzwhryxwfaorcca
+      '@upstash/ratelimit': 0.1.5_@upstash+redis@1.16.1
+      '@upstash/redis': 1.16.1
       classnames: 2.3.2
       clsx: 1.2.1
       d3-array: 3.2.0
@@ -227,6 +232,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-hook-form: 7.39.4_react@18.2.0
+      react-intersection-observer: 9.4.1_react@18.2.0
       slugify: 1.6.5
       stripe: 10.17.0
       svix: 0.70.0
@@ -1785,6 +1791,22 @@ packages:
       '@typescript-eslint/types': 5.43.0
       eslint-visitor-keys: 3.3.0
     dev: true
+
+  /@upstash/ratelimit/0.1.5_@upstash+redis@1.16.1:
+    resolution: {integrity: sha512-v0zq3Xpq42HQBvXDvm0C4djYvKC5TjHG29uCpbIQcOw0znJNroHewI8y4Yk4tBeEF1rvj2RjDkFihjCp6uTExQ==}
+    peerDependencies:
+      '@upstash/redis': ^1.4.0
+    dependencies:
+      '@upstash/redis': 1.16.1
+    dev: false
+
+  /@upstash/redis/1.16.1:
+    resolution: {integrity: sha512-tejZ5vvWthxDFe3gebZodlRY3qqiQU20TxtL/fL7yddHAeduWeKN1GcSC9WBJJA0avZUAgLk/FSHL5N+HM04AA==}
+    dependencies:
+      isomorphic-fetch: 3.0.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
 
   /@xata.io/client/0.20.2_typescript@4.9.3:
     resolution: {integrity: sha512-GT88eGcuS/6iNI9LXrQvhj7zL0SCcGu7X5cgPAxSqX9X2YeAwTcBY+BH+KcibhCphKS/eJOxlo/jaYGRvDgTQg==}
@@ -4006,6 +4028,14 @@ packages:
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /react-intersection-observer/9.4.1_react@18.2.0:
+    resolution: {integrity: sha512-IXpIsPe6BleFOEHKzKh5UjwRUaz/JYS0lT/HPsupWEQou2hDqjhLMStc5zyE3eQVT4Fk3FufM8Fw33qW1uyeiw==}
+    peerDependencies:
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
     dev: false

@@ -81,9 +81,17 @@ resource "vercel_project" "web" {
       key    = "NEXTAUTH_SECRET"
       value  = var.nextauth_secret
       target = ["production"]
+      }, {
+      key    = "UPSTASH_REDIS_REST_URL"
+      value  = var.upstash_redis_rest_url
+      target = ["production", "preview", "development"]
+      }, {
+      key    = "UPSTASH_REDIS_REST_TOKEN"
+      value  = var.upstash_redis_rest_token
+      target = ["production", "preview", "development"]
     },
-  
-    
+
+
   ]
 
 }

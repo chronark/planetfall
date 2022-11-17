@@ -31,9 +31,9 @@ module.exports = {
 					"radial-gradient(50% 30% at 50% 0%, var(--tw-gradient-stops))",
 				"gradient-feature":
 					"radial-gradient(50% 50% at 0% 50%, var(--tw-gradient-stops))",
-				"gradient-feature-tl":
+				"gradient-feature-to-l":
 					"radial-gradient(100% 50% at 100% 50%, var(--tw-gradient-stops))",
-				"gradient-feature-tr":
+				"gradient-feature-to-r":
 					"radial-gradient(100% 50% at 0% 50%, var(--tw-gradient-stops))",
 			},
 			dropShadow: {

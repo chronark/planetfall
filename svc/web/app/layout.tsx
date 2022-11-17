@@ -17,6 +17,7 @@ export default function RootLayout({
 			<head>
 				<title>Planetfall</title>
 				<meta name="description" content="Global Latency Monitoring" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="icon" href="/logo.svg" />
 			</head>
 
