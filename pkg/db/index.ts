@@ -15,5 +15,6 @@ if (process.env.NODE_ENV === "production") {
 	}
 	prisma = global.cachedPrisma;
 }
+prisma.$queryRaw`SET @@boost_cached_queries = true`;
 
 export const db = prisma;

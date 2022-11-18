@@ -6,6 +6,7 @@ import { Cta } from "./cta";
 import { Hero } from "./hero";
 import { Pricing } from "./pricing";
 import { Stats } from "./stats";
+export const revalidate = 60 * 60; // revalidate every hour
 
 export default async function LandingPage() {
 	return (
