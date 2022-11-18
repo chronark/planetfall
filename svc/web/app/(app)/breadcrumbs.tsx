@@ -14,10 +14,7 @@ export const Breadcrumbs: React.FC<Props> = ({ teamSwitcher }) => {
 	return (
 		<ul role="list" className="flex items-center">
 			<li key="home" className="pr-2">
-				<Link
-					href="/"
-					className="font-bold text-zinc-900 hover:text-zinc-800"
-				>
+				<Link href="/" className="font-bold text-zinc-900 hover:text-zinc-800">
 					<Logo className="w-8 h-8" />
 				</Link>
 			</li>

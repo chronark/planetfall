@@ -6,6 +6,13 @@ import { z } from "zod";
 import { ApiError } from "lib/api/error";
 import type { ApiResponse } from "lib/api/response";
 import { newId } from "@planetfall/id";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const ratelimit = new Ratelimit({
+	redis: Redis.fromEnv(),
+	limiter: Ratelimit.fixedWindow(10, "10 s"),
+});
 
 const input = z.object({
 	method: z.enum(["POST"]),
@@ -56,6 +63,14 @@ export default async function handler(
 	res: NextApiResponse<Output>,
 ): Promise<void> {
 	try {
+		const { success } = await ratelimit.limit("global");
+		if (!success) {
+			throw new ApiError({
+				status: 429,
+				message: "Too many requests, please try again later",
+			});
+		}
+
 		const request = input.safeParse(req);
 		if (!request.success) {
 			throw new ApiError({

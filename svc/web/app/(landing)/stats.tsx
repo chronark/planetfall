@@ -2,8 +2,6 @@ import React from "react";
 import { db } from "@planetfall/db";
 import { asyncComponent } from "lib/api/component";
 
-export const revalidate = 60 * 60; // revalidate every hour
-
 export const Stats = asyncComponent(async () => {
 	const rng = Math.random();
 	console.time(`stats${rng}`);
@@ -45,16 +43,16 @@ export const Stats = asyncComponent(async () => {
 	return (
 		<section id="stats">
 			<div className="relative py-16 sm:py-24 lg:py-32">
-				<div className="container mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
+				<div className="container grid grid-cols-1 gap-4 mx-auto sm:grid-cols-3">
 					{stats.map(({ label, value }) => (
 						<div
 							key={label}
-							className="flex items-center justify-between px-4 py-3 overflow-hidden rounded m sm:flex-col gap-2"
+							className="flex items-center justify-between gap-2 px-4 py-3 overflow-hidden rounded m sm:flex-col"
 						>
-							<dt className="text-lg text-center  leading-6 text-zinc-500">
+							<dt className="text-lg leading-6 text-center text-zinc-500">
 								{label}
 							</dt>
-							<dd className="text-2xl font-bold tracking-tight text-center  sm:text-5xl text-zinc-100">
+							<dd className="text-2xl font-bold tracking-tight text-center sm:text-5xl text-zinc-100">
 								{value.toLocaleString(undefined, { maximumFractionDigits: 2 })}
 							</dd>
 						</div>

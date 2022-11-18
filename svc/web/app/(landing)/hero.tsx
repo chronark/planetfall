@@ -1,4 +1,31 @@
+"use client";
 import React, { useId } from "react";
+import { motion } from "framer-motion";
+
+const textVariants = {
+	visible: {
+		opacity: 1,
+		transition: { duration: 0.5, staggerChildren: 0.25, ease: "easeInOut" },
+	},
+	hidden: { opacity: 0 },
+};
+const slideUp = {
+	visible: {
+		opacity: 1,
+		scale: 1,
+		y: 0,
+		transition: { duration: 0.85, ease: "easeInOut" },
+	},
+	hidden: { opacity: 0, scale: 0.95, y: "20" },
+};
+
+const fadeIn = {
+	visible: {
+		opacity: 1,
+		transition: { duration: 2, delay: 1, ease: "easeInOut" },
+	},
+	hidden: { opacity: 0 },
+};
 
 const Rings: React.FC = (): JSX.Element => {
 	let id = useId();
@@ -6,6 +33,7 @@ const Rings: React.FC = (): JSX.Element => {
 	return (
 		<div className="absolute left-1/2  h-2/3 scale-150  stroke-zinc-300/70 [mask-image:linear-gradient(to_top,white_20%,transparent_75%)] -translate-x-1/2">
 			{/* Outer ring */}
+
 			<svg
 				viewBox="0 0 1026 1026"
 				fill="none"
@@ -63,43 +91,52 @@ const Rings: React.FC = (): JSX.Element => {
 						gradientUnits="userSpaceOnUse"
 					>
 						<stop stopColor="#fff" />
-						<stop offset={1} stopColor="##fafafa" stopOpacity={0} />
+						<stop offset={1} stopColor="#fafafa" stopOpacity={0} />
 					</linearGradient>
 				</defs>
 			</svg>
 		</div>
 	);
 };
+
 export const Hero: React.FC = (): JSX.Element => {
 	return (
 		<section
-			className="relative w-screen mt-16 -pt-16"
+			className="relative w-screen h-screen mt-16 -pt-16"
 			style={{ minHeight: "50vh" }}
 		>
 			<Rings />
 
-			<div className="relative max-w-6xl min-h-screen px-4 mx-auto sm:px-6">
-				<div className="pt-32 md:pt-40">
-					<div className="flex flex-col items-center text-center">
-						<h1 className="max-w-lg md:max-w-xl lg:max-w-4xl xl:max-w-6xl text-center font-extrabold tracking-[-0.02em] py-4  text-[40px] md:text-6xl lg:text-7xl xl:text-8xl   text-transparent bg-clip-text bg-gradient-to-t from-zinc-100/80  to-white">
+			<div className="relative h-full max-w-6xl px-4 mx-auto sm:px-6">
+				<div className="h-full pt-32 md:pt-40">
+					<motion.div
+						initial="hidden"
+						animate="visible"
+						variants={textVariants}
+						className="flex flex-col items-center justify-center text-center h-2/3"
+					>
+						<motion.h1
+							variants={slideUp}
+							className="container text-center font-extrabold tracking-[-0.02em] py-4  text-6xl lg:text-8xl   text-transparent bg-clip-text bg-gradient-to-t from-zinc-100/80  to-white"
+						>
 							Global Latency Monitoring
-						</h1>
-						<p className="max-w-lg mt-6 text-lg font-light md:max-w-xl lg:max-w-4xl xl:max-w-6xl text-zinc-300">
-							Understand the true performance of your API by monitoring it from around the world.
-						</p>
-						<div className="max-w-xs mx-auto mt-10 space-y-4 sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4">
-							<div>
-								<div className="px-10 py-2 text-gray-900 transition-all duration-1000 border border-white rounded bg-gradient-to-tr drop-shadow-launch from-zinc-100 to-white hover:text-zinc-800">
-									Launching soon
-								</div>
-								{/* <Link href="/auth/sign-in">
-                  <div className="inline-flex items-center justify-center w-full px-4 py-3 font-medium leading-snug transition-all duration-300 ease-in-out border rounded shadow-sm hover:cursor-pointer hover:px-6 hover:shadow-lg border-zinc-900 bg-zinc-900 text-zinc-50 hover:bg-zinc-50 hover:text-zinc-900 group">
-                    Get Started for free
-                  </div>
-                </Link> */}
+						</motion.h1>
+						<motion.p
+							variants={slideUp}
+							className="container mt-6 text-lg font-light text-zinc-300"
+						>
+							Understand the true performance of your API by monitoring it from
+							around the world.
+						</motion.p>
+						<motion.div
+							variants={fadeIn}
+							className="max-w-xs mx-auto mt-10 space-y-4 sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4"
+						>
+							<div className="px-10 py-2 text-gray-900 transition-all duration-1000 border border-white rounded bg-gradient-to-tr drop-shadow-launch from-zinc-100 to-white hover:text-zinc-800">
+								Launching soon
 							</div>
-						</div>
-					</div>
+						</motion.div>
+					</motion.div>
 				</div>
 			</div>
 		</section>

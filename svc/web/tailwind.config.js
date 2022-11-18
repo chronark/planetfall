@@ -30,9 +30,11 @@ module.exports = {
 				"gradient-divider":
 					"radial-gradient(50% 30% at 50% 0%, var(--tw-gradient-stops))",
 				"gradient-feature":
-					"radial-gradient(50% 50% at 50% 0%, var(--tw-gradient-stops))",
-				"gradient-feature-inner":
-					"radial-gradient(30% 30% at 50% 0%, var(--tw-gradient-stops))",
+					"radial-gradient(50% 50% at 0% 50%, var(--tw-gradient-stops))",
+				"gradient-feature-to-l":
+					"radial-gradient(100% 50% at 100% 50%, var(--tw-gradient-stops))",
+				"gradient-feature-to-r":
+					"radial-gradient(100% 50% at 0% 50%, var(--tw-gradient-stops))",
 			},
 			dropShadow: {
 				launch: [
@@ -40,25 +42,25 @@ module.exports = {
 					"0 10px 10px rgba(219, 227, 248, 0.6)",
 				],
 				cta: ["0 10px 50px rgba(219, 227, 248, 0.4)"],
-				feature: ["0 10px 80px rgba(219, 227, 248, 0.5)"],
+				feature: ["0 10px 40px rgba(212, 212, 216, 0.3)"],
 			},
 			boxShadow: {
 				ambient: "0 35px 120px -10px rgba(51, 102, 255, 0.03)",
 				cta: "0 35px 120px -10px rgba(51, 102, 255, 0.1)",
 			},
 			colors: {
-				 primary: {
-				 	100: "#D6E4FF",
-				 	200: "#ADC8FF",
-				 	300: "#84A9FF",
-				 	400: "#6690FF",
-				 	500: "#3366FF",
-				 	600: "#254EDB",
-				 	700: "#1939B7",
-				 	800: "#102693",
-				 	900: "#091A7A",
-				 },
-				
+				primary: {
+					100: "#D6E4FF",
+					200: "#ADC8FF",
+					300: "#84A9FF",
+					400: "#6690FF",
+					500: "#3366FF",
+					600: "#254EDB",
+					700: "#1939B7",
+					800: "#102693",
+					900: "#091A7A",
+				},
+
 				// primary: {
 				// 	100: "#DBE3F8",
 				// 	200: "#B9C8F1",
@@ -117,8 +119,8 @@ module.exports = {
 			},
 
 			fontFamily: {
-				sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
-				display: ["PangeaAfrikan-Regular", ...defaultTheme.fontFamily.sans],
+				sans: ["Inter var", ...defaultTheme.fontFamily.sans],
+				display: ["Lexend", ...defaultTheme.fontFamily.sans],
 			},
 
 			maxWidth: {

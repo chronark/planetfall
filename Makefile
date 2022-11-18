@@ -17,19 +17,20 @@ build-proxy:
 	go build -o ./dist/main ./main.go 
 	# zip ./dist/function.v2.zip ./dist/main
 
-deploy: build-proxy build-scheduler
+deploy: build-proxy
 	terraform -chdir=deployment init -upgrade
 	terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
-	cd svc/scheduler && flyctl deploy --image ${SCHEDULER_TAG}
+	flyctl -c ./svc/scheduler/fly.toml deploy --dockerfile=./svc/scheduler/Dockerfile --push
+	# cd svc/scheduler && flyctl deploy --image ${SCHEDULER_TAG}
 
 
-build-scheduler:
-	docker build \
-	 	--platform=linux/amd64 \
-		-t ${SCHEDULER_TAG} \
-		-f svc/scheduler/Dockerfile \
-		.
-	docker push ${SCHEDULER_TAG}
+# build-scheduler:
+# 	docker build \
+# 	 	--platform=linux/amd64 \
+# 		-t ${SCHEDULER_TAG} \
+# 		-f svc/scheduler/Dockerfile \
+# 		.
+# 	docker push ${SCHEDULER_TAG}
 
 
 dev: rm build

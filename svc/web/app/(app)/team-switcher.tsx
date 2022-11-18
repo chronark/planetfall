@@ -33,9 +33,7 @@ export const TeamSwitcher: React.FC<Props> = ({
 					className="z-30 p-4 bg-white border rounded shadow-lg divide-y divide-zinc-200"
 				>
 					<div className="py-2">
-						<h3 className="px-3 text-xs font-medium text-zinc-500">
-							Personal
-						</h3>
+						<h3 className="px-3 text-xs font-medium text-zinc-500">Personal</h3>
 						<div className="mt-1 space-y-1" aria-labelledby="projects-headline">
 							<Link
 								href={`/${personalTeam?.slug}`}

@@ -2,9 +2,6 @@ FROM node:18
 WORKDIR /planetfall
 RUN npm i -g pnpm turbo
 
-COPY pnpm-lock.yaml .
-RUN pnpm fetch
-
 ARG version
 ENV PLANETFALL_VERSION ${version}
 
