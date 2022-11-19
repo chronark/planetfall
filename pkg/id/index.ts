@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 
 import baseX from "base-x";
 
@@ -44,3 +44,5 @@ export const newId = new IdGenerator({
 	token: "tkn",
 	run: "run",
 }).id;
+
+export const newShortId = () => encodeBase58(randomBytes(8));

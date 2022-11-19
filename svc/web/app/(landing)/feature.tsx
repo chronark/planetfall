@@ -9,7 +9,7 @@ import { useInView } from "react-intersection-observer";
 export type FeatureProps = {
 	hash: string;
 	title: string;
-	image: React.ReactNode;
+	image?: React.ReactNode;
 	description: string;
 	bullets: { title: string; description: string }[];
 };
@@ -19,19 +19,24 @@ const featureVariants = {
 		opacity: 1,
 		scale: 1,
 		y: 0,
-		transition: { duration: 2, staggerChildren: 0.5 },
+		transition: { duration: 2, staggerChildren: 0.3, delayChildren: 1 },
 	},
 	hidden: { opacity: 0, scale: 0.9, y: "10%" },
 };
 
 const slideLeft = {
 	visible: { opacity: 1, x: 0, transition: { duration: 1 } },
-	hidden: { opacity: 0, x: "90%" },
+	hidden: { opacity: 0, x: "50%" },
 };
 
 const slideRight = {
 	visible: { opacity: 1, x: 0, transition: { duration: 1 } },
-	hidden: { opacity: 0, x: "-90%" },
+	hidden: { opacity: 0, x: "-50%" },
+};
+
+const slideUp = {
+	visible: { opacity: 1, y: 0, transition: { duration: 1 } },
+	hidden: { opacity: 0, y: "10%" },
 };
 
 export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
@@ -52,7 +57,7 @@ export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 			animate={controls}
 			variants={featureVariants}
 			initial="hidden"
-			className="container mx-auto text-center lg:px-8"
+			className="container px-4 mx-auto text-center lg:px-8"
 			id={feature.hash}
 		>
 			{/* <h2 className="text-lg font-semibold text-zinc-600"></h2> */}
@@ -73,57 +78,70 @@ export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 					},
 				)}
 			>
-				<div className="z-10 w-3/5 mx-auto border rounded drop-shadow-feature border-zinc-300/20">
-					{feature.image}
-				</div>
+				{feature.image ? (
+					<div className="z-10 mx-auto border rounded lg:w-3/5 drop-shadow-feature border-zinc-300/20">
+						{feature.image}
+					</div>
+				) : null}
 
-				<div className="grid grid-cols-1 lg:w-2/5 lg:gap-8">
-					{feature.bullets.map((b, j) => (
-						<motion.div
-							variants={i % 2 === 0 ? slideRight : slideLeft}
-							key={b.title}
-							className={classNames(
-								"from-zinc-600/50 to-transparent drop-shadow-feature",
-								{
-									"lg:bg-gradient-to-r": i % 2 === 0,
-									"lg:bg-gradient-to-l": i % 2 === 1,
-								},
-							)}
-						>
-							<div
+				<div
+					className={classNames("grid grid-cols-1 w-1/2 lg:gap-8", {
+						"lg:w-2/5": feature.image,
+					})}
+				>
+					{feature.bullets.map((b) => {
+						return (
+							<motion.div
+								variants={
+									feature.image
+										? i % 2 === 0
+											? slideRight
+											: slideLeft
+										: slideUp
+								}
+								key={b.title}
 								className={classNames(
-									"absolute  w-full h-px -top-px from-zinc-400/0 via-zinc-400/70  to-zinc-400/0",
-									{
-										"bg-gradient-to-r lg:right-20": i % 2 === 0,
-										"bg-gradient-to-l lg:left-20": i % 2 === 1,
-										// "hidden lg:absolute": j === 0
-									},
-								)}
-							/>
-							<div
-								className={classNames(
-									"absolute w-full h-px -bottom-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0",
-									{
-										"lg:bg-gradient-to-r lg:right-20": i % 2 === 0,
-										"lg:bg-gradient-to-l lg:left-20": i % 2 === 1,
-									},
-								)}
-							/>
-
-							<div
-								className={classNames(
-									"p-4 from-zinc-300/0 via-zinc-300/10 lg:from-zinc-300/20  lg:via-zinc-300/10  to-zinc-300/0 text-center",
-									{
-										" lg:bg-gradient-feature-to-r lg:text-left": i % 2 === 0,
-										" lg:bg-gradient-feature-to-l lg:text-right": i % 2 === 1,
-									},
+									"from-zinc-600/50 to-transparent drop-shadow-feature",
 								)}
 							>
-								<dt className=" text-zinc-200">{b.title}</dt>
-								<dd className="mt-1 text-sm text-zinc-300">{b.description}</dd>
-							</div>
-						</motion.div>
-					))}
+								<div
+									className={classNames(
+										"absolute  w-full h-px -top-px from-zinc-400/0 via-zinc-400/70  to-zinc-400/0 bg-gradient-to-r",
+										{
+											"lg:right-20": feature.image && i % 2 === 0,
+											"lg:left-20": feature.image && i % 2 === 1,
+										},
+									)}
+								/>
+								<div
+									className={classNames(
+										"absolute w-full h-px -bottom-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0",
+										{
+											"lg:bg-gradient-to-r lg:right-20": i % 2 === 0,
+											"lg:bg-gradient-to-l lg:left-20": i % 2 === 1,
+										},
+									)}
+								/>
+
+								<div
+									className={classNames(
+										"p-4 from-zinc-300/10  to-zinc-300/0 text-center",
+										{
+											" lg:bg-gradient-feature-to-r lg:text-left":
+												feature.image && i % 2 === 0,
+											" lg:bg-gradient-feature-to-l lg:text-right":
+												feature.image && i % 2 === 1,
+										},
+									)}
+								>
+									<dt className=" text-zinc-200">{b.title}</dt>
+									<dd className="mt-1 text-sm text-zinc-300">
+										{b.description}
+									</dd>
+								</div>
+							</motion.div>
+						);
+					})}
 				</div>
 			</div>
 		</motion.div>

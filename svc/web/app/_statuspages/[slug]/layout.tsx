@@ -26,7 +26,7 @@ export default async function ({ children }: { children: React.ReactNode }) {
 								{session ? (
 									<li key="home" className="hidden md:block">
 										<Link
-											className="flex items-center px-3 py-2 font-medium text-gray-600 hover:text-gray-200 lg:px-5 transition duration-150 ease-in-out"
+											className="flex items-center px-3 py-2 font-medium text-zinc-600 hover:text-zinc-200 lg:px-5 transition duration-150 ease-in-out"
 											href="/home"
 										>
 											Dashboard

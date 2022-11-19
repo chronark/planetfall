@@ -44,7 +44,7 @@ export const EndpointsTable: React.FC<Props> = ({ endpoints }) => {
 		accessor("name", {
 			header: "Name",
 			cell: (info) => (
-				<div className="flex flex-col items-start text-sm font-medium text-gray-900">
+				<div className="flex flex-col items-start text-sm font-medium text-zinc-900">
 					<span>{info.getValue()}</span>
 					<span>{info.row.original.url}</span>
 				</div>

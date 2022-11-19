@@ -9,13 +9,13 @@ const features: FeatureProps[] = [
 		hash: "insights",
 		title: "Gain Insights into the Performance of your API",
 		description:
-			"Synthetic monitoring for your APIs. Monitor the latency of your APIs from around the planet.",
-		image: <div>Hello</div>,
+			"Synthetic monitoring for your APIs. Check the latency of your APIs from around the planet.",
+
 		bullets: [
 			{
 				title: "22 Regions",
 				description:
-					"Check your API from around the globe. More regions coming soon.",
+					"Planetfall can check your API from 22 regions across the globe",
 			},
 			{
 				title: "Custom timeouts",
@@ -29,23 +29,26 @@ const features: FeatureProps[] = [
 			},
 		],
 	},
+
+	{
+		hash: "alerts",
+		title: "Alerts",
+		description:
+			"Receive realtime alerts when your API goes down or experiences degraded performance",
+
+		bullets: [{ title: "Webhooks, Email or Slack", description: "" }],
+	},
 	{
 		hash: "statuspage",
 		title: "Public Statuspage",
 		description:
-			"Group your APIs together and share their performance publicly with your customers",
-		image: (
-			<Image
-				src="/img/landing/statuspage.png"
-				width={1920}
-				height={1080}
-				alt="Feature screenshot"
-			/>
-		),
+			"Create custom status pages for your APIs to share with your customers.",
+
 		bullets: [
 			{
-				title: "Integrated dashboard",
-				description: "Free subdomain on planetfall.io",
+				title: "Integrated Status Page",
+				description:
+					"Simply add a free subdomain on planetfall.io to host your status page",
 			},
 			{
 				title: "1 Click Setup",
@@ -54,35 +57,21 @@ const features: FeatureProps[] = [
 		],
 	},
 	{
-		hash: "alerts",
-		title: "Alerts",
-		description:
-			"Receive realtime alerts when your API goes down or experiences degraded performance",
-		image: <div>Hello</div>,
-
-		bullets: [
-			{ title: "Webhook", description: "" },
-			{ title: "Email", description: "" },
-			{ title: "Slack", description: "" },
-		],
-	},
-	{
 		hash: "api",
 		title: "API",
 		description:
-			"Manage all your endpoints and pages via REST API or create your own integration",
+			"The Planetfall REST API gives you full control over all resources to build anything.",
 		image: <ApiSnippet />,
 
 		bullets: [
 			{
-				title: "Integrate",
-				description:
-					"Use our API to integrate Planetfall into your monitoring stack",
+				title: "Checks",
+				description: "Run checks programmatically",
 			},
 			{
-				title: "CI-CD",
+				title: "CI/CD",
 				description:
-					"Use preview branches and add monitoring within your CI pipeline",
+					"Integrate Planetfall into your release pipeline to ensure you never ship slow APIs again",
 			},
 		],
 	},

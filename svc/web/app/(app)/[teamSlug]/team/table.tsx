@@ -33,7 +33,7 @@ export const TeamTable: React.FC<Props> = ({ members }) => {
 						src={info.getValue().image ?? ""}
 						alt=""
 					/>
-					<span className="ml-3 text-sm font-medium text-gray-900">
+					<span className="ml-3 text-sm font-medium text-zinc-900">
 						{info.getValue().email}
 					</span>
 				</div>

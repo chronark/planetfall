@@ -2,17 +2,26 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "install": {
-      "outputs": ["node_modules/**", "pnpm-lock.yaml"]
+      "outputs": [
+        "node_modules/**",
+        "pnpm-lock.yaml"
+      ]
     },
     "build": {
-      "dependsOn": ["format", "^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "dependsOn": [
+        "fmt",
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**"
+      ]
     },
-    "format": {
-      "outputs": []
+    "fmt": {
+      "cache": false
     },
     "lint": {
-      "outputs": []
+      "cache": false
     },
     "dev": {
       "cache": false

@@ -1,5 +1,6 @@
 import "./globals.css";
 import "@tremor/react/dist/esm/tremor.css";
+import { Analytics } from "app/components/analytics";
 import { Inter } from "@next/font/google";
 
 const inter = Inter({
@@ -20,13 +21,13 @@ export default function RootLayout({
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="icon" href="/logo.svg" />
 			</head>
-
 			<body
 				className={
 					process.env.NODE_ENV === "development" ? "debug-screens" : undefined
 				}
 			>
 				{children}
+				<Analytics />
 			</body>
 		</html>
 	);

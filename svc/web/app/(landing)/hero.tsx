@@ -5,33 +5,24 @@ import { motion } from "framer-motion";
 const textVariants = {
 	visible: {
 		opacity: 1,
-		transition: { duration: 0.5, staggerChildren: 0.25, ease: "easeInOut" },
+		transition: { duration: 1, staggerChildren: 0.25, ease: "easeOut" },
 	},
 	hidden: { opacity: 0 },
 };
 const slideUp = {
 	visible: {
 		opacity: 1,
-		scale: 1,
 		y: 0,
-		transition: { duration: 0.85, ease: "easeInOut" },
+		transition: { duration: 1, ease: "easeOut" },
 	},
-	hidden: { opacity: 0, scale: 0.95, y: "20" },
-};
-
-const fadeIn = {
-	visible: {
-		opacity: 1,
-		transition: { duration: 2, delay: 1, ease: "easeInOut" },
-	},
-	hidden: { opacity: 0 },
+	hidden: { opacity: 0, y: "20" },
 };
 
 const Rings: React.FC = (): JSX.Element => {
 	let id = useId();
 
 	return (
-		<div className="absolute left-1/2  h-2/3 scale-150  stroke-zinc-300/70 [mask-image:linear-gradient(to_top,white_20%,transparent_75%)] -translate-x-1/2">
+		<div className=" absolute left-1/2  h-2/3 scale-150  stroke-zinc-300/70 [mask-image:linear-gradient(to_top,white_20%,transparent_75%)] -translate-x-1/2">
 			{/* Outer ring */}
 
 			<svg
@@ -101,10 +92,7 @@ const Rings: React.FC = (): JSX.Element => {
 
 export const Hero: React.FC = (): JSX.Element => {
 	return (
-		<section
-			className="relative w-screen h-screen mt-16 -pt-16"
-			style={{ minHeight: "50vh" }}
-		>
+		<section className="w-screen lg:h-screen" style={{ minHeight: "50vh" }}>
 			<Rings />
 
 			<div className="relative h-full max-w-6xl px-4 mx-auto sm:px-6">
@@ -129,10 +117,10 @@ export const Hero: React.FC = (): JSX.Element => {
 							around the world.
 						</motion.p>
 						<motion.div
-							variants={fadeIn}
+							variants={slideUp}
 							className="max-w-xs mx-auto mt-10 space-y-4 sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4"
 						>
-							<div className="px-10 py-2 text-gray-900 transition-all duration-1000 border border-white rounded bg-gradient-to-tr drop-shadow-launch from-zinc-100 to-white hover:text-zinc-800">
+							<div className="px-10 py-2 transition-all duration-1000 border border-white rounded text-zinc-900 bg-gradient-to-tr drop-shadow-launch from-zinc-100 to-white hover:text-zinc-800">
 								Launching soon
 							</div>
 						</motion.div>

@@ -1,10 +1,9 @@
 import { SignIn } from "@/components/auth/sign-in";
 import { db } from "@planetfall/db";
-import { asyncComponent } from "lib/api/component";
 import { getSession } from "lib/auth";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
-export default asyncComponent(async () => {
+export default async function Home() {
 	const { session } = await getSession();
 	if (!session) {
 		return <SignIn />;
@@ -21,7 +20,7 @@ export default asyncComponent(async () => {
 		},
 	});
 	if (!team) {
-		return <SignIn />;
+		notFound();
 	}
 	redirect(`/${team.slug}`);
-});
+}

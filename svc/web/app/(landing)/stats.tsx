@@ -2,6 +2,8 @@ import React from "react";
 import { db } from "@planetfall/db";
 import { asyncComponent } from "lib/api/component";
 
+const formatter = Intl.NumberFormat(undefined, { notation: "compact" });
+
 export const Stats = asyncComponent(async () => {
 	const rng = Math.random();
 	console.time(`stats${rng}`);
@@ -17,7 +19,7 @@ export const Stats = asyncComponent(async () => {
 		{
 			label: "Ø Checks Per Day",
 			value: await fetch(
-				"https://api.tinybird.co/v0/pipes/checks_in_last_day.json",
+				"https://api.tinybird.co/v0/pipes/production__checks_in_last_day__v1.json",
 				{
 					headers: {
 						Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
@@ -39,11 +41,10 @@ export const Stats = asyncComponent(async () => {
 				}),
 		},
 	]);
-	console.timeEnd(`stats${rng}`);
 	return (
 		<section id="stats">
 			<div className="relative py-16 sm:py-24 lg:py-32">
-				<div className="container grid grid-cols-1 gap-4 mx-auto sm:grid-cols-3">
+				<div className="container grid grid-cols-1 gap-4 mx-auto mt-8 sm:grid-cols-3 md:mt-16">
 					{stats.map(({ label, value }) => (
 						<div
 							key={label}
@@ -53,7 +54,7 @@ export const Stats = asyncComponent(async () => {
 								{label}
 							</dt>
 							<dd className="text-2xl font-bold tracking-tight text-center sm:text-5xl text-zinc-100">
-								{value.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+								{formatter.format(value)}
 							</dd>
 						</div>
 					))}

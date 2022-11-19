@@ -1,4 +1,4 @@
-import { PrismaClient } from "@planetfall/db";
+import { db, PrismaClient } from "@planetfall/db";
 import { Logger } from "./logger";
 import Stripe from "stripe";
 
@@ -20,7 +20,7 @@ export class Billing {
 			typescript: true,
 			apiVersion: "2022-08-01",
 		});
-		this.db = new PrismaClient();
+		this.db = db;
 		this.logger = logger;
 	}
 

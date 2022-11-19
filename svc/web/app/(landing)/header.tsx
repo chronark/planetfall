@@ -1,37 +1,60 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Logo } from "../components/logo";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import { asyncComponent } from "lib/api/component";
-import { authOptions } from "pages/api/auth/[...nextauth]";
-import { getSession } from "lib/auth";
+import { Session } from "next-auth";
+import { useScroll } from "framer-motion";
+import classNames from "classnames";
 
-export const Header = asyncComponent(async () => {
-	const session = await getSession();
+type Props = {
+	session: Session | null;
+};
+export const Header: React.FC<Props> = (props: Props) => {
+	const isSignedIn = !!props.session;
+	const [isScrolled, setIsScrolled] = useState(false);
 
-	const isSignedIn = !!session.session;
+	useEffect(() => {
+		function onScroll() {
+			setIsScrolled(window.scrollY > 0);
+		}
+		onScroll();
+		window.addEventListener("scroll", onScroll, { passive: true });
+		return () => {
+			window.removeEventListener("scroll", onScroll);
+		};
+	}, []);
 	return (
-		<header className="fixed top-0 z-50 w-full  backdrop-blur">
+		<header
+			className={classNames(
+				"fixed top-0 z-30 w-full backdrop-blur duration-1000 ",
+				{
+					"bg-zinc-900/50": isScrolled,
+					"bg-zinc-900/0": !isScrolled,
+				},
+			)}
+		>
 			<div className="container mx-auto">
 				<div className="flex items-center justify-between h-16 md:h-20">
 					{/* Site branding */}
 					<div className="mr-4 shrink-0">
 						{/* Logo */}
 						<Link href="/" aria-label="Planetfall">
-							<div className="flex items-center gap-2 group ">
-								<Logo className="w-10 h-10 group-hover:text-white text-zinc-100 duration-500" />
-								<span className="text-2xl font-semibold group-hover:text-white text-zinc-100 duration-500">
+							<div className="flex items-center gap-2 ">
+								<Logo className="w-10 h-10 text-zinc-100" />
+								<span className="text-2xl font-semibold text-zinc-100">
 									Planetfall
 								</span>
 							</div>
 						</Link>
 					</div>
 					{/* Desktop navigation */}
-					<nav className="flex items-center grow">
-						<ul className="flex flex-wrap items-center justify-end grow gap-8">
+					<nav className="items-center hidden grow md:flex">
+						<ul className="flex flex-wrap items-center justify-end gap-8 grow">
 							<li className="hidden md:block">
 								<Link
-									className="flex items-center px-3 py-2 font-medium text-gray-400 hover:text-gray-200 lg:px-5 transition duration-150 ease-in-out"
+									className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-400 hover:text-zinc-200 lg:px-5"
 									href="/play"
 								>
 									Play
@@ -39,7 +62,7 @@ export const Header = asyncComponent(async () => {
 							</li>
 							<li className="hidden md:block">
 								<Link
-									className="flex items-center px-3 py-2 font-medium text-gray-400 hover:text-gray-200 lg:px-5 transition duration-150 ease-in-out"
+									className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-400 hover:text-zinc-200 lg:px-5"
 									href="/docs"
 								>
 									Docs
@@ -47,7 +70,7 @@ export const Header = asyncComponent(async () => {
 							</li>
 							<li className="hidden md:block">
 								<Link
-									className="flex items-center px-3 py-2 font-medium text-gray-400 hover:text-gray-200 lg:px-5 transition duration-150 ease-in-out"
+									className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-400 hover:text-zinc-200 lg:px-5"
 									href="/pricing"
 								>
 									Pricing
@@ -56,9 +79,9 @@ export const Header = asyncComponent(async () => {
 
 							<li>
 								<Link href={isSignedIn ? "/home" : "/auth/sign-in"}>
-									<div className="inline-flex items-center justify-center font-medium leading-snug text-gray-200 transition-all hover:cursor-pointer whitespace-nowrap duration-300 ease-in-out  hover:text-zinc-100 shadow-sm group">
+									<div className="inline-flex items-center justify-center font-medium leading-snug transition-all duration-300 ease-in-out shadow-sm text-zinc-200 hover:cursor-pointer whitespace-nowrap hover:text-zinc-100 group">
 										{isSignedIn ? "Dashboard" : "Sign in"}
-										<ArrowLongRightIcon className="hidden w-6 h-6 ml-1 md:block group-hover:text-zinc-100  group-hover:trangray-x-1 transition-transform duration-150 ease-out" />
+										<ArrowLongRightIcon className="hidden w-6 h-6 ml-1 transition-transform duration-150 ease-out md:block group-hover:text-zinc-100 group-hover:trangray-x-1" />
 									</div>
 								</Link>
 							</li>
@@ -66,6 +89,16 @@ export const Header = asyncComponent(async () => {
 					</nav>
 				</div>
 			</div>
+			{/* Fancy fading bottom border */}
+			<div
+				className={classNames(
+					"absolute w-full transition-all duration-1000  h-px -bottom-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0 bg-gradient-to-l",
+					{
+						"opacity-0": !isScrolled,
+						"opacity-100": isScrolled,
+					},
+				)}
+			/>
 		</header>
 	);
-});
+};

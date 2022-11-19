@@ -4,16 +4,23 @@ import { Loading } from "@/components/loading";
 import { PageHeader } from "@/components/page";
 import type { Region } from "@planetfall/db";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import type { Input, Output } from "pages/api/v1/checks";
+import * as checkApi from "pages/api/v1/checks";
+// @ts-ignore
+import * as shareApi from "pages/api/v1/checks/share";
 import { BarChart } from "@tremor/react";
 import { Trace } from "@/components/trace";
 import { Stats } from "@/components/stats";
 import * as Tabs from "@radix-ui/react-tabs";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+import * as Dialog from "@radix-ui/react-alert-dialog";
+import { Transition } from "@headlessui/react";
+import classNames from "classnames";
+import { Button } from "@/components/button";
+import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 
 type FormData = {
 	url: string;
@@ -38,12 +45,17 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 		getValues,
 	} = useForm<FormData>({ reValidateMode: "onSubmit" });
 
+	const [shareOpen, setShareOpen] = useState(false);
+	const [copied, setCopied] = useState(false);
+
 	const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [shareIsLoading, setShareLoading] = useState(false);
 	const searchParams = useSearchParams();
-	const [checks, setChecks] = useState<Output["data"]>(undefined);
+	const [checks, setChecks] = useState<checkApi.Output["data"]>(undefined);
+	const [shareId, setShareId] = useState<string | null>(null);
 
-	async function runCheck(input: Input["body"]): Promise<void> {
+	async function runCheck(input: checkApi.Input["body"]): Promise<void> {
 		setIsLoading(true);
 		const res = await fetch("/api/v1/play", {
 			method: "POST",
@@ -52,8 +64,21 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 			},
 			body: JSON.stringify(input),
 		});
-		setChecks(((await res.json()) as Output).data);
+		setChecks(((await res.json()) as checkApi.Output).data);
 		setIsLoading(false);
+	}
+
+	async function share(input: shareApi.Input): Promise<shareApi.Output> {
+		setShareLoading(true);
+		const res = await fetch("/api/v1/play/share", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(input),
+		});
+		setShareId(((await res.json()) as shareApi.Output).data.id);
+		setShareLoading(false);
 	}
 
 	async function submit(data: FormData) {
@@ -102,324 +127,482 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 	}, [method, url, regions, repeat]);
 
 	return (
-		<form onSubmit={handleSubmit(submit)}>
-			<header className="fixed top-0 z-50 w-full  backdrop-blur">
-				<div className="container mx-auto">
-					<div className="flex items-center justify-between h-16 md:h-20">
-						{/* Site branding */}
-						<div className="mr-4 shrink-0">
-							{/* Logo */}
-							<Link href="/" aria-label="Planetfall">
-								<div className="flex items-center gap-2 group ">
-									<Logo className="w-10 h-10 group-hover:text-black text-primary-900 duration-500" />
-									<span className="text-2xl font-semibold group-hover:text-black text-primary-900 duration-500">
-										Planetfall
-									</span>
-								</div>
-							</Link>
+		<>
+			<Dialog.Root open={shareOpen} onOpenChange={setShareOpen}>
+				<Transition.Root show={shareOpen}>
+					<Transition.Child
+						as={Fragment}
+						enter="ease-out duration-300"
+						enterFrom="opacity-0"
+						enterTo="opacity-100"
+						leave="ease-in duration-200"
+						leaveFrom="opacity-100"
+						leaveTo="opacity-0"
+					>
+						<Dialog.Overlay
+							forceMount={true}
+							className="fixed inset-0 z-20 bg-slate-900/50"
+						/>
+					</Transition.Child>
+					<Transition.Child
+						as={Fragment}
+						enter="ease-out duration-300"
+						enterFrom="opacity-0 scale-95"
+						enterTo="opacity-100 scale-100"
+						leave="ease-in duration-200"
+						leaveFrom="opacity-100 scale-100"
+						leaveTo="opacity-0 scale-95"
+					>
+						<Dialog.Content
+							forceMount={true}
+							className={classNames(
+								"fixed z-50",
+								"w-[95vw] max-w-md rounded p-4 md:w-full",
+								"top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]",
+								"bg-white dark:bg-gray-800",
+								"focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75",
+							)}
+						>
+							<Dialog.Title>
+								<Heading h3={true}>Do you want to share these results?</Heading>
+							</Dialog.Title>
+							<Dialog.Description className="py-4">
+								<p className="text-left">
+									Anyone with the link will be able to see the response body and
+									headers.
+								</p>
+							</Dialog.Description>
+
+							<div className="flex justify-end pt-4 space-x-2 border-t border-slate-200 ">
+								<Dialog.Cancel>
+									<Button type="secondary">Cancel</Button>
+								</Dialog.Cancel>
+								<Dialog.Action>
+									<Button
+										type="primary"
+										loading={shareIsLoading}
+										onClick={async () => {
+											await share({ url: getValues().url, checks });
+										}}
+									>
+										Share
+									</Button>
+								</Dialog.Action>
+							</div>
+						</Dialog.Content>
+					</Transition.Child>
+				</Transition.Root>
+			</Dialog.Root>
+			<Dialog.Root
+				open={!!shareId}
+				onOpenChange={() => {
+					setShareId(null);
+				}}
+			>
+				<Transition.Root show={!!shareId}>
+					<Transition.Child
+						as={Fragment}
+						enter="ease-out duration-300"
+						enterFrom="opacity-0"
+						enterTo="opacity-100"
+						leave="ease-in duration-200"
+						leaveFrom="opacity-100"
+						leaveTo="opacity-0"
+					>
+						<Dialog.Overlay
+							forceMount={true}
+							className="fixed inset-0 z-20 bg-slate-900/50"
+						/>
+					</Transition.Child>
+					<Transition.Child
+						as={Fragment}
+						enter="ease-out duration-300"
+						enterFrom="opacity-0 scale-95"
+						enterTo="opacity-100 scale-100"
+						leave="ease-in duration-200"
+						leaveFrom="opacity-100 scale-100"
+						leaveTo="opacity-0 scale-95"
+					>
+						<Dialog.Content
+							forceMount={true}
+							className={classNames(
+								"fixed z-50",
+								"w-[95vw] max-w-md rounded p-4 md:w-full",
+								"top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]",
+								"bg-white dark:bg-gray-800",
+								"focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75",
+							)}
+						>
+							<Dialog.Title>
+								<Heading h3={true}>Do you want to share these results?</Heading>
+							</Dialog.Title>
+							<Dialog.Description className="p-4">
+								<Link
+									href={`https://planetfall.io/play/${shareId}`}
+									className="flex justify-center px-2 py-1 rounded hover:bg-zinc-50 bg-zinc-100 text-zinc-700 ring-1 ring-zinc-900"
+								>
+									{`https://planetfall.io/play/${shareId}`}
+								</Link>
+							</Dialog.Description>
+
+							<div className="flex justify-end pt-4 space-x-2 border-t border-slate-200 ">
+								<Dialog.Cancel>
+									<Button type="secondary">Close</Button>
+								</Dialog.Cancel>
+
+								<Button
+									type="primary"
+									loading={shareIsLoading}
+									onClick={() => {
+										navigator.clipboard.writeText(
+											`https://planetfall.io/play/${shareId}`,
+										);
+									}}
+								>
+									{copied ? (
+										<ClipboardDocumentCheckIcon className="w-6 h-6" />
+									) : (
+										"Copy"
+									)}
+								</Button>
+							</div>
+						</Dialog.Content>
+					</Transition.Child>
+				</Transition.Root>
+			</Dialog.Root>
+			<form onSubmit={handleSubmit(submit)}>
+				<header className="fixed top-0 z-50 w-full backdrop-blur">
+					<div className="container mx-auto">
+						<div className="flex items-center justify-between h-16 md:h-20">
+							{/* Site branding */}
+							<div className="mr-4 shrink-0">
+								{/* Logo */}
+								<Link href="/" aria-label="Planetfall">
+									<div className="flex items-center gap-2 group ">
+										<Logo className="w-10 h-10 duration-500 group-hover:text-zinc-700 text-zinc-900" />
+										<span className="text-2xl font-semibold duration-500 group-hover:text-black text-zinc-900">
+											Planetfall
+										</span>
+									</div>
+								</Link>
+							</div>
+							{/* Desktop navigation */}
+							<nav className="flex items-center grow">
+								<ul className="flex flex-wrap items-center justify-end gap-8 grow">
+									<li className="hidden md:block">
+										<Link
+											className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-500 hover:text-zinc-700 lg:px-5"
+											href="/docs"
+										>
+											Docs
+										</Link>
+									</li>
+									<li className="hidden md:block">
+										<Link
+											className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-500 hover:text-zinc-700 lg:px-5"
+											href="/home"
+										>
+											Dashboard
+										</Link>
+									</li>
+									<li>
+										<button
+											key="submit"
+											type="submit"
+											className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
+										>
+											{isLoading ? <Loading /> : "Check"}
+										</button>
+									</li>
+									{checks ? (
+										<li>
+											<button
+												key="share"
+												type="button"
+												onClick={() => setShareOpen(true)}
+												className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
+											>
+												Share
+											</button>
+										</li>
+									) : null}
+								</ul>
+							</nav>
 						</div>
-						{/* Desktop navigation */}
-						<nav className="flex items-center grow">
-							<ul className="flex flex-wrap items-center justify-end grow gap-8">
-								<li className="hidden md:block">
-									<Link
-										className="flex items-center px-3 py-2 font-medium text-zinc-500 hover:text-zinc-700 lg:px-5 transition duration-150 ease-in-out"
-										href="/docs"
-									>
-										Docs
-									</Link>
-								</li>
-								<li className="hidden md:block">
-									<Link
-										className="flex items-center px-3 py-2 font-medium text-zinc-500 hover:text-zinc-700 lg:px-5 transition duration-150 ease-in-out"
-										href="/home"
-									>
-										Dashboard
-									</Link>
-								</li>
-								<li>
-									<button
-										key="submit"
-										type="submit"
-										className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 duration-300 ease-in-out md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900  shadow-sm group"
-									>
-										{isLoading ? <Loading /> : "Check"}
-									</button>
-								</li>
-							</ul>
-						</nav>
 					</div>
-				</div>
-			</header>
-			<div className="container min-h-screen pb-20 mx-auto mt-24 -pt-24">
-				{checks ? (
-					<div className="pb-32 mb-32 border-b">
-						<PageHeader title={getValues().url} />
+				</header>
+				<div className="container min-h-screen pb-20 mx-auto mt-24 -pt-24">
+					{checks ? (
+						<div className="pb-32 mb-32 border-b">
+							<PageHeader title={getValues().url} />
 
-						{checks.length >= 2 ? (
-							<>
-								<Heading h3={true}>Latency per Region</Heading>
-								<BarChart
-									data={checks.map((r) => {
-										const x: Record<string, string | number> = {
-											region: r.region.name,
-										};
-										if (r.checks.length > 1) {
-											r.checks = r.checks.sort((a, b) => a.time - b.time);
-											x.Cold = r.checks[0].latency!;
-											x.Hot = r.checks[1].latency!;
-										} else {
-											x.Latency = r.checks[0].latency!;
-										}
-										return x;
-									})}
-									dataKey="region"
-									categories={
-										checks && checks.length > 0 && checks[0].checks.length > 1
-											? ["Cold", "Hot"]
-											: ["Latency"]
-									}
-									colors={["blue", "red"]}
-									valueFormatter={(n: number) => `${n.toLocaleString()} ms`}
-								/>
-							</>
-						) : null}
-
-						<div className="py-4 md:py-8 lg:py-16">
 							{checks.length >= 2 ? (
-								<PageHeader
-									title="Details"
-									description="A detailed breakdown by region, including the response and a latency trace"
-								/>
+								<>
+									<Heading h3={true}>Latency per Region</Heading>
+									<BarChart
+										data={checks.map((r) => {
+											const x: Record<string, string | number> = {
+												region: r.region.name,
+											};
+											if (r.checks.length > 1) {
+												r.checks = r.checks.sort((a, b) => a.time - b.time);
+												x.Cold = r.checks[0].latency!;
+												x.Hot = r.checks[1].latency!;
+											} else {
+												x.Latency = r.checks[0].latency!;
+											}
+											return x;
+										})}
+										dataKey="region"
+										categories={
+											checks && checks.length > 0 && checks[0].checks.length > 1
+												? ["Cold", "Hot"]
+												: ["Latency"]
+										}
+										colors={["blue", "red"]}
+										valueFormatter={(n: number) => `${n.toLocaleString()} ms`}
+									/>
+								</>
 							) : null}
 
-							<Tabs.Root defaultValue={checks[0].region.id}>
-								<Tabs.List className="flex items-center justify-center space-x-4">
+							<div className="py-4 md:py-8 lg:py-16">
+								{checks.length >= 2 ? (
+									<PageHeader
+										title="Details"
+										description="A detailed breakdown by region, including the response and a latency trace"
+									/>
+								) : null}
+
+								<Tabs.Root defaultValue={checks[0].region.id}>
+									<Tabs.List className="flex items-center justify-center space-x-4">
+										{checks?.map((r) => (
+											<Tabs.Trigger
+												key={r.region.id}
+												value={r.region.id}
+												className="border-b border-transparent text-zinc-700 radix-state-active:text-zinc-900 radix-state-active:border-zinc-800"
+											>
+												{r.region.name}
+											</Tabs.Trigger>
+										))}
+									</Tabs.List>
 									{checks?.map((r) => (
-										<Tabs.Trigger
+										<Tabs.Content
 											key={r.region.id}
 											value={r.region.id}
-											className="border-b border-transparent text-zinc-700 radix-state-active:text-zinc-900 radix-state-active:border-zinc-800"
+											className="flex flex-col justify-between w-full divide-y md:flex-row md:divide-y-0 "
 										>
-											{r.region.name}
-										</Tabs.Trigger>
-									))}
-								</Tabs.List>
-								{checks?.map((r) => (
-									<Tabs.Content
-										key={r.region.id}
-										value={r.region.id}
-										className="flex flex-col justify-between w-full md:flex-row divide-y md:divide-y-0 "
-									>
-										{r.checks
-											.sort((a, b) => a.time - b.time)
-											.map((c, i) => (
-												<div
-													key={i}
-													className={`${
-														r.checks.length > 1 ? "w-1/2" : "w-full"
-													} p-4 flex flex-col divide-y divide-zinc-200`}
-												>
-													<div className="flex flex-col items-center justify-between">
-														{r.checks.length > 1 ? (
-															<>
-																<Heading h3={true}>
-																	{i === 0 ? "Cold" : "Hot"}
-																</Heading>
-																<span className="text-sm text-zinc-500">
-																	{new Date(c.time).toISOString()}
-																</span>
-															</>
-														) : null}
-														<div className="flex">
-															<Stats
-																label="Latency"
-																value={c.latency!.toLocaleString()}
-																suffix="ms"
-															/>
+											{r.checks
+												.sort((a, b) => a.time - b.time)
+												.map((c, i) => (
+													<div
+														key={i}
+														className={`${
+															r.checks.length > 1 ? "w-1/2" : "w-full"
+														} p-4 flex flex-col divide-y divide-zinc-200`}
+													>
+														<div className="flex flex-col items-center justify-between">
+															{r.checks.length > 1 ? (
+																<>
+																	<Heading h3={true}>
+																		{i === 0 ? "Cold" : "Hot"}
+																	</Heading>
+																	<span className="text-sm text-zinc-500">
+																		{new Date(c.time).toISOString()}
+																	</span>
+																</>
+															) : null}
+															<div className="flex">
+																<Stats
+																	label="Latency"
+																	value={c.latency!.toLocaleString()}
+																	suffix="ms"
+																/>
 
-															<Stats label="Status" value={c.status} />
+																<Stats label="Status" value={c.status} />
+															</div>
+														</div>
+														<div className="py-4 md:py-8">
+															<Heading h4={true}>Trace</Heading>
+
+															<Trace timings={c.timing} />
+														</div>
+														<div className="py-4 md:py-8">
+															<Heading h4={true}>Response Header</Heading>
+															<pre className="p-2 rounded bg-zinc-50">
+																{JSON.stringify(c.headers, null, 2)}
+															</pre>
+														</div>
+														<div className="py-4 md:py-8">
+															<Heading h4={true}>Response Body</Heading>
+															<pre className="p-2 rounded bg-zinc-50">
+																{atob(c.body ?? "")}
+															</pre>
 														</div>
 													</div>
-													<div className="py-4 md:py-8">
-														<Heading h4={true}>Trace</Heading>
-
-														<Trace timings={c.timing} />
-													</div>
-													<div className="py-4 md:py-8">
-														<Heading h4={true}>Response Header</Heading>
-														<pre className="p-2 rounded bg-zinc-50">
-															{JSON.stringify(c.headers, null, 2)}
-														</pre>
-													</div>
-													<div className="py-4 md:py-8">
-														<Heading h4={true}>Response Body</Heading>
-														<pre className="p-2 rounded bg-zinc-50">
-															{atob(c.body ?? "")}
-														</pre>
-													</div>
-												</div>
-											))}
-									</Tabs.Content>
-								))}
-							</Tabs.Root>
-						</div>
-					</div>
-				) : null}
-				<div>
-					<PageHeader
-						title="Planetfall Playground"
-						description="Enter a URL, method and up to five regions to check the latency of your API"
-					/>
-					<div className="space-y-8  sm:space-y-5 lg:space-y-24">
-						<div className="space-y-6 sm:space-y-5">
-							<div>
-								<h3 className="text-lg font-medium leading-6 text-zinc-900">
-									URL
-								</h3>
-								<p className="mt-1 text-sm text-zinc-500">
-									Enter the url of your endpoint and select a HTTP method
-								</p>
+												))}
+										</Tabs.Content>
+									))}
+								</Tabs.Root>
 							</div>
-
+						</div>
+					) : null}
+					<div>
+						<PageHeader
+							title="Planetfall Playground"
+							description="Enter a URL, method and up to five regions to check the latency of your API"
+						/>
+						<div className="space-y-8 sm:space-y-5 lg:space-y-24">
 							<div className="space-y-6 sm:space-y-5">
-								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
-									<label
-										htmlFor="method"
-										className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
-									>
-										Method
-									</label>
-									<div className="mt-1 sm:col-span-4 sm:mt-0">
-										<div className="">
-											<select
-												{...register("method", { required: true })}
-												className={
-													"transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
-												}
-											>
-												<option value="GET">GET</option>
-												<option value="POST">POST</option>
-												<option value="PUT">PUT</option>
-												<option value="DELETE">DELETE</option>
-											</select>
-										</div>
-									</div>
-								</div>
-								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
-									<label
-										htmlFor="url"
-										className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
-									>
+								<div>
+									<h3 className="text-lg font-medium leading-6 text-zinc-900">
 										URL
-									</label>
-									<div className="mt-1 sm:col-span-4 sm:mt-0">
-										<div className="">
-											<input
-												type="text"
-												{...register("url", {
-													required: true,
-													validate: (v) =>
-														z.string().url().safeParse(v).success,
-												})}
-												placeholder="https://example.com"
-												className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${
-													errors.url ? "border-red-500" : "border-zinc-700"
-												} hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
-											/>
+									</h3>
+									<p className="mt-1 text-sm text-zinc-500">
+										Enter the url of your endpoint and select a HTTP method
+									</p>
+								</div>
+
+								<div className="space-y-6 sm:space-y-5">
+									<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
+										<label
+											htmlFor="method"
+											className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
+										>
+											Method
+										</label>
+										<div className="mt-1 sm:col-span-4 sm:mt-0">
+											<div className="">
+												<select
+													{...register("method", { required: true })}
+													className={
+														"transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+													}
+												>
+													<option value="GET">GET</option>
+													<option value="POST">POST</option>
+													<option value="PUT">PUT</option>
+													<option value="DELETE">DELETE</option>
+												</select>
+											</div>
 										</div>
-										{errors.url ? (
-											<p className="mt-2 text-sm text-red-500">
-												{errors.url.message || "A URL is required"}
-											</p>
-										) : null}
+									</div>
+									<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
+										<label
+											htmlFor="url"
+											className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
+										>
+											URL
+										</label>
+										<div className="mt-1 sm:col-span-4 sm:mt-0">
+											<div className="">
+												<input
+													type="text"
+													{...register("url", {
+														required: true,
+														validate: (v) =>
+															z.string().url().safeParse(v).success,
+													})}
+													placeholder="https://example.com"
+													className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${
+														errors.url ? "border-red-500" : "border-zinc-700"
+													} hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+												/>
+											</div>
+											{errors.url ? (
+												<p className="mt-2 text-sm text-red-500">
+													{errors.url.message || "A URL is required"}
+												</p>
+											) : null}
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-
-						<div className="space-y-6 sm:space-y-5">
-							<div>
-								<h3 className="text-lg font-medium leading-6 text-zinc-900">
-									Repeat
-								</h3>
-								<p className="mt-1 text-sm text-zinc-500">
-									Send 2 requests to your API in rapid succession to simulate
-									cold and hot functions or caches.
-								</p>
 							</div>
 
 							<div className="space-y-6 sm:space-y-5">
-								<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
-									<label
-										htmlFor="repeat"
-										className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
-									>
+								<div>
+									<h3 className="text-lg font-medium leading-6 text-zinc-900">
 										Repeat
-									</label>
-									<div className="mt-1 sm:col-span-4 sm:mt-0">
-										<div className="">
-											<select
-												{...register("repeat", { required: false })}
-												className={
-													"transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
-												}
-											>
-												<option value="false">No</option>
-												<option value="true">Yes</option>
-											</select>
+									</h3>
+									<p className="mt-1 text-sm text-zinc-500">
+										Send 2 requests to your API in rapid succession to simulate
+										cold and hot functions or caches.
+									</p>
+								</div>
+
+								<div className="space-y-6 sm:space-y-5">
+									<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
+										<label
+											htmlFor="repeat"
+											className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
+										>
+											Repeat
+										</label>
+										<div className="mt-1 sm:col-span-4 sm:mt-0">
+											<div className="">
+												<select
+													{...register("repeat", { required: false })}
+													className={
+														"transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+													}
+												>
+													<option value="false">No</option>
+													<option value="true">Yes</option>
+												</select>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div className="pt-8 space-y-6 divide-y divide-zinc-200 sm:space-y-5 sm:pt-10">
-							<div>
-								<h3 className="text-lg font-medium leading-6 text-zinc-900">
-									Regions
-								</h3>
-								<p className="max-w-2xl mt-1 text-sm text-zinc-500">
-									Select the regions from where we should call your API.
-								</p>
-							</div>
-							<div className="space-y-6 divide-y divide-zinc-200 sm:space-y-5">
-								<div className="pt-6 sm:pt-5">
-									<div role="group" aria-labelledby="label-email">
-										<div className="sm:grid sm:items-baseline sm:gap-4">
-											<div className="mt-4 sm:col-span-3 sm:mt-0">
-												<fieldset className="w-full gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4  lg:grid-cols-6">
-													{allRegions.map((r) => (
-														<button
-															type="button"
-															key={r.id}
-															className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-zinc-700 ${
-																selectedRegions.includes(r.id)
-																	? "border-zinc-900 bg-zinc-50"
-																	: "border-zinc-300"
-															}`}
-															onClick={() => {
-																if (selectedRegions.includes(r.id)) {
-																	setSelectedRegions(
-																		selectedRegions.filter((id) => id !== r.id),
-																	);
-																} else {
-																	setSelectedRegions([
-																		...selectedRegions,
-																		r.id,
-																	]);
-																}
-															}}
-														>
-															{r.name}
-														</button>
-													))}
-												</fieldset>
-												{errors.regions ? (
-													<p className="mt-2 text-sm text-red-500">
-														{errors.regions.message ||
-															"Select at least one region"}
-													</p>
-												) : null}
+							<div className="pt-8 space-y-6 divide-y divide-zinc-200 sm:space-y-5 sm:pt-10">
+								<div>
+									<h3 className="text-lg font-medium leading-6 text-zinc-900">
+										Regions
+									</h3>
+									<p className="max-w-2xl mt-1 text-sm text-zinc-500">
+										Select the regions from where we should call your API.
+									</p>
+								</div>
+								<div className="space-y-6 divide-y divide-zinc-200 sm:space-y-5">
+									<div className="pt-6 sm:pt-5">
+										<div role="group" aria-labelledby="label-email">
+											<div className="sm:grid sm:items-baseline sm:gap-4">
+												<div className="mt-4 sm:col-span-3 sm:mt-0">
+													<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+														{allRegions.map((r) => (
+															<button
+																type="button"
+																key={r.id}
+																className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-zinc-700 ${
+																	selectedRegions.includes(r.id)
+																		? "border-zinc-900 bg-zinc-50"
+																		: "border-zinc-300"
+																}`}
+																onClick={() => {
+																	if (selectedRegions.includes(r.id)) {
+																		setSelectedRegions(
+																			selectedRegions.filter(
+																				(id) => id !== r.id,
+																			),
+																		);
+																	} else {
+																		setSelectedRegions([
+																			...selectedRegions,
+																			r.id,
+																		]);
+																	}
+																}}
+															>
+																{r.name}
+															</button>
+														))}
+													</fieldset>
+													{errors.regions ? (
+														<p className="mt-2 text-sm text-red-500">
+															{errors.regions.message ||
+																"Select at least one region"}
+														</p>
+													) : null}
+												</div>
 											</div>
 										</div>
 									</div>
@@ -428,7 +611,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 						</div>
 					</div>
 				</div>
-			</div>
-		</form>
+			</form>
+		</>
 	);
 };

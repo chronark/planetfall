@@ -24,13 +24,13 @@ deploy: build-proxy
 	# cd svc/scheduler && flyctl deploy --image ${SCHEDULER_TAG}
 
 
-# build-scheduler:
-# 	docker build \
-# 	 	--platform=linux/amd64 \
-# 		-t ${SCHEDULER_TAG} \
-# 		-f svc/scheduler/Dockerfile \
-# 		.
-# 	docker push ${SCHEDULER_TAG}
+build-scheduler:
+	docker build \
+	 	--platform=linux/amd64 \
+		-t ${SCHEDULER_TAG} \
+		-f svc/scheduler/Dockerfile \
+		.
+	docker push ${SCHEDULER_TAG}
 
 
 dev: rm build
