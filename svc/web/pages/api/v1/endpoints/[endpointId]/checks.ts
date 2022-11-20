@@ -2,6 +2,7 @@ import { db } from "@planetfall/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { ApiError, ApiResponse, getRole } from "lib/api";
+import { Client as Tinybird } from "@planetfall/tinybird";
 
 const input = z.object({
 	method: z.enum(["GET"]),
@@ -64,7 +65,7 @@ export default async function handler(
 	res: NextApiResponse<Output>,
 ): Promise<void> {
 	try {
-		const { role } = await getRole(req, res);
+		const { role, userId } = await getRole(req, res);
 		const auth = role.authorize({ check: ["read"] });
 		if (!auth.success) {
 			throw new ApiError({
@@ -84,11 +85,21 @@ export default async function handler(
 			where: {
 				id: request.data.query.endpointId,
 			},
+			include: { team: { include: { members: true } } },
 		});
 		if (!endpoint) {
 			throw new ApiError({ status: 404, message: "endpoint not found" });
 		}
-		throw new ApiError({ status: 500, message: "TODO:" });
+		if (!endpoint.team.members.some((m) => m.userId === userId)) {
+			throw new ApiError({ status: 404, message: "endpoint not found" });
+		}
+
+		const checks = await new Tinybird().getLatestChecksByEndpoint(
+			request.data.query.endpointId,
+		);
+		res.json({
+			data: checks,
+		});
 		// const user = endpoint.team.members.find((m) => m.userId === token.userId);
 		// if (!user) {
 		//   throw new ApiError({

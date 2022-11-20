@@ -12,7 +12,6 @@ export default async function AppLayout(props: {
 		return <SignIn />;
 	}
 
-	console.log(__filename, { session });
 	return (
 		<div className="min-h-screen bg-white">
 			<DesktopNavbar teamSlug={props.params.teamSlug} />

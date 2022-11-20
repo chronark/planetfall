@@ -2,7 +2,7 @@
 
 import React, { useEffect, useReducer, useState } from "react";
 import type { Check } from "@planetfall/tinybird";
-
+import useSWR from "swr";
 import {
 	createColumnHelper,
 	flexRender,
@@ -15,16 +15,24 @@ import Link from "next/link";
 import { MinusIcon } from "@heroicons/react/24/outline";
 import { usePathname, useSearchParams } from "next/navigation";
 export type Props = {
+	endpointId: string;
 	checks: Check[];
 	teamSlug: string;
 };
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export const LatestTable: React.FC<Props> = ({
+	endpointId,
 	checks,
 	teamSlug,
 }): JSX.Element => {
 	const { accessor } = createColumnHelper<Check>();
 
+	const { data } = useSWR<{ data: Check[] }>(
+		`/api/v1/endpoints/${endpointId}/checks?limit=10`,
+		fetcher,
+		{ refreshInterval: 10_000 },
+	);
 	const columns = [
 		accessor("error", {
 			header: "Success",
@@ -78,9 +86,13 @@ export const LatestTable: React.FC<Props> = ({
 		}),
 	];
 	const table = useReactTable({
-		data: checks
-			.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
-			.slice(0, 10),
+		data: data
+			? data.data
+			: checks
+					.sort(
+						(a, b) => new Date(b.time).getTime() - new Date(a.time).getTime(),
+					)
+					.slice(0, 10),
 		columns,
 
 		getCoreRowModel: getCoreRowModel(),

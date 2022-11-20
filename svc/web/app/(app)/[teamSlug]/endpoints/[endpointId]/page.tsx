@@ -204,6 +204,7 @@ export default async function Page(props: {
 					<div className="py-4 md:py-8 lg:py-16">
 						<Heading h3={true}>Latest Checks</Heading>
 						<LatestTable
+							endpointId={props.params.endpointId}
 							teamSlug={props.params.teamSlug}
 							checks={latestChecks}
 						/>

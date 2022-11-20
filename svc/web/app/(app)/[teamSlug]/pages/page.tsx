@@ -13,7 +13,6 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 		return <SignIn />;
 	}
 
-	console.log({ props });
 	const team = await db.team.findUnique({
 		where: { slug: props.params.teamSlug },
 		include: { pages: { include: { endpoints: true } } },

@@ -9,8 +9,6 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 export async function getRole(req: NextApiRequest, res: NextApiResponse) {
 	const session = await unstable_getServerSession(req, res, authOptions);
 	if (session) {
-		console.log("Session", session, roles.root);
-
 		return {
 			role: roles.root,
 			userId: session.user.id,
@@ -29,10 +27,8 @@ export async function getRole(req: NextApiRequest, res: NextApiResponse) {
 	}
 
 	const bearerToken = authHeader.replace(/^Bearer/, "");
-	console.log({ bearerToken });
 	const hash = hashToken(bearerToken);
 
-	console.log({ hash });
 	const token = await db.token.findUnique({ where: { hash } });
 	if (!token) {
 		throw new ApiError({ status: 401, message: "token not found" });
