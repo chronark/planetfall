@@ -12,7 +12,7 @@ export default async function Head() {
       <meta property="twitter:url" content="https://planetfall.io" />
       <meta name="twitter:title" content="Planetfall" />
       <meta name="twitter:description" content="Global Latency Monitoring" />
-      <meta name="twitter:image" content="" />
+      <meta name="twitter:image" content="/img/og.jpg" />
     </>
   );
 }
