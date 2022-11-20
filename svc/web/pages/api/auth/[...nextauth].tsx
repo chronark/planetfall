@@ -5,12 +5,16 @@ import { newId } from "@planetfall/id";
 import { DEFAULT_QUOTA } from "plans";
 import slugify from "slugify";
 import Stripe from "stripe";
+import { Redis } from "@upstash/redis";
+import { emit } from "process";
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2022-08-01",
   typescript: true,
 });
+
+const redis = Redis.fromEnv()
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -22,6 +26,9 @@ export const authOptions: NextAuthOptions = {
 
   adapter: {
     createUser: async (data) => {
+
+
+
       const name = data.name || data.email.split("@")[0];
       const slug = slugify(name, { lower: true, strict: true });
       const customer = await stripe.customers.create({
@@ -137,6 +144,14 @@ export const authOptions: NextAuthOptions = {
     },
   },
   callbacks: {
+    signIn: async ({ user }) => {
+      if (!user.email) {
+        return false
+      }
+      const whitelist = await redis.smembers("signup:whitelist:emaildomain")
+      const domain = user.email.split("@")[1]
+      return whitelist.includes(domain)
+    },
     session: async ({ session, token }) => {
       if (!token.sub) {
         throw new Error("unable to enrich user session, sub is undefined");

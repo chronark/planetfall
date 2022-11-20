@@ -73,7 +73,6 @@ async function handler(
 		});
 
 		if (r !== null) {
-			// await res.revalidate(`/play/${id}`)
 			res.json({ data: { id } });
 			return;
 		}

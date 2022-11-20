@@ -2,12 +2,14 @@
 
 import { signOut } from "next-auth/react";
 import * as Popover from "@radix-ui/react-popover";
-import cx from "classnames";
 import Image from "next/image";
-import Link from "next/link";
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import {
+	AdjustmentsVerticalIcon,
+	ArrowRightOnRectangleIcon,
+} from "@heroicons/react/24/outline";
 
 type Props = {
 	user: {
@@ -21,7 +23,7 @@ export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
 	const router = useRouter();
 	return (
 		<Popover.Root>
-			<Popover.Trigger className="flex items-center justify-between px-2 py-1 rounded gap-4 text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 duration-500">
+			<Popover.Trigger className="flex items-center justify-between gap-4 px-2 py-1 duration-500 rounded text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100">
 				<span className="text-sm ">{user.name}</span>
 
 				<Image
@@ -33,20 +35,28 @@ export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
 				/>
 			</Popover.Trigger>
 			<Popover.Portal>
-				<Popover.Content className="z-30 flex flex-col items-start w-full bg-white border rounded shadow-lg divide-y divide-zinc-200">
-					<div // href="/settings"
-						className="px-3 py-1 text-sm font-medium rounded text-zinc-400"
-					>
-						Settings
-					</div>
+				<Popover.Content
+					sideOffset={5}
+					className="z-30 p-4 bg-white border rounded shadow-lg"
+				>
 					<button
-						className="px-3 py-1 text-sm font-medium rounded text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
-						onClick={async () => {
-							await signOut({ redirect: false });
-							router.push("/");
-						}}
+						disabled={true}
+						// href={`/${personalTeam?.slug}`}
+						className="flex items-center justify-between gap-4 px-3 py-2 text-sm font-medium rounded-md lg:gap-8 xl:gap-16 group text-zinc-400 "
 					>
-						Sign Out
+						<span className="truncate">Settings</span>
+
+						<AdjustmentsVerticalIcon className="w-4 h-4" />
+					</button>
+
+					<div className="w-full h-px border-t border-zinc-200" />
+					<button
+						onClick={() => signOut()}
+						className="flex items-center justify-between gap-4 px-3 py-2 text-sm font-medium rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+					>
+						<span className="truncate">Sign Out</span>
+
+						<ArrowRightOnRectangleIcon className="w-4 h-4" />
 					</button>
 				</Popover.Content>
 			</Popover.Portal>

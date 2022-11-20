@@ -257,6 +257,8 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 										navigator.clipboard.writeText(
 											`https://planetfall.io/play/${shareId}`,
 										);
+										setCopied(true);
+										setTimeout(() => setCopied(false), 5000);
 									}}
 								>
 									{copied ? (
