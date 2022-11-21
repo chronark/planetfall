@@ -1,4 +1,4 @@
-module github.com/chronark/planetfall/svc/proxy-aws
+module github.com/chronark/planetfall/svc/proxy
 
 go 1.19
 

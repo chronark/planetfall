@@ -186,56 +186,41 @@ export class Scheduler {
 						};
 					}[];
 
-					let error: string | undefined = undefined;
+					const data = parsed.map((c) => {
+						let error: string | undefined = undefined;
 
-					// const as = assertions.deserialize(endpoint.assertions as any ?? []);
-					// for (const a of as) {
-					//   this.logger.info("asserting stuff", {
-					//     type: a.type,
-					//     schema: a.schema,
-					//     status: parsed.status,
-					//   });
-					//   const assertionResponse = a.assert(parsed);
-					//   if (!assertionResponse.success) {
-					//     error = assertionResponse.error;
-					//     this.logger.warn("Assertion failed", { error });
-					//     break;
-					//   }
-					// }
+						if (endpoint.assertions) {
+							const as = assertions.deserialize(endpoint.assertions);
+							for (const a of as) {
+								const success = a.assert({
+									body: c.body,
+									header: c.headers,
+									status: c.status,
+								});
+								if (!success) {
+									error = `Assertion error: ${a.schema.type}`;
+									break;
+								}
+							}
+						}
 
-					const runId = parsed.length > 1 ? newId("run") : undefined;
-
-					const data = parsed.map((c) => ({
-						id: newId("check"),
-						runId,
-						endpointId: endpoint.id,
-						latency: c.latency,
-						time: new Date(c.time),
-						status: c.status,
-						regionId,
-						error,
-						body: c.body,
-						headers: c.headers,
-						timing: c.timing,
-					}));
-
-					await this.tinybird.publishChecks(
-						data.map((c) => ({
+						return {
 							source: "scheduler",
-							id: c.id,
-							runId: c.runId,
-							endpointId: c.endpointId,
+							id: newId("check"),
+							endpointId: endpoint.id,
 							teamId: endpoint.teamId,
 							latency: c.latency,
-							time: c.time.getTime(),
+							time: c.time,
 							status: c.status,
-							regionId: c.regionId,
-							error: c.error,
-							timing: JSON.stringify(c.timing),
+							regionId,
+							error,
 							body: c.body,
 							header: JSON.stringify(c.headers),
-						})),
-					);
+							timing: JSON.stringify(c.timing),
+						};
+					});
+
+					await this.tinybird.publishChecks(data);
 				}),
 			);
 		} catch (err) {

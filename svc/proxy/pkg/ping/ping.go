@@ -1,19 +1,16 @@
-package main
+package ping
 
 import (
 	"context"
 	"crypto/tls"
 	"encoding/base64"
-	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptrace"
 	"strings"
 	"time"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
-)
+	)
 
 type Request struct {
 	Url     string            `json:"url"`
@@ -40,7 +37,7 @@ type Timing struct {
 	TransferDone      int64 `json:"transferDone"`
 }
 
-type CheckResponse struct {
+type Response struct {
 	Status  int               `json:"status"`
 	Latency int64             `json:"latency"`
 	Body    string            `json:"body"`
@@ -49,70 +46,31 @@ type CheckResponse struct {
 	Timing  Timing            `json:"timing"`
 }
 
-type ErrorResponse struct {
-	Error string `json:"error"`
-}
+func Ping(ctx context.Context, req Request) ([]Response, error) {
 
-func handleError(err error, statusCode int) (events.LambdaFunctionURLResponse, error) {
-	body, err := json.Marshal(ErrorResponse{Error: err.Error()})
-	if err != nil {
-		return events.LambdaFunctionURLResponse{StatusCode: 500}, err
-	}
-	return events.LambdaFunctionURLResponse{
-		StatusCode: statusCode,
-		Body:       string(body),
-	}, nil
-}
-
-func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
-
-	if event.Headers["content-type"] != "application/json" {
-		return events.LambdaFunctionURLResponse{StatusCode: 400, Body: "use application/json"}, nil
+	if req.Checks == 0 {
+		req.Checks = 1
 	}
 
-	input := Request{}
-	err := json.Unmarshal([]byte(event.Body), &input)
-	if err != nil {
-		return handleError(err, http.StatusBadRequest)
-	}
-	if input.Checks == 0 {
-		input.Checks = 1
-	}
-
-	responses := make([]CheckResponse, input.Checks)
-	for i := 0; i < input.Checks; i++ {
-		responses[i], err = check(ctx, input)
+	responses := make([]Response, req.Checks)
+	for i := 0; i < req.Checks; i++ {
+		var err error
+		responses[i], err = check(ctx, req)
 		if err != nil {
-			return handleError(err, http.StatusInternalServerError)
+			return []Response{}, err
 		}
 	}
-
-	responseBody, err := json.Marshal(responses)
-	if err != nil {
-		return handleError(err, http.StatusInternalServerError)
-	}
-
-	return events.LambdaFunctionURLResponse{
-		StatusCode: 200,
-		Body:       string(responseBody),
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
-	}, nil
+	return responses, nil
 
 }
 
-func main() {
-	lambda.Start(HandleRequest)
-}
-
-func check(ctx context.Context, input Request) (CheckResponse, error) {
+func check(ctx context.Context, input Request) (Response, error) {
 	now := time.Now()
 	timing := Timing{}
 
 	req, err := http.NewRequest(input.Method, input.Url, strings.NewReader(input.Body))
 	if err != nil {
-		return CheckResponse{}, err
+		return Response{}, err
 	}
 	for key, value := range input.Headers {
 		req.Header.Add(key, value)
@@ -147,14 +105,14 @@ func check(ctx context.Context, input Request) (CheckResponse, error) {
 	timing.TransferDone = time.Now().UnixMilli()
 	latency := time.Since(start).Milliseconds()
 	if err != nil {
-		return CheckResponse{}, err
+		return Response{}, err
 	}
 
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return CheckResponse{}, err
+		return Response{}, err
 	}
 	headers := make(map[string]string)
 	for key := range res.Header {
@@ -163,8 +121,8 @@ func check(ctx context.Context, input Request) (CheckResponse, error) {
 	if len(body) > 1000 {
 		body = body[:1000]
 	}
-	return CheckResponse{
-		Time: now.UnixMilli(),
+	return Response{
+		Time:    now.UnixMilli(),
 		Status:  res.StatusCode,
 		Body:    base64.StdEncoding.EncodeToString(body),
 		Headers: headers,

@@ -73,8 +73,8 @@ export default async function Page(props: {
 		<div>
 			<PageHeader
 				sticky={true}
-				title={endpoint.name ?? endpoint.url}
-				description={endpoint.id}
+				title={endpoint.name}
+				description={endpoint.url}
 				actions={[
 					// endpoint.active ? (
 					// 	<div className="flex items-center justify-center w-6 h-6 mr-2">

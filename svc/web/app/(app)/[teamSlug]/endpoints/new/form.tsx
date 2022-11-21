@@ -11,7 +11,7 @@ import { Loading } from "@/components/loading";
 import { useRouter } from "next/navigation";
 import type { Input as Req, Output as Res } from "pages/api/v1/endpoints/";
 import { mutate } from "lib/api/call";
-import type { Session } from "next-auth";
+import * as assertions from "@planetfall/assertions";
 type Props = {
 	teamId: string;
 	teamSlug: string;
@@ -28,10 +28,7 @@ type FormData = {
 	interval: number;
 	distribution: "ALL" | "RANDOM";
 	regions: string[];
-	statusAssertions: {
-		comparison: "gt" | "lt" | "eq" | "lte" | "gte";
-		target: number;
-	}[];
+	statusAssertions: z.infer<typeof assertions.statusAssertion>[];
 };
 
 export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
@@ -109,7 +106,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 
 	return (
 		<form className="space-y-8 divide-y divide-zinc-200">
-			<div className="space-y-8  sm:space-y-5 lg:space-y-24">
+			<div className="space-y-8 sm:space-y-5 lg:space-y-24">
 				<div className="space-y-6 sm:space-y-5">
 					<div>
 						<h3 className="text-lg font-medium leading-6 text-zinc-900">
@@ -231,7 +228,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 							>
 								Body
 							</label>
-							<div className="mt-1  sm:col-span-4 sm:mt-0">
+							<div className="mt-1 sm:col-span-4 sm:mt-0">
 								<textarea
 									rows={3}
 									disabled={!["POST", "PUT"].includes(formValues.method)}
@@ -260,7 +257,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 							>
 								Headers
 							</label>
-							<div className="mt-1  sm:col-span-4 sm:mt-0">
+							<div className="mt-1 sm:col-span-4 sm:mt-0">
 								<textarea
 									rows={3}
 									{...register("headers", {
@@ -290,7 +287,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<h3 className="text-lg font-medium leading-6 text-zinc-900">
 							Assertions
 						</h3>
-						<p className="mt-1 text-sm  text-zinc-500">
+						<p className="mt-1 text-sm text-zinc-500">
 							Define validations and latency thresholds
 						</p>
 					</div>
@@ -308,7 +305,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 									be sent.
 								</p>
 							</div>
-							<div className="flex mt-1  sm:col-span-4 sm:mt-0">
+							<div className="flex mt-1 sm:col-span-4 sm:mt-0">
 								<div className="relative flex items-stretch flex-grow group focus-within:z-10">
 									<input
 										type="number"
@@ -317,10 +314,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 											min: 1,
 										})}
 										placeholder="600"
-										className="block w-full border border-r-0 rounded-none rounded-l transition-all  group-focus:bg-zinc-50 md:px-4 md:h-12 border-zinc-900 hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none"
+										className="block w-full transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 md:px-4 md:h-12 border-zinc-900 hover:bg-zinc-50 focus:outline-none"
 									/>
 								</div>
-								<div className="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium border border-l-0 rounded-r space-x-2 border-zinc-900 bg-zinc-50 text-zinc-700 ">
+								<div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
 									<span>ms</span>
 								</div>
 							</div>
@@ -332,20 +329,23 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 							>
 								Status
 							</label>
-							<div className="mt-1 sm:col-span-4 sm:mt-0 space-y-4">
+							<div className="mt-1 space-y-4 sm:col-span-4 sm:mt-0">
 								{statusAssertions.fields.map((f, i) => (
 									<div key={f.id} className="flex items-center gap-4">
 										<select
-											{...register(`statusAssertions.${i}.comparison`, {
+											{...register(`statusAssertions.${i}.compare`, {
 												required: true,
 											})}
 											className={
 												"transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
 											}
 										>
+											<option value="gt">Greater than</option>
 											<option value="gte">Greater than or equal</option>
+											<option value="lt">Less than</option>
 											<option value="lte">Less than or equal</option>
 											<option value="eq">Equal</option>
+											<option value="not_eq">Not Equal</option>
 										</select>
 										<input
 											type="number"
@@ -374,7 +374,9 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 										type="tertiary"
 										onClick={() =>
 											statusAssertions.append({
-												comparison: "eq",
+												version: "v1",
+												type: "status",
+												compare: "eq",
 												target: 200,
 											})
 										}
@@ -403,7 +405,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 							<div role="group" aria-labelledby="label-email">
 								<div className="sm:grid sm:items-baseline sm:gap-4">
 									<div className="mt-4 sm:col-span-3 sm:mt-0">
-										<fieldset className="w-full gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4  lg:grid-cols-6">
+										<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
 											{regions.map((r) => (
 												<button
 													type="button"
@@ -443,7 +445,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<h3 className="text-lg font-medium leading-6 text-zinc-900">
 							Interval
 						</h3>
-						<p className="mt-1 text-sm  text-zinc-500">
+						<p className="mt-1 text-sm text-zinc-500">
 							How frequently should we call your API
 						</p>
 					</div>
@@ -451,11 +453,11 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
 							<label
 								htmlFor="last-name"
-								className="block pr-8 text-sm font-medium sm:col-span-2  text-zinc-700 sm:mt-px sm:pt-2"
+								className="block pr-8 text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
 							>
 								Interval
 							</label>
-							<div className="flex mt-1  sm:col-span-4 sm:mt-0">
+							<div className="flex mt-1 sm:col-span-4 sm:mt-0">
 								<div className="relative flex items-stretch flex-grow group focus-within:z-10">
 									<input
 										type="number"
@@ -464,10 +466,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 											min: 1,
 										})}
 										defaultValue={15}
-										className="block w-full border border-r-0 rounded-none rounded-l transition-all  group-focus:bg-zinc-50 md:px-4 md:h-12 border-zinc-900 hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none"
+										className="block w-full transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 md:px-4 md:h-12 border-zinc-900 hover:bg-zinc-50 focus:outline-none"
 									/>
 								</div>
-								<div className="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium border border-l-0 rounded-r space-x-2 border-zinc-900 bg-zinc-50 text-zinc-700 ">
+								<div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
 									<span>s</span>
 								</div>
 							</div>
@@ -505,7 +507,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 						<h3 className="text-lg font-medium leading-6 text-zinc-900">
 							Summary
 						</h3>
-						<p className="mt-1 text-sm  text-zinc-500" />
+						<p className="mt-1 text-sm text-zinc-500" />
 					</div>
 					<div className="space-y-6 divide-y divide-zinc-200 sm:space-y-5">
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
@@ -516,7 +518,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 								Expected monthly requests
 							</label>
 							<div className="flex mt-1 sm:col-span-4 sm:mt-0">
-								<div className="inline-flex items-center w-full border rounded cursor-not-allowed  transition-all md:px-4 md:h-12 border-zinc-900 duration-300 ease-in-out focus:outline-none">
+								<div className="inline-flex items-center w-full transition-all duration-300 ease-in-out border rounded cursor-not-allowed md:px-4 md:h-12 border-zinc-900 focus:outline-none">
 									{monthlyRequests.toLocaleString()}
 								</div>
 							</div>
@@ -529,14 +531,14 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 				<div className="flex justify-end gap-8">
 					<Link
 						href={`/${teamSlug}/endpoints`}
-						className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 duration-300 ease-in-out  text-zinc-900 md:hover:bg-zinc-50 hover:text-zinc-900 shadow-sm group"
+						className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 text-zinc-900 md:hover:bg-zinc-50 hover:text-zinc-900 group"
 					>
 						Cancel
 					</Link>
 					<button
 						type="button"
 						onClick={handleSubmit(submit)}
-						className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 duration-300 ease-in-out md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900  shadow-sm group"
+						className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
 					>
 						{loading ? <Loading /> : "Create"}
 					</button>

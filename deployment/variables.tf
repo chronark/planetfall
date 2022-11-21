@@ -104,3 +104,30 @@ variable "upstash_redis_rest_token" {
 }
 
 
+
+variable "proton_verification"{
+  type =string
+  sensitive = true
+}
+variable "proton_spf"{
+  type =string
+  sensitive = true
+}
+
+
+variable "proton_domainkey"{
+  type =string
+  sensitive = true
+}
+variable "proton_domainkey2"{
+  type =string
+  sensitive = true
+}
+variable "proton_domainkey3"{
+  type =string
+  sensitive = true
+}
+variable "proton_dmarc"{
+  type = string
+  sensitive =true
+}

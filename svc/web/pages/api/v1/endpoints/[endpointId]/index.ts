@@ -38,7 +38,6 @@ async function handler(
 			message: JSON.stringify(JSON.parse(request.error.message)),
 		});
 	}
-	console.log(request);
 
 	const endpoint = await db.endpoint.findUnique({
 		where: { id: request.data.query.endpointId },

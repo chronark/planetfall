@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { JSONPath } from "jsonpath-plus";
+import { Assertion, AssertionRequest } from "./types";
 
-const stringCompare = z.enum([
+export const stringCompare = z.enum([
 	"contains",
 	"not_contains",
 	"eq",
@@ -13,7 +14,7 @@ const stringCompare = z.enum([
 	"lt",
 	"lte",
 ]);
-const numberCompare = z.enum(["eq", "not_eq", "gt", "gte", "lt", "lte"]);
+export const numberCompare = z.enum(["eq", "not_eq", "gt", "gte", "lt", "lte"]);
 
 function evaluateNumber(
 	value: number,
@@ -65,12 +66,13 @@ function evaluateString(
 	}
 }
 
-const base = z.object({
-	version: z.enum(["v1"]),
-	type: z.string(),
-});
-
-const statusAssertion = base.merge(
+export const base = z
+	.object({
+		version: z.enum(["v1"]),
+		type: z.string(),
+	})
+	.passthrough();
+export const statusAssertion = base.merge(
 	z.object({
 		type: z.literal("status"),
 		compare: numberCompare,
@@ -78,7 +80,7 @@ const statusAssertion = base.merge(
 	}),
 );
 
-const headerAssertion = base.merge(
+export const headerAssertion = base.merge(
 	z.object({
 		type: z.literal("header"),
 		compare: stringCompare,
@@ -87,7 +89,7 @@ const headerAssertion = base.merge(
 	}),
 );
 
-const textBodyAssertion = base.merge(
+export const textBodyAssertion = base.merge(
 	z.object({
 		type: z.literal("textBody"),
 		compare: stringCompare,
@@ -95,7 +97,7 @@ const textBodyAssertion = base.merge(
 	}),
 );
 
-const jsonBodyAssertion = base.merge(
+export const jsonBodyAssertion = base.merge(
 	z.object({
 		type: z.literal("jsonBody"),
 		path: z.string(), // https://www.npmjs.com/package/jsonpath-plus
@@ -104,76 +106,64 @@ const jsonBodyAssertion = base.merge(
 	}),
 );
 
-const assertion = z.discriminatedUnion("type", [
+export const assertion = z.discriminatedUnion("type", [
 	statusAssertion,
 	headerAssertion,
 	textBodyAssertion,
 	jsonBodyAssertion,
 ]);
 
-class StatusAssertion {
-	readonly assertion: z.infer<typeof statusAssertion>;
+export class StatusAssertion implements Assertion {
+	readonly schema: z.infer<typeof statusAssertion>;
 
-	constructor(assertion: z.infer<typeof statusAssertion>) {
-		this.assertion = assertion;
+	constructor(schema: z.infer<typeof statusAssertion>) {
+		this.schema = schema;
 	}
 
-	public evaluate(req: { status: number }): boolean {
-		return evaluateNumber(
-			req.status,
-			this.assertion.compare,
-			this.assertion.target,
-		);
+	public assert(req: AssertionRequest): boolean {
+		return evaluateNumber(req.status, this.schema.compare, this.schema.target);
 	}
 }
 
-class HeaderAssertion {
-	readonly assertion: z.infer<typeof headerAssertion>;
+export class HeaderAssertion {
+	readonly schema: z.infer<typeof headerAssertion>;
 
-	constructor(assertion: z.infer<typeof headerAssertion>) {
-		this.assertion = assertion;
+	constructor(schema: z.infer<typeof headerAssertion>) {
+		this.schema = schema;
 	}
 
-	public evaluate(req: { header: Record<string, string> }): boolean {
+	public assert(req: AssertionRequest): boolean {
 		return evaluateString(
-			req.header[this.assertion.key],
-			this.assertion.compare,
-			this.assertion.target,
+			req.header[this.schema.key],
+			this.schema.compare,
+			this.schema.target,
 		);
 	}
 }
 
-class TextBodyAssertion {
-	readonly assertion: z.infer<typeof textBodyAssertion>;
+export class TextBodyAssertion {
+	readonly schema: z.infer<typeof textBodyAssertion>;
 
-	constructor(assertion: z.infer<typeof textBodyAssertion>) {
-		this.assertion = assertion;
+	constructor(schema: z.infer<typeof textBodyAssertion>) {
+		this.schema = schema;
 	}
 
-	public evaluate(req: { body: string }): boolean {
-		return evaluateString(
-			req.body,
-			this.assertion.compare,
-			this.assertion.target,
-		);
+	public assert(req: AssertionRequest): boolean {
+		return evaluateString(req.body, this.schema.compare, this.schema.target);
 	}
 }
-class JsonBodyAssertion {
-	readonly assertion: z.infer<typeof jsonBodyAssertion>;
+export class JsonBodyAssertion implements Assertion {
+	readonly schema: z.infer<typeof jsonBodyAssertion>;
 
-	constructor(assertion: z.infer<typeof jsonBodyAssertion>) {
-		this.assertion = assertion;
+	constructor(schema: z.infer<typeof jsonBodyAssertion>) {
+		this.schema = schema;
 	}
 
-	public evaluate(req: { body: string }): boolean {
+	public assert(req: AssertionRequest): boolean {
 		try {
 			const json = JSON.parse(req.body);
-			const value = JSONPath({ path: this.assertion.path, json });
-			return evaluateString(
-				value,
-				this.assertion.compare,
-				this.assertion.target,
-			);
+			const value = JSONPath({ path: this.schema.path, json });
+			return evaluateString(value, this.schema.compare, this.schema.target);
 		} catch (e) {
 			console.error("Unable to parse json");
 			return false;

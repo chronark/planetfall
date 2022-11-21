@@ -569,12 +569,12 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 										<div role="group" aria-labelledby="label-email">
 											<div className="sm:grid sm:items-baseline sm:gap-4">
 												<div className="mt-4 sm:col-span-3 sm:mt-0">
-													<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+													<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
 														{allRegions.map((r) => (
 															<button
 																type="button"
 																key={r.id}
-																className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-zinc-700 ${
+																className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
 																	selectedRegions.includes(r.id)
 																		? "border-zinc-900 bg-zinc-50"
 																		: "border-zinc-300"
@@ -594,7 +594,12 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 																	}
 																}}
 															>
-																{r.name}
+																<span className="px-2 py-1 lg:px-4">
+																	{r.name}
+																</span>
+																<span className="inline-flex items-center justify-center w-1/5 h-full px-2 text-xs uppercase border-l bg-zinc-50 border-zinc-300">
+																	{r.platform}
+																</span>
 															</button>
 														))}
 													</fieldset>

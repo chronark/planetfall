@@ -133,6 +133,13 @@ const regions = [
 		name: "Oregon, USA",
 		url: "https://cc23mi2oufithyqakehzoxt7le0qjcut.lambda-url.us-west-2.on.aws/",
 	},
+
+	{
+		platform: Platform.fly,
+		region: "ams",
+		name: "Amsterdam",
+		url: "https://planetfall-ping-ams.fly.dev",
+	},
 ];
 
 async function main() {

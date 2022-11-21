@@ -141,6 +141,7 @@ model Team {
 enum Platform {
   vercel
   aws
+  fly
 }
 
 model Region {
@@ -200,7 +201,7 @@ model Endpoint {
   headers      Json?
   body         String?
 
-  assertions Json?
+  assertions String?
 
   pages StatusPage[]
 }

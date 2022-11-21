@@ -8,6 +8,12 @@ import type { ApiResponse } from "lib/api/response";
 import { withMiddleware, withRecoverer } from "lib/api/middleware";
 import { newId } from "@planetfall/id";
 import { getRole } from "lib/api";
+import {
+	statusAssertion,
+	serialize as serializeAssertions,
+	StatusAssertion,
+	Assertion,
+} from "@planetfall/assertions";
 
 const input = z.object({
 	method: z.enum(["POST"]),
@@ -26,14 +32,7 @@ const input = z.object({
 		regionIds: z.array(z.string()).min(1),
 		distribution: z.enum(["ALL", "RANDOM"]),
 		teamId: z.string(),
-		statusAssertions: z
-			.array(
-				z.object({
-					comparison: z.enum(["gte", "lt", "gt", "lte", "eq"]),
-					target: z.number().int(),
-				}),
-			)
-			.optional(),
+		statusAssertions: z.array(statusAssertion).optional(),
 	}),
 });
 export type Input = z.infer<typeof input>;
@@ -79,6 +78,11 @@ async function handler(
 		});
 	}
 
+	const assertions: Assertion[] = [];
+	for (const s of request.data.body.statusAssertions ?? []) {
+		assertions.push(new StatusAssertion(s));
+	}
+
 	const endpoint = await db.endpoint.create({
 		data: {
 			id: newId("endpoint"),
@@ -94,7 +98,7 @@ async function handler(
 			regions: {
 				connect: request.data.body.regionIds.map((id) => ({ id })),
 			},
-			// assertions: assertions.serialize(as),
+			assertions: serializeAssertions(assertions),
 			team: {
 				connect: {
 					id: team.id,

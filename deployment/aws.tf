@@ -6,8 +6,8 @@
 
 data "archive_file" "function_archive" {
   type        = "zip"
-  source_file = "${path.module}/../svc/proxy-aws/dist/main"
-  output_path = "${path.module}/../svc/proxy-aws/dist/function.zip"
+  source_file = "${path.module}/../svc/proxy/dist/cmd/aws/main"
+  output_path = "${path.module}/../svc/proxy/dist/cmd/aws/function.zip"
 }
 
 
@@ -23,8 +23,6 @@ provider "aws" {
 module "pinger_us_east_1" {
   source = "./pinger"
   zip = {
-    # path = "../svc/proxy-aws/dist/function.v2.zip"
-    # hash="v2"
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
