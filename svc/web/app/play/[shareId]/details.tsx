@@ -37,7 +37,7 @@ export const Details: React.FC<Props> = ({ checks }) => {
 							<div
 								key={i}
 								className={`${
-									r.checks.length > 1 ? "w-1/2" : "w-full"
+									r.checks.length > 1 ? "lg:w-1/2" : "w-full"
 								} p-4 flex flex-col divide-y divide-zinc-200`}
 							>
 								<div className="flex flex-col items-center justify-between">
@@ -66,13 +66,13 @@ export const Details: React.FC<Props> = ({ checks }) => {
 								</div>
 								<div className="py-4 md:py-8">
 									<Heading h4={true}>Response Header</Heading>
-									<pre className="p-2 rounded bg-zinc-50">
+									<pre className="p-2 overflow-x-auto rounded bg-zinc-50">
 										{JSON.stringify(c.headers, null, 2)}
 									</pre>
 								</div>
 								<div className="py-4 md:py-8">
 									<Heading h4={true}>Response Body</Heading>
-									<pre className="p-2 rounded bg-zinc-50">
+									<pre className="p-2 overflow-x-auto rounded bg-zinc-50">
 										{atob(c.body ?? "")}
 									</pre>
 								</div>

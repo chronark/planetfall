@@ -4,9 +4,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { Redis } from "@upstash/redis";
-// @ts-ignore
-import type { Input } from "pages/api/v1/checks/share";
+import type { Input } from "pages/api/v1/play/share";
 import { Chart } from "./chart";
+import { Table } from "./table";
 import { Details } from "./details";
 
 export const revalidate = 60;
@@ -71,7 +71,7 @@ export default async function Share(props: { params: { shareId: string } }) {
 				</div>
 			</header>
 			<div className="container min-h-screen pb-20 mx-auto mt-24 -pt-24">
-				<div className="pb-32 mb-32 border-b">
+				<div className="pb-32 mb-32 space-y-4 border-b md:space-y-8 lg:space-y-16">
 					<PageHeader title={url} />
 
 					{checks.length >= 2 ? (
@@ -80,8 +80,8 @@ export default async function Share(props: { params: { shareId: string } }) {
 							<Chart checks={checks} />
 						</>
 					) : null}
-
-					<div className="py-4 md:py-8 lg:py-16">
+					{checks.length >= 2 ? <Table checks={checks} /> : null}
+					<div>
 						{checks.length >= 2 ? (
 							<PageHeader
 								title="Details"

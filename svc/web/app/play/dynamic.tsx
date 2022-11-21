@@ -8,8 +8,7 @@ import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import * as checkApi from "pages/api/v1/checks";
-// @ts-ignore
-import * as shareApi from "pages/api/v1/checks/share";
+import * as shareApi from "pages/api/v1/play/share";
 import { BarChart } from "@tremor/react";
 import { Trace } from "@/components/trace";
 import { Stats } from "@/components/stats";
@@ -21,6 +20,9 @@ import { Transition } from "@headlessui/react";
 import classNames from "classnames";
 import { Button } from "@/components/button";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
+import { Chart } from "./[shareId]/chart";
+import { Table } from "./[shareId]/table";
+import { Details } from "./[shareId]/details";
 
 type FormData = {
 	url: string;
@@ -45,7 +47,6 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 		getValues,
 	} = useForm<FormData>({ reValidateMode: "onSubmit" });
 
-	const [shareOpen, setShareOpen] = useState(false);
 	const [copied, setCopied] = useState(false);
 
 	const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
@@ -68,16 +69,21 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 		setIsLoading(false);
 	}
 
-	async function share(input: shareApi.Input): Promise<shareApi.Output> {
-		setShareLoading(true);
+	async function share(): Promise<void> {
+		// setShareLoading(true);
+
 		const res = await fetch("/api/v1/play/share", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(input),
+			body: JSON.stringify({ url: getValues().url, checks }),
 		});
-		setShareId(((await res.json()) as shareApi.Output).data.id);
+		const { data, error } = (await res.json()) as shareApi.Output;
+		if (error) {
+			alert(error);
+		}
+		setShareId(data!.id);
 		setShareLoading(false);
 	}
 
@@ -128,71 +134,6 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 
 	return (
 		<>
-			<Dialog.Root open={shareOpen} onOpenChange={setShareOpen}>
-				<Transition.Root show={shareOpen}>
-					<Transition.Child
-						as={Fragment}
-						enter="ease-out duration-300"
-						enterFrom="opacity-0"
-						enterTo="opacity-100"
-						leave="ease-in duration-200"
-						leaveFrom="opacity-100"
-						leaveTo="opacity-0"
-					>
-						<Dialog.Overlay
-							forceMount={true}
-							className="fixed inset-0 z-20 bg-slate-900/50"
-						/>
-					</Transition.Child>
-					<Transition.Child
-						as={Fragment}
-						enter="ease-out duration-300"
-						enterFrom="opacity-0 scale-95"
-						enterTo="opacity-100 scale-100"
-						leave="ease-in duration-200"
-						leaveFrom="opacity-100 scale-100"
-						leaveTo="opacity-0 scale-95"
-					>
-						<Dialog.Content
-							forceMount={true}
-							className={classNames(
-								"fixed z-50",
-								"w-[95vw] max-w-md rounded p-4 md:w-full",
-								"top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]",
-								"bg-white dark:bg-gray-800",
-								"focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75",
-							)}
-						>
-							<Dialog.Title>
-								<Heading h3={true}>Do you want to share these results?</Heading>
-							</Dialog.Title>
-							<Dialog.Description className="py-4">
-								<p className="text-left">
-									Anyone with the link will be able to see the response body and
-									headers.
-								</p>
-							</Dialog.Description>
-
-							<div className="flex justify-end pt-4 space-x-2 border-t border-slate-200 ">
-								<Dialog.Cancel>
-									<Button type="secondary">Cancel</Button>
-								</Dialog.Cancel>
-								<Dialog.Action>
-									<Button
-										type="primary"
-										loading={shareIsLoading}
-										onClick={async () => {
-											await share({ url: getValues().url, checks });
-										}}
-									>
-										Share
-									</Button>
-								</Dialog.Action>
-							</div>
-						</Dialog.Content>
-					</Transition.Child>
-				</Transition.Root>
-			</Dialog.Root>
 			<Dialog.Root
 				open={!!shareId}
 				onOpenChange={() => {
@@ -250,23 +191,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 									<Button type="secondary">Close</Button>
 								</Dialog.Cancel>
 
-								<Button
-									type="primary"
-									loading={shareIsLoading}
-									onClick={() => {
-										navigator.clipboard.writeText(
-											`https://planetfall.io/play/${shareId}`,
-										);
-										setCopied(true);
-										setTimeout(() => setCopied(false), 5000);
-									}}
-								>
-									{copied ? (
-										<ClipboardDocumentCheckIcon className="w-6 h-6" />
-									) : (
-										"Copy"
-									)}
-								</Button>
+								
 							</div>
 						</Dialog.Content>
 					</Transition.Child>
@@ -311,6 +236,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 										<button
 											key="submit"
 											type="submit"
+											disabled={isLoading}
 											className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
 										>
 											{isLoading ? <Loading /> : "Check"}
@@ -321,10 +247,11 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 											<button
 												key="share"
 												type="button"
-												onClick={() => setShareOpen(true)}
+												disabled={shareIsLoading}
+												onClick={() => share()}
 												className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
 											>
-												Share
+												{shareIsLoading ? <Loading /> : "Share"}
 											</button>
 										</li>
 									) : null}
@@ -335,39 +262,17 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 				</header>
 				<div className="container min-h-screen pb-20 mx-auto mt-24 -pt-24">
 					{checks ? (
-						<div className="pb-32 mb-32 border-b">
-							<PageHeader title={getValues().url} />
+						<div className="pb-32 mb-32 space-y-4 border-b md:space-y-8 lg:space-y-16">
+							<PageHeader title={url ?? ""} />
 
 							{checks.length >= 2 ? (
 								<>
 									<Heading h3={true}>Latency per Region</Heading>
-									<BarChart
-										data={checks.map((r) => {
-											const x: Record<string, string | number> = {
-												region: r.region.name,
-											};
-											if (r.checks.length > 1) {
-												r.checks = r.checks.sort((a, b) => a.time - b.time);
-												x.Cold = r.checks[0].latency!;
-												x.Hot = r.checks[1].latency!;
-											} else {
-												x.Latency = r.checks[0].latency!;
-											}
-											return x;
-										})}
-										dataKey="region"
-										categories={
-											checks && checks.length > 0 && checks[0].checks.length > 1
-												? ["Cold", "Hot"]
-												: ["Latency"]
-										}
-										colors={["blue", "red"]}
-										valueFormatter={(n: number) => `${n.toLocaleString()} ms`}
-									/>
+									<Chart checks={checks} />
 								</>
 							) : null}
-
-							<div className="py-4 md:py-8 lg:py-16">
+							{checks.length >= 2 ? <Table checks={checks} /> : null}
+							<div>
 								{checks.length >= 2 ? (
 									<PageHeader
 										title="Details"
@@ -375,76 +280,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 									/>
 								) : null}
 
-								<Tabs.Root defaultValue={checks[0].region.id}>
-									<Tabs.List className="flex items-center justify-center space-x-4">
-										{checks?.map((r) => (
-											<Tabs.Trigger
-												key={r.region.id}
-												value={r.region.id}
-												className="border-b border-transparent text-zinc-700 radix-state-active:text-zinc-900 radix-state-active:border-zinc-800"
-											>
-												{r.region.name}
-											</Tabs.Trigger>
-										))}
-									</Tabs.List>
-									{checks?.map((r) => (
-										<Tabs.Content
-											key={r.region.id}
-											value={r.region.id}
-											className="flex flex-col justify-between w-full divide-y md:flex-row md:divide-y-0 "
-										>
-											{r.checks
-												.sort((a, b) => a.time - b.time)
-												.map((c, i) => (
-													<div
-														key={i}
-														className={`${
-															r.checks.length > 1 ? "w-1/2" : "w-full"
-														} p-4 flex flex-col divide-y divide-zinc-200`}
-													>
-														<div className="flex flex-col items-center justify-between">
-															{r.checks.length > 1 ? (
-																<>
-																	<Heading h3={true}>
-																		{i === 0 ? "Cold" : "Hot"}
-																	</Heading>
-																	<span className="text-sm text-zinc-500">
-																		{new Date(c.time).toISOString()}
-																	</span>
-																</>
-															) : null}
-															<div className="flex">
-																<Stats
-																	label="Latency"
-																	value={c.latency!.toLocaleString()}
-																	suffix="ms"
-																/>
-
-																<Stats label="Status" value={c.status} />
-															</div>
-														</div>
-														<div className="py-4 md:py-8">
-															<Heading h4={true}>Trace</Heading>
-
-															<Trace timings={c.timing} />
-														</div>
-														<div className="py-4 md:py-8">
-															<Heading h4={true}>Response Header</Heading>
-															<pre className="p-2 rounded bg-zinc-50">
-																{JSON.stringify(c.headers, null, 2)}
-															</pre>
-														</div>
-														<div className="py-4 md:py-8">
-															<Heading h4={true}>Response Body</Heading>
-															<pre className="p-2 rounded bg-zinc-50">
-																{atob(c.body ?? "")}
-															</pre>
-														</div>
-													</div>
-												))}
-										</Tabs.Content>
-									))}
-								</Tabs.Root>
+								<Details checks={checks} />
 							</div>
 						</div>
 					) : null}
