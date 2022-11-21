@@ -22,7 +22,8 @@ deploy:
 	terraform -chdir=deployment init -upgrade
 	terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
 	$(MAKE) build-fly-ping
-	flyctl -c ./svc/proxy/fly.toml deploy --image ${PINGER_TAG}
+	flyctl -c ./svc/proxy/fly-ams.toml deploy --image ${PINGER_TAG}
+	flyctl -c ./svc/proxy/fly-fra.toml deploy --image ${PINGER_TAG}
 	$(MAKE) build-scheduler
 	flyctl -c ./svc/scheduler/fly.toml deploy --dockerfile=./svc/scheduler/Dockerfile --push
 

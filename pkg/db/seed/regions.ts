@@ -140,6 +140,12 @@ const regions = [
 		name: "Amsterdam",
 		url: "https://planetfall-ping-ams.fly.dev",
 	},
+	{
+		platform: Platform.fly,
+		region: "fra",
+		name: "Frankfurt",
+		url: "https://planetfall-ping-fra.fly.dev",
+	},
 ];
 
 async function main() {

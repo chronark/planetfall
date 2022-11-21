@@ -190,8 +190,6 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 								<Dialog.Cancel>
 									<Button type="secondary">Close</Button>
 								</Dialog.Cancel>
-
-								
 							</div>
 						</Dialog.Content>
 					</Transition.Child>

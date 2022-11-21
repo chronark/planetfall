@@ -8,6 +8,7 @@ import {
 	getCoreRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
+import { Legend } from "@tremor/react";
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
 
@@ -60,10 +61,9 @@ const Cell: React.FC<{ value: (number | string | undefined)[] }> = ({
 		return <div className="w-full text-right ">{value[0]}</div>;
 	} else {
 		return (
-			<div className="flex items-center justify-center gap-2 px-2 text-right lg:px-4">
-				<span className="w-2/5">{value[0]}</span>
-				<span className="w-1/5">-</span>
-				<span className="w-2/5">{value[1]}</span>
+			<div className="w-full text-right">
+				<div className="">{value[0]}</div>
+				<div className="">{value[1]}</div>
 			</div>
 		);
 	}
@@ -97,11 +97,12 @@ export const Table: React.FC<Props> = ({ checks }) => {
 	}));
 	const { accessor } = createColumnHelper<typeof data[0]>();
 
-	const columns = [
+	let columns = [
 		accessor("region", {
 			header: "Region",
 			cell: (info) => info.getValue().name,
 		}),
+
 		accessor("status", {
 			header: "Status",
 			cell: (info) => <Cell value={info.getValue()} />,
@@ -115,6 +116,7 @@ export const Table: React.FC<Props> = ({ checks }) => {
 
 			cell: (info) => <Cell value={info.getValue()} />,
 		}),
+
 		accessor("tls", {
 			header: "TLS",
 
@@ -131,6 +133,22 @@ export const Table: React.FC<Props> = ({ checks }) => {
 			cell: (info) => <Cell value={info.getValue()} />,
 		}),
 	];
+
+	if (data[0].latency.length > 1) {
+		columns = [
+			columns[0],
+			accessor("latency", {
+				header: "Check",
+				cell: (info) => (
+					<div className="flex flex-col items-start gap-1 text-sm font-semibold text-left ">
+						<Legend categories={["Cold"]} colors={["blue"]} />
+						<Legend categories={["Hot"]} colors={["red"]} />
+					</div>
+				),
+			}),
+			...columns.slice(1),
+		] as any;
+	}
 	const table = useReactTable({
 		data,
 		columns,
@@ -153,9 +171,9 @@ export const Table: React.FC<Props> = ({ checks }) => {
 									className={classNames(
 										"sticky px-4 bg-white z-10  border-t border-b border-zinc-400  py-3.5  text-sm font-semibold text-zinc-900",
 										{
-											"text-center": i > 0,
-											"text-left": i === 0,
-											"text-right": i > 0 && checks[0].checks.length === 1,
+											"text-left":
+												checks[0].checks.length > 1 ? i <= 1 : i === 0,
+											"text-right": checks[0].checks.length > 1 ? i > 1 : i > 0,
 											"rounded-l border-l": i === 0,
 											"rounded-r border-r ":
 												i + 1 === headerGroup.headers.length,
@@ -174,12 +192,17 @@ export const Table: React.FC<Props> = ({ checks }) => {
 					))}
 				</thead>
 				<tbody>
-					{table.getRowModel().rows.map((row) => (
+					{table.getRowModel().rows.map((row, i) => (
 						<tr key={row.id}>
 							{row.getVisibleCells().map((cell) => (
 								<td
 									key={cell.id}
-									className="px-3 py-2 text-sm whitespace-nowrap text-zinc-500"
+									className={classNames(
+										"px-4 py-2 whitespace-nowrap text-zinc-500",
+										{
+											"border-t border-zinc-100": i > 0,
+										},
+									)}
 								>
 									{flexRender(cell.column.columnDef.cell, cell.getContext())}
 								</td>
@@ -204,15 +227,6 @@ export const Table: React.FC<Props> = ({ checks }) => {
 					))}
 				</tfoot>
 			</table>
-			{checks[0].checks.length > 1 ? (
-				<div className="py-4">
-					<p className="text-sm text-center text-zinc-500">
-						This check was run twice to simulate cold and hot caches. The table
-						shows both results. On the left is the cold value and on the right
-						the hot one.
-					</p>
-				</div>
-			) : null}
 		</div>
 	);
 };
