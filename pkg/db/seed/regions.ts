@@ -58,7 +58,7 @@ const regions = [
 	{
 		platform: Platform.aws,
 		region: "ca-central-1",
-		name: "Canada",
+		name: "Montreal, Canada",
 		url: "https://fypvfik2n67ieiafpq4tylqtri0qvvyh.lambda-url.ca-central-1.on.aws/",
 	},
 	{

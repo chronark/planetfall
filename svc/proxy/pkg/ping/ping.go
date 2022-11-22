@@ -5,12 +5,12 @@ import (
 	"crypto/tls"
 	"encoding/base64"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptrace"
 	"strings"
 	"time"
-
-	)
+)
 
 type Request struct {
 	Url     string            `json:"url"`
@@ -65,6 +65,8 @@ func Ping(ctx context.Context, req Request) ([]Response, error) {
 }
 
 func check(ctx context.Context, input Request) (Response, error) {
+	log.Printf("Checking [%s] %s\n", input.Method, input.Url)
+
 	now := time.Now()
 	timing := Timing{}
 
@@ -93,7 +95,10 @@ func check(ctx context.Context, input Request) (Response, error) {
 
 	req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
 
+
+	log.Printf("Request: %#v\n", req)
 	client := &http.Client{
+		Transport: &http.Transport{},
 		Timeout: time.Duration(input.Timeout) * time.Millisecond,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			// Do not follow redirects
@@ -109,7 +114,7 @@ func check(ctx context.Context, input Request) (Response, error) {
 	}
 
 	defer res.Body.Close()
-
+	log.Printf("Response from %s: [%d] \n", req.URL, res.StatusCode)
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return Response{}, err

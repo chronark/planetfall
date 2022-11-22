@@ -97,7 +97,7 @@ export default async function handler(
 					},
 					body: JSON.stringify({
 						url: request.data.body.url,
-						method: request.data.method,
+						method: request.data.body.method,
 						timeout: 2000,
 						checks: request.data.body.repeat ? 2 : 1,
 					}),

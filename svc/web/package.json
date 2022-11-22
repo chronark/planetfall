@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/plots": "^1.2.2",
     "@chronark/access": "^0.0.16",
     "@docsearch/react": "^3.3.0",
     "@headlessui/react": "^1.7.4",
@@ -29,7 +30,9 @@
     "@radix-ui/react-hover-card": "^1.0.2",
     "@radix-ui/react-navigation-menu": "^1.1.1",
     "@radix-ui/react-popover": "^1.0.2",
+    "@radix-ui/react-select": "^1.1.2",
     "@radix-ui/react-tabs": "^1.0.1",
+    "@shopify/polaris-viz": "7.4.4",
     "@sindresorhus/slugify": "^2.1.1",
     "@tailwindcss/typography": "^0.5.8",
     "@tanstack/react-table": "^8.5.30",

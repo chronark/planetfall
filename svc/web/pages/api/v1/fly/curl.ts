@@ -3,8 +3,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { ApiError } from "lib/api/error";
 import type { ApiResponse } from "lib/api/response";
-import { newId } from "@planetfall/id";
-
+import { newId, newShortId } from "@planetfall/id";
+import { Redis } from "@upstash/redis";
+const redis = Redis.fromEnv();
 const input = z.object({
 	method: z.enum(["POST"]),
 	headers: z.object({
@@ -18,37 +19,48 @@ const input = z.object({
 		repeat: z.boolean().optional(),
 	}),
 });
+
 export type Input = z.infer<typeof input>;
-export type Output = ApiResponse<
-	{
-		region: {
-			id: string;
-			name: string;
-		};
-		checks: {
-			id: string;
-			latency?: number;
-			time: number;
 
-			status: number;
-			body: string;
+type Check = {
+	id: string;
+	latency?: number;
+	time: number;
+	status: number;
+	body: string;
+	headers: Record<string, string>;
+	timing: {
+		dnsStart: number;
+		dnsDone: number;
+		connectStart: number;
+		connectDone: number;
+		firstByteStart: number;
+		firstByteDone: number;
+		tlsHandshakeStart: number;
+		tlsHandshakeDone: number;
+		transferStart: number;
+		transferDone: number;
+	};
+};
+export type Output = ApiResponse<{
+	link: string;
+	regions: {
+		id: string;
+		name: string;
+		checks: Check[];
+	}[];
+}>;
 
-			headers: Record<string, string>;
-			timing: {
-				dnsStart: number;
-				dnsDone: number;
-				connectStart: number;
-				connectDone: number;
-				firstByteStart: number;
-				firstByteDone: number;
-				tlsHandshakeStart: number;
-				tlsHandshakeDone: number;
-				transferStart: number;
-				transferDone: number;
-			};
-		}[];
-	}[]
->;
+export type Shared = {
+	method: string;
+	url: string;
+	time: number;
+	regions: {
+		id: string;
+		name: string;
+		checks: Check[];
+	}[];
+};
 
 export default async function handler(
 	req: NextApiRequest,
@@ -87,7 +99,7 @@ export default async function handler(
 					},
 					body: JSON.stringify({
 						url: request.data.body.url,
-						method: request.data.method,
+						method: request.data.body.method,
 						timeout: 2000,
 						checks: request.data.body.repeat ? 2 : 1,
 					}),
@@ -122,10 +134,8 @@ export default async function handler(
 				}[];
 
 				return {
-					region: {
-						id: region.id,
-						name: region.name,
-					},
+					id: region.id,
+					name: region.name,
 					checks: checks.map((c) => ({
 						...c,
 						id: newId("check"),
@@ -134,7 +144,24 @@ export default async function handler(
 			}),
 		);
 
-		res.json({ data: regions });
+		const s: Shared = {
+			method: request.data.body.method,
+			url: request.data.body.url,
+			time: Date.now(),
+			regions,
+		};
+
+		const id = newShortId();
+		const saved = await redis.set(["fly", id].join(":"), s, {
+			ex: 7 * 24 * 60 * 60,
+			nx: true,
+		});
+
+		if (saved === null) {
+			throw new ApiError({ status: 500, message: "share id collission" });
+		}
+
+		res.json({ data: { link: `https://planetfall.io/fly/${id}`, regions } });
 		return;
 	} catch (e) {
 		if (e instanceof ApiError) {

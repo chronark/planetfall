@@ -24,7 +24,7 @@ deploy:
 	$(MAKE) build-fly-ping
 	flyctl -c ./svc/proxy/fly-ams.toml deploy --image ${PINGER_TAG}
 	flyctl -c ./svc/proxy/fly-fra.toml deploy --image ${PINGER_TAG}
-	$(MAKE) build-scheduler
+	# $(MAKE) build-scheduler
 	flyctl -c ./svc/scheduler/fly.toml deploy --dockerfile=./svc/scheduler/Dockerfile --push
 
 

@@ -23,6 +23,8 @@ func main() {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		log.Printf("Received request: %+v\n", req)
+		
 		res, err := ping.Ping(ctx, req)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
