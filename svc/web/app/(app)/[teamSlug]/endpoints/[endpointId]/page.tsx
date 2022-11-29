@@ -10,9 +10,10 @@ import { Heading } from "@/components/heading";
 import { LatestTable } from "./latest-table";
 import { DeleteButton } from "./delete";
 import { getSession } from "lib/auth";
-// import Confirm from "@/components/confirm/confirm";
+import Button from "@/components/button/button";
+import Toggle from "./toggle";
 
-export const revalidate = 5;
+export const revalidate = 10;
 
 export default async function Page(props: {
 	params: { teamSlug: string; endpointId: string };
@@ -76,44 +77,19 @@ export default async function Page(props: {
 				title={endpoint.name}
 				description={endpoint.url}
 				actions={[
-					// endpoint.active ? (
-					// 	<div className="flex items-center justify-center w-6 h-6 mr-2">
-					// 		<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 animate-ping-slow bg-emerald-400" />
-					// 		<span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
-					// 	</div>
-					// ) : (
-					// 	<div className="flex items-center justify-center w-6 h-6 mr-2">
-					// 		<span className="relative inline-flex w-2 h-2 rounded-full bg-zinc-500" />
-					// 	</div>
-					// ),
+					<Toggle endpointId={endpoint.id} active={endpoint.active} />,
 
-					// <Button
-					// 	key="update"
-					// 	type="secondary"
-					// 	href={`/ ${ props.params.teamSlug } /endpoints/${ props.params.endpointId } /settings`}
-					// >
-					// 	{endpoint.active ? "Active" : "Paused"}
-					// </Button>,
-					// // <Confirm
-					// //     key="delete"
-					// //     title="Delete Endpoint?"
-					// //     description={endpoint.name ?? endpoint.url}
-					// //     onConfirm={async () => {
-					// //         alert("TODO:")
-					// //     }}
-					// //     trigger={<Button type="secondary">Delete</Button>}
-					// // />,
-					// <Button
-					// 	key="settings"
-					// 	type="secondary"
-					// 	href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/settings`}
-					// >
-					// 	Settings
-					// </Button>,
+					<Button
+						key="settings"
+						type="secondary"
+						href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/settings`}
+					>
+						Settings
+					</Button>,
 
 					<DeleteButton
 						endpointId={endpoint.id}
-						endpointName={endpoint.name ?? undefined}
+						endpointName={endpoint.name}
 						endpointUrl={endpoint.url}
 					/>,
 				]}

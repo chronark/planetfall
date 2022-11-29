@@ -15,6 +15,21 @@ resource "vercel_project" "web" {
 
   environment = [
     {
+      key    = "UPSTASH_KAFKA_REST_URL"
+      value  = upstash_kafka_cluster.planetfall.rest_endpoint
+      target = ["production", "preview"]
+    },
+    {
+      key    = "UPSTASH_KAFKA_USERNAME"
+      value  = upstash_kafka_cluster.planetfall.username
+      target = ["production", "preview"]
+    },
+    {
+      key    = "UPSTASH_KAFKA_PASSWORD"
+      value  = upstash_kafka_cluster.planetfall.password
+      target = ["production", "preview"]
+    },
+    {
       key    = "PINGER_AUTH_TOKEN"
       value  = var.auth_token
       target = ["production", "preview"]
@@ -109,68 +124,68 @@ resource "vercel_dns_record" "proton_verification" {
 
 
 resource "vercel_dns_record" "proton_mail" {
-  team_id  = var.vercel_team_id
-  domain   = "planetfall.io"
-  name     = "" # Should be "@"
-  type     = "MX"
-  ttl      = 60
+  team_id     = var.vercel_team_id
+  domain      = "planetfall.io"
+  name        = "" # Should be "@"
+  type        = "MX"
+  ttl         = 60
   mx_priority = 10
-  value    = "mail.protonmail.ch"
+  value       = "mail.protonmail.ch"
 }
 
 
 resource "vercel_dns_record" "proton_spf" {
-  team_id  = var.vercel_team_id
-  domain   = "planetfall.io"
-  name     = "" # Should be "@"
-  type     = "TXT"
-  ttl      = 60
-  value    = var.proton_spf
+  team_id = var.vercel_team_id
+  domain  = "planetfall.io"
+  name    = "" # Should be "@"
+  type    = "TXT"
+  ttl     = 60
+  value   = var.proton_spf
 }
 resource "vercel_dns_record" "proton_domainkey" {
-  team_id  = var.vercel_team_id
-  domain   = "planetfall.io"
-  name     = "protonmail._domainkey"
-  type     = "CNAME"
-  ttl      = 60
-  value    = var.proton_domainkey
+  team_id = var.vercel_team_id
+  domain  = "planetfall.io"
+  name    = "protonmail._domainkey"
+  type    = "CNAME"
+  ttl     = 60
+  value   = var.proton_domainkey
 }
 
 resource "vercel_dns_record" "proton_domainkey2" {
-  team_id  = var.vercel_team_id
-  domain   = "planetfall.io"
-  name     = "protonmail2._domainkey"
-  type     = "CNAME"
-  ttl      = 60
-  value    = var.proton_domainkey2
+  team_id = var.vercel_team_id
+  domain  = "planetfall.io"
+  name    = "protonmail2._domainkey"
+  type    = "CNAME"
+  ttl     = 60
+  value   = var.proton_domainkey2
 }
 
 resource "vercel_dns_record" "proton_domainkey3" {
-  team_id  = var.vercel_team_id
-  domain   = "planetfall.io"
-  name     = "protonmail3._domainkey"
-  type     = "CNAME"
-  ttl      = 60
-  value    = var.proton_domainkey3
+  team_id = var.vercel_team_id
+  domain  = "planetfall.io"
+  name    = "protonmail3._domainkey"
+  type    = "CNAME"
+  ttl     = 60
+  value   = var.proton_domainkey3
 }
 
 resource "vercel_dns_record" "proton_dmarc" {
-  team_id  = var.vercel_team_id
-  domain   = "planetfall.io"
-  name     = "_dmarc"
-  type     = "TXT"
-  ttl      = 60
-  value    = var.proton_dmarc
+  team_id = var.vercel_team_id
+  domain  = "planetfall.io"
+  name    = "_dmarc"
+  type    = "TXT"
+  ttl     = 60
+  value   = var.proton_dmarc
 }
 
 resource "vercel_dns_record" "proton_mailsec" {
-  team_id  = var.vercel_team_id
-  domain   = "planetfall.io"
-  name     = "" # Should be "@"
-  type     = "MX"
-  ttl      = 60
+  team_id     = var.vercel_team_id
+  domain      = "planetfall.io"
+  name        = "" # Should be "@"
+  type        = "MX"
+  ttl         = 60
   mx_priority = 20
-  value    = "mailsec.protonmail.ch"
+  value       = "mailsec.protonmail.ch"
 }
 
 

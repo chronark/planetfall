@@ -5,6 +5,7 @@ import { Endpoint } from "@planetfall/db";
 import React from "react";
 
 import { useRouter } from "next/navigation";
+import { trpc } from "lib/utils/trpc";
 
 type Props = {
 	endpointId: string;
@@ -24,7 +25,7 @@ export const DeleteButton: React.FC<Props> = ({
 			description={endpointName ?? endpointUrl}
 			trigger={<Button type="alert">Delete</Button>}
 			onConfirm={async () => {
-				await fetch(`/api/v1/endpoints/${endpointId}`, { method: "DELETE" });
+				await trpc.endpoint.delete.mutate({ endpointId });
 				router.refresh();
 			}}
 		/>

@@ -72,7 +72,6 @@ func main() {
 	})
 
 	app.Get("/health", func(c *fiber.Ctx) error {
-
 		log.Println("received health check")
 		return c.SendString("OK")
 	})

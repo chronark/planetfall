@@ -38,10 +38,10 @@ tasks:
           DOCKERFILE: svc/proxy/Dockerfile
           IMAGE: chronark/planetfall-pinger
           
-      # - task: build-docker
-      #   vars:
-      #     DOCKERFILE: svc/scheduler/Dockerfile
-      #     IMAGE: chronark/planetfall-scheduler
+      - task: build-docker
+        vars:
+          DOCKERFILE: svc/scheduler/Dockerfile
+          IMAGE: chronark/planetfall-scheduler
         
 
       - terraform -chdir=deployment init -upgrade

@@ -13,31 +13,29 @@ export class Events {
 	private logger: Logger;
 
 	constructor({ scheduler, logger }: { scheduler: Scheduler; logger: Logger }) {
-		// const broker = process.env.KAFKA_BROKER
-		// if (!broker) {
-		//   throw new Error("KAFKA_BROKER is not defined")
-		// }
-		// const username = process.env.KAFKA_USERNAME
-		// if (!username) {
-		//   throw new Error("KAFKA_USERNAME is not defined")
-		// }
+		const broker = process.env.KAFKA_BROKER;
+		if (!broker) {
+			throw new Error("KAFKA_BROKER is not defined");
+		}
+		const username = process.env.KAFKA_USERNAME;
+		if (!username) {
+			throw new Error("KAFKA_USERNAME is not defined");
+		}
 
-		// const password = process.env.KAFKA_PASSWORD
-		// if (!password) {
-		//   throw new Error("KAFKA_PASSWORD is not defined")
-		// }
+		const password = process.env.KAFKA_PASSWORD;
+		if (!password) {
+			throw new Error("KAFKA_PASSWORD is not defined");
+		}
 		this.logger = logger;
 
 		this.scheduler = scheduler;
 
 		this.kafka = new Kafka({
-			brokers: ["usable-snipe-5277-eu1-kafka.upstash.io:9092"],
+			brokers: [broker],
 			sasl: {
 				mechanism: "scram-sha-256",
-				username:
-					"dXNhYmxlLXNuaXBlLTUyNzckgQzcA6IYQ332mfG8_U4caCkdWR-tgVvgXep9ACs",
-				password:
-					"baAtrzV9P0xqkhmSSJlN9woFhKOOuYqeYc8L7E_l7pS4yBxDEWks06jfdNYkFPwSKq9A2A==",
+				username,
+				password,
 			},
 			ssl: true,
 		});

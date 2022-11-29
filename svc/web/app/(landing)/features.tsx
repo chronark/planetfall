@@ -7,6 +7,7 @@ import { Feature, FeatureProps } from "./feature";
 import { ApiSnippet } from "./features/api-snippet";
 
 export const Features = asyncComponent(async () => {
+	const regions = await db.region.count();
 	const features: FeatureProps[] = [
 		{
 			hash: "insights",
@@ -16,9 +17,8 @@ export const Features = asyncComponent(async () => {
 
 			bullets: [
 				{
-					title: `${await db.regions.count()} Regions`,
-					description:
-						"Planetfall can check your API from 22 regions across the globe",
+					title: `${regions} Regions`,
+					description: "Planetfall can check your API from across the globe",
 				},
 				{
 					title: "Custom timeouts",
@@ -49,13 +49,12 @@ export const Features = asyncComponent(async () => {
 
 			bullets: [
 				{
-					title: "Integrated Status Page",
-					description:
-						"Simply add a free subdomain on planetfall.io to host your status page",
+					title: "Public Status Page",
+					description: "Share your monitoring results with your customers",
 				},
 				{
-					title: "1 Click Setup",
-					description: "Select your APIs and a subdomain and you're done",
+					title: "Free custom domain",
+					description: "Bring your own domain.",
 				},
 			],
 		},

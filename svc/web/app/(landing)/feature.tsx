@@ -85,7 +85,7 @@ export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 				) : null}
 
 				<div
-					className={classNames("grid grid-cols-1 w-1/2 lg:gap-8", {
+					className={classNames("grid grid-cols-1 mt-4 lg:gap-8", {
 						"lg:w-2/5": feature.image,
 					})}
 				>

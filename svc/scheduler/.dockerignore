@@ -1,0 +1,9 @@
+.env*
+node_modules
+.next
+.turbo
+dist
+.tfvars
+*.tfstate
+.terraform
+.tinyb
