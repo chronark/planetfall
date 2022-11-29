@@ -3,8 +3,11 @@ import Link from "next/link";
 import { CheckIcon, MinusIcon } from "@heroicons/react/24/solid";
 import { DEFAULT_QUOTA } from "../../plans";
 import ms from "ms";
+import classNames from "classnames";
 
 type Tier = "Free" | "Pro" | "Enterprise";
+
+type Tag = "New" | "Planned" | "Beta" | "In Development";
 
 const tiers: {
 	name: Tier;
@@ -22,7 +25,7 @@ const tiers: {
 		name: "Free",
 		href: "/auth/sign-in",
 		monthlyPrice: "$0",
-		description: "No credit card required",
+		description: "No cprimaryit card requiprimary",
 		cta: "Start for free",
 	},
 	{
@@ -49,6 +52,7 @@ const sections: {
 	features: {
 		name: string;
 		tiers: Record<Tier, string | boolean>;
+		tag?: Tag;
 	}[];
 }[] = [
 	{
@@ -76,7 +80,12 @@ const sections: {
 			},
 			{
 				name: "Status Pages",
-				tiers: { Free: "1", Pro: "5", Enterprise: "∞" },
+				tiers: {
+					Free: DEFAULT_QUOTA.FREE.maxStatusPages.toString(),
+					Pro: DEFAULT_QUOTA.PRO.maxStatusPages.toString(),
+					Enterprise: "∞",
+				},
+				tag: "New",
 			},
 		],
 	},
@@ -128,6 +137,7 @@ const sections: {
 					Pro: false,
 					Enterprise: true,
 				},
+				tag: "Planned",
 			},
 		],
 	},
@@ -141,6 +151,7 @@ const sections: {
 					Pro: true,
 					Enterprise: true,
 				},
+				tag: "In Development",
 			},
 			{
 				name: "Slack",
@@ -149,6 +160,7 @@ const sections: {
 					Pro: true,
 					Enterprise: true,
 				},
+				tag: "Planned",
 			},
 			{
 				name: "Email",
@@ -158,14 +170,11 @@ const sections: {
 					Pro: true,
 					Enterprise: true,
 				},
+				tag: "Planned",
 			},
 		],
 	},
 ];
-
-function classNames(...classes: unknown[]) {
-	return classes.filter(Boolean).join(" ");
-}
 
 const Button: React.FC<PropsWithChildren<{ href: string }>> = ({
 	children,
@@ -189,7 +198,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 					<p className="mt-2 text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
 						Transparent pricing
 					</p>
-					<p className="mx-auto mt-5 text-xl max-w-prose text-zinc-400">
+					<p className="mx-auto mt-5 text-xl max-w-pprimary text-zinc-400">
 						Start for free, then upgrade as you grow.
 					</p>
 				</div>
@@ -245,10 +254,29 @@ export const Pricing: React.FC = (): JSX.Element => {
 												{section.features.map((feature) => (
 													<tr key={feature.name}>
 														<th
-															className="px-4 py-5 text-sm font-normal text-left text-zinc-500"
+															className="flex items-center gap-4 px-6 py-5 text-sm font-normal text-left text-zinc-400"
 															scope="row"
 														>
-															{feature.name}
+															<span>{feature.name}</span>
+															{feature.tag ? (
+																<span
+																	className={classNames(
+																		"px-1 text-xs border rounded ",
+																		{
+																			"bg-primary-700/50 border-primary-400 text-primary-100":
+																				feature.tag === "New",
+																			"border-orange-500 text-orange-500":
+																				feature.tag === "Beta",
+																			"border-zinc-400 text-zinc-400":
+																				feature.tag === "In Development",
+																			"border-zinc-500 text-zinc-500":
+																				feature.tag === "Planned",
+																		},
+																	)}
+																>
+																	{feature.tag}
+																</span>
+															) : null}
 														</th>
 														<td className="py-5 pr-4">
 															{typeof feature.tiers[tier.name] === "string" ? (
@@ -372,10 +400,29 @@ export const Pricing: React.FC = (): JSX.Element => {
 											{section.features.map((feature) => (
 												<tr key={feature.name}>
 													<th
-														className="px-6 py-5 text-sm font-normal text-left text-zinc-400"
+														className="flex items-center gap-4 px-6 py-5 text-sm font-normal text-left text-zinc-400"
 														scope="row"
 													>
-														{feature.name}
+														<span>{feature.name}</span>
+														{feature.tag ? (
+															<span
+																className={classNames(
+																	"px-1 text-xs border rounded ",
+																	{
+																		"bg-primary-700/50 border-primary-400 text-primary-100":
+																			feature.tag === "New",
+																		"border-orange-500 text-orange-500":
+																			feature.tag === "Beta",
+																		"border-zinc-400 text-zinc-400":
+																			feature.tag === "In Development",
+																		"border-zinc-500 text-zinc-500":
+																			feature.tag === "Planned",
+																	},
+																)}
+															>
+																{feature.tag}
+															</span>
+														) : null}
 													</th>
 													{tiers.map((tier) => (
 														<td

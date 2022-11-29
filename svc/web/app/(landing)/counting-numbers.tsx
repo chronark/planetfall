@@ -1,0 +1,44 @@
+"use client";
+import { useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+
+export default function CountingNumbers({
+	value,
+	duration = 800,
+}: {
+	value: number;
+	duration?: number;
+}) {
+	const [n, setNumber] = useState(0);
+	const increment = Math.max(1, Math.floor(value / 100));
+	const interval = duration * (increment / value);
+	const ref = useRef(null);
+	const isInView = useInView(ref);
+
+	useEffect(() => {
+		if (isInView) {
+			let timer = setInterval(() => {
+				if (n < value) {
+					setNumber((num) => {
+						let newValue = num + increment;
+						if (newValue > value) {
+							newValue = value;
+							if (timer) {
+								clearInterval(timer);
+							}
+						}
+						return newValue;
+					});
+				} else if (timer) {
+					clearInterval(timer);
+				}
+			}, interval);
+		}
+	}, [isInView]);
+
+	return (
+		<span ref={ref}>
+			{Intl.NumberFormat(undefined, { notation: "compact" }).format(n)}
+		</span>
+	);
+}

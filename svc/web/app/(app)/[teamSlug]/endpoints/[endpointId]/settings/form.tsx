@@ -59,7 +59,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 								<h3 className="text-lg font-medium leading-6 text-zinc-900">
 									General
 								</h3>
-								<p className="mt-1 text-sm text-zinc-600"></p>
+								<p className="mt-1 text-sm text-zinc-600" />
 							</div>
 						</div>
 						<div className="mt-5 md:col-span-2 md:mt-0">
@@ -478,7 +478,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 								<h3 className="text-lg font-medium leading-6 text-zinc-900">
 									Interval
 								</h3>
-								<p className="mt-1 text-sm text-zinc-600"></p>
+								<p className="mt-1 text-sm text-zinc-600" />
 							</div>
 						</div>
 						<div className="mt-5 md:col-span-2 md:mt-0">

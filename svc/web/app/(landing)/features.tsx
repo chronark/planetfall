@@ -18,7 +18,8 @@ export const Features = asyncComponent(async () => {
 			bullets: [
 				{
 					title: `${regions} Regions`,
-					description: "Planetfall can check your API from across the globe",
+					description:
+						"See the true speed of your API from anywhere on the globe",
 				},
 				{
 					title: "Custom timeouts",

@@ -2,11 +2,11 @@ import React from "react";
 import { db } from "@planetfall/db";
 import { asyncComponent } from "lib/api/component";
 
-const formatter = Intl.NumberFormat(undefined, { notation: "compact" });
+import { useEffect, useRef, useState } from "react";
+import { useInView } from "framer-motion";
+import CountingNumbers from "./counting-numbers";
 
 export const Stats = asyncComponent(async () => {
-	const rng = Math.random();
-	console.time(`stats${rng}`);
 	const stats = await Promise.all([
 		{
 			label: "Teams",
@@ -54,7 +54,7 @@ export const Stats = asyncComponent(async () => {
 								{label}
 							</dt>
 							<dd className="text-2xl font-bold tracking-tight text-center sm:text-5xl text-zinc-100">
-								{formatter.format(value)}
+								<CountingNumbers value={value} />
 							</dd>
 						</div>
 					))}

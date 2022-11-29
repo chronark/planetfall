@@ -43,7 +43,7 @@ const theme: PrismTheme = {
 
 export const ApiSnippet: React.FC = () => {
 	return (
-		<div className="relative rounded bg-zinc-800/80 ring-1 ring-white/10 backdrop-blur">
+		<div className="relative rounded bg-zinc-900/80 ring-1 ring-white/10 backdrop-blur">
 			<div className="absolute z-50 h-px -top-px left-20 right-11 bg-gradient-to-r from-zinc-300/0 via-zinc-300/70 to-red-300/0" />
 			<div className="absolute h-px -bottom-px left-11 right-20 bg-gradient-to-r from-zinc-400/0 via-zinc-400 to-zinc-400/0" />
 			<div className="pt-4 pl-4">
@@ -82,7 +82,7 @@ export const ApiSnippet: React.FC = () => {
 				<div className="flex items-start px-1 mt-6 text-sm">
 					<div
 						aria-hidden="true"
-						className="pr-4 font-mono border-r select-none border-zinc-300/5 text-zinc-600"
+						className="pr-4 font-mono border-r select-none border-zinc-300/5 text-zinc-700"
 					>
 						{Array.from({
 							length: code.split("\n").length,

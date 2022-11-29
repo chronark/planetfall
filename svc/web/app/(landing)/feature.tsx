@@ -100,25 +100,27 @@ export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 										: slideUp
 								}
 								key={b.title}
-								className={classNames(
-									"from-zinc-600/50 to-transparent drop-shadow-feature",
-								)}
+								className="group from-zinc-600/50 to-transparent drop-shadow-feature"
 							>
 								<div
 									className={classNames(
-										"absolute  w-full h-px -top-px from-zinc-400/0 via-zinc-400/70  to-zinc-400/0 bg-gradient-to-r",
+										"absolute w-full group-hover:w-2/3  h-px -top-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0 transition-all duration-1000",
 										{
-											"lg:right-20": feature.image && i % 2 === 0,
-											"lg:left-20": feature.image && i % 2 === 1,
+											"lg:bg-gradient-to-r lg:right-8 group-hover:right-4":
+												i % 2 === 1,
+											"lg:bg-gradient-to-l lg:left-8 group-hover:left-4":
+												i % 2 === 0,
 										},
 									)}
 								/>
 								<div
 									className={classNames(
-										"absolute w-full h-px -bottom-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0",
+										"absolute w-full group-hover:w-2/3 h-px -bottom-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0 transition-all duration-1000",
 										{
-											"lg:bg-gradient-to-r lg:right-20": i % 2 === 0,
-											"lg:bg-gradient-to-l lg:left-20": i % 2 === 1,
+											"lg:bg-gradient-to-r lg:right-8 group-hover:right-4":
+												i % 2 === 0,
+											"lg:bg-gradient-to-l lg:left-8 group-hover:left-4":
+												i % 2 === 1,
 										},
 									)}
 								/>
@@ -134,7 +136,9 @@ export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 										},
 									)}
 								>
-									<dt className=" text-zinc-200">{b.title}</dt>
+									<dt className="text-lg font-semibold duration-1000 text-zinc-100 group-hover:text-white">
+										{b.title}
+									</dt>
 									<dd className="mt-1 text-sm text-zinc-300">
 										{b.description}
 									</dd>
