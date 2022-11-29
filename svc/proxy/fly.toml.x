@@ -1,16 +1,12 @@
-# fly.toml file generated for planetfall-ping-fra-tf on 2022-11-27T14:01:23+01:00
 
-app = "planetfall-ping-fra-tf"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
-[build]
-  [build.args]
-    NEXT_PUBLIC_EXAMPLE = "Value goes here"
+# [build]
+#  image = "chronark/planetfall-pinger"
 
 [env]
-  PORT = "8080"
 
 [experimental]
   allowed_public_ports = []

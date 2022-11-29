@@ -12,7 +12,10 @@ terraform {
       source  = "fly-apps/fly"
       version = ">=0.0.20"
     }
-
+docker = {
+      source  = "kreuzwerker/docker"
+      version = "2.23.1"
+    }
   }
 }
 
@@ -35,4 +38,9 @@ provider "fly" {
   useinternaltunnel    = true
   internaltunnelorg    = "personal"
   internaltunnelregion = "fra"
+}
+
+
+provider "docker" {
+  # host = "unix:///var/run/docker.sock"
 }
