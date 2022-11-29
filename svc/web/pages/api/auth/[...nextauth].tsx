@@ -6,11 +6,10 @@ import { DEFAULT_QUOTA } from "plans";
 import slugify from "slugify";
 import Stripe from "stripe";
 import { Redis } from "@upstash/redis";
-import { emit } from "process";
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2022-08-01",
+  apiVersion: "2022-11-15",
   typescript: true,
 });
 

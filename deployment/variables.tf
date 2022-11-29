@@ -131,3 +131,19 @@ variable "proton_dmarc"{
   type = string
   sensitive =true
 }
+variable "git_credentials" {
+  type = string
+  sensitive = true
+  
+}
+
+variable "fly_token" {
+  type = string
+  sensitive = true
+  
+}
+
+variable "fly_org" {
+  type = string
+  default = "personal"  
+}

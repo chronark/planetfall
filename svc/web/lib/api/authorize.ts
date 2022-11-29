@@ -2,7 +2,7 @@ import { ApiError } from "./error";
 import { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@planetfall/db";
 import { Role } from "@chronark/access";
-import { hashToken, roles, Statements } from "@planetfall/auth";
+import { hashToken, roles, Statements } from "lib/auth";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 

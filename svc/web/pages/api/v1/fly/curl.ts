@@ -17,6 +17,7 @@ const input = z.object({
 		url: z.string().url(),
 		regionIds: z.array(z.string()).min(1),
 		repeat: z.boolean().optional(),
+		headers: z.record(z.string()).optional(),
 	}),
 });
 
@@ -91,17 +92,21 @@ export default async function handler(
 						message: `regionId: ${regionId} not found`,
 					});
 				}
-
+				const headers = new Headers({
+					"Content-Type": "application/json",
+				});
+				if (region.platform === "fly") {
+					headers.set("Fly-Prefer-Region", region.region);
+				}
 				const res = await fetch(region.url, {
 					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
+					headers,
 					body: JSON.stringify({
 						url: request.data.body.url,
 						method: request.data.body.method,
 						timeout: 2000,
 						checks: request.data.body.repeat ? 2 : 1,
+						headers: request.data.body.headers,
 					}),
 				});
 				if (res.status !== 200) {
@@ -132,6 +137,7 @@ export default async function handler(
 						transferDone: number;
 					};
 				}[];
+				console.log({ region, checks });
 
 				return {
 					id: region.id,

@@ -1,13 +1,13 @@
-# fly.toml file generated for planetfall-ping-fra on 2022-11-21T21:01:31+01:00
+# fly.toml file generated for planetfall-ping-fra-tf on 2022-11-27T14:01:23+01:00
 
-app = "planetfall-ping-fra"
+app = "planetfall-ping-fra-tf"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
 [build]
-  builder = "paketobuildpacks/builder:base"
-  buildpacks = ["gcr.io/paketo-buildpacks/go"]
+  [build.args]
+    NEXT_PUBLIC_EXAMPLE = "Value goes here"
 
 [env]
   PORT = "8080"

@@ -3,7 +3,7 @@ import baseX from "base-x";
 
 const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
-export async function newApiToken(): Promise<{ token: string; hash: string }> {
+export function newApiToken(): { token: string; hash: string } {
 	const buf = new Uint8Array(32);
 	crypto.getRandomValues(buf);
 	const token = ["api", baseX(alphabet).encode(buf)].join("_");

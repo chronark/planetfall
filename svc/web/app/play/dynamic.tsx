@@ -7,23 +7,17 @@ import { useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import * as checkApi from "pages/api/v1/checks";
 import * as shareApi from "pages/api/v1/play/share";
-import { BarChart } from "@tremor/react";
-import { Trace } from "@/components/trace";
-import { Stats } from "@/components/stats";
-import * as Tabs from "@radix-ui/react-tabs";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import * as Dialog from "@radix-ui/react-alert-dialog";
 import { Transition } from "@headlessui/react";
 import classNames from "classnames";
 import { Button } from "@/components/button";
-import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { Chart } from "./[shareId]/chart";
 import { Table } from "./[shareId]/table";
 import { Details } from "./[shareId]/details";
-
+import { trpc } from "lib/utils/trpc";
 type FormData = {
 	url: string;
 	method: string;
@@ -53,19 +47,13 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [shareIsLoading, setShareLoading] = useState(false);
 	const searchParams = useSearchParams();
-	const [checks, setChecks] = useState<checkApi.Output["data"]>(undefined);
+	const [checks, setChecks] = useState<any>(undefined);
 	const [shareId, setShareId] = useState<string | null>(null);
 
-	async function runCheck(input: checkApi.Input["body"]): Promise<void> {
+	async function runCheck(input: any): Promise<void> {
 		setIsLoading(true);
-		const res = await fetch("/api/v1/play", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(input),
-		});
-		setChecks(((await res.json()) as checkApi.Output).data);
+
+		setChecks(await trpc.play.check.mutate(input));
 		setIsLoading(false);
 	}
 
@@ -266,7 +254,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 							{checks.length >= 2 ? (
 								<>
 									<Heading h3={true}>Latency per Region</Heading>
-									<Chart checks={checks} />
+									<Chart regions={checks} />
 								</>
 							) : null}
 							{checks.length >= 2 ? <Table checks={checks} /> : null}
@@ -278,7 +266,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 									/>
 								) : null}
 
-								<Details checks={checks} />
+								<Details regions={checks} />
 							</div>
 						</div>
 					) : null}
@@ -430,9 +418,6 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 															>
 																<span className="px-2 py-1 lg:px-4">
 																	{r.name}
-																</span>
-																<span className="inline-flex items-center justify-center w-1/5 h-full px-2 text-xs uppercase border-l bg-zinc-50 border-zinc-300">
-																	{r.platform}
 																</span>
 															</button>
 														))}

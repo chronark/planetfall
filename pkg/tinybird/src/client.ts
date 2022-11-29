@@ -24,7 +24,7 @@ export class Client {
 		const res = await fetch(url.toString(), {
 			method: "POST",
 			body,
-			headers: { Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}` },
+			headers: { Authorization: `Bearer ${this.token}` },
 		});
 		if (!res.ok) {
 			throw new Error(await res.text());
@@ -44,7 +44,7 @@ export class Client {
 		);
 		url.searchParams.set("endpointId", endpointId);
 		const res = await fetch(url.toString(), {
-			headers: { Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}` },
+			headers: { Authorization: `Bearer ${this.token}` },
 		});
 		if (!res.ok) {
 			throw new Error(await res.text());
@@ -68,7 +68,7 @@ export class Client {
 		const url = new URL("/v0/pipes/check_by_id.json", this.baseUrl);
 		url.searchParams.set("checkId", checkId);
 		const res = await fetch(url.toString(), {
-			headers: { Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}` },
+			headers: { Authorization: `Bearer ${this.token}` },
 		});
 		if (!res.ok) {
 			throw new Error(await res.text());
@@ -96,7 +96,7 @@ export class Client {
 			url.searchParams.set("errorsOnly", "true");
 		}
 		const res = await fetch(url.toString(), {
-			headers: { Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}` },
+			headers: { Authorization: `Bearer ${this.token}` },
 		});
 		if (!res.ok) {
 			throw new Error(await res.text());

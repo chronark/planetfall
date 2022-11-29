@@ -5,13 +5,19 @@ import * as checkApi from "pages/api/v1/checks";
 import { BarChart } from "@tremor/react";
 
 type Props = {
-	checks: checkApi.Output["data"];
+	regions: {
+		region: { name: string };
+		checks: {
+			time: number;
+			latency?: number;
+		}[];
+	}[];
 };
 
-export const Chart: React.FC<Props> = ({ checks }) => {
+export const Chart: React.FC<Props> = ({ regions }) => {
 	return (
 		<BarChart
-			data={checks!.map((r) => {
+			data={regions!.map((r) => {
 				const x: Record<string, string | number> = {
 					region: r.region.name,
 				};
@@ -26,7 +32,7 @@ export const Chart: React.FC<Props> = ({ checks }) => {
 			})}
 			dataKey="region"
 			categories={
-				checks && checks.length > 0 && checks[0].checks.length > 1
+				regions && regions.length > 0 && regions[0].checks.length > 1
 					? ["Cold", "Hot"]
 					: ["Latency"]
 			}

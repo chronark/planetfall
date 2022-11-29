@@ -18,7 +18,7 @@ export class Billing {
 		logger.info("Billing enabled");
 		this.stripe = new Stripe(stripeSecretKey, {
 			typescript: true,
-			apiVersion: "2022-08-01",
+			apiVersion: "2022-11-15",
 		});
 		this.db = db;
 		this.logger = logger;

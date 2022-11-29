@@ -49,6 +49,7 @@ const input = z.object({
 		),
 	}),
 });
+
 export type Input = z.infer<typeof input>;
 export type Output = ApiResponse<{
 	id: string;

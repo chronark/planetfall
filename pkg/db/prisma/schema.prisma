@@ -151,7 +151,7 @@ model Region {
   region   String
 
   // Url where the lambda function for this region is reachable
-  url       String     @unique
+  url       String     
   endpoints Endpoint[]
 
   @@unique([platform, region])

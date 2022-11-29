@@ -65,7 +65,7 @@ func Ping(ctx context.Context, req Request) ([]Response, error) {
 }
 
 func check(ctx context.Context, input Request) (Response, error) {
-	log.Printf("Checking [%s] %s\n", input.Method, input.Url)
+	log.Printf("Checking [%s] %s: %#v\n", input.Method, input.Url, input)
 
 	now := time.Now()
 	timing := Timing{}
@@ -95,11 +95,13 @@ func check(ctx context.Context, input Request) (Response, error) {
 
 	req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
 
-
 	log.Printf("Request: %#v\n", req)
+	t := &http.Transport{}
+
+	defer t.CloseIdleConnections()
 	client := &http.Client{
-		Transport: &http.Transport{},
-		Timeout: time.Duration(input.Timeout) * time.Millisecond,
+		Transport: t,
+		Timeout:   time.Duration(input.Timeout) * time.Millisecond,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			// Do not follow redirects
 			return http.ErrUseLastResponse

@@ -1,21 +1,31 @@
 "use client";
 
 import React from "react";
-import * as checkApi from "pages/api/v1/checks";
 import * as Tabs from "@radix-ui/react-tabs";
 import { Heading } from "@/components/heading";
 import { Stats } from "@/components/stats";
-import { Trace } from "@/components/trace";
+
+import { Trace, Timings } from "@/components/trace";
 
 type Props = {
-	checks: checkApi.Output["data"];
+	regions: {
+		region: { name: string; id: string };
+		checks: {
+			status: number;
+			time: number;
+			latency?: number;
+			timing: Timings;
+			headers: Record<string, string>;
+			body: string;
+		}[];
+	}[];
 };
 
-export const Details: React.FC<Props> = ({ checks }) => {
+export const Details: React.FC<Props> = ({ regions }) => {
 	return (
-		<Tabs.Root defaultValue={checks![0].region.id}>
+		<Tabs.Root defaultValue={regions![0].region.id}>
 			<Tabs.List className="flex items-center justify-center space-x-4">
-				{checks?.map((r) => (
+				{regions?.map((r) => (
 					<Tabs.Trigger
 						key={r.region.id}
 						value={r.region.id}
@@ -25,7 +35,7 @@ export const Details: React.FC<Props> = ({ checks }) => {
 					</Tabs.Trigger>
 				))}
 			</Tabs.List>
-			{checks?.map((r) => (
+			{regions?.map((r) => (
 				<Tabs.Content
 					key={r.region.id}
 					value={r.region.id}

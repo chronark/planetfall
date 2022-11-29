@@ -5,3 +5,4 @@ export * from "./error";
 export * from "./middleware";
 export * from "./response";
 export * from "./validate";
+export * from "./rpc";

@@ -77,7 +77,7 @@ export default async function Share(props: { params: { shareId: string } }) {
 					{checks.length >= 2 ? (
 						<>
 							<Heading h3={true}>Latency per Region</Heading>
-							<Chart checks={checks} />
+							<Chart regions={checks} />
 						</>
 					) : null}
 					{checks.length >= 2 ? <Table checks={checks} /> : null}
@@ -89,7 +89,7 @@ export default async function Share(props: { params: { shareId: string } }) {
 							/>
 						) : null}
 
-						<Details checks={checks} />
+						<Details regions={checks} />
 					</div>
 				</div>
 			</div>

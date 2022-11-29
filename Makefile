@@ -1,6 +1,8 @@
 VERSION := $(shell git describe --tags --always)
-SCHEDULER_TAG := chronark/planetfall-scheduler:${VERSION}
-PINGER_TAG := chronark/planetfall-pinger:${VERSION}
+SCHEDULER_IMAGE := chronark/planetfall-scheduler
+SCHEDULER_TAG := ${SCHEDULER_IMAGE}:${VERSION}
+PINGER_IMAGE := chronark/planetfall-pinger
+PINGER_TAG := ${PINGER_IMAGE}:${VERSION}
 
 rm:
 	rm -rf ./**/node_modules; rm -rf ./**/dist; rm -rf ./**/.next; rm -rf ./**/.turbo
@@ -16,34 +18,39 @@ build-proxy:
 	rm -rf dist && \
 	go mod tidy && \
 	go build -o ./dist/cmd/aws/main ./cmd/aws/main.go 
-	# zip ./dist/cmd/aws/function.zip ./dist/cmd/aws/main
 
-deploy: 
+deploy: build-proxy
+	$(MAKE) build-fly-ping
+	$(MAKE) build-scheduler
 	terraform -chdir=deployment init -upgrade
 	terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
-	$(MAKE) build-fly-ping
-	flyctl -c ./svc/proxy/fly-ams.toml deploy --image ${PINGER_TAG}
-	flyctl -c ./svc/proxy/fly-fra.toml deploy --image ${PINGER_TAG}
-	# $(MAKE) build-scheduler
-	flyctl -c ./svc/scheduler/fly.toml deploy --dockerfile=./svc/scheduler/Dockerfile --push
+
+	
+	flyctl deploy --app=planetfall-pinger --image=${PINGER_TAG}
+	flyctl deploy --app=planetfall-scheduler --image=${SCHEDULER_TAG}
 
 
 build-scheduler:
 	docker build \
 	 	--platform=linux/amd64 \
 		-t ${SCHEDULER_TAG} \
+		-t ${SCHEDULER_IMAGE}:latest \
 		-f svc/scheduler/Dockerfile \
 		.
 	docker push ${SCHEDULER_TAG}
+	docker push ${SCHEDULER_IMAGE}:latest
 
 
 build-fly-ping:
 	docker build \
 	 	--platform=linux/amd64 \
 		-t ${PINGER_TAG} \
+		-t ${PINGER_IMAGE}:latest \
 		-f svc/proxy/Dockerfile.fly \
 		.
 	docker push ${PINGER_TAG}
+	docker push ${PINGER_IMAGE}:latest
+
 
 
 dev: rm build

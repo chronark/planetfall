@@ -20,9 +20,9 @@ export default async function Share(props: { params: { shareId: string } }) {
 	}
 
 	const { url, time } = res;
-	const regions = res.regions.sort(
-		(a, b) => (b.checks[0].latency ?? 0) - (a.checks[0].latency ?? 0),
-	);
+	const regions = res.regions
+		.filter((r) => r.checks.length > 0)
+		.sort((a, b) => (b.checks[0].latency ?? 0) - (a.checks[0].latency ?? 0));
 	return (
 		<>
 			<header className="fixed top-0 z-50 w-full backdrop-blur">
@@ -76,7 +76,7 @@ export default async function Share(props: { params: { shareId: string } }) {
 				<div className="pb-32 mb-32 space-y-4 border-b md:space-y-8 lg:space-y-16">
 					<PageHeader
 						title={url}
-						description={new Date(time).toLocaleDateString()}
+						description={new Date(time).toLocaleString()}
 					/>
 
 					{regions.length >= 2 ? (

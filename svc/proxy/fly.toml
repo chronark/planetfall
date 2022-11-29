@@ -1,12 +1,11 @@
-# fly.toml file generated for planetfall-ping-ams on 2022-11-21T11:52:06+01:00
+# fly.toml file generated for planetfall-pinger on 2022-11-27T17:16:42+01:00
 
-app = "planetfall-ping-ams"
+app = "planetfall-pinger"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
 [env]
-  PORT = "8080"
 
 [experimental]
   allowed_public_ports = []
@@ -37,3 +36,5 @@ processes = []
     interval = "15s"
     restart_limit = 0
     timeout = "2s"
+
+

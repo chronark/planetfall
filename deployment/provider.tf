@@ -8,11 +8,11 @@ terraform {
       source  = "upstash/upstash"
       version = ">=1.2.1"
     }
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">=4.39.0"
+    fly = {
+      source  = "fly-apps/fly"
+      version = ">=0.0.20"
     }
-    
+
   }
 }
 
@@ -28,4 +28,11 @@ provider "upstash" {
 
 provider "vercel" {
   api_token = var.vercel_token
+}
+
+provider "fly" {
+  fly_api_token        = var.fly_token
+  useinternaltunnel    = true
+  internaltunnelorg    = "personal"
+  internaltunnelregion = "fra"
 }

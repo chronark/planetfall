@@ -25,12 +25,12 @@ export const Chart: React.FC<Props> = ({ regions }) => {
 					{
 						region: r.name,
 						type: "Cold",
-						latency: r.checks[0].latency,
+						latency: r.checks[0]?.latency ?? -1,
 					},
 					{
 						region: r.name,
 						type: "Hot",
-						latency: r.checks[1].latency,
+						latency: r.checks[1]?.latency ?? -1,
 					},
 				])}
 				isGroup={true}
@@ -48,7 +48,6 @@ export const Chart: React.FC<Props> = ({ regions }) => {
 			/>
 		);
 	} else {
-		console.log(regions);
 		return (
 			<Column
 				{...defaultStyle}

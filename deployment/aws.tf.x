@@ -563,3 +563,82 @@ module "pinger_eu_south_1" {
     aws = aws.eu_south_1
   }
 }
+
+
+
+#############################
+# ap-south-2
+#############################
+
+provider "aws" {
+  region = "ap-south-2"
+  alias  = "ap_south_2"
+}
+
+module "pinger_ap_south_2" {
+  source = "./pinger"
+  zip = {
+    path = data.archive_file.function_archive.output_path
+    hash = data.archive_file.function_archive.output_base64sha256
+  }
+  region      = "ap-south-2"
+  environment = "production"
+  providers = {
+    aws = aws.ap_south_2
+  }
+}
+
+
+
+
+
+#############################
+# eu-south-2
+#############################
+
+provider "aws" {
+  region = "eu-south-2"
+  alias  = "eu_south_2"
+}
+
+module "pinger_eu_south_2" {
+  source = "./pinger"
+  zip = {
+    path = data.archive_file.function_archive.output_path
+    hash = data.archive_file.function_archive.output_base64sha256
+  }
+  region      = "eu-south-2"
+  environment = "production"
+  providers = {
+    aws = aws.eu_south_2
+  }
+}
+
+
+
+
+#############################
+# eu-central-2
+#############################
+
+provider "aws" {
+  region = "eu-central-2"
+  alias  = "eu_central"
+}
+
+module "pinger_eu_central" {
+  source = "./pinger"
+  zip = {
+    path = data.archive_file.function_archive.output_path
+    hash = data.archive_file.function_archive.output_base64sha256
+  }
+  region      = "eu-central-2"
+  environment = "production"
+  providers = {
+    aws = aws.eu_central
+  }
+}
+
+
+
+

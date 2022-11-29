@@ -8,11 +8,7 @@ const nextConfig = {
 	},
 	experimental: {
 		appDir: true,
-		serverComponentsExternalPackages: [
-			"@planetfall/db",
-			"@prisma/client",
-			"@shopify/polaris-viz",
-		],
+		serverComponentsExternalPackages: ["@planetfall/db", "@prisma/client"],
 	},
 };
 
