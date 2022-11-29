@@ -20,7 +20,7 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 	const columns = [
 		accessor("time", {
 			header: "Time",
-			cell: (info) => info.getValue()?.toLocaleString(),
+			cell: (info) => new Date(info.getValue()).toLocaleString(),
 		}),
 
 		accessor("status", {

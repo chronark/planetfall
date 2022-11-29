@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import cn from "classnames";
 import React, { PropsWithChildren } from "react";
 
@@ -45,7 +46,7 @@ export const Heading: React.FC<PropsWithChildren<HeadingProps>> = ({
 	const wrapper = React.createElement(
 		heading,
 		{
-			className: cn(
+			className: classNames(
 				"text-zinc-900 text-left",
 				{
 					"text-6xl font-black": heading === "h1",

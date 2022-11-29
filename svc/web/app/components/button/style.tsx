@@ -3,6 +3,7 @@ import React from "react";
 
 import cn from "classnames";
 import { Size } from "app/components/types";
+import classNames from "classnames";
 
 export type ButtonType = "primary" | "secondary" | "tertiary" | "alert";
 
@@ -36,7 +37,7 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
 }): JSX.Element => {
 	return (
 		<div
-			className={cn(
+			className={classNames(
 				/**
 				 * Common for all variations
 				 */
@@ -82,7 +83,7 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
 		>
 			{iconLeft ? (
 				<span
-					className={cn({
+					className={classNames({
 						"w-4 h-4 mr-1": size === "sm" || size === "xs",
 						"w-5 h-5 mr-2": size === "md",
 						"w-6 h-6 mr-3": size === "lg",
@@ -98,7 +99,7 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
 				</div>
 			) : icon ? (
 				<span
-					className={cn({
+					className={classNames({
 						"w-6 h-6": size === "sm" || size === "xs",
 						"w-8 h-8": size === "md",
 						"opacity-0": loading,
@@ -107,10 +108,10 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
 					{icon}
 				</span>
 			) : null}
-			<div className={cn({ "opacity-0": loading })}>{children}</div>
+			<div className={classNames({ "opacity-0": loading })}>{children}</div>
 			{iconRight ? (
 				<span
-					className={cn({
+					className={classNames({
 						"w-4 h-4 ml-1": size === "sm" || size === "xs",
 						"w-5 h-5 ml-2": size === "md",
 					})}

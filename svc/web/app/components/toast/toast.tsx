@@ -1,6 +1,6 @@
 "use client";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import cn from "classnames";
+import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { describe } from "node:test";
 import React, { useEffect, useState } from "react";
@@ -51,7 +51,7 @@ export const Toast: React.FC<ToastProps> = ({
 					exit={{ opacity: 0, y: 20, scale: 0.7 }}
 					transition={{ type: "spring", stiffness: 500, damping: 50, mass: 1 }}
 					role={type}
-					className={cn(
+					className={classNames(
 						"flex space-x-4 items-start relative px-6 py-4 rounded shadow-lg max-w-md border",
 						{
 							"text-black bg-white  border-zinc-500": type === "info",

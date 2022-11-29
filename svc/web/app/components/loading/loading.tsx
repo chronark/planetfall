@@ -1,5 +1,5 @@
 import { Size } from "app/components/types";
-import cn from "classnames";
+import classNames from "classnames";
 import React from "react";
 export interface LoadingProps {
 	size?: Size;
@@ -21,7 +21,7 @@ export const Loading: React.FC<LoadingProps> = ({
 }): JSX.Element => {
 	return (
 		<div
-			className={cn(
+			className={classNames(
 				"flex items-center justify-center w-full h-full animate-pulse",
 				bg,
 				{
@@ -35,7 +35,7 @@ export const Loading: React.FC<LoadingProps> = ({
 				height="105"
 				viewBox="0 0 105 105"
 				xmlns="http://www.w3.org/2000/svg"
-				className={cn(" fill-current", {
+				className={classNames(" fill-current", {
 					"w-3 h-3": size === "xs",
 					"w-4 h-4": size === "sm",
 					"w-5 h-5": size === "md",

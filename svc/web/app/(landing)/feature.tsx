@@ -19,7 +19,7 @@ const featureVariants = {
 		opacity: 1,
 		scale: 1,
 		y: 0,
-		transition: { duration: 2, staggerChildren: 0.3, delayChildren: 1 },
+		transition: { duration: 2, staggerChildren: 0.3, delayChildren: 0.25 },
 	},
 	hidden: { opacity: 0, scale: 0.9, y: "10%" },
 };
@@ -102,7 +102,8 @@ export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 								key={b.title}
 								className="group from-zinc-600/50 to-transparent drop-shadow-feature"
 							>
-								<div
+								<motion.div
+									variants={i % 2 === 0 ? slideRight : slideLeft}
 									className={classNames(
 										"absolute w-full group-hover:w-2/3  h-px -top-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0 transition-all duration-1000",
 										{
@@ -113,7 +114,8 @@ export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 										},
 									)}
 								/>
-								<div
+								<motion.div
+									variants={i % 2 === 0 ? slideLeft : slideRight}
 									className={classNames(
 										"absolute w-full group-hover:w-2/3 h-px -bottom-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0 transition-all duration-1000",
 										{

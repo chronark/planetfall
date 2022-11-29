@@ -1,6 +1,6 @@
 import { Size } from "../types";
-import cn from "classnames";
 import React, { PropsWithChildren } from "react";
+import classNames from "classnames";
 
 export interface TextProps {
 	size?: Size | "2xl" | "3xl";
@@ -47,7 +47,7 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
 }): JSX.Element => {
 	return (
 		<span
-			className={cn(
+			className={classNames(
 				{
 					"text-xs": size === "xs",
 					"text-sm": size === "sm",

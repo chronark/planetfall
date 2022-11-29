@@ -50,8 +50,8 @@ resource "fly_machine" "pinger" {
   image    = var.pinger_image
 
   cpus     = 1
-  cputype  = "performance"
-  memorymb = 2048
+  cputype  = "shared"
+  memorymb = 1024
   services = [
     {
       ports = [
