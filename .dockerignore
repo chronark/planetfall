@@ -1,7 +1,9 @@
-Dockerfile
-.dockerignore
+.env*
 node_modules
-npm-debug.log
-README.md
 .next
-.git
+.turbo
+dist
+.tfvars
+*.tfstate
+.terraform
+.tinyb
