@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/components/button";
-import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import {
 	createColumnHelper,
 	flexRender,
@@ -10,48 +8,10 @@ import {
 } from "@tanstack/react-table";
 import { Legend } from "@tremor/react";
 import classNames from "classnames";
-import { usePathname } from "next/navigation";
-
-type Endpoint = {
-	id: string;
-	name: string | null;
-	url: string;
-	stats: {
-		count: number;
-		min: number;
-		max: number;
-		p50: number;
-		p95: number;
-		p99: number;
-	} | null;
-};
-
-type Check = {
-	region: {
-		id: string;
-		name: string;
-	};
-	checks: {
-		id: string;
-		latency?: number;
-		status?: number;
-		timing: {
-			dnsStart: number;
-			dnsDone: number;
-			connectStart: number;
-			connectDone: number;
-			firstByteStart: number;
-			firstByteDone: number;
-			tlsHandshakeStart: number;
-			tlsHandshakeDone: number;
-			transferStart: number;
-			transferDone: number;
-		};
-	}[];
-};
+import { PlayChecks } from "lib/server/routers/play";
 
 type Props = {
-	checks: Check[];
+	regions: PlayChecks["regions"];
 };
 
 const Cell: React.FC<{ value: (number | string | undefined)[] }> = ({
@@ -69,7 +29,7 @@ const Cell: React.FC<{ value: (number | string | undefined)[] }> = ({
 	}
 };
 
-export const Table: React.FC<Props> = ({ checks }) => {
+export const Table: React.FC<Props> = ({ regions }) => {
 	const fmt = (n: number | undefined) => {
 		if (n === undefined) {
 			return "N/A";
@@ -79,28 +39,28 @@ export const Table: React.FC<Props> = ({ checks }) => {
 		)} ms`;
 	};
 
-	const data = checks.map((check) => ({
-		region: check.region,
-		latency: check.checks.map((c) => fmt(c.latency)),
-		status: check.checks.map((c) => c.status),
-		dns: check.checks.map((c) => fmt(c.timing.dnsDone - c.timing.dnsStart)),
-		connect: check.checks.map((c) =>
+	const data = regions.map((r) => ({
+		name: r.name,
+		latency: r.checks.map((c) => fmt(c.latency)),
+		status: r.checks.map((c) => c.status),
+		dns: r.checks.map((c) => fmt(c.timing.dnsDone - c.timing.dnsStart)),
+		connect: r.checks.map((c) =>
 			fmt(c.timing.connectDone - c.timing.connectStart),
 		),
-		tls: check.checks.map((c) =>
+		tls: r.checks.map((c) =>
 			fmt(c.timing.tlsHandshakeDone - c.timing.tlsHandshakeStart),
 		),
-		ttfb: check.checks.map((c) =>
+		ttfb: r.checks.map((c) =>
 			fmt(c.timing.firstByteDone - c.timing.firstByteStart),
 		),
-		total: check.checks.map((c) => fmt(c.latency)),
+		total: r.checks.map((c) => fmt(c.latency)),
 	}));
 	const { accessor } = createColumnHelper<typeof data[0]>();
 
 	let columns = [
-		accessor("region", {
+		accessor("name", {
 			header: "Region",
-			cell: (info) => info.getValue().name,
+			cell: (info) => info.getValue(),
 		}),
 
 		accessor("status", {
@@ -162,7 +122,7 @@ export const Table: React.FC<Props> = ({ checks }) => {
 				className="min-w-full border-separate"
 				style={{ borderSpacing: 0 }}
 			>
-				<thead>
+				<thead className="sticky">
 					{table.getHeaderGroups().map((headerGroup) => (
 						<tr key={headerGroup.id}>
 							{headerGroup.headers.map((header, i) => (
@@ -172,8 +132,9 @@ export const Table: React.FC<Props> = ({ checks }) => {
 										"sticky px-4 bg-white z-10  border-t border-b border-zinc-400  py-3.5  text-sm font-semibold text-zinc-900",
 										{
 											"text-left":
-												checks[0].checks.length > 1 ? i <= 1 : i === 0,
-											"text-right": checks[0].checks.length > 1 ? i > 1 : i > 0,
+												regions[0].checks.length > 1 ? i <= 1 : i === 0,
+											"text-right":
+												regions[0].checks.length > 1 ? i > 1 : i > 0,
 											"rounded-l border-l": i === 0,
 											"rounded-r border-r ":
 												i + 1 === headerGroup.headers.length,

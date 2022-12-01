@@ -8,19 +8,23 @@ import type { Input } from "pages/api/v1/play/share";
 import { Chart } from "./chart";
 import { Table } from "./table";
 import { Details } from "./details";
+import { PlayChecks } from "lib/server/routers/play";
 
 export const revalidate = 60;
 
 const redis = Redis.fromEnv();
 export default async function Share(props: { params: { shareId: string } }) {
-	const res = await redis.get<Input["body"]>(
+	const res = await redis.get<PlayChecks>(
 		["play", props.params.shareId].join(":"),
 	);
 	if (!res) {
 		return notFound();
 	}
 
-	const { checks, url } = res;
+	const { url, time } = res;
+	const regions = res.regions
+		.filter((r) => r.checks.length > 0)
+		.sort((a, b) => (b.checks[0].latency ?? 0) - (a.checks[0].latency ?? 0));
 	return (
 		<>
 			<header className="fixed top-0 z-50 w-full backdrop-blur">
@@ -70,26 +74,24 @@ export default async function Share(props: { params: { shareId: string } }) {
 					</div>
 				</div>
 			</header>
-			<div className="container min-h-screen pb-20 mx-auto mt-24 -pt-24">
+			<div className="container relative min-h-screen pb-20 mx-auto mt-24 -pt-24">
 				<div className="pb-32 mb-32 space-y-4 border-b md:space-y-8 lg:space-y-16">
-					<PageHeader title={url} />
+					<PageHeader
+						title={url}
+						description={new Date(time).toLocaleString()}
+					/>
 
-					{checks.length >= 2 ? (
+					{regions.length >= 2 ? (
 						<>
 							<Heading h3={true}>Latency per Region</Heading>
-							<Chart regions={checks} />
+							<div className="h-80">
+								<Chart regions={regions} />
+							</div>
 						</>
 					) : null}
-					{checks.length >= 2 ? <Table checks={checks} /> : null}
+					{regions.length >= 2 ? <Table regions={regions} /> : null}
 					<div>
-						{checks.length >= 2 ? (
-							<PageHeader
-								title="Details"
-								description="A detailed breakdown by region, including the response and a latency trace"
-							/>
-						) : null}
-
-						<Details regions={checks} />
+						{regions.length >= 2 ? <Details regions={regions} /> : null}
 					</div>
 				</div>
 			</div>

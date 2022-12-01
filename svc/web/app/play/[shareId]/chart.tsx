@@ -1,43 +1,82 @@
 "use client";
 
 import React from "react";
-import * as checkApi from "pages/api/v1/checks";
-import { BarChart } from "@tremor/react";
+import { Column } from "@ant-design/plots";
+import { PlayChecks } from "lib/server/routers/play";
 
 type Props = {
-	regions: {
-		region: { name: string };
-		checks: {
-			time: number;
-			latency?: number;
-		}[];
-	}[];
+	regions: PlayChecks["regions"];
 };
 
+const defaultStyle = {
+	columnStyle: {
+		radius: [2, 2, 0, 0],
+	},
+};
 export const Chart: React.FC<Props> = ({ regions }) => {
-	return (
-		<BarChart
-			data={regions!.map((r) => {
-				const x: Record<string, string | number> = {
-					region: r.region.name,
-				};
-				if (r.checks.length > 1) {
-					r.checks = r.checks.sort((a, b) => a.time - b.time);
-					x.Cold = r.checks[0].latency!;
-					x.Hot = r.checks[1].latency!;
-				} else {
-					x.Latency = r.checks[0].latency!;
-				}
-				return x;
-			})}
-			dataKey="region"
-			categories={
-				regions && regions.length > 0 && regions[0].checks.length > 1
-					? ["Cold", "Hot"]
-					: ["Latency"]
-			}
-			colors={["blue", "red"]}
-			valueFormatter={(n: number) => `${n.toLocaleString()} ms`}
-		/>
-	);
+	if (regions[0].checks.length > 1) {
+		return (
+			<Column
+				{...defaultStyle}
+				data={regions
+
+				.flatMap((r) => [
+					{
+						region: r.name,
+						type: "Cold",
+						latency: r.checks[0]?.latency ?? -1,
+					},
+					{
+						region: r.name,
+						type: "Hot",
+						latency: r.checks[1]?.latency ?? -1,
+					},
+				])}
+				isGroup={true}
+				seriesField="type"
+				xField="region"
+				yField="latency"
+				xAxis={{
+					title: { text: "Regions" },
+				}}
+				yAxis={{
+					maxTickCount: 3,
+					title: { text: "Latency (ms)" },
+				}}
+				color={["#3b82f6", "#ef4444"]}
+			/>
+		);
+	} else {
+		return (
+			<Column
+				{...defaultStyle}
+				data={regions.map((r) => ({
+					region: r.name,
+					Latency: r.checks[0].latency!,
+				}))}
+				xField="region"
+				yField="Latency"
+				color={["#3366FF"]}
+				seriesField="region"
+				legend={false}
+				xAxis={{
+					title: { text: "Regions" },
+					label: {
+						autoRotate: true,
+					},
+				}}
+				yAxis={{
+					maxTickCount: 3,
+
+					title: { text: "Latency (ms)" },
+				}}
+				tooltip={{
+					formatter: (datum) => ({
+						name: datum.region,
+						value: `${datum.Latency} ms`,
+					}),
+				}}
+			/>
+		);
+	}
 };

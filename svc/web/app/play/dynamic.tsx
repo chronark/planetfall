@@ -4,26 +4,21 @@ import { Loading } from "@/components/loading";
 import { PageHeader } from "@/components/page";
 import type { Region } from "@planetfall/db";
 import { useSearchParams } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import * as shareApi from "pages/api/v1/play/share";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import * as Dialog from "@radix-ui/react-alert-dialog";
-import { Transition } from "@headlessui/react";
-import classNames from "classnames";
-import { Button } from "@/components/button";
 import { Chart } from "./[shareId]/chart";
 import { Table } from "./[shareId]/table";
 import { Details } from "./[shareId]/details";
 import { trpc } from "lib/utils/trpc";
+import { useRouter } from "next/navigation";
+
 type FormData = {
 	url: string;
 	method: string;
 	regions: string[];
-
-	// "true" |"false"
 	repeat: string;
 };
 
@@ -38,97 +33,37 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 		handleSubmit,
 		setError,
 		setValue,
-		getValues,
 	} = useForm<FormData>({ reValidateMode: "onSubmit" });
-
-	const [copied, setCopied] = useState(false);
 
 	const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
-	const [shareIsLoading, setShareLoading] = useState(false);
 	const searchParams = useSearchParams();
-	const [checks, setChecks] = useState<any>(undefined);
-	const [shareId, setShareId] = useState<string | null>(null);
-
-	async function runCheck(input: any): Promise<void> {
-		setIsLoading(true);
-
-		setChecks(await trpc.play.check.mutate(input));
-		setIsLoading(false);
-	}
-
-	async function share(): Promise<void> {
-		// setShareLoading(true);
-
-		const res = await fetch("/api/v1/play/share", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ url: getValues().url, checks }),
-		});
-		const { data, error } = (await res.json()) as shareApi.Output;
-		if (error) {
-			alert(error);
-		}
-		setShareId(data!.id);
-		setShareLoading(false);
-	}
+	const router = useRouter();
 
 	async function submit(data: FormData) {
 		if (selectedRegions.length === 0) {
 			setError("regions", { message: "Select at least 1 region" });
 		}
-		await runCheck({
+		setIsLoading(true);
+		const res = await trpc.play.check.mutate({
 			url: data.url,
 			method: data.method as any,
 			regionIds: selectedRegions,
 			repeat: data.repeat === "true",
 		});
+		router.push(`/play/${res.shareId}`);
+		setIsLoading(false);
 	}
-
-	const method = searchParams.get("method");
-	const url = searchParams.get("url");
-	const regions = searchParams.get("regions");
-	const repeat = searchParams.get("repeat");
-	useEffect(() => {
-		let params = 0;
-
-		if (method && typeof method === "string") {
-			setValue("method", method.toUpperCase());
-			params++;
-		}
-		if (url && typeof url === "string") {
-			setValue("url", url);
-			params++;
-		}
-		if (regions && typeof regions === "string") {
-			setSelectedRegions(regions.split(","));
-			params++;
-		}
-		if (repeat === "true") {
-			setValue("repeat", "true");
-		}
-
-		if (params === 3) {
-			runCheck({
-				url: url!,
-				method: method as any,
-				regionIds: regions!.split(","),
-				repeat: repeat === "true",
-			});
-		}
-	}, [method, url, regions, repeat]);
 
 	return (
 		<>
-			<Dialog.Root
-				open={!!shareId}
+			{/* <Dialog.Root
+				open={!!shareUrl}
 				onOpenChange={() => {
-					setShareId(null);
+					setShareUrl(null);
 				}}
 			>
-				<Transition.Root show={!!shareId}>
+				<Transition.Root show={!!shareUrl}>
 					<Transition.Child
 						as={Fragment}
 						enter="ease-out duration-300"
@@ -167,10 +102,10 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 							</Dialog.Title>
 							<Dialog.Description className="p-4">
 								<Link
-									href={`https://planetfall.io/play/${shareId}`}
+									href={shareUrl ?? ""}
 									className="flex justify-center px-2 py-1 rounded hover:bg-zinc-50 bg-zinc-100 text-zinc-700 ring-1 ring-zinc-900"
 								>
-									{`https://planetfall.io/play/${shareId}`}
+									{shareUrl}
 								</Link>
 							</Dialog.Description>
 
@@ -182,7 +117,7 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 						</Dialog.Content>
 					</Transition.Child>
 				</Transition.Root>
-			</Dialog.Root>
+			</Dialog.Root> */}
 			<form onSubmit={handleSubmit(submit)}>
 				<header className="fixed top-0 z-50 w-full backdrop-blur">
 					<div className="container mx-auto">
@@ -228,48 +163,12 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 											{isLoading ? <Loading /> : "Check"}
 										</button>
 									</li>
-									{checks ? (
-										<li>
-											<button
-												key="share"
-												type="button"
-												disabled={shareIsLoading}
-												onClick={() => share()}
-												className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
-											>
-												{shareIsLoading ? <Loading /> : "Share"}
-											</button>
-										</li>
-									) : null}
 								</ul>
 							</nav>
 						</div>
 					</div>
 				</header>
 				<div className="container min-h-screen pb-20 mx-auto mt-24 -pt-24">
-					{checks ? (
-						<div className="pb-32 mb-32 space-y-4 border-b md:space-y-8 lg:space-y-16">
-							<PageHeader title={url ?? ""} />
-
-							{checks.length >= 2 ? (
-								<>
-									<Heading h3={true}>Latency per Region</Heading>
-									<Chart regions={checks} />
-								</>
-							) : null}
-							{checks.length >= 2 ? <Table checks={checks} /> : null}
-							<div>
-								{checks.length >= 2 ? (
-									<PageHeader
-										title="Details"
-										description="A detailed breakdown by region, including the response and a latency trace"
-									/>
-								) : null}
-
-								<Details regions={checks} />
-							</div>
-						</div>
-					) : null}
 					<div>
 						<PageHeader
 							title="Planetfall Playground"

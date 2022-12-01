@@ -16,7 +16,6 @@ async function getEndpointData(endpointId: string) {
 	const data = (await res.json()) as {
 		data: Metric[];
 	};
-	console.log({ data });
 	const missing = 72 - data.data.length;
 	if (missing > 0) {
 		const empty = new Array(missing).fill({

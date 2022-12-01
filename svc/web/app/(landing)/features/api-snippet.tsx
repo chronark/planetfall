@@ -10,8 +10,8 @@ const code = `curl -XPOST 'https://api.planetfall.io/v1/checks' \\
     "url": "https://example.com",
     "method": "GET",
     "regionIds": [
-      "aws:us-east-1",
-      "aws:eu-central-1"
+      "fly:fra",
+      "fly:hkg"
     ]
   }'`;
 const theme: PrismTheme = {

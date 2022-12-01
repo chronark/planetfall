@@ -18,7 +18,9 @@ type Props = {
 };
 
 export const Details: React.FC<Props> = ({ regions }) => {
-	const [selectedRegion, setSelectedRegion] = React.useState(regions[0]);
+	const [selectedRegion, setSelectedRegion] = React.useState<
+		Shared["regions"][0] | undefined
+	>(regions[0]);
 	return (
 		<>
 			<PageHeader
@@ -26,7 +28,7 @@ export const Details: React.FC<Props> = ({ regions }) => {
 				description="A detailed breakdown by region, including the response and a latency trace"
 				actions={[
 					<Select.Root
-						defaultValue={selectedRegion.id}
+						defaultValue={selectedRegion?.id}
 						onValueChange={(id) =>
 							setSelectedRegion(regions.find((r) => r.id === id)!)
 						}
@@ -51,7 +53,7 @@ export const Details: React.FC<Props> = ({ regions }) => {
 												key={r.id}
 												value={r.id}
 												className={`hover:ring-0 gap-4 lg:gap-8 xl:gap-16 group flex items-center justify-between rounded-md px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 ${
-													r.id === selectedRegion.id ? "bg-zinc-100" : ""
+													r.id === selectedRegion?.id ? "bg-zinc-100" : ""
 												}`}
 											>
 												<Select.ItemText>{r.name}</Select.ItemText>
@@ -72,7 +74,7 @@ export const Details: React.FC<Props> = ({ regions }) => {
 			/>
 
 			<div className="flex flex-col justify-between w-full divide-y md:flex-row md:divide-y-0 ">
-				{selectedRegion.checks
+				{selectedRegion?.checks
 					.sort((a, b) => a.time - b.time)
 					.map((c, i) => (
 						<div

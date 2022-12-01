@@ -137,7 +137,6 @@ export default async function handler(
 						transferDone: number;
 					};
 				}[];
-				console.log({ region, checks });
 
 				return {
 					id: region.id,
