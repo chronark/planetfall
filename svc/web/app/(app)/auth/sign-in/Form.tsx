@@ -32,14 +32,15 @@ export const Form: React.FC = () => {
 					<Logo className="w-10 h-10" />
 				</Link>
 				<h3 className="text-xl font-semibold">Sign In</h3>
-				<p className="text-sm text-zinc-500">
-					Use your GitHub account to sign in.
-				</p>
-				<div className="mt-4">
+				<div className="flex flex-col w-full gap-4">
+					<p className="text-sm text-zinc-500">
+						Use your GitHub account to sign in.
+					</p>
 					<Button
+						block={true}
 						loading={state === "loading"}
 						size="lg"
-						type="primary"
+						type="secondary"
 						iconLeft={
 							<svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
 								<path
@@ -56,13 +57,10 @@ export const Form: React.FC = () => {
 						}}
 					>
 						Sign in with GitHub
-					</Button>{" "}
+					</Button>
 				</div>
 			</div>
-			<div className="p-4 sm:px-16">
-				<p className="text-sm text-center text-zinc-500">
-					Or enter your email address to receive a magic link.
-				</p>
+			<div className="px-4 sm:px-16">
 				<form
 					className="flex flex-col w-full gap-4 py-4 lg:py-8"
 					onSubmit={async (e) => {
@@ -72,9 +70,12 @@ export const Form: React.FC = () => {
 						setState("sent");
 					}}
 				>
+					<p className="text-sm text-center text-zinc-500">
+						Or receive a magic link in your mail.
+					</p>
 					<input
 						placeholder="chronark@planetfall.io"
-						className="w-full px-3 py-1 text-center duration-500 bg-white border rounded text-md text-zinc-700 border-zinc-700 hover:borde-zinc-900 hover:bg-zinc-300 hover:text-zinc-900 focus:outline-none"
+						className="px-3 py-1 text-center duration-500 bg-white border rounded text-md text-zinc-700 border-zinc-700 hover:borde-zinc-900 hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none"
 						type="email"
 						value={email}
 						onChange={(e) => {
@@ -86,7 +87,7 @@ export const Form: React.FC = () => {
 					<Button
 						loading={state === "loading"}
 						size="md"
-						type="secondary"
+						type="primary"
 						htmlType="submit"
 						iconLeft={<EnvelopeIcon />}
 					>
