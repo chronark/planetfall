@@ -9,10 +9,26 @@ import { Chart } from "./chart";
 import { Table } from "./table";
 import { Details } from "./details";
 import { PlayChecks } from "lib/server/routers/play";
-
-export const revalidate = 60;
-
 const redis = Redis.fromEnv();
+
+export const revalidate = false;
+
+export async function generateStaticParams() {
+
+	const keys: string[] = []
+	let cursor = 0
+	do {
+		const [newCursor, newKeys] = await redis.scan(cursor, { match: "play:*" });
+		cursor = newCursor
+		keys.push(...newKeys)
+
+	} while (cursor !== 0)
+
+	return keys.map((key) => ({
+		shareId: key.replace("play:", ""),
+	}));
+}
+
 export default async function Share(props: { params: { shareId: string } }) {
 	const res = await redis.get<PlayChecks>(
 		["play", props.params.shareId].join(":"),
