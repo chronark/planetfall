@@ -7,6 +7,8 @@ import { DocsSearch } from "@/components/docs/search";
 import { SiteFooter } from "@/components/site-footer";
 import { DocsSidebarNav } from "@/components/docs/sidebar-nav";
 
+export { reportWebVitals } from "next-axiom";
+
 interface DocsLayoutProps {
 	children: React.ReactNode;
 }
