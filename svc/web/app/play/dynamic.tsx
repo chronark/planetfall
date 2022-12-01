@@ -14,6 +14,7 @@ import { Table } from "./[shareId]/table";
 import { Details } from "./[shareId]/details";
 import { trpc } from "lib/utils/trpc";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/button";
 
 type FormData = {
 	url: string;
@@ -39,6 +40,19 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 	const [isLoading, setIsLoading] = useState(false);
 	const searchParams = useSearchParams();
 	const router = useRouter();
+
+	if (searchParams.get("url")) {
+		setValue("url", searchParams.get("url")!);
+	}
+	if (searchParams.get("method")) {
+		setValue("method", searchParams.get("method")!);
+	}
+	if (searchParams.get("repeat")) {
+		setValue("repeat", searchParams.get("repeat")!);
+	}
+	if (searchParams.get("regions")) {
+		setValue("regions", searchParams.get("regions")!.split(","));
+	}
 
 	async function submit(data: FormData) {
 		if (selectedRegions.length === 0) {
@@ -277,13 +291,27 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 								</div>
 							</div>
 							<div className="pt-8 space-y-6 divide-y divide-zinc-200 sm:space-y-5 sm:pt-10">
-								<div>
-									<h3 className="text-lg font-medium leading-6 text-zinc-900">
-										Regions
-									</h3>
-									<p className="max-w-2xl mt-1 text-sm text-zinc-500">
-										Select the regions from where we should call your API.
-									</p>
+								<div className="flex items-center justify-between">
+									<div>
+										<h3 className="text-lg font-medium leading-6 text-zinc-900">
+											Regions
+										</h3>
+										<p className="max-w-2xl mt-1 text-sm text-zinc-500">
+											Select the regions from where we should call your API.
+										</p>
+									</div>
+									<Button
+										type="secondary"
+										onClick={() => {
+											if (selectedRegions.length >= allRegions.length / 2) {
+												setSelectedRegions([]);
+											} else {
+												setSelectedRegions(allRegions.map((r) => r.id));
+											}
+										}}
+									>
+										Toggle All
+									</Button>
 								</div>
 								<div className="space-y-6 divide-y divide-zinc-200 sm:space-y-5">
 									<div className="pt-6 sm:pt-5">

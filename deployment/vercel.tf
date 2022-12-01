@@ -20,12 +20,12 @@ resource "vercel_project" "web" {
       target = ["production", "preview"]
     },
     {
-      key    = "UPSTASH_KAFKA_USERNAME"
+      key    = "UPSTASH_KAFKA_REST_USERNAME"
       value  = upstash_kafka_cluster.planetfall.username
       target = ["production", "preview"]
     },
     {
-      key    = "UPSTASH_KAFKA_PASSWORD"
+      key    = "UPSTASH_KAFKA_REST_PASSWORD"
       value  = upstash_kafka_cluster.planetfall.password
       target = ["production", "preview"]
     },
@@ -259,14 +259,14 @@ data "vercel_project_directory" "planetfall" {
   path = "../"
 }
 
-# resource "vercel_deployment" "web" {
-#   project_id  = vercel_project.web.id
-#   team_id     = var.vercel_team_id
-#   files       = data.vercel_project_directory.planetfall.files
-#   path_prefix = data.vercel_project_directory.planetfall.path
-#   production  = true
+resource "vercel_deployment" "web" {
+  project_id  = vercel_project.web.id
+  team_id     = var.vercel_team_id
+  files       = data.vercel_project_directory.planetfall.files
+  path_prefix = data.vercel_project_directory.planetfall.path
+  production  = true
 
 
-# }
+}
 
 
