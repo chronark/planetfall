@@ -12,13 +12,9 @@ RUN go build -o ./dist/cmd/fly/main ./cmd/fly/main.go
 
 
 
-# FROM golang:1.19-alpine
+FROM golang:1.19-alpine
 
-# WORKDIR /planetfall
-# COPY --from=builder /planetfall/svc/proxy/dist/cmd/fly/main proxy
+WORKDIR /planetfall
+COPY --from=builder /planetfall/svc/proxy/dist/cmd/fly/main proxy
 
-# CMD ["./proxy"]
-
-FROM gcr.io/distroless/base
-COPY --from=builder /planetfall/svc/proxy/dist/cmd/fly/main pinger
-CMD ["./pinger"]
+CMD ["./proxy"]
