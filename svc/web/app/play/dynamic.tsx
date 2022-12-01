@@ -9,9 +9,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { Chart } from "./[shareId]/chart";
-import { Table } from "./[shareId]/table";
-import { Details } from "./[shareId]/details";
 import { trpc } from "lib/utils/trpc";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
@@ -310,7 +307,9 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 											}
 										}}
 									>
-										Toggle All
+										{selectedRegions.length >= allRegions.length / 2
+											? "Deselect all"
+											: "Select all"}
 									</Button>
 								</div>
 								<div className="space-y-6 divide-y divide-zinc-200 sm:space-y-5">

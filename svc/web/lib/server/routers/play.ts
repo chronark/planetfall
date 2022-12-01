@@ -95,6 +95,12 @@ export const playRouter = t.router({
 								timeout: 2000,
 								checks: input.repeat ? 2 : 1,
 							}),
+						}).catch((err) => {
+							console.error(err);
+							throw new TRPCError({
+								code: "INTERNAL_SERVER_ERROR",
+								message: `Unable to ping: ${region.id}`,
+							});
 						});
 						if (res.status !== 200) {
 							throw new TRPCError({
