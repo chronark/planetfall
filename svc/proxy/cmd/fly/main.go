@@ -56,13 +56,16 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
+	region := os.Getenv("FLY_REGION")
+	if region == ""{
+		log.Fatal("FLY_REGION not set")
+	}
 
 	close := make(chan os.Signal, 1)
 	signal.Notify(close, os.Interrupt, syscall.SIGTERM)
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: false,
 	})
-
 	idle := NewIdleChecker()
 
 	// Send a heartbeat for every incoming request
@@ -75,13 +78,20 @@ func main() {
 		log.Println("received health check")
 		return c.SendString("OK")
 	})
-	app.Post("/", func(c *fiber.Ctx) error {
-
+	app.Post("/ping/:requestedRegion", func(c *fiber.Ctx) error {
+		requestedRegion := c.Params("requestedRegion")
+		if requestedRegion == "" {
+			return c.SendStatus(404)
+		}
+		if requestedRegion != region {
+			c.Response().Header.Add("Fly-Replay", fmt.Sprintf("region=%s", requestedRegion))
+			return c.SendStatus(202)
+		}
 		req := ping.Request{}
 		err := c.BodyParser(&req)
 		if err != nil {
 			return c.Status(400).JSON(map[string]string{"error": err.Error()})
-		}
+		} 
 
 		res, err := ping.Ping(c.UserContext(), req)
 		if err != nil {

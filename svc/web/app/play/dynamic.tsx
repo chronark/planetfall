@@ -22,53 +22,47 @@ type FormData = {
 
 type Props = {
 	regions: Region[];
+	defaultValues: Partial<FormData>;
 };
 
-export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
+export const Form: React.FC<Props> = ({
+	defaultValues,
+	regions: allRegions,
+}): JSX.Element => {
 	const {
 		register,
 		formState: { errors },
 		handleSubmit,
 		setError,
 		setValue,
-	} = useForm<FormData>({ reValidateMode: "onSubmit" });
+	} = useForm<FormData>({ reValidateMode: "onSubmit", defaultValues });
 
 	const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
-	if (searchParams.get("url")) {
-		setValue("url", searchParams.get("url")!);
-	}
-	if (searchParams.get("method")) {
-		setValue("method", searchParams.get("method")!);
-	}
-	if (searchParams.get("repeat")) {
-		setValue("repeat", searchParams.get("repeat")!);
-	}
-	if (searchParams.get("regions")) {
-		setValue("regions", searchParams.get("regions")!.split(","));
-	}
-
 	async function submit(data: FormData) {
 		if (selectedRegions.length === 0) {
 			setError("regions", { message: "Select at least 1 region" });
 		}
 		setIsLoading(true);
-		await trpc.play.check.mutate({
-			url: data.url,
-			method: data.method as any,
-			regionIds: selectedRegions,
-			repeat: data.repeat === "true",
-		})
+		await trpc.play.check
+			.mutate({
+				url: data.url,
+				method: data.method as any,
+				regionIds: selectedRegions,
+				repeat: data.repeat === "true",
+			})
 			.then(({ shareId }) => {
 				router.push(`/play/${shareId}`);
 			})
-			.catch(err => { alert(err.message) })
+			.catch((err) => {
+				alert(err.message);
+			})
 			.finally(() => {
 				setIsLoading(false);
-			})
+			});
 	}
 	return (
 		<>
@@ -241,8 +235,9 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 															z.string().url().safeParse(v).success,
 													})}
 													placeholder="https://example.com"
-													className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-zinc-700"
-														} hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+													className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${
+														errors.url ? "border-red-500" : "border-zinc-700"
+													} hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
 												/>
 											</div>
 											{errors.url ? (
@@ -325,10 +320,11 @@ export const Form: React.FC<Props> = ({ regions: allRegions }): JSX.Element => {
 															<button
 																type="button"
 																key={r.id}
-																className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${selectedRegions.includes(r.id)
-																	? "border-zinc-900 bg-zinc-50"
-																	: "border-zinc-300"
-																	}`}
+																className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+																	selectedRegions.includes(r.id)
+																		? "border-zinc-900 bg-zinc-50"
+																		: "border-zinc-300"
+																}`}
 																onClick={() => {
 																	if (selectedRegions.includes(r.id)) {
 																		setSelectedRegions(

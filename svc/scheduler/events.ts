@@ -17,7 +17,6 @@ export class Events {
 		if (!broker) {
 			throw new Error("KAFKA_BROKER is not defined");
 		}
-		logger.warn("BROKER", { broker });
 		const username = process.env.KAFKA_USERNAME;
 		if (!username) {
 			throw new Error("KAFKA_USERNAME is not defined");

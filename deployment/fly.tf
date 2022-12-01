@@ -28,8 +28,9 @@ locals {
     "yul",
     "yyz"
   ])
-  replicas = 3
+  replicas = 1
 }
+
 
 
 
@@ -106,7 +107,7 @@ resource "fly_machine" "scheduler" {
   cputype  = "shared"
   memorymb = 256
   env = {
-    "KAFKA_BROKER"   = upstash_kafka_cluster.planetfall.tcp_endpoint
+    "KAFKA_BROKER"   = "${upstash_kafka_cluster.planetfall.tcp_endpoint}:9092"
     "KAFKA_USERNAME" = upstash_kafka_cluster.planetfall.username
     "KAFKA_PASSWORD" = upstash_kafka_cluster.planetfall.password
     "AXIOM_TOKEN"    = var.axiom_token
@@ -147,3 +148,10 @@ resource "fly_ip" "scheduler_v6" {
 
 
 }
+
+
+
+# resource "fly_cert" "pinger" {
+#   app      = fly_app.pinger.name
+#   hostname = "pinger.planetfall.io"
+# }
