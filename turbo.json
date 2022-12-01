@@ -4,7 +4,8 @@
     "install": {
       "outputs": [
         "node_modules/**",
-        "pnpm-lock.yaml"
+        "pnpm-lock.yaml",
+        "yarn.lock"
       ]
     },
     "build": {

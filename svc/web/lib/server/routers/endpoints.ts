@@ -117,11 +117,6 @@ export const endpointRouter = t.router({
 				headerAssertions: z.array(headerAssertion).optional(),
 			}),
 		)
-		.output(
-			z.object({
-				id: z.string(),
-			}),
-		)
 		.mutation(async ({ input, ctx }) => {
 			if (!ctx.session) {
 				throw new TRPCError({ code: "UNAUTHORIZED" });

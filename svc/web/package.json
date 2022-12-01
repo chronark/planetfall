@@ -19,6 +19,7 @@
     "@markdoc/next.js": "^0.2.1",
     "@next/font": "^13.0.5",
     "@planetfall/assertions": "workspace:*",
+    "@planetfall/emails": "workspace:*",
     "@planetfall/db": "workspace:*",
     "@planetfall/id": "workspace:*",
     "@planetfall/tinybird": "workspace:*",

@@ -1,11 +1,14 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import { db, Prisma } from "@planetfall/db";
+import EmailProvider from "next-auth/providers/email";
+import { Email } from "@planetfall/emails";
+
+
+import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
 import { DEFAULT_QUOTA } from "plans";
 import slugify from "slugify";
 import Stripe from "stripe";
-import { Redis } from "@upstash/redis";
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -13,7 +16,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   typescript: true,
 });
 
-const redis = Redis.fromEnv()
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -21,11 +23,23 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GITHUB_OAUTH_ID!,
       clientSecret: process.env.GITHUB_OAUTH_SECRET!,
     }),
+    EmailProvider({
+      from: "chronark@planetfall.io",
+      sendVerificationRequest: ({ identifier, url }) => {
+        try {
+
+          new Email().sendSignInLink({ from: "chronark@planetfall.io", to: identifier.trim(), link: url })
+        } catch (err) {
+          console.error("UNABLE TO SEND EMAIL",err)
+          throw err
+        }
+      }
+
+    }),
   ],
 
   adapter: {
     createUser: async (data) => {
-
 
 
       const name = data.name || data.email.split("@")[0];
@@ -147,7 +161,7 @@ export const authOptions: NextAuthOptions = {
       if (!user.email) {
         return false
       }
-      const whitelist = await redis.smembers("signup:whitelist:emaildomain")
+      const whitelist = ["chronark.com", "upstash.com", "vercel.com", "fly.io", "dub.sh"]
       const domain = user.email.split("@")[1]
       return whitelist.includes(domain)
     },

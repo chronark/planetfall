@@ -1,7 +1,6 @@
 import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 import { Client as Tinybird } from "@planetfall/tinybird";
-import { SignIn } from "@/components/auth/sign-in";
 
 import Button from "@/components/button/button";
 import { db } from "@planetfall/db";
@@ -34,7 +33,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 	return (
 		<div className="transition-all duration-500">
 			{timings.dnsDone > 0 ? (
-				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-zinc-100">
+				<div className="flex items-center w-full gap-4 py-1 duration-500 rounded hover:bg-zinc-100">
 					<div className="flex justify-between w-1/5 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>DNS</span>
 						<span>
@@ -58,7 +57,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 			) : null}
 
 			{timings.connectDone > 0 ? (
-				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-zinc-100">
+				<div className="flex items-center w-full gap-4 py-1 duration-500 rounded hover:bg-zinc-100">
 					<div className="flex justify-between w-1/5 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>Connection</span>
 						<span>
@@ -88,7 +87,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 				</div>
 			) : null}
 			{timings.tlsHandshakeDone > 0 ? (
-				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-zinc-100">
+				<div className="flex items-center w-full gap-4 py-1 duration-500 rounded hover:bg-zinc-100">
 					<div className="flex justify-between w-1/5 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>TLS</span>
 						<span>
@@ -124,7 +123,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 				</div>
 			) : null}
 			{timings.firstByteDone > 0 ? (
-				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-zinc-100">
+				<div className="flex items-center w-full gap-4 py-1 duration-500 rounded hover:bg-zinc-100">
 					<div className="flex justify-between w-1/5 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>Waiting for response</span>
 						<span>
@@ -157,7 +156,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 				</div>
 			) : null}
 			{timings.transferDone > 0 ? (
-				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-zinc-100">
+				<div className="flex items-center w-full gap-4 py-1 duration-500 rounded hover:bg-zinc-100">
 					<div className="flex justify-between w-1/5 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>Transfer</span>
 						<span>
@@ -204,7 +203,7 @@ export default async function Page(props: {
 
 	const session = await getSession();
 	if (!session) {
-		return <SignIn />;
+		return redirect("/auth/sign-in");
 	}
 
 	const endpoint = check.endpointId
@@ -275,21 +274,21 @@ export default async function Page(props: {
 				</div>
 
 				{check.timing ? (
-					<div className="flex flex-col py-4 md:py-8 lg:py-16 space-y-4">
+					<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
 						<Heading h2={true}>Trace</Heading>
 
 						<DNS timings={JSON.parse(check.timing) as Timings} />
 					</div>
 				) : null}
 				{check.error ? (
-					<div className="flex flex-col py-4 md:py-8 lg:py-16  space-y-4">
+					<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
 						<Heading h2={true}>Error</Heading>
 
 						<Text>{check.error}</Text>
 					</div>
 				) : null}
 
-				<div className="flex flex-col py-4 md:py-8 lg:py-16 space-y-4">
+				<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
 					<Heading h2={true}>Response Header</Heading>
 
 					<HeaderTable
@@ -299,7 +298,7 @@ export default async function Page(props: {
 					/>
 				</div>
 				{check.body ? (
-					<div className="flex flex-col py-4 md:py-8 lg:py-16 space-y-4">
+					<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
 						<Heading h2={true}>Response Body</Heading>
 
 						<code className="flex flex-grow w-full px-2 py-1 border rounded md:px-4 md:py-3 ">

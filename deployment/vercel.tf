@@ -105,6 +105,11 @@ resource "vercel_project" "web" {
       value  = var.upstash_redis_rest_token
       target = ["production", "preview", "development"]
     },
+    {
+      key    = "SENDGRID_API_KEY"
+      value  = var.sendgrid_api_key
+      target = ["production", "preview", "development"]
+    },
 
 
   ]
@@ -235,23 +240,6 @@ resource "vercel_dns_record" "sendgrid_s2_domainkey" {
   value   = "s2.domainkey.u29341690.wl191.sendgrid.net"
 }
 
-# resource "vercel_dns_record" "fly_v4"{
-#   team_id = var.vercel_team_id
-#   domain  = "planetfall.io"
-#   name = "fly"
-#   type = "A"
-#   ttl = 60
-#   value = fly_ip.pinger_v4.address
-# }
-
-# resource "vercel_dns_record" "fly_v6"{
-#   team_id = var.vercel_team_id
-#   domain  = "planetfall.io"
-#   name = "fly"
-#   type = "AAAA"
-#   ttl = 60
-#   value = fly_ip.pinger_v6.address
-# }
 
 
 resource "vercel_project_domain" "web" {
@@ -268,19 +256,5 @@ resource "vercel_project_domain" "wildcard" {
 
 
 
-
-# data "vercel_project_directory" "planetfall" {
-#   path = "../"
-# }
-
-# resource "vercel_deployment" "web" {
-#   project_id  = vercel_project.web.id
-#   team_id     = var.vercel_team_id
-#   files       = data.vercel_project_directory.planetfall.files
-#   path_prefix = data.vercel_project_directory.planetfall.path
-#   production  = true
-
-
-# }
 
 

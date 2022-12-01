@@ -1,7 +1,6 @@
 import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 import { Client as Tinybird } from "@planetfall/tinybird";
-import { SignIn } from "@/components/auth/sign-in";
 
 import Button from "@/components/button/button";
 import { EndpointsTable } from "./table";
@@ -10,7 +9,7 @@ import { getSession } from "lib/auth";
 export default async function Page(props: { params: { teamSlug: string } }) {
 	const session = await getSession();
 	if (!session) {
-		return <SignIn />;
+		return redirect("/auth/sign-in");
 	}
 
 	const team = await db.team.findUnique({

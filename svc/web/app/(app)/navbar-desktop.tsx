@@ -1,10 +1,9 @@
 import { asyncComponent } from "lib/api/component";
 import { UserButton } from "./user-button";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { NavLink } from "./navlink";
 import { TeamSwitcher } from "./team-switcher";
 import { Breadcrumbs } from "./breadcrumbs";
-import { SignIn } from "@/components/auth/sign-in";
 
 import { db } from "@planetfall/db";
 import { getSession } from "lib/auth";
@@ -19,7 +18,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 	const { session } = await getSession();
 
 	if (!session) {
-		return <SignIn />;
+		return redirect("/auth/sign-in");
 	}
 
 	const navigation: { name: string; href: string }[] = [

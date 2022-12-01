@@ -10,6 +10,7 @@ const nextConfig = {
 	},
 	experimental: {
 		appDir: true,
+		transpilePackages: ["@planetfall/emails"],
 		serverComponentsExternalPackages: ["@planetfall/db", "@prisma/client"],
 	},
 };

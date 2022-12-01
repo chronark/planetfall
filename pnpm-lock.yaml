@@ -50,17 +50,19 @@ importers:
       prisma: 4.6.1
       typescript: 4.9.3
 
-  pkg/email:
+  pkg/emails:
     specifiers:
       '@planetfall/tsconfig': workspace:*
       '@sendgrid/mail': ^7.2.1
       '@types/node': ^18.11.9
+      nodemailer: ^6.8.0
       typescript: ^4.9.3
     dependencies:
       '@sendgrid/mail': 7.7.0
     devDependencies:
       '@planetfall/tsconfig': link:../tsconfig
       '@types/node': 18.11.9
+      nodemailer: 6.8.0
       typescript: 4.9.3
 
   pkg/id:
@@ -135,6 +137,7 @@ importers:
       '@next/font': ^13.0.5
       '@planetfall/assertions': workspace:*
       '@planetfall/db': workspace:*
+      '@planetfall/emails': workspace:*
       '@planetfall/id': workspace:*
       '@planetfall/tinybird': workspace:*
       '@prisma/client': ^4.5.0
@@ -207,6 +210,7 @@ importers:
       '@next/font': 13.0.5
       '@planetfall/assertions': link:../../pkg/assertions
       '@planetfall/db': link:../../pkg/db
+      '@planetfall/emails': link:../../pkg/emails
       '@planetfall/id': link:../../pkg/id
       '@planetfall/tinybird': link:../../pkg/tinybird
       '@prisma/client': 4.6.1_prisma@4.6.1
@@ -4000,6 +4004,11 @@ packages:
 
   /node-releases/2.0.6:
     resolution: {integrity: sha512-PiVXnNuFm5+iYkLBNeq5211hvO38y63T0i2KKh2KnUs3RpzJ+JtODFjkD8yjLwnDkTYF1eKXheUwdssR+NRZdg==}
+    dev: true
+
+  /nodemailer/6.8.0:
+    resolution: {integrity: sha512-EjYvSmHzekz6VNkNd12aUqAco+bOkRe3Of5jVhltqKhEsjw/y0PYPJfp83+s9Wzh1dspYAkUW/YNQ350NATbSQ==}
+    engines: {node: '>=6.0.0'}
     dev: true
 
   /normalize-path/3.0.0:

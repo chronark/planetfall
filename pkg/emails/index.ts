@@ -12,18 +12,22 @@ export class Email {
 		this.client.setApiKey(apikey);
 	}
 
-	public async sendOTP(email: string, otp: string): Promise<void> {
+	public async sendSignInLink(opts: {
+		to: string;
+		link: string;
+		from: string;
+	}): Promise<void> {
 		const res = await this.client.send({
-			to: email,
-			from: "info@planetfall.io",
+			from: opts.from,
+			to: opts.to,
 			subject: "Planetfall Sign In",
-			templateId: "d-28daad5179b544daa9b72c20d64c81e0",
+			templateId: "d-3894fa3392f94fa385747d9f2944886b",
 			dynamicTemplateData: {
-				otp,
+				link: opts.link,
 			},
 		});
 		if (res[0].statusCode > 300) {
-			console.error("unable to send email:", res[0].statusCode);
+			throw new Error(`unable to send email. status: ${res[0].statusCode}`);
 		}
 	}
 }

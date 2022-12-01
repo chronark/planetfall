@@ -1,7 +1,6 @@
 import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 import { Client as Tinybird } from "@planetfall/tinybird";
-import { SignIn } from "@/components/auth/sign-in";
 
 import { db } from "@planetfall/db";
 import { Stats } from "@/components/stats";
@@ -20,7 +19,7 @@ export default async function Page(props: {
 }) {
 	const { session } = await getSession();
 	if (!session) {
-		return <SignIn />;
+		return redirect("/auth/sign-in");
 	}
 
 	const endpoint = await db.endpoint.findUnique({

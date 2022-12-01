@@ -1,5 +1,5 @@
 {
-  "name": "@planetfall/email",
+  "name": "@planetfall/emails",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -13,6 +13,7 @@
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",
     "@types/node": "^18.11.9",
+    "nodemailer": "^6.8.0",
     "typescript": "^4.9.3"
   },
   "dependencies": {
