@@ -17,6 +17,7 @@ export class Events {
 		if (!broker) {
 			throw new Error("KAFKA_BROKER is not defined");
 		}
+		logger.warn("BROKER", { broker });
 		const username = process.env.KAFKA_USERNAME;
 		if (!username) {
 			throw new Error("KAFKA_USERNAME is not defined");
@@ -47,12 +48,15 @@ export class Events {
 			throw new Error(`unable to connect to kafka: ${(err as Error).message}`);
 		});
 		await c.subscribe({ topic: "endpoint.created", fromBeginning: false });
+		await c.subscribe({ topic: "endpoint.updated", fromBeginning: false });
+		await c.subscribe({ topic: "endpoint.deleted", fromBeginning: false });
 		await c.run({
 			autoCommitThreshold: 10,
 			eachMessage: async ({ topic, message }) => {
 				const { endpointId } = validation.parse(
 					JSON.parse(message.value!.toString()),
 				);
+				this.logger.info("Endpoint changed", { endpointId });
 				switch (topic) {
 					case "endpoint.created": {
 						await this.scheduler.addEndpoint(endpointId);

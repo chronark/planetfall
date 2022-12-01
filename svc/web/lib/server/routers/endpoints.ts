@@ -2,15 +2,17 @@ import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { t } from "../trpc";
-import { Client as Tinybird } from "@planetfall/tinybird";
 import { db } from "@planetfall/db";
 import {
 	statusAssertion,
 	serialize as serializeAssertions,
 	StatusAssertion,
 	Assertion,
+	headerAssertion,
+	HeaderAssertion,
+	deserialize,
 } from "@planetfall/assertions";
-import { emit } from "process";
+import { kafka } from "lib/kafka";
 
 export const endpointRouter = t.router({
 	create: t.procedure
@@ -28,6 +30,7 @@ export const endpointRouter = t.router({
 				distribution: z.enum(["ALL", "RANDOM"]),
 				teamId: z.string(),
 				statusAssertions: z.array(statusAssertion).optional(),
+				headerAssertions: z.array(headerAssertion).optional(),
 			}),
 		)
 		.output(
@@ -56,11 +59,14 @@ export const endpointRouter = t.router({
 			}
 
 			const assertions: Assertion[] = [];
-			for (const s of input.statusAssertions ?? []) {
-				assertions.push(new StatusAssertion(s));
+			for (const a of input.statusAssertions ?? []) {
+				assertions.push(new StatusAssertion(a));
+			}
+			for (const a of input.headerAssertions ?? []) {
+				assertions.push(new HeaderAssertion(a));
 			}
 
-			return await db.endpoint.create({
+			const created = await db.endpoint.create({
 				data: {
 					id: newId("endpoint"),
 					method: input.method,
@@ -84,6 +90,14 @@ export const endpointRouter = t.router({
 					body: input.body,
 				},
 			});
+			await kafka
+				.producer()
+				.produce(
+					"endpoint.created",
+					JSON.stringify({ endpointId: created.id }),
+				);
+
+			return created;
 		}),
 	update: t.procedure
 		.input(
@@ -100,6 +114,7 @@ export const endpointRouter = t.router({
 				regionIds: z.array(z.string()).min(1).optional(),
 				distribution: z.enum(["ALL", "RANDOM"]).optional(),
 				statusAssertions: z.array(statusAssertion).optional(),
+				headerAssertions: z.array(headerAssertion).optional(),
 			}),
 		)
 		.output(
@@ -130,7 +145,23 @@ export const endpointRouter = t.router({
 				});
 			}
 
-			return await db.endpoint.update({
+			const assertions: Assertion[] = [];
+			const existingAssertions = endpoint.assertions
+				? deserialize(endpoint.assertions)
+				: [];
+
+			assertions.push(
+				...(input.statusAssertions
+					? input.statusAssertions.map((a) => new StatusAssertion(a))
+					: existingAssertions.filter((a) => a.schema.type === "status")),
+			);
+			assertions.push(
+				...(input.headerAssertions
+					? input.headerAssertions.map((a) => new HeaderAssertion(a))
+					: existingAssertions.filter((a) => a.schema.type === "header")),
+			);
+
+			const updatedEndpoint = await db.endpoint.update({
 				where: { id: input.endpointId },
 				data: {
 					method: input.method,
@@ -145,12 +176,21 @@ export const endpointRouter = t.router({
 							id,
 						})),
 					},
-					// assertions: input.statusAssertions ?erializeAssertions(assertions),
+					assertions: serializeAssertions(assertions),
 
 					headers: input.headers,
 					body: input.body,
 				},
 			});
+
+			await kafka
+				.producer()
+				.produce(
+					"endpoint.updated",
+					JSON.stringify({ endpointId: endpoint.id }),
+				);
+
+			return updatedEndpoint;
 		}),
 
 	toggleActive: t.procedure

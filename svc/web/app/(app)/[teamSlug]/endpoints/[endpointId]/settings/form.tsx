@@ -1,13 +1,23 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PageHeader } from "@/components/page";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { Endpoint, Region } from "@planetfall/db";
 import { Button } from "@/components/button";
 import { trpc } from "lib/utils/trpc";
 import { ToastProvider, useToaster } from "@/components/toast";
 import { useRouter } from "next/navigation";
-
+import { MinusSmallIcon, PlusIcon } from "@heroicons/react/24/outline";
+import * as Slider from "@radix-ui/react-slider";
+import {
+	assertion,
+	deserialize as deserializeAssertions,
+	HeaderAssertion,
+	headerAssertion,
+	statusAssertion,
+} from "@planetfall/assertions";
+import { z } from "zod";
+import classNames from "classnames";
 type Props = {
 	teamSlug: string;
 	endpoint: Omit<Endpoint, "createdAt" | "updatedAt"> & { regions: Region[] };
@@ -38,6 +48,36 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 		distribution: "ALL" | "RANDOM";
 	}>();
 
+	const assertions = endpoint.assertions
+		? deserializeAssertions(endpoint.assertions).map((a) => a.schema)
+		: [];
+
+	const statusAssertionsForm = useForm<{
+		assertions: z.infer<typeof statusAssertion>[];
+	}>({
+		defaultValues: {
+			assertions: assertions.filter((a) => a.type === "status") as any,
+		},
+	});
+
+	const statusAssertions = useFieldArray({
+		control: statusAssertionsForm.control,
+		name: "assertions",
+	});
+
+	const headerAssertionsForm = useForm<{
+		assertions: z.infer<typeof headerAssertion>[];
+	}>({
+		defaultValues: {
+			assertions: assertions.filter((a) => a.type === "header") as any,
+		},
+	});
+
+	const headerAssertions = useFieldArray({
+		control: headerAssertionsForm.control,
+		name: "assertions",
+	});
+
 	return (
 		<>
 			<PageHeader
@@ -45,7 +85,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 				description="Edit your endpoint's settings"
 				actions={[
 					<Button key="cancel" href={`/${teamSlug}/endpoints/${endpoint.id}`}>
-						Cancel
+						Go Back
 					</Button>,
 				]}
 			/>
@@ -80,7 +120,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 												})}
 												defaultValue={endpoint.name}
 												placeholder="My API"
-												className={`w-full transition-all  focus:bg-zinc-50 md:px-4 md:py-3  ${
+												className={`w-full transition-all  focus:bg-zinc-50 px-4 py-3  ${
 													nameForm.formState.errors.name
 														? "border-red-500"
 														: "border-zinc-300"
@@ -157,7 +197,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 											</label>
 											<select
 												{...urlForm.register("method", { required: true })}
-												className="w-full transition-all duration-300 ease-in-out border rounded focus:bg-zinc-50 md:px-4 md:py-3 border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:shadow"
+												className="w-full px-4 py-3 transition-all duration-300 ease-in-out border rounded focus:bg-zinc-50 border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:shadow"
 												defaultValue={endpoint.method}
 											>
 												<option value="POST">POST</option>
@@ -187,7 +227,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 													required: true,
 												})}
 												defaultValue={endpoint.url}
-												className={`w-full transition-all  focus:bg-zinc-50 md:px-4 md:py-3  ${
+												className={`w-full transition-all  focus:bg-zinc-50 px-4 py-3  ${
 													urlForm.formState.errors.url
 														? "border-red-500"
 														: "border-zinc-300"
@@ -269,7 +309,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 														? JSON.stringify(endpoint.headers, null, 2)
 														: undefined
 												}
-												className={`font-mono w-full transition-all  focus:bg-zinc-50 md:px-4 md:py-3  ${
+												className={`font-mono w-full transition-all  focus:bg-zinc-50 px-4 py-3  ${
 													requestForm.formState.errors.headers
 														? "border-red-500"
 														: "border-zinc-300"
@@ -295,7 +335,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 												{...requestForm.register("body")}
 												rows={5}
 												defaultValue={endpoint.body ?? undefined}
-												className={`font-mono w-full transition-all  focus:bg-zinc-50 md:px-4 md:py-3  ${
+												className={`font-mono w-full transition-all  focus:bg-zinc-50 px-4 py-3  ${
 													requestForm.formState.errors.body
 														? "border-red-500"
 														: "border-zinc-300"
@@ -361,13 +401,213 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 								<h3 className="text-lg font-medium leading-6 text-zinc-900">
 									Assertions
 								</h3>
-								{/* <p className="mt-1 text-sm text-zinc-600">Change the request body and headers.</p> */}
+								<p className="mt-1 text-sm text-zinc-600">
+									Validate the response. If at least one assertion fails, we
+									will alert you.
+								</p>
 							</div>
 						</div>
-						<div className="mt-5 md:col-span-2 md:mt-0">
+						<div className="mt-5 space-y-10 md:col-span-2 md:mt-0">
 							<form>
-								<div className="px-4 py-4 border sm:overflow-hidden sm:rounded">
-									Coming soon
+								<div className="border sm:overflow-hidden sm:rounded">
+									<div className="px-4 py-5 space-y-6 bg-white sm:p-6">
+										<label className="block text-sm font-medium text-zinc-700">
+											Status
+										</label>
+										{statusAssertions.fields.map((f, i) => (
+											<div key={f.id} className="flex items-center gap-4">
+												<select
+													{...statusAssertionsForm.register(
+														`assertions.${i}.compare`,
+														{
+															required: true,
+														},
+													)}
+													className={
+														"transition-all  focus:bg-zinc-50 py-3 px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+													}
+												>
+													<option value="gt">Greater than</option>
+													<option value="gte">Greater than or equal</option>
+													<option value="lt">Less than</option>
+													<option value="lte">Less than or equal</option>
+													<option value="eq">Equal</option>
+													<option value="not_eq">Not Equal</option>
+												</select>
+												<input
+													type="number"
+													{...statusAssertionsForm.register(
+														`assertions.${i}.target`,
+														{
+															required: true,
+															valueAsNumber: true,
+														},
+													)}
+													className={
+														"transition-all  focus:bg-zinc-50 py-3 px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+													}
+												/>
+												<div>
+													<Button
+														type="secondary"
+														square={true}
+														onClick={() => statusAssertions.remove(i)}
+														size="lg"
+														icon={<MinusSmallIcon className="w-6 h-6" />}
+													/>
+												</div>
+											</div>
+										))}
+
+										<div className="w-full">
+											<Button
+												type="tertiary"
+												onClick={() =>
+													statusAssertions.append({
+														version: "v1",
+														type: "status",
+														compare: "eq",
+														target: 200,
+													})
+												}
+												size="lg"
+												block={true}
+												icon={<PlusIcon className="w-6 h-6" />}
+											/>
+										</div>
+									</div>
+									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
+										<Button
+											type="secondary"
+											onClick={nameForm.handleSubmit(async ({ name }) => {
+												await trpc.endpoint.update
+													.mutate({
+														endpointId: endpoint.id,
+														statusAssertions:
+															statusAssertionsForm.getValues().assertions,
+													})
+													.then(() => {
+														addToast({ title: "Assertions updated" });
+														router.refresh();
+													})
+													.catch((err) => {
+														addToast({
+															type: "error",
+															title: "Error",
+															content: (err as Error).message,
+														});
+													});
+											})}
+										>
+											Save
+										</Button>
+									</div>
+								</div>
+							</form>
+							<form>
+								<div className="border sm:overflow-hidden sm:rounded">
+									<div className="px-4 py-5 space-y-6 bg-white sm:p-6">
+										<label className="block text-sm font-medium text-zinc-700">
+											Headers
+										</label>
+										{headerAssertions.fields.map((f, i) => (
+											<div key={f.id} className="flex items-center gap-4">
+												<input
+													{...headerAssertionsForm.register(
+														`assertions.${i}.key`,
+														{
+															required: true,
+														},
+													)}
+													className={
+														"transition-all font-mono focus:bg-zinc-50 py-3 px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+													}
+												/>
+												<select
+													{...headerAssertionsForm.register(
+														`assertions.${i}.compare`,
+														{
+															required: true,
+														},
+													)}
+													className={
+														"transition-all  focus:bg-zinc-50 py-3 px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+													}
+												>
+													<option value="gt">Greater than</option>
+													<option value="gte">Greater than or equal</option>
+													<option value="lt">Less than</option>
+													<option value="lte">Less than or equal</option>
+													<option value="eq">Equal</option>
+													<option value="not_eq">Not Equal</option>
+												</select>
+												<input
+													{...headerAssertionsForm.register(
+														`assertions.${i}.target`,
+														{
+															required: true,
+														},
+													)}
+													className={
+														"transition-all font-mono  focus:bg-zinc-50 py-3 px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+													}
+												/>
+												<div>
+													<Button
+														type="secondary"
+														square={true}
+														onClick={() => headerAssertions.remove(i)}
+														size="lg"
+														icon={<MinusSmallIcon className="w-6 h-6" />}
+													/>
+												</div>
+											</div>
+										))}
+
+										<div className="w-full">
+											<Button
+												type="tertiary"
+												onClick={() =>
+													headerAssertions.append({
+														version: "v1",
+														type: "header",
+														key: "Content-Type",
+														compare: "eq",
+														target: "application/json",
+													})
+												}
+												size="lg"
+												block={true}
+												icon={<PlusIcon className="w-6 h-6" />}
+											/>
+										</div>
+									</div>
+									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
+										<Button
+											type="secondary"
+											onClick={nameForm.handleSubmit(async ({ name }) => {
+												await trpc.endpoint.update
+													.mutate({
+														endpointId: endpoint.id,
+														headerAssertions:
+															headerAssertionsForm.getValues().assertions,
+													})
+													.then(() => {
+														addToast({ title: "Assertions updated" });
+														router.refresh();
+													})
+													.catch((err) => {
+														addToast({
+															type: "error",
+															title: "Error",
+															content: (err as Error).message,
+														});
+													});
+											})}
+										>
+											Save
+										</Button>
+									</div>
 								</div>
 							</form>
 						</div>
@@ -492,6 +732,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 											>
 												Interval
 											</label>
+
 											<div className="flex mt-1 sm:col-span-2 sm:mt-0">
 												<div className="relative flex items-stretch flex-grow group focus-within:z-10">
 													<input
@@ -501,7 +742,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 															min: 1,
 														})}
 														defaultValue={endpoint.interval / 1000}
-														className="block w-full transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 md:px-4 md:py-3 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
+														className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
 													/>
 												</div>
 												<div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
@@ -526,7 +767,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 											<select
 												{...intervalForm.register("distribution")}
 												defaultValue={endpoint.distribution}
-												className="w-full transition-all duration-300 ease-in-out border rounded focus:bg-zinc-50 md:px-4 md:py-3 border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:shadow"
+												className="w-full px-4 py-3 transition-all duration-300 ease-in-out border rounded focus:bg-zinc-50 border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:shadow"
 											>
 												<option value="ALL">All</option>
 												<option value="RANDOM">Round Robin</option>

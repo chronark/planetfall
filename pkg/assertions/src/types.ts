@@ -1,4 +1,4 @@
-import { base } from "./v2";
+import { assertion } from "./v2";
 import { z } from "zod";
 export type AssertionRequest = {
 	body: string;
@@ -7,6 +7,6 @@ export type AssertionRequest = {
 };
 
 export interface Assertion {
-	schema: z.infer<typeof base>;
+	schema: z.infer<typeof assertion>;
 	assert: (req: AssertionRequest) => boolean;
 }

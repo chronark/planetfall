@@ -134,6 +134,8 @@ model Team {
   maxTimeout         Int // [milliseconds]
   endpoints          Endpoint[]
   pages              StatusPage[]
+
+  webhookAlerts WebhookAlert[]
   
   @@index([slug])
 }
@@ -201,9 +203,12 @@ model Endpoint {
   headers      Json?
   body         String?
 
+
   assertions String?
 
   pages StatusPage[]
+
+  @@index([teamId])
 }
 
 model VerificationRequest {
@@ -224,4 +229,23 @@ model StatusPage {
   endpoints Endpoint[]
   teamId    String
   team      Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+}
+
+
+
+
+model WebhookAlert {
+  id String @id
+  teamId    String
+  team      Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+
+  url       String
+  signingKey String
+  active    Boolean
+
+
+  @@index([teamId])
 }

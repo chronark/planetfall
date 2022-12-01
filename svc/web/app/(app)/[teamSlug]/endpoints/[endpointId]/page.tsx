@@ -57,8 +57,7 @@ export default async function Page(props: {
 	if (!stats) {
 		console.warn(__filename, "Stats not found");
 
-		notFound();
-		return;
+		return notFound();
 	}
 
 	const availability = stats.count > 0 ? 1 - errors.length / stats.count : 1;

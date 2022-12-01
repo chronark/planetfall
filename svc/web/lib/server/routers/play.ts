@@ -17,7 +17,7 @@ export const playRouter = t.router({
 			z.object({
 				method: z.enum(["GET", "POST", "PUT", "DELETE"]),
 				url: z.string().url(),
-				regionIds: z.array(z.string()).min(1).max(5),
+				regionIds: z.array(z.string()).min(1),
 				repeat: z.boolean().optional(),
 			}),
 		)

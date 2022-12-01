@@ -79,9 +79,9 @@ export const Header: React.FC<Props> = (props: Props) => {
 
 							<li>
 								<Link href={isSignedIn ? "/home" : "/auth/sign-in"}>
-									<div className="inline-flex items-center justify-center font-medium leading-snug transition-all duration-300 ease-in-out shadow-sm text-zinc-200 hover:cursor-pointer whitespace-nowrap hover:text-zinc-100 group">
+									<div className="inline-flex items-center justify-center gap-1 font-medium leading-snug transition-none duration-500 ease-in-out shadow-sm text-zinc-200 hover:text-zinc-100 hover:cursor-pointer whitespace-nowrap">
 										{isSignedIn ? "Dashboard" : "Sign in"}
-										<ArrowLongRightIcon className="hidden w-6 h-6 ml-1 transition-transform duration-150 ease-out md:block group-hover:text-zinc-100 group-hover:trangray-x-1" />
+										<ArrowLongRightIcon className="hidden w-6 h-6 md:block " />
 									</div>
 								</Link>
 							</li>

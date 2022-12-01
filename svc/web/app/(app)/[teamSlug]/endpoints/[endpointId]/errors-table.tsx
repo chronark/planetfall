@@ -20,7 +20,7 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 	const columns = [
 		accessor("time", {
 			header: "Time",
-			cell: (info) => new Date(info.getValue()).toLocaleString(),
+			cell: (info) => new Date(info.getValue()).toLocaleString("en"),
 		}),
 
 		accessor("status", {
@@ -36,7 +36,7 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 		}),
 		accessor("latency", {
 			header: "Latency",
-			cell: (info) => `${info.getValue()?.toLocaleString()} ms`,
+			cell: (info) => `${info.getValue()?.toLocaleString("en")} ms`,
 		}),
 
 		accessor("regionId", {
@@ -51,7 +51,6 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 			.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
 			.slice(0, 10),
 		columns,
-
 		getCoreRowModel: getCoreRowModel(),
 	});
 

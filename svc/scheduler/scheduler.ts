@@ -203,7 +203,7 @@ export class Scheduler {
 									status: c.status,
 								});
 								if (!success) {
-									error = `Assertion error: ${a.schema.type}`;
+									error = `Assertion error: ${JSON.stringify(a.schema)}`;
 									break;
 								}
 							}
