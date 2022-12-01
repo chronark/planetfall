@@ -38,6 +38,9 @@ export const Chart: React.FC<Props> = ({ regions }) => {
 				yField="latency"
 				xAxis={{
 					title: { text: "Regions" },
+					label: {
+						autoRotate: true,
+					},
 				}}
 				yAxis={{
 					maxTickCount: 3,
