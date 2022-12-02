@@ -288,15 +288,17 @@ export default async function Page(props: {
 					</div>
 				) : null}
 
-				<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
-					<Heading h2={true}>Response Header</Heading>
+				{check.header ? (
+					<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
+						<Heading h2={true}>Response Header</Heading>
 
-					<HeaderTable
-						header={Object.entries(
-							JSON.parse(check.header) as Record<string, string>,
-						).map(([key, value]) => ({ key, value }))}
-					/>
-				</div>
+						<HeaderTable
+							header={Object.entries(
+								JSON.parse(check.header) as Record<string, string>,
+							).map(([key, value]) => ({ key, value }))}
+						/>
+					</div>
+				) : null}
 				{check.body ? (
 					<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
 						<Heading h2={true}>Response Body</Heading>

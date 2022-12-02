@@ -193,7 +193,7 @@ export class Scheduler {
 										teamId: endpoint.teamId,
 										time: Date.now(),
 										regionId,
-										error: `timeout exceeded: ${ms(endpoint.timeout)}`,
+										error: `timeout exceeded: ${ms(endpoint.timeout ?? 0)}`,
 									},
 								]);
 								return;

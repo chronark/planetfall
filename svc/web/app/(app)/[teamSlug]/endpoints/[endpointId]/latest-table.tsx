@@ -72,11 +72,12 @@ export const LatestTable: React.FC<Props> = ({
 				return (
 					<span
 						className={classNames({
-							"text-amber-500": degradedAfter && latency > degradedAfter,
-							"text-red-500": timeout && latency > timeout,
+							"text-amber-500":
+								degradedAfter && latency && latency > degradedAfter,
+							"text-red-500": timeout && latency && latency > timeout,
 						})}
 					>
-						{latency.toLocaleString()} ms
+						{latency?.toLocaleString()} ms
 					</span>
 				);
 			},
