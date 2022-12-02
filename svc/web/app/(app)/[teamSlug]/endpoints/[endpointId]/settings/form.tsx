@@ -43,6 +43,10 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 		method: "POST" | "GET" | "PUT" | "DELETE";
 	}>();
 	const requestForm = useForm<{ body: string; headers: string }>();
+	const latencyForm = useForm<{
+		timeout: number;
+		degradedAfter: number;
+	}>();
 	const intervalForm = useForm<{
 		interval: number;
 		distribution: "ALL" | "RANDOM";
@@ -81,8 +85,9 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 	return (
 		<>
 			<PageHeader
+				sticky={true}
 				title="Endpoint Settings"
-				description="Edit your endpoint's settings"
+				description={endpoint.name}
 				actions={[
 					<Button key="cancel" href={`/${teamSlug}/endpoints/${endpoint.id}`}>
 						Go Back
@@ -92,7 +97,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 
 			<div className="container mx-auto">
 				<div>
-					{" "}
 					<div className="md:grid md:grid-cols-3 md:gap-6">
 						<div className="md:col-span-1">
 							<div className="px-4 sm:px-0">
@@ -366,6 +370,128 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 																typeof body === "string" && body === ""
 																	? null
 																	: body,
+														})
+														.then(() => {
+															router.refresh();
+															addToast({ title: "Endpoint updated" });
+														})
+														.catch((err) => {
+															addToast({
+																type: "error",
+																title: "Error",
+																content: (err as Error).message,
+															});
+														});
+												},
+											)}
+										>
+											Save
+										</Button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div className="hidden sm:block" aria-hidden="true">
+					<div className="py-5 md:py-8">
+						<div className="border-t border-zinc-200" />
+					</div>
+				</div>
+				<div>
+					<div className="md:grid md:grid-cols-3 md:gap-6">
+						<div className="md:col-span-1">
+							<div className="px-4 sm:px-0">
+								<h3 className="text-lg font-medium leading-6 text-zinc-900">
+									Acceptable Latency
+								</h3>
+								<p className="mt-1 text-sm text-zinc-600">
+									Configure the acceptable latency for this endpoint. If the
+									latency exceeds the timeout, it will be marked as failed
+								</p>
+							</div>
+						</div>
+						<div className="mt-5 md:col-span-2 md:mt-0">
+							<form>
+								<div className="border sm:overflow-hidden sm:rounded">
+									<div className="px-4 py-5 space-y-6 bg-white sm:p-6">
+										<div className="">
+											<label
+												htmlFor="timeout"
+												className="block text-sm font-medium text-zinc-700"
+											>
+												Timeout
+											</label>
+
+											<div className="flex mt-1 sm:col-span-2 sm:mt-0">
+												<div className="relative flex items-stretch flex-grow group focus-within:z-10">
+													<input
+														type="number"
+														{...latencyForm.register("timeout", {
+															valueAsNumber: true,
+															min: 0,
+														})}
+														min={0}
+														defaultValue={endpoint.timeout ?? undefined}
+														className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
+													/>
+												</div>
+												<div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
+													<span>ms</span>
+												</div>
+											</div>
+
+											{latencyForm.formState.errors.timeout ? (
+												<p className="mt-2 text-sm text-red-500">
+													{latencyForm.formState.errors.timeout.message ||
+														"Timeout is invalid"}
+												</p>
+											) : null}
+										</div>
+										<div className="">
+											<label
+												htmlFor="timeout"
+												className="block text-sm font-medium text-zinc-700"
+											>
+												Degraded After
+											</label>
+
+											<div className="flex mt-1 sm:col-span-2 sm:mt-0">
+												<div className="relative flex items-stretch flex-grow group focus-within:z-10">
+													<input
+														type="number"
+														{...latencyForm.register("degradedAfter", {
+															valueAsNumber: true,
+															min: 0,
+														})}
+														min={0}
+														defaultValue={endpoint.degradedAfter ?? undefined}
+														className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
+													/>
+												</div>
+												<div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
+													<span>ms</span>
+												</div>
+											</div>
+
+											{latencyForm.formState.errors.degradedAfter ? (
+												<p className="mt-2 text-sm text-red-500">
+													{latencyForm.formState.errors.degradedAfter.message ||
+														"DegradedAfter is invalid"}
+												</p>
+											) : null}
+										</div>
+									</div>
+									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
+										<Button
+											type="secondary"
+											onClick={latencyForm.handleSubmit(
+												async ({ timeout, degradedAfter }) => {
+													await trpc.endpoint.update
+														.mutate({
+															endpointId: endpoint.id,
+															timeout,
+															degradedAfter,
 														})
 														.then(() => {
 															router.refresh();

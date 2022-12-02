@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -51,13 +53,28 @@ func NewIdleChecker() *IdleChecker {
 	return i
 }
 
+type ResponseError struct {
+	Error struct {
+		Code    string `json:"code"`
+		Message string `json:"message"`
+	} `json:"error"`
+}
+
+func handleError(c *fiber.Ctx, status int,code string, message string) error {
+	re := ResponseError{}
+	re.Error.Code = code
+	re.Error.Message = message
+
+	return c.Status(status).JSON(re)
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 	region := os.Getenv("FLY_REGION")
-	if region == ""{
+	if region == "" {
 		log.Fatal("FLY_REGION not set")
 	}
 
@@ -81,7 +98,7 @@ func main() {
 	app.Post("/ping/:requestedRegion", func(c *fiber.Ctx) error {
 		requestedRegion := c.Params("requestedRegion")
 		if requestedRegion == "" {
-			return c.SendStatus(404)
+			return handleError(c, 404, "NOT_FOUND", "Invalid region")
 		}
 		if requestedRegion != region {
 			c.Response().Header.Add("Fly-Replay", fmt.Sprintf("region=%s", requestedRegion))
@@ -90,12 +107,16 @@ func main() {
 		req := ping.Request{}
 		err := c.BodyParser(&req)
 		if err != nil {
-			return c.Status(400).JSON(map[string]string{"error": err.Error()})
-		} 
+			return handleError(c, 400, "BAD_REQUEST", err.Error())
+		}
 
 		res, err := ping.Ping(c.UserContext(), req)
 		if err != nil {
-			return c.Status(500).JSON(map[string]string{"error": err.Error()})
+			if errors.Is(err, context.DeadlineExceeded) {
+				return handleError(c, 500, "REQUEST_TIMEOUT", err.Error())
+			}
+
+			return handleError(c, 500, "INTERNAL_SERVER_ERROR", err.Error())
 		}
 
 		return c.JSON(res)

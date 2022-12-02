@@ -18,37 +18,35 @@ export type Props = {
 	endpointId: string;
 	checks: Check[];
 	teamSlug: string;
+	degradedAfter: number | null;
+	timeout: number | null;
 };
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export const LatestTable: React.FC<Props> = ({
 	endpointId,
 	checks,
 	teamSlug,
+	degradedAfter,
+	timeout,
 }): JSX.Element => {
 	const { accessor } = createColumnHelper<Check>();
 
-	const { data } = useSWR<{ data: Check[] }>(
-		`/api/v1/endpoints/${endpointId}/checks?limit=10`,
-		fetcher,
-		{ refreshInterval: 10_000 },
-	);
 	const columns = [
-		accessor("error", {
-			header: "Success",
-			cell: (info) =>
-				info.getValue() ? (
-					<div className="flex items-center justify-center w-6 h-6 mr-2">
-						<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 animate-ping-slow bg-rose-400" />
-						<span className="relative inline-flex w-2 h-2 rounded-full bg-rose-500" />
-					</div>
-				) : (
-					<div className="flex items-center justify-center w-6 h-6 mr-2">
-						<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 bg-emerald-400" />
-						<span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
-					</div>
-				),
-		}),
+		// accessor("error", {
+		// 	header: "Success",
+		// 	cell: (info) =>
+		// 		info.getValue() ? (
+		// 			<div className="flex items-center justify-center w-6 h-6 mr-2">
+		// 				<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 animate-ping-slow bg-rose-400" />
+		// 				<span className="relative inline-flex w-2 h-2 rounded-full bg-rose-500" />
+		// 			</div>
+		// 		) : (
+		// 			<div className="flex items-center justify-center w-6 h-6 mr-2">
+		// 				<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 bg-emerald-400" />
+		// 				<span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+		// 			</div>
+		// 		),
+		// }),
 		accessor("time", {
 			header: "Time",
 			cell: (info) => new Date(info.getValue()).toLocaleString(),
@@ -69,15 +67,27 @@ export const LatestTable: React.FC<Props> = ({
 		}),
 		accessor("latency", {
 			header: "Latency",
-			cell: (info) => `${info.getValue()?.toLocaleString()} ms`,
+			cell: (info) => {
+				const latency = info.getValue();
+				return (
+					<span
+						className={classNames({
+							"text-amber-500": degradedAfter && latency > degradedAfter,
+							"text-red-500": timeout && latency > timeout,
+						})}
+					>
+						{latency.toLocaleString()} ms
+					</span>
+				);
+			},
 		}),
 
-		accessor("regionId", {
-			header: "Region",
-			cell: (info) =>
-				// regions.data?.find((r) => r.id === info.getValue())?.name ??
-				info.getValue(),
-		}),
+		//  accessor("regionId", {
+		//  	header: "Region",
+		//  	cell: (info) =>
+		//  		 regions.data?.find((r) => r.id === info.getValue())?.name ??
+		//  		info.getValue(),
+		//  }),
 		accessor("id", {
 			header: "",
 			cell: (info) => (
@@ -86,13 +96,7 @@ export const LatestTable: React.FC<Props> = ({
 		}),
 	];
 	const table = useReactTable({
-		data: data
-			? data.data
-			: checks
-					.sort(
-						(a, b) => new Date(b.time).getTime() - new Date(a.time).getTime(),
-					)
-					.slice(0, 10),
+		data: checks,
 		columns,
 
 		getCoreRowModel: getCoreRowModel(),

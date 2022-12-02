@@ -3,6 +3,9 @@ import * as tb from "@planetfall/tinybird";
 import { newId } from "@planetfall/id";
 import { Logger } from "./logger";
 import * as assertions from "@planetfall/assertions";
+import { z } from "zod";
+import ms from "ms";
+
 export class Scheduler {
 	// Map of endpoint id -> clearInterval function
 	private clearIntervals: Map<string, () => void>;
@@ -166,11 +169,39 @@ export class Scheduler {
 						}),
 					});
 					if (res.status !== 200) {
-						throw new Error(
-							`unable to ping: ${region.id} [${
-								res.status
-							}]: ${await res.text()}`,
-						);
+						const { error } = z
+							.object({
+								error: z.object({
+									code: z.literal("REQUEST_TIMEOUT"),
+									message: z.string(),
+								}),
+							})
+							.parse(await res.json());
+						switch (error.code) {
+							case "REQUEST_TIMEOUT": {
+								this.logger.info("Request timeout exceeded", {
+									teamId: endpoint.teamId,
+									endpointId: endpoint.id,
+									url: endpoint.url,
+									timeout: endpoint.timeout,
+								});
+								await this.tinybird.publishChecks([
+									{
+										source: "scheduler",
+										id: newId("check"),
+										endpointId: endpoint.id,
+										teamId: endpoint.teamId,
+										time: Date.now(),
+										regionId,
+										error: `timeout exceeded: ${ms(endpoint.timeout)}`,
+									},
+								]);
+								return;
+							}
+
+							default:
+								throw new Error(`Unhandled error from pinger: ${error.code}`);
+						}
 					}
 
 					const parsed = (await res.json()) as {

@@ -1,8 +1,8 @@
 import { Size } from "../types";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, ReactComponentElement } from "react";
 import classNames from "classnames";
 
-export interface TextProps {
+export interface TextProps<As extends React.ElementType> {
 	size?: Size | "2xl" | "3xl";
 	/**
 	 * Override default default colors.
@@ -33,20 +33,30 @@ export interface TextProps {
 	 * Truncate the text to prevent overflows
 	 */
 	truncate?: boolean;
+
+	/**
+	 * The HTML element to render
+	 *
+	 * @default "p"
+	 */
+	as?: As;
 }
 
-export const Text: React.FC<PropsWithChildren<TextProps>> = ({
+export function Text<As extends React.ElementType>({
 	bold,
 	color,
 	children,
 	size = "md",
-	lineBreak,
+	lineBreak = true,
 	align,
 	mono,
+	as,
 	truncate,
-}): JSX.Element => {
+}: TextProps<As> &
+	Omit<React.ComponentPropsWithoutRef<As>, keyof TextProps<As>>): JSX.Element {
+	const Component = as || "p";
 	return (
-		<span
+		<Component
 			className={classNames(
 				{
 					"text-xs": size === "xs",
@@ -65,6 +75,6 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
 			)}
 		>
 			{children}
-		</span>
+		</Component>
 	);
-};
+}

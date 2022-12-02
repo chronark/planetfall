@@ -99,10 +99,12 @@ importers:
       '@planetfall/id': workspace:*
       '@planetfall/tinybird': workspace:*
       '@planetfall/tsconfig': workspace:*
+      '@types/ms': ^0.7.31
       '@types/node': 18.11.9
       dotenv-cli: ^6.0.0
       isomorphic-fetch: ^3.0.0
       kafkajs: ^2.2.3
+      ms: ^2.1.3
       stripe: ^11.1.0
       tslog: ^3.3.4
       typescript: ^4.9.3
@@ -115,11 +117,13 @@ importers:
       '@planetfall/tinybird': link:../../pkg/tinybird
       isomorphic-fetch: 3.0.0
       kafkajs: 2.2.3
+      ms: 2.1.3
       stripe: 11.1.0
       tslog: 3.3.4
       zod: 3.19.1
     devDependencies:
       '@planetfall/tsconfig': link:../../pkg/tsconfig
+      '@types/ms': 0.7.31
       '@types/node': 18.11.9
       dotenv-cli: 6.0.0
       typescript: 4.9.3

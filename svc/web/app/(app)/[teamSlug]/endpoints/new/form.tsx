@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import type { Input as Req, Output as Res } from "pages/api/v1/endpoints/";
 import { mutate } from "lib/api/call";
 import * as assertions from "@planetfall/assertions";
+import { trpc } from "lib/utils/trpc";
+import { TRPCError } from "@trpc/server";
 type Props = {
 	teamId: string;
 	teamSlug: string;
@@ -24,11 +26,13 @@ type FormData = {
 	method: "POST" | "GET" | "PUT" | "DELETE";
 	headers?: string;
 	body?: string;
-	degradedAfter?: number;
 	interval: number;
 	distribution: "ALL" | "RANDOM";
 	regions: string[];
 	statusAssertions: z.infer<typeof assertions.statusAssertion>[];
+	headerAssertions: z.infer<typeof assertions.headerAssertion>[];
+	timeout?: number;
+	degradedAfter?: number;
 };
 
 export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
@@ -53,6 +57,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 		control,
 		name: "statusAssertions",
 	});
+	const headerAssertions = useFieldArray({
+		control,
+		name: "headerAssertions",
+	});
 	// useEffect(() => {
 	//   if (statusAssertions.fields.length === 0) {
 	//     statusAssertions.append({ comparison: "GTE", target: 200 })
@@ -65,13 +73,13 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 		}
 		setLoading(true);
 		try {
-			const res = await mutate<Req["body"], Res>("/api/v1/endpoints", {
+			const res = trpc.endpoint.create.mutate({
 				name: data.name,
-				method: data.method,
 				url: data.url,
-				body: data.body,
+				method: data.method,
 				headers: data.headers ? JSON.parse(data.headers) : undefined,
-				degradedAfter: data.degradedAfter || undefined,
+				degradedAfter: data.degradedAfter ?? undefined,
+				timeout: data.timeout ?? undefined,
 				interval: data.interval * 1000,
 				regionIds: selectedRegions,
 				distribution: data.distribution,
@@ -79,12 +87,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 				statusAssertions: data.statusAssertions,
 			});
 
-			if (res.error) {
-				console.error(res.error);
-				throw new Error(res.error.message);
-			}
-
-			const { id } = await res.data;
+			const { id } = await res;
 
 			router.push(`/${teamSlug}/endpoints/${id}`);
 		} catch (err) {
@@ -282,46 +285,106 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 					</div>
 				</div>
 
+				<div className="pt-8 space-y-6 sm:space-y-5 sm:pt-10">
+					<div>
+						<h3 className="text-lg font-medium leading-6 text-zinc-900">
+							Acceptable Latency
+						</h3>
+						<p className="max-w-2xl mt-1 text-sm text-zinc-500">
+							Configure the acceptable latency for this endpoint. If the latency
+							exceeds the timeout, it will be marked as failed
+						</p>
+					</div>
+
+					<div className="space-y-6 sm:space-y-5">
+						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
+							<label
+								htmlFor="timeout"
+								className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
+							>
+								Timeout
+								<p className="text-xs font-normal">
+									Set to 0 or empty to disable
+								</p>
+							</label>
+							<div className="mt-1 sm:col-span-4 sm:mt-0">
+								<div className="flex mt-1 sm:col-span-2 sm:mt-0">
+									<div className="relative flex items-stretch flex-grow group focus-within:z-10">
+										<input
+											type="number"
+											{...register("timeout", {
+												valueAsNumber: true,
+												min: 0,
+											})}
+											min={0}
+											className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
+										/>
+									</div>
+									<div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
+										<span>ms</span>
+									</div>
+								</div>
+								{errors.timeout ? (
+									<p className="mt-2 text-sm text-red-500">
+										{errors.timeout.message || "Timeout is invalid"}
+									</p>
+								) : null}
+							</div>
+						</div>
+
+						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
+							<label
+								htmlFor="degradedAfter"
+								className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
+							>
+								Degraded After
+								<p className="text-xs font-normal">
+									Set to 0 or empty to disable
+								</p>
+							</label>
+							<div className="mt-1 sm:col-span-4 sm:mt-0">
+								<div className="flex mt-1 sm:col-span-2 sm:mt-0">
+									<div className="relative flex items-stretch flex-grow group focus-within:z-10">
+										<input
+											type="number"
+											{...register("degradedAfter", {
+												valueAsNumber: true,
+												min: 0,
+											})}
+											min={0}
+											className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
+										/>
+									</div>
+									<div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
+										<span>ms</span>
+									</div>
+								</div>
+								{errors.degradedAfter ? (
+									<p className="mt-2 text-sm text-red-500">
+										{errors.degradedAfter.message || "degradedAfter is invalid"}
+									</p>
+								) : null}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="hidden sm:block" aria-hidden="true">
+					<div className="py-5 md:py-8">
+						<div className="border-t border-zinc-200" />
+					</div>
+				</div>
+
 				<div className="pt-8 space-y-6 divide-y divide-zinc-200 sm:space-y-5 sm:pt-10">
 					<div>
 						<h3 className="text-lg font-medium leading-6 text-zinc-900">
 							Assertions
 						</h3>
 						<p className="mt-1 text-sm text-zinc-500">
-							Define validations and latency thresholds
+							Validate the response from your API. If any of the assertions
+							fail, we will alert you.
 						</p>
 					</div>
 					<div className="space-y-6 divide-y divide-zinc-200 sm:space-y-5">
-						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
-							<div className=" sm:col-span-2">
-								<label
-									htmlFor="last-name"
-									className="block text-sm font-medium text-zinc-700 sm:mt-px sm:pt-2"
-								>
-									Degraded After
-								</label>
-								<p className="mt-1 text-sm font-normal text-zinc-500">
-									After this time the API is considered degraded and alerts can
-									be sent.
-								</p>
-							</div>
-							<div className="flex mt-1 sm:col-span-4 sm:mt-0">
-								<div className="relative flex items-stretch flex-grow group focus-within:z-10">
-									<input
-										type="number"
-										{...register("degradedAfter", {
-											valueAsNumber: true,
-											min: 1,
-										})}
-										placeholder="600"
-										className="block w-full transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 md:px-4 md:h-12 border-zinc-900 hover:bg-zinc-50 focus:outline-none"
-									/>
-								</div>
-								<div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
-									<span>ms</span>
-								</div>
-							</div>
-						</div>
 						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
 							<label
 								htmlFor="status"
@@ -387,30 +450,120 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 								</div>
 							</div>
 						</div>
+						<div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
+							<label
+								htmlFor="header"
+								className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
+							>
+								Header
+							</label>
+							<div className="mt-1 space-y-4 sm:col-span-4 sm:mt-0">
+								{headerAssertions.fields.map((f, i) => (
+									<div key={f.id} className="flex items-center gap-4">
+										<input
+											type="text"
+											{...register(`headerAssertions.${i}.key`, {
+												required: true,
+											})}
+											className={
+												"transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+											}
+										/>
+										<select
+											{...register(`headerAssertions.${i}.compare`, {
+												required: true,
+											})}
+											className={
+												"transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+											}
+										>
+											<option value="gt">Greater than</option>
+											<option value="gte">Greater than or equal</option>
+											<option value="lt">Less than</option>
+											<option value="lte">Less than or equal</option>
+											<option value="eq">Equal</option>
+											<option value="not_eq">Not Equal</option>
+										</select>
+										<input
+											type="text"
+											{...register(`headerAssertions.${i}.target`, {
+												required: true,
+											})}
+											className={
+												"transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+											}
+										/>
+										<div>
+											<Button
+												type="secondary"
+												square={true}
+												onClick={() => headerAssertions.remove(i)}
+												size="lg"
+												icon={<MinusSmallIcon className="w-6 h-6" />}
+											/>
+										</div>
+									</div>
+								))}
+
+								<div className="w-full">
+									<Button
+										type="tertiary"
+										onClick={() =>
+											headerAssertions.append({
+												version: "v1",
+												type: "header",
+												key: "Content-Type",
+												compare: "eq",
+												target: "application/json",
+											})
+										}
+										size="lg"
+										block={true}
+										icon={<PlusIcon className="w-6 h-6" />}
+									/>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div className="pt-8 space-y-6 divide-y divide-zinc-200 sm:space-y-5 sm:pt-10">
-					<div>
-						<h3 className="text-lg font-medium leading-6 text-zinc-900">
-							Regions
-						</h3>
-						<p className="max-w-2xl mt-1 text-sm text-zinc-500">
-							Select the regions from where we should call your API. We will
-							either call your API from all regions in parallel, or one region
-							at a time.
-						</p>
+					<div className="flex items-center justify-between">
+						<div>
+							<h3 className="text-lg font-medium leading-6 text-zinc-900">
+								Regions
+							</h3>
+							<p className="max-w-2xl mt-1 text-sm text-zinc-500">
+								Select the regions from where we should call your API. We will
+								either call your API from all regions in parallel, or one region
+								at a time.
+							</p>
+						</div>
+						<Button
+							type="secondary"
+							onClick={() => {
+								if (selectedRegions.length >= regions.length / 2) {
+									setSelectedRegions([]);
+								} else {
+									setSelectedRegions(regions.map((r) => r.id));
+								}
+							}}
+						>
+							{selectedRegions.length >= regions.length / 2
+								? "Deselect all"
+								: "Select all"}
+						</Button>
 					</div>
 					<div className="space-y-6 divide-y divide-zinc-200 sm:space-y-5">
 						<div className="pt-6 sm:pt-5">
 							<div role="group" aria-labelledby="label-email">
 								<div className="sm:grid sm:items-baseline sm:gap-4">
 									<div className="mt-4 sm:col-span-3 sm:mt-0">
-										<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+										<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 											{regions.map((r) => (
 												<button
 													type="button"
 													key={r.id}
-													className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+													className={`text-left px-2 py-1 border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
 														selectedRegions.includes(r.id)
 															? "border-zinc-900 bg-zinc-50"
 															: "border-zinc-300"
@@ -425,10 +578,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 														}
 													}}
 												>
-													<span className="px-2 py-1 lg:px-4">{r.name}</span>
-													<span className="inline-flex items-center justify-center w-1/5 h-full px-2 text-xs uppercase border-l bg-zinc-50 border-zinc-300">
-														{r.platform}
-													</span>
+													{r.name}
 												</button>
 											))}
 										</fieldset>

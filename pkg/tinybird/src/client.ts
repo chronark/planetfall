@@ -106,6 +106,7 @@ export class Client {
 		if (data.data.length === 0) {
 			return [];
 		}
+		console.log({ data });
 		return data.data;
 	}
 }
@@ -121,15 +122,15 @@ export type EndpointStats = {
 export type Check = {
 	id: string;
 	endpointId: string;
-	latency: number;
+	latency?: number;
 	regionId: string;
-	status: number;
+	status?: number;
 	teamId: string;
 	// unix timestamp with millisecond precision
 	time: number;
-	timing: string;
-	body: string;
-	header: string;
+	timing?: string;
+	body?: string;
+	header?: string;
 	source?: string;
 	error?: string;
 };

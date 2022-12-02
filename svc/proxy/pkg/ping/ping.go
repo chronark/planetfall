@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+
+
 type Request struct {
 	Url     string            `json:"url"`
 	Method  string            `json:"method"`
@@ -112,7 +114,7 @@ func check(ctx context.Context, input Request) (Response, error) {
 	timing.TransferDone = time.Now().UnixMilli()
 	latency := time.Since(start).Milliseconds()
 	if err != nil {
-		return Response{}, err
+			return Response{}, err
 	}
 
 	defer res.Body.Close()
