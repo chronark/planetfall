@@ -27,13 +27,13 @@ type Props = {
 	defaultValues: Partial<FormData>;
 };
 
-
-
 export const Form: React.FC<Props> = (props): JSX.Element => {
 	return (
-		<ToastProvider><Inner {...props} /></ToastProvider>
-	)
-}
+		<ToastProvider>
+			<Inner {...props} />
+		</ToastProvider>
+	);
+};
 
 export const Inner: React.FC<Props> = ({
 	defaultValues,
@@ -51,7 +51,7 @@ export const Inner: React.FC<Props> = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const searchParams = useSearchParams();
 	const router = useRouter();
-	const toast = useToaster()
+	const toast = useToaster();
 
 	async function submit(data: FormData) {
 		if (selectedRegions.length === 0) {
@@ -66,7 +66,11 @@ export const Inner: React.FC<Props> = ({
 				repeat: data.repeat === "true",
 			})
 			.then(({ shareId }) => {
-				toast.addToast({type:"info",title:"All Checks are done", content: "Redirecting to results page"})
+				toast.addToast({
+					type: "info",
+					title: "All Checks are done",
+					content: "Redirecting to results page",
+				});
 				router.push(`/play/${shareId}`);
 			})
 			.catch((err) => {
@@ -247,8 +251,9 @@ export const Inner: React.FC<Props> = ({
 															z.string().url().safeParse(v).success,
 													})}
 													placeholder="https://example.com"
-													className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-zinc-700"
-														} hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+													className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${
+														errors.url ? "border-red-500" : "border-zinc-700"
+													} hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
 												/>
 											</div>
 											{errors.url ? (
@@ -331,10 +336,11 @@ export const Inner: React.FC<Props> = ({
 															<button
 																type="button"
 																key={r.id}
-																className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${selectedRegions.includes(r.id)
-																	? "border-zinc-900 bg-zinc-50"
-																	: "border-zinc-300"
-																	}`}
+																className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+																	selectedRegions.includes(r.id)
+																		? "border-zinc-900 bg-zinc-50"
+																		: "border-zinc-300"
+																}`}
 																onClick={() => {
 																	if (selectedRegions.includes(r.id)) {
 																		setSelectedRegions(

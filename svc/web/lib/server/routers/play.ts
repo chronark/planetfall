@@ -114,8 +114,9 @@ export const playRouter = t.router({
 						if (res.status !== 200) {
 							throw new TRPCError({
 								code: "INTERNAL_SERVER_ERROR",
-								message: `unable to ping: ${region.id} [${res.status
-									}]: ${await res.text()}`,
+								message: `unable to ping: ${region.id} [${
+									res.status
+								}]: ${await res.text()}`,
 							});
 						}
 
@@ -148,7 +149,7 @@ export const playRouter = t.router({
 							})),
 						};
 					}),
-				)
+				),
 			};
 
 			const redis = Redis.fromEnv();
@@ -169,5 +170,4 @@ export const playRouter = t.router({
 				message: "Too many id collissions",
 			});
 		}),
-
 });
