@@ -107,6 +107,8 @@ resource "fly_machine" "scheduler" {
   cputype  = "shared"
   memorymb = 256
   env = {
+    "UPSTASH_REDIS_REST_URL"= "https:${upstash_redis_database.planetfall.endpoint}"
+    "UPSTASH_REDIS_REST_TOKEN"= upstash_redis_database.planetfall.rest_token
     "KAFKA_BROKER"   = "${upstash_kafka_cluster.planetfall.tcp_endpoint}:9092"
     "KAFKA_USERNAME" = upstash_kafka_cluster.planetfall.username
     "KAFKA_PASSWORD" = upstash_kafka_cluster.planetfall.password
@@ -114,6 +116,7 @@ resource "fly_machine" "scheduler" {
     "TINYBIRD_TOKEN" = var.tinybird_token
     "DATABASE_URL"   = var.database_url
   }
+
   services = [
     {
       ports = [

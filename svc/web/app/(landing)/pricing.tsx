@@ -145,6 +145,16 @@ const sections: {
 		name: "Alerts",
 		features: [
 			{
+				name: "Email",
+				tiers: {
+					Free: true,
+
+					Pro: true,
+					Enterprise: true,
+				},
+				tag: "New",
+			},
+			{
 				name: "Webhooks",
 				tiers: {
 					Free: true,
@@ -161,16 +171,6 @@ const sections: {
 					Enterprise: true,
 				},
 				tag: "Planned",
-			},
-			{
-				name: "Email",
-				tiers: {
-					Free: false,
-
-					Pro: true,
-					Enterprise: true,
-				},
-				tag: "New",
 			},
 		],
 	},

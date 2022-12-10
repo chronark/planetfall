@@ -2,12 +2,10 @@ datasource db {
   provider             = "mysql"
   url                  = env("DATABASE_URL")
   shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
-  referentialIntegrity = "prisma"
 }
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
 }
 
 model User {
@@ -232,6 +230,9 @@ model StatusPage {
 
   @@index([teamId])
 }
+
+
+
 
 model WebhookAlert {
   id String @id

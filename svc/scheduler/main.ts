@@ -4,9 +4,21 @@ import http from "node:http";
 import "isomorphic-fetch";
 import { newLogger } from "./logger";
 import { Billing } from "./billing";
+import { Notifications } from "./notifications";
+import { Redis } from "@upstash/redis";
+import { db } from "@planetfall/db";
+import { Email } from "@planetfall/emails";
 
 const logger = newLogger({ dataset: "scheduler" });
-const s = new Scheduler({ logger });
+
+const notifications = new Notifications({
+	logger,
+	redis: Redis.fromEnv(),
+	db: db,
+	email: new Email(),
+});
+
+const s = new Scheduler({ logger, notifications });
 const e = new Events({ scheduler: s, logger });
 
 e.run();

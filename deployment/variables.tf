@@ -92,18 +92,6 @@ variable "nextauth_secret" {
   sensitive = true
 }
 
-variable "upstash_redis_rest_url" {
-  type = string
-  sensitive = true
-}
-
-
-variable "upstash_redis_rest_token" {
-  type = string
-  sensitive = true
-}
-
-
 
 variable "proton_verification"{
   type =string

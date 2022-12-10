@@ -5,6 +5,7 @@ import { Logger } from "./logger";
 import * as assertions from "@planetfall/assertions";
 import { z } from "zod";
 import ms from "ms";
+import { Notifications } from "./notifications";
 
 export class Scheduler {
 	// Map of endpoint id -> clearInterval function
@@ -13,14 +14,19 @@ export class Scheduler {
 	private updatedAt: number = 0;
 	private logger: Logger;
 	private tinybird: tb.Client;
+	private notifications: Notifications;
 	regions: Record<string, Region>;
 
-	constructor({ logger }: { logger: Logger }) {
+	constructor({
+		logger,
+		notifications,
+	}: { logger: Logger; notifications: Notifications }) {
 		this.db = new PrismaClient();
 		this.tinybird = new tb.Client();
 		this.clearIntervals = new Map();
 		this.logger = logger;
 		this.regions = {};
+		this.notifications = notifications;
 		setInterval(() => {
 			this.regions = {};
 		}, 5 * 60 * 1000);
@@ -255,6 +261,20 @@ export class Scheduler {
 							timing: JSON.stringify(c.timing),
 						};
 					});
+					for (const d of data) {
+						if (d.error) {
+							this.notifications.notify({
+								type: "check",
+								check: {
+									id: d.id,
+									endpointId: d.endpointId,
+									teamId: d.teamId,
+									time: d.time,
+									error: d.error,
+								},
+							});
+						}
+					}
 
 					await this.tinybird.publishChecks(data);
 				}),

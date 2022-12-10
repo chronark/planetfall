@@ -98,11 +98,11 @@ resource "vercel_project" "web" {
       target = ["production"]
       }, {
       key    = "UPSTASH_REDIS_REST_URL"
-      value  = var.upstash_redis_rest_url
+      value  = "https:${upstash_redis_database.planetfall.endpoint}"
       target = ["production", "preview", "development"]
       }, {
       key    = "UPSTASH_REDIS_REST_TOKEN"
-      value  = var.upstash_redis_rest_token
+      value  = upstash_redis_database.planetfall.rest_token
       target = ["production", "preview", "development"]
     },
     {

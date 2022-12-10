@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "preview": "email dev"
   },
   "keywords": [],
   "author": "Andreas Thomas",
@@ -13,10 +14,24 @@
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",
     "@types/node": "^18.11.12",
+    "@types/react": "18.0.26",
     "nodemailer": "^6.8.0",
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@sendgrid/mail": "^7.2.1"
+    "@react-email/button": "^0.0.4",
+    "@react-email/container": "^0.0.4",
+    "@react-email/head": "^0.0.2",
+    "@react-email/hr": "^0.0.2",
+    "@react-email/html": "^0.0.2",
+    "@react-email/img": "^0.0.2",
+    "@react-email/link": "^0.0.2",
+    "@react-email/preview": "^0.0.2",
+    "@react-email/render": "^0.0.2",
+    "@react-email/section": "^0.0.1",
+    "@react-email/text": "^0.0.2",
+    "@sendgrid/mail": "^7.2.1",
+    "react": "^18.2.0",
+    "react-email": "^1.2.0"
   }
 }
