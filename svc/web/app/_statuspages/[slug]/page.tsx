@@ -137,9 +137,7 @@ export default async function Page(props: { params: { slug: string } }) {
 			>
 				{endpoints.map((endpoint) => (
 					<li
-						key={
-							endpoint.url
-						}
+						key={endpoint.url}
 						// variants={{
 						//   hidden: { scale: 0.9, opacity: 0 },
 						//   show: { scale: 1, opacity: 1, transition: { type: "spring" } },

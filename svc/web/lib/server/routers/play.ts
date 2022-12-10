@@ -65,6 +65,8 @@ export const playRouter = t.router({
 				});
 			}
 
+			let counter = 0;
+
 			const out: PlayChecks = {
 				url: input.url,
 				time: Date.now(),
@@ -102,12 +104,18 @@ export const playRouter = t.router({
 								message: `Unable to ping: ${region.id}`,
 							});
 						});
+						console.log(
+							"Pinged ",
+							++counter,
+							"/",
+							input.regionIds.length,
+							"regions",
+						);
 						if (res.status !== 200) {
 							throw new TRPCError({
 								code: "INTERNAL_SERVER_ERROR",
-								message: `unable to ping: ${region.id} [${
-									res.status
-								}]: ${await res.text()}`,
+								message: `unable to ping: ${region.id} [${res.status
+									}]: ${await res.text()}`,
 							});
 						}
 
@@ -140,7 +148,7 @@ export const playRouter = t.router({
 							})),
 						};
 					}),
-				),
+				)
 			};
 
 			const redis = Redis.fromEnv();
@@ -161,23 +169,5 @@ export const playRouter = t.router({
 				message: "Too many id collissions",
 			});
 		}),
-	// share: t.procedure.input(playChecks
-	// ).output(z.object({ url: z.string() })).mutation(async ({ input }) => {
-	// 	const redis = Redis.fromEnv()
-	// 	for (let i = 0; i < 100; i++) {
-	// 		const id = newShortId();
-	// 		const r = await redis.set(["play", id].join(":"), input, {
-	// 			ex: 7 * 24 * 60 * 60,
-	// 			nx: true,
-	// 		});
 
-	// 		if (r !== null) {
-	// 			return { url: `https://planetfall.io/play/${id}` }
-
-	// 		}
-	// 	}
-
-	// 	throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Too many id collissions" });
-
-	// })
 });

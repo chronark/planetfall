@@ -151,7 +151,7 @@ const sections: {
 					Pro: true,
 					Enterprise: true,
 				},
-				tag: "In Development",
+				tag: "Planned",
 			},
 			{
 				name: "Slack",
@@ -170,7 +170,7 @@ const sections: {
 					Pro: true,
 					Enterprise: true,
 				},
-				tag: "Planned",
+				tag: "New",
 			},
 		],
 	},
