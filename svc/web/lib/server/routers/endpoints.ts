@@ -90,7 +90,7 @@ export const endpointRouter = t.router({
 					body: input.body,
 				},
 			});
-			await kafka
+			kafka
 				.producer()
 				.produce(
 					"endpoint.created",
