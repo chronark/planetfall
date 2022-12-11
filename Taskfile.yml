@@ -33,24 +33,25 @@ tasks:
           TF_VAR_pinger_image: "{{.PINGER_IMAGE}}:{{.VERSION}}"
           TF_VAR_scheduler_image: "{{.SCHEDULER_IMAGE}}:{{.VERSION}}"
     cmds:
-      - task: build-docker
-        vars:
-          DOCKERFILE: svc/proxy/Dockerfile
-          IMAGE: chronark/planetfall-pinger
-          
-      - task: build-docker
-        vars:
-          DOCKERFILE: svc/scheduler/Dockerfile
-          IMAGE: chronark/planetfall-scheduler
-        
-
+      - task: build-scheduler
+      - task: build-pinger
+       
       - terraform -chdir=deployment init -upgrade
       - terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
        
      
-        
-  
+  build-pinger:
+    - task: build-docker
+      vars:
+        DOCKERFILE: svc/proxy/Dockerfile
+        IMAGE: chronark/planetfall-pinger
 
+  build-scheduler:
+    - task: build-docker
+      vars:
+        DOCKERFILE: svc/scheduler/Dockerfile
+        IMAGE: chronark/planetfall-scheduler
+    
   build-docker:
     internal: true
     run: when_changed

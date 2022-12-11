@@ -1,10 +1,9 @@
 "use client";
 import React from "react";
-import { Button, Card, Confirm, Text } from "@/components/index";
-import { Team } from "@prisma/client";
+import { Button, Card, Text } from "@/components/index";
 import Link from "next/link";
 import { UpgradeButton } from "./UpgradeButton";
-import { trpc } from "lib/utils/trpc";
+import { PortalButton } from "./PortalButton";
 
 type Props = {
 	team: {
@@ -114,14 +113,7 @@ export const BillingCard: React.FC<Props> = ({
 				</span>
 
 				<Card.Footer.Actions>
-					{team.plan !== "FREE" ? (
-						<Confirm
-							title="Are you sure you want to cancel?"
-							description="You can come back any time, your endpoints are not deleted."
-							onConfirm={() => trpc.billing.cancel.mutate({ teamId: team.id })}
-							trigger={<Button type="secondary">Cancel</Button>}
-						/>
-					) : null}
+					{team.plan !== "FREE" ? <PortalButton teamId={team.id} /> : null}
 
 					{team.isPersonal ? (
 						team?.plan === "FREE" ? (

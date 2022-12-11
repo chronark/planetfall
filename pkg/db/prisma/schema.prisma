@@ -2,16 +2,18 @@ datasource db {
   provider             = "mysql"
   url                  = env("DATABASE_URL")
   shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 generator client {
   provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 model User {
   id             String       @id
   name           String
-  email          String      @unique
+  email          String       @unique
   emailVerified  DateTime?
   image          String?
   accounts       Account[]
@@ -134,7 +136,7 @@ model Team {
   pages              StatusPage[]
 
   webhookAlerts WebhookAlert[]
-  
+
   @@index([slug])
 }
 
@@ -151,7 +153,7 @@ model Region {
   region   String
 
   // Url where the lambda function for this region is reachable
-  url       String     
+  url       String
   endpoints Endpoint[]
 
   @@unique([platform, region])
@@ -201,7 +203,6 @@ model Endpoint {
   headers      Json?
   body         String?
 
-
   assertions String?
 
   pages StatusPage[]
@@ -231,19 +232,14 @@ model StatusPage {
   @@index([teamId])
 }
 
-
-
-
 model WebhookAlert {
-  id String @id
-  teamId    String
-  team      Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  id     String @id
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
-
-  url       String
+  url        String
   signingKey String
-  active    Boolean
-
+  active     Boolean
 
   @@index([teamId])
 }

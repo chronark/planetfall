@@ -56,21 +56,15 @@ export class Scheduler {
 				continue;
 			}
 
-			const monthStart = new Date();
-			monthStart.setDate(1);
-			monthStart.setHours(0, 0, 0, 0);
-			const monthEnd = new Date();
-			monthEnd.setMonth(monthEnd.getMonth() + 1);
-			monthEnd.setDate(0);
-			monthEnd.setHours(0, 0, 0, 0);
+			const now = new Date();
+			const monthStart = new Date(now.getUTCFullYear(), now.getUTCMonth());
+			const monthEnd = new Date(now.getUTCFullYear(), now.getUTCMonth() + 1);
 
-			const billingStart = Math.floor(
-				t.stripeCurrentBillingPeriodStart?.getTime() ??
-					monthStart.getTime() / 1000,
-			);
-			const billingEnd = Math.floor(
-				t.stripeCurrentBillingPeriodEnd?.getTime() ?? monthEnd.getTime() / 1000,
-			);
+			const billingStart =
+				t.stripeCurrentBillingPeriodStart?.getTime() ?? monthStart.getTime();
+			const billingEnd =
+				t.stripeCurrentBillingPeriodEnd?.getTime() ?? monthEnd.getTime();
+
 			const usage = await this.tinybird.getUsage(t.id, [
 				billingStart,
 				billingEnd,
@@ -78,6 +72,8 @@ export class Scheduler {
 
 			this.logger.info("evaluating team usage", {
 				teamId: t.id,
+				billingStart,
+				billingEnd,
 				usage,
 			});
 

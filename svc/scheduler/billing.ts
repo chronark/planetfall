@@ -77,12 +77,11 @@ export class Billing {
 					continue;
 				}
 
-
 				await this.stripe.subscriptionItems.createUsageRecord(itemId, {
 					quantity: usage,
 					action: "set",
 				});
-	} catch (e) {
+			} catch (e) {
 				this.logger.error((e as Error).message, {
 					teamId: t.id,
 				});

@@ -51,19 +51,19 @@ export const billingRouter = t.router({
 				cancel_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
 			});
 
-			return checkoutSession;
+			return { url: checkoutSession.url };
 		}),
-
-	cancel: t.procedure
+	portal: t.procedure
 		.input(
 			z.object({
 				teamId: z.string(),
 			}),
 		)
-		.mutation(async ({ input, ctx }) => {
+		.query(async ({ input, ctx }) => {
 			if (!ctx.session) {
 				throw new TRPCError({ code: "UNAUTHORIZED" });
 			}
+
 			const team = await db.team.findUnique({
 				where: { id: input.teamId },
 				include: {
@@ -74,16 +74,18 @@ export const billingRouter = t.router({
 					},
 				},
 			});
+
 			if (!team) {
 				throw new TRPCError({ code: "NOT_FOUND" });
 			}
 
-			if (!team.stripeSubscriptionId) {
-				throw new TRPCError({
-					code: "PRECONDITION_FAILED",
-					message: "No subscription found",
-				});
-			}
-			await stripe.subscriptions.cancel(team.stripeSubscriptionId);
+			const portal = await stripe.billingPortal.sessions.create({
+				customer: team.stripeCustomerId,
+				return_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
+			});
+
+			return { url: portal.url };
 		}),
+
+
 });

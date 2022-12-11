@@ -92,7 +92,10 @@ export class Client {
 		teamId: string,
 		interval: [number, number],
 	): Promise<number> {
-		const url = new URL("/v0/pipes/production__usage_interval__v1.json", this.baseUrl);
+		const url = new URL(
+			"/v0/pipes/production__usage_interval__v1.json",
+			this.baseUrl,
+		);
 		url.searchParams.set("teamId", teamId);
 		url.searchParams.set("start", interval[0].toString());
 		url.searchParams.set("end", interval[1].toString());
