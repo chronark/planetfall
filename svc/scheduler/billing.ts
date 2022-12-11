@@ -48,6 +48,12 @@ export class Billing {
 					Math.floor(t.stripeCurrentBillingPeriodStart!.getTime() / 1000),
 					Math.floor(t.stripeCurrentBillingPeriodEnd!.getTime() / 1000),
 				]);
+				if (usage === 0) {
+					this.logger.info("Skipping team with no usage", {
+						teamId: t.id,
+					});
+					continue;
+				}
 
 				this.logger.info("Team usage report", {
 					teamId: t.id,
@@ -71,11 +77,12 @@ export class Billing {
 					continue;
 				}
 
+
 				await this.stripe.subscriptionItems.createUsageRecord(itemId, {
 					quantity: usage,
 					action: "set",
 				});
-			} catch (e) {
+	} catch (e) {
 				this.logger.error((e as Error).message, {
 					teamId: t.id,
 				});

@@ -18,4 +18,4 @@ export const kafka = new Kafka({
 	password,
 });
 
-console.log("topics:", kafka.admin().topics())
+console.log("topics:", kafka.admin().topics());

@@ -50,6 +50,9 @@ export class Scheduler {
 		});
 		for (const t of teams) {
 			if (t.plan === "DISABLED") {
+				this.logger.info("Skipping team with DISABLED plan", {
+					teamId: t.id,
+				});
 				continue;
 			}
 
@@ -61,23 +64,29 @@ export class Scheduler {
 			monthEnd.setDate(0);
 			monthEnd.setHours(0, 0, 0, 0);
 
+			const billingStart = Math.floor(
+				t.stripeCurrentBillingPeriodStart?.getTime() ??
+					monthStart.getTime() / 1000,
+			);
+			const billingEnd = Math.floor(
+				t.stripeCurrentBillingPeriodEnd?.getTime() ?? monthEnd.getTime() / 1000,
+			);
 			const usage = await this.tinybird.getUsage(t.id, [
-				Math.floor(
-					t.stripeCurrentBillingPeriodStart?.getTime() ??
-						monthStart.getTime() / 1000,
-				),
-				Math.floor(
-					t.stripeCurrentBillingPeriodEnd?.getTime() ??
-						monthEnd.getTime() / 1000,
-				),
+				billingStart,
+				billingEnd,
 			]);
+
+			this.logger.info("evaluating team usage", {
+				teamId: t.id,
+				usage,
+			});
 
 			if (usage > t.maxMonthlyRequests) {
 				this.logger.info("team has exceeded monthly requests", {
 					teamId: t.id,
 					maxMonthlyRequests: t.maxMonthlyRequests,
-					monthStart,
-					monthEnd,
+					billingStart,
+					billingEnd,
 					usage,
 				});
 				break;
@@ -117,10 +126,33 @@ export class Scheduler {
 			where: { id: endpointId },
 			include: {
 				regions: true,
+				team: true,
 			},
 		});
 		if (!endpoint) {
 			throw new Error(`endpoint not found: ${endpointId}`);
+		}
+
+		const monthStart = new Date();
+		monthStart.setDate(1);
+		monthStart.setHours(0, 0, 0, 0);
+		const monthEnd = new Date();
+		monthEnd.setMonth(monthEnd.getMonth() + 1);
+		monthEnd.setDate(0);
+		monthEnd.setHours(0, 0, 0, 0);
+
+		const usage = await this.tinybird.getUsage(endpoint.team.id, [
+			Math.floor(
+				endpoint.team.stripeCurrentBillingPeriodStart?.getTime() ??
+					monthStart.getTime() / 1000,
+			),
+			Math.floor(
+				endpoint.team.stripeCurrentBillingPeriodEnd?.getTime() ??
+					monthEnd.getTime() / 1000,
+			),
+		]);
+		if (usage > endpoint.team.maxMonthlyRequests) {
+			return;
 		}
 		this.removeEndpoint(endpoint.id);
 		this.testEndpoint(endpoint);
@@ -197,19 +229,10 @@ export class Scheduler {
 						}),
 					});
 					if (res.status !== 200) {
-						const { error } = z
-							.object({
-								error: z.object({
-									code: z.literal("REQUEST_TIMEOUT"),
-									message: z.string(),
-								}),
-							})
-							.parse(await res.json());
 						this.logger.error("endpoint test failed", {
 							endpointId: endpoint.id,
 							regionId: region.id,
-							code: error.code,
-							error: error.message,
+							error: await res.text(),
 						});
 						return;
 					}

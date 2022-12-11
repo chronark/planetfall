@@ -1,5 +1,6 @@
 import { db } from "@planetfall/db";
 import { Metric, Row } from "./chart";
+import { RelativeTime } from "./RelativeTime";
 
 export const revalidate = 60;
 
@@ -63,6 +64,9 @@ async function getEndpointDataByRegion(endpointId: string) {
 }
 
 import React from "react";
+import Link from "next/link";
+import { Heading } from "@/components/heading";
+import { Text } from "@/components/text";
 
 type Series = {
 	time: number;
@@ -72,6 +76,7 @@ type Series = {
 }[];
 
 export default async function Page(props: { params: { slug: string } }) {
+	const now = Date.now();
 	const statusPage = await db.statusPage.findUnique({
 		where: { slug: props.params.slug },
 		include: {
@@ -122,31 +127,51 @@ export default async function Page(props: { params: { slug: string } }) {
 	);
 
 	return (
-		<main className="container mx-auto md:py-16 ">
-			<ul
-				className="gap-4" // initial="hidden"
-				// animate="show"
-				// variants={{
-				//   hidden: {},
-				//   show: {
-				//     transition: {
-				//       staggerChildren: 0.1,
-				//     },
-				//   },
-				// }}
-			>
-				{endpoints.map((endpoint) => (
-					<li
-						key={endpoint.url}
-						// variants={{
-						//   hidden: { scale: 0.9, opacity: 0 },
-						//   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
-						// }}
+		<div>
+			<header className="container flex items-center justify-between w-full mx-auto mt-4 lg:mt-8 ">
+				<Heading h2>{statusPage.name}</Heading>
+
+				<Text>
+					Last updated <RelativeTime time={now} />
+				</Text>
+			</header>
+			<main className="container min-h-screen mx-auto md:py-16 ">
+				<ul
+					className="gap-4" // initial="hidden"
+					// animate="show"
+					// variants={{
+					//   hidden: {},
+					//   show: {
+					//     transition: {
+					//       staggerChildren: 0.1,
+					//     },
+					//   },
+					// }}
+				>
+					{endpoints.map((endpoint) => (
+						<li
+							key={endpoint.url}
+							// variants={{
+							//   hidden: { scale: 0.9, opacity: 0 },
+							//   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
+							// }}
+						>
+							<Row key={endpoint.url} endpoint={endpoint} />
+						</li>
+					))}
+				</ul>
+			</main>
+			<footer className="inset-x-0 bottom-0 py-16 border-t">
+				<p className="text-center text-zinc-400">
+					Powered by{" "}
+					<Link
+						className="font-medium text-primary-400 hover:text-zinc-600"
+						href="https://planetfall.io"
 					>
-						<Row key={endpoint.url} endpoint={endpoint} />
-					</li>
-				))}
-			</ul>
-		</main>
+						planetfall.io
+					</Link>
+				</p>
+			</footer>
+		</div>
 	);
 }
