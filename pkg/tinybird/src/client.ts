@@ -82,6 +82,36 @@ export class Client {
 
 		return data.data[0];
 	}
+	/**
+	 *
+	 * @param teamId
+	 * @param interval - [start, end] in unix timestamp with millisecond precision
+	 * @returns
+	 */
+	public async getUsage(
+		teamId: string,
+		interval: [number, number],
+	): Promise<number> {
+		const url = new URL("/v0/pipes/usage_interval.json", this.baseUrl);
+		url.searchParams.set("teamId", teamId);
+		url.searchParams.set("start", interval[0].toString());
+		url.searchParams.set("end", interval[1].toString());
+		const res = await fetch(url.toString(), {
+			headers: { Authorization: `Bearer ${this.token}` },
+		});
+		if (!res.ok) {
+			throw new Error(await res.text());
+		}
+
+		const data = (await res.json()) as {
+			data: { teamId: string; usage: number }[];
+		};
+		if (data.data.length === 0) {
+			return 0;
+		}
+
+		return data.data[0].usage;
+	}
 
 	public async getLatestChecksByEndpoint(
 		endpointId: string,

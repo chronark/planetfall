@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -112,11 +110,7 @@ func main() {
 
 		res, err := ping.Ping(c.UserContext(), req)
 		if err != nil {
-			if errors.Is(err, context.DeadlineExceeded) {
-				return handleError(c, 500, "REQUEST_TIMEOUT", err.Error())
-			}
-
-			return handleError(c, 500, "INTERNAL_SERVER_ERROR", err.Error())
+		return handleError(c, 500, "INTERNAL_SERVER_ERROR", err.Error())
 		}
 
 		return c.JSON(res)

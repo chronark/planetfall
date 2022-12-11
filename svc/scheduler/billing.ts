@@ -1,12 +1,14 @@
 import { db, PrismaClient } from "@planetfall/db";
 import { Logger } from "./logger";
 import Stripe from "stripe";
+import { Client as Tinybird } from "@planetfall/tinybird";
 
 export class Billing {
 	// Map of endpoint id -> clearInterval function
 	private db: PrismaClient;
 	private logger: Logger;
 	private stripe: Stripe;
+	private tinybird: Tinybird;
 
 	constructor({
 		logger,
@@ -22,6 +24,7 @@ export class Billing {
 		});
 		this.db = db;
 		this.logger = logger;
+		this.tinybird = new Tinybird();
 	}
 
 	public async run(): Promise<void> {
@@ -41,19 +44,11 @@ export class Billing {
 
 		for (const t of teams) {
 			try {
-				const usage = 0;
+				const usage = await this.tinybird.getUsage(t.id, [
+					Math.floor(t.stripeCurrentBillingPeriodStart!.getTime() / 1000),
+					Math.floor(t.stripeCurrentBillingPeriodEnd!.getTime() / 1000),
+				]);
 
-				//  const usage = await this.db.check.count({
-				//    where: {
-				//      time: {
-				//        gte: t.stripeCurrentBillingPeriodStart!,
-				//        lte: t.stripeCurrentBillingPeriodEnd!,
-				//      },
-				//      endpoint: {
-				//        teamId: t.id,
-				//      },
-				//    },
-				//  });
 				this.logger.info("Team usage report", {
 					teamId: t.id,
 					plan: t.plan,

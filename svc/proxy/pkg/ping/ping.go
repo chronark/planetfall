@@ -4,6 +4,8 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/base64"
+	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -12,14 +14,12 @@ import (
 	"time"
 )
 
-
-
 type Request struct {
 	Url     string            `json:"url"`
 	Method  string            `json:"method"`
 	Body    string            `json:"body"`
 	Headers map[string]string `json:"headers"`
-	// Timeout in milliseconds
+	//Timeout in milliseconds
 	Timeout int `json:"timeout"`
 	// How many checks should run
 	Checks int `json:"checks"`
@@ -40,12 +40,13 @@ type Timing struct {
 }
 
 type Response struct {
-	Status  int               `json:"status"`
-	Latency int64             `json:"latency"`
-	Body    string            `json:"body"`
-	Headers map[string]string `json:"headers"`
+	Status  int               `json:"status,omitempty"`
+	Latency int64             `json:"latency,omitempty"`
+	Body    string            `json:"body,omitempty"`
+	Headers map[string]string `json:"headers,omitempty"`
 	Time    int64             `json:"time"`
 	Timing  Timing            `json:"timing"`
+	Error   string            `json:"error,omitempty"`
 }
 
 func Ping(ctx context.Context, req Request) ([]Response, error) {
@@ -114,7 +115,14 @@ func check(ctx context.Context, input Request) (Response, error) {
 	timing.TransferDone = time.Now().UnixMilli()
 	latency := time.Since(start).Milliseconds()
 	if err != nil {
-			return Response{}, err
+		if errors.Is(err, context.DeadlineExceeded) {
+			return Response{
+				Time:   now.UnixMilli(),
+				Timing: timing,
+				Error:  fmt.Sprintf("Timeout after %d ms", input.Timeout),
+			}, nil
+		}
+		return Response{}, err
 	}
 
 	defer res.Body.Close()

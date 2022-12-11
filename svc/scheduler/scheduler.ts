@@ -49,22 +49,44 @@ export class Scheduler {
 			},
 		});
 		for (const t of teams) {
-			const since =
-				t.stripeCurrentBillingPeriodStart ??
-				new Date(now.getUTCFullYear(), now.getUTCMonth());
-			const usage = 0; // FIXME:
+			if (t.plan === "DISABLED") {
+				continue;
+			}
+
+			const monthStart = new Date();
+			monthStart.setDate(1);
+			monthStart.setHours(0, 0, 0, 0);
+			const monthEnd = new Date();
+			monthEnd.setMonth(monthEnd.getMonth() + 1);
+			monthEnd.setDate(0);
+			monthEnd.setHours(0, 0, 0, 0);
+
+			const usage = await this.tinybird.getUsage(t.id, [
+				Math.floor(
+					t.stripeCurrentBillingPeriodStart?.getTime() ??
+						monthStart.getTime() / 1000,
+				),
+				Math.floor(
+					t.stripeCurrentBillingPeriodEnd?.getTime() ??
+						monthEnd.getTime() / 1000,
+				),
+			]);
+
 			if (usage > t.maxMonthlyRequests) {
 				this.logger.info("team has exceeded monthly requests", {
 					teamId: t.id,
 					maxMonthlyRequests: t.maxMonthlyRequests,
-					since,
+					monthStart,
+					monthEnd,
 					usage,
 				});
 				break;
 			}
 
 			for (const e of t.endpoints) {
-				want[e.id] = e;
+				if (e.active) {
+					want[e.id] = e;
+				}
 			}
 		}
 
@@ -183,39 +205,22 @@ export class Scheduler {
 								}),
 							})
 							.parse(await res.json());
-						switch (error.code) {
-							case "REQUEST_TIMEOUT": {
-								this.logger.info("Request timeout exceeded", {
-									teamId: endpoint.teamId,
-									endpointId: endpoint.id,
-									url: endpoint.url,
-									timeout: endpoint.timeout,
-								});
-								await this.tinybird.publishChecks([
-									{
-										source: "scheduler",
-										id: newId("check"),
-										endpointId: endpoint.id,
-										teamId: endpoint.teamId,
-										time: Date.now(),
-										regionId,
-										error: `timeout exceeded: ${ms(endpoint.timeout ?? 0)}`,
-									},
-								]);
-								return;
-							}
-
-							default:
-								throw new Error(`Unhandled error from pinger: ${error.code}`);
-						}
+						this.logger.error("endpoint test failed", {
+							endpointId: endpoint.id,
+							regionId: region.id,
+							code: error.code,
+							error: error.message,
+						});
+						return;
 					}
 
 					const parsed = (await res.json()) as {
+						error?: string;
 						time: number;
 						status: number;
-						latency: number;
-						body: string;
-						headers: Record<string, string>;
+						latency?: number;
+						body?: string;
+						headers?: Record<string, string>;
 						timing: {
 							dnsStart: number;
 							dnsDone: number;
@@ -229,33 +234,40 @@ export class Scheduler {
 					}[];
 
 					const data = parsed.map((c) => {
-						let error: string | undefined = undefined;
+						if (!c.error) {
+							if (!c.body) {
+								throw new Error("no body");
+							}
+							if (!c.headers) {
+								throw new Error("no headers");
+							}
 
-						if (endpoint.assertions) {
-							const as = assertions.deserialize(endpoint.assertions);
-							for (const a of as) {
-								const success = a.assert({
-									body: c.body,
-									header: c.headers,
-									status: c.status,
-								});
-								if (!success) {
-									error = `Assertion error: ${JSON.stringify(a.schema)}`;
-									break;
+							if (endpoint.assertions) {
+								const as = assertions.deserialize(endpoint.assertions);
+								for (const a of as) {
+									const success = a.assert({
+										body: c.body,
+										header: c.headers,
+										status: c.status,
+									});
+									if (!success) {
+										c.error = `Assertion error: ${JSON.stringify(a.schema)}`;
+										break;
+									}
 								}
 							}
 						}
 
 						return {
-							source: "scheduler",
 							id: newId("check"),
+							source: "scheduler",
 							endpointId: endpoint.id,
 							teamId: endpoint.teamId,
 							latency: c.latency,
 							time: c.time,
 							status: c.status,
 							regionId,
-							error,
+							error: c.error,
 							body: c.body,
 							header: JSON.stringify(c.headers),
 							timing: JSON.stringify(c.timing),

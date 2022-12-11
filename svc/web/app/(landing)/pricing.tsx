@@ -25,7 +25,7 @@ const tiers: {
 		name: "Free",
 		href: "/auth/sign-in",
 		monthlyPrice: "$0",
-		description: "No cprimaryit card requiprimary",
+		description: "No credit card required",
 		cta: "Start for free",
 	},
 	{

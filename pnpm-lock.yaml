@@ -189,6 +189,8 @@ importers:
       '@radix-ui/react-tabs': ^1.0.1
       '@radix-ui/react-toast': ^1.1.2
       '@sindresorhus/slugify': ^2.1.1
+      '@stripe/react-stripe-js': ^1.16.1
+      '@stripe/stripe-js': ^1.46.0
       '@tailwindcss/typography': ^0.5.8
       '@tanstack/react-query': ^4.19.1
       '@tanstack/react-table': ^8.7.0
@@ -262,6 +264,8 @@ importers:
       '@radix-ui/react-tabs': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-toast': 1.1.2_biqbaboplfbrettd7655fr4n2y
       '@sindresorhus/slugify': 2.1.1
+      '@stripe/react-stripe-js': 1.16.1_keartrz7uyerl3wkpjpue4xbhy
+      '@stripe/stripe-js': 1.46.0
       '@tailwindcss/typography': 0.5.8_tailwindcss@3.2.4
       '@tanstack/react-query': 4.19.1_biqbaboplfbrettd7655fr4n2y
       '@tanstack/react-table': 8.7.0_biqbaboplfbrettd7655fr4n2y
@@ -1812,6 +1816,23 @@ packages:
     dependencies:
       escape-string-regexp: 5.0.0
       lodash.deburr: 4.1.0
+    dev: false
+
+  /@stripe/react-stripe-js/1.16.1_keartrz7uyerl3wkpjpue4xbhy:
+    resolution: {integrity: sha512-einalv46WrAZhCN8jDHz3e6ePYmwwkbwDfv//XPKw/higzdiZmSZgMJWeqEOPvalf8qryx9vOXOYaH7G6yUGug==}
+    peerDependencies:
+      '@stripe/stripe-js': ^1.44.1
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@stripe/stripe-js': 1.46.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@stripe/stripe-js/1.46.0:
+    resolution: {integrity: sha512-dkm0zCEoRLu5rTnsIgwDf/QG2DKcalOT2dk1IVgMySOHWTChLyOvQwMYhEduGgLvyYWTwNhAUV4WOLPQvjwLwA==}
     dev: false
 
   /@swc/helpers/0.4.14:

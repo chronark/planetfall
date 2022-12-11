@@ -45,4 +45,5 @@ resource "upstash_redis_database" "planetfall" {
   database_name = "prod"
   region       = "eu-west-1"
   tls = true
+  multizone = true
 }
