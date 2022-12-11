@@ -45,13 +45,10 @@ variable "stripe_publishable_key" {
   type = string
 }
 
-variable "stripe_product_id_pro" {
+variable "stripe_price_id_pro" {
   type = string
 }
 
-variable "stripe_product_id_personal" {
-  type = string
-}
 
 
 variable "sendgrid_api_key" {

@@ -68,15 +68,11 @@ resource "vercel_project" "web" {
       target = ["production"]
     },
     {
-      key    = "STRIPE_PRODUCT_ID_PRO"
-      value  = var.stripe_product_id_pro
+      key    = "STRIPE_PRICE_ID_PRO"
+      value  = var.stripe_price_id_pro
       target = ["production"]
     },
-    {
-      key    = "STRIPE_PRODUCT_ID_PERSONAL"
-      value  = var.stripe_product_id_personal
-      target = ["production"]
-    },
+
     {
       key    = "TINYBIRD_TOKEN"
       value  = var.tinybird_token
