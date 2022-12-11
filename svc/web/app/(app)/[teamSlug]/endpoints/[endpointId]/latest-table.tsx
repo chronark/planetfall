@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useReducer, useState } from "react";
+import React from "react";
 import type { Check } from "@planetfall/tinybird";
-import useSWR from "swr";
+import type { Region } from "@planetfall/db";
 import {
 	createColumnHelper,
 	flexRender,
@@ -20,6 +20,7 @@ export type Props = {
 	teamSlug: string;
 	degradedAfter: number | null;
 	timeout: number | null;
+	regions: Region[];
 };
 
 export const LatestTable: React.FC<Props> = ({
@@ -28,6 +29,7 @@ export const LatestTable: React.FC<Props> = ({
 	teamSlug,
 	degradedAfter,
 	timeout,
+	regions,
 }): JSX.Element => {
 	const { accessor } = createColumnHelper<Check>();
 
@@ -83,12 +85,11 @@ export const LatestTable: React.FC<Props> = ({
 			},
 		}),
 
-		//  accessor("regionId", {
-		//  	header: "Region",
-		//  	cell: (info) =>
-		//  		 regions.data?.find((r) => r.id === info.getValue())?.name ??
-		//  		info.getValue(),
-		//  }),
+		accessor("regionId", {
+			header: "Region",
+			cell: (info) =>
+				regions.find((r) => r.id === info.getValue())?.name ?? info.getValue(),
+		}),
 		accessor("id", {
 			header: "",
 			cell: (info) => (

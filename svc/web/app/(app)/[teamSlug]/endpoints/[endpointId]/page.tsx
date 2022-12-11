@@ -23,6 +23,7 @@ export default async function Page(props: {
 		return redirect("/auth/sign-in");
 	}
 
+	const regions = await db.region.findMany();
 	const endpoint = await db.endpoint.findUnique({
 		where: {
 			id: props.params.endpointId,
@@ -191,6 +192,7 @@ export default async function Page(props: {
 							checks={latestChecks}
 							degradedAfter={endpoint.degradedAfter}
 							timeout={endpoint.timeout}
+							regions={regions}
 						/>
 					</div>
 				) : null}

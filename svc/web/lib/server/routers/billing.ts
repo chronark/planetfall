@@ -86,6 +86,4 @@ export const billingRouter = t.router({
 
 			return { url: portal.url };
 		}),
-
-
 });
