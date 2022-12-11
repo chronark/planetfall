@@ -106,7 +106,6 @@ export class Client {
 		if (data.data.length === 0) {
 			return [];
 		}
-		console.log({ data });
 		return data.data;
 	}
 }

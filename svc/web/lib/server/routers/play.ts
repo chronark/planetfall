@@ -6,8 +6,9 @@ import { db } from "@planetfall/db";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
+const redis = Redis.fromEnv();
 const ratelimit = new Ratelimit({
-	redis: Redis.fromEnv(),
+	redis,
 	limiter: Ratelimit.fixedWindow(10, "10 s"),
 });
 
@@ -56,103 +57,117 @@ export const playRouter = t.router({
 			}),
 		)
 		.output(z.object({ shareId: z.string() }))
-		.mutation(async ({ input }) => {
-			const { success } = await ratelimit.limit("global");
+		.mutation(async ({ ctx, input }) => {
+			const { success, remaining, reset, limit } = await ratelimit.limit(
+				"global",
+			);
 			if (!success) {
 				throw new TRPCError({
 					code: "TOO_MANY_REQUESTS",
 					message: "Too many requests, please try again later",
 				});
 			}
+			ctx.res.setHeader("X-RateLimit-Limit", limit);
+			ctx.res.setHeader("X-RateLimit-Remaining", remaining);
+			ctx.res.setHeader("X-RateLimit-Reset", reset);
 
 			let counter = 0;
+
+			const ps = await Promise.allSettled(
+				input.regionIds.map(async (regionId) => {
+					const region = await db.region.findUnique({
+						where: { id: regionId },
+					});
+					if (!region) {
+						throw new TRPCError({
+							code: "BAD_REQUEST",
+							message: `regionId: ${regionId} not found`,
+						});
+					}
+					const headers = new Headers({
+						"Content-Type": "application/json",
+					});
+					if (region.platform === "fly") {
+						headers.set("Fly-Prefer-Region", region.region);
+					}
+
+					const res = await fetch(region.url, {
+						method: "POST",
+						headers,
+						body: JSON.stringify({
+							url: input.url,
+							method: input.method,
+							timeout: 2000,
+							checks: input.repeat ? 2 : 1,
+						}),
+					}).catch((err) => {
+						console.error(err);
+						throw new TRPCError({
+							code: "INTERNAL_SERVER_ERROR",
+							message: `Unable to ping: ${region.id}`,
+						});
+					});
+					console.log(
+						"Pinged ",
+						++counter,
+						"/",
+						input.regionIds.length,
+						"regions",
+					);
+					if (res.status !== 200) {
+						throw new TRPCError({
+							code: "INTERNAL_SERVER_ERROR",
+							message: `unable to ping: ${region.id} [${
+								res.status
+							}]: ${await res.text()}`,
+						});
+					}
+
+					const checks = (await res.json()) as {
+						time: number;
+						status: number;
+						latency: number;
+						body: string;
+						headers: Record<string, string>;
+						timing: {
+							dnsStart: number;
+							dnsDone: number;
+							connectStart: number;
+							connectDone: number;
+							firstByteStart: number;
+							firstByteDone: number;
+							tlsHandshakeStart: number;
+							tlsHandshakeDone: number;
+							transferStart: number;
+							transferDone: number;
+						};
+					}[];
+
+					return {
+						id: region.id,
+						name: region.name,
+						checks: checks.map((c) => ({
+							...c,
+							id: newId("check"),
+						})),
+					};
+				}),
+			);
 
 			const out: PlayChecks = {
 				url: input.url,
 				time: Date.now(),
-				regions: await Promise.all(
-					input.regionIds.map(async (regionId) => {
-						const region = await db.region.findUnique({
-							where: { id: regionId },
-						});
-						if (!region) {
-							throw new TRPCError({
-								code: "BAD_REQUEST",
-								message: `regionId: ${regionId} not found`,
-							});
-						}
-						const headers = new Headers({
-							"Content-Type": "application/json",
-						});
-						if (region.platform === "fly") {
-							headers.set("Fly-Prefer-Region", region.region);
-						}
-
-						const res = await fetch(region.url, {
-							method: "POST",
-							headers,
-							body: JSON.stringify({
-								url: input.url,
-								method: input.method,
-								timeout: 2000,
-								checks: input.repeat ? 2 : 1,
-							}),
-						}).catch((err) => {
-							console.error(err);
-							throw new TRPCError({
-								code: "INTERNAL_SERVER_ERROR",
-								message: `Unable to ping: ${region.id}`,
-							});
-						});
-						console.log(
-							"Pinged ",
-							++counter,
-							"/",
-							input.regionIds.length,
-							"regions",
-						);
-						if (res.status !== 200) {
-							throw new TRPCError({
-								code: "INTERNAL_SERVER_ERROR",
-								message: `unable to ping: ${region.id} [${
-									res.status
-								}]: ${await res.text()}`,
-							});
-						}
-
-						const checks = (await res.json()) as {
-							time: number;
-							status: number;
-							latency: number;
-							body: string;
-							headers: Record<string, string>;
-							timing: {
-								dnsStart: number;
-								dnsDone: number;
-								connectStart: number;
-								connectDone: number;
-								firstByteStart: number;
-								firstByteDone: number;
-								tlsHandshakeStart: number;
-								tlsHandshakeDone: number;
-								transferStart: number;
-								transferDone: number;
-							};
-						}[];
-
-						return {
-							id: region.id,
-							name: region.name,
-							checks: checks.map((c) => ({
-								...c,
-								id: newId("check"),
-							})),
-						};
-					}),
-				),
+				regions: [],
 			};
 
-			const redis = Redis.fromEnv();
+			for (const p of ps) {
+				if (p.status === "fulfilled") {
+					out.regions.push(p.value);
+				} else {
+					console.error(p.reason);
+				}
+			}
+
 			for (let i = 0; i < 100; i++) {
 				const id = newShortId();
 				const r = await redis.set(["play", id].join(":"), out, {
@@ -161,6 +176,9 @@ export const playRouter = t.router({
 				});
 
 				if (r !== null) {
+					await ctx.res.revalidate(`/play/${id}`).catch((err) => {
+						console.error("revalidate failed", err);
+					});
 					return { shareId: id };
 				}
 			}

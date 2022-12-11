@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 
 export type PageHeaderProps = {
 	title: string;
-	description?: string;
+	description?: string | React.ReactNode;
 	actions?: React.ReactNode[];
 	sticky?: boolean;
 };
@@ -39,7 +39,7 @@ export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
 					</h1>
 					<p className="mt-2 text-sm text-zinc-700">{props.description}</p>
 				</div>
-				<div className="flex items-center mt-3 sm:mt-0 sm:ml-4 gap-2">
+				<div className="flex items-center gap-2 mt-3 sm:mt-0 sm:ml-4">
 					{props.actions?.map((a, i) => (
 						<div key={i}>{a}</div>
 					))}

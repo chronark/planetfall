@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export const config = {
-	matcher: "/((?!_next|_static|_vercel|api|[\\w-]+\\.\\w+).*)",
+	matcher: "/((?!_next|_static|_vercel|api|play|[\\w-]+\\.\\w+).*)",
 };
 
 function middleware(req: NextRequest) {

@@ -9,23 +9,24 @@ import { Chart } from "./chart";
 import { Table } from "./table";
 import { Details } from "./details";
 import { PlayChecks } from "lib/server/routers/play";
+import { DateDisplay } from "./DateDisplay";
 const redis = Redis.fromEnv();
 
-export const revalidate = false;
+export const revalidate = 3600;
 
-// export async function generateStaticParams() {
-// 	const keys: string[] = [];
-// 	let cursor = 0;
-// 	do {
-// 		const [newCursor, newKeys] = await redis.scan(cursor, { match: "play:*" });
-// 		cursor = newCursor;
-// 		keys.push(...newKeys);
-// 	} while (cursor !== 0);
+export async function generateStaticParams() {
+	const keys: string[] = [];
+	let cursor = 0;
+	do {
+		const [newCursor, newKeys] = await redis.scan(cursor, { match: "play:*" });
+		cursor = newCursor;
+		keys.push(...newKeys);
+	} while (cursor !== 0);
 
-// 	return keys.map((key) => ({
-// 		shareId: key.replace("play:", ""),
-// 	}));
-// }
+	return keys.map((key) => ({
+		shareId: key.replace("play:", ""),
+	}));
+}
 
 export default async function Share(props: { params: { shareId: string } }) {
 	const res = await redis.get<PlayChecks>(
@@ -90,10 +91,7 @@ export default async function Share(props: { params: { shareId: string } }) {
 			</header>
 			<div className="container relative min-h-screen pb-20 mx-auto mt-24 -pt-24">
 				<div className="pb-32 mb-32 space-y-4 border-b md:space-y-8 lg:space-y-16">
-					<PageHeader
-						title={url}
-						description={new Date(time).toLocaleString()}
-					/>
+					<PageHeader title={url} description={<DateDisplay time={time} />} />
 
 					{regions.length >= 2 ? (
 						<>

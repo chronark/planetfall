@@ -9,6 +9,8 @@ export async function createContext({
 	const session = await unstable_getServerSession(req, res, authOptions);
 
 	return {
+		req,
+		res,
 		session,
 	};
 }

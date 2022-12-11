@@ -10,7 +10,6 @@ export default async function PlayPage(props: {
 	};
 }) {
 	const regions = await db.region.findMany();
-	console.log({ regions, props });
 	return (
 		<Form
 			regions={regions}
