@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/chronark/planetfall/svc/proxy/pkg/ping"
+	"github.com/chronark/planetfall/apps/proxy/pkg/ping"
 	"github.com/gofiber/fiber/v2"
 )
 

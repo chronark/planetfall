@@ -43,13 +43,13 @@ tasks:
   build-pinger:
     - task: build-docker
       vars:
-        DOCKERFILE: svc/proxy/Dockerfile
+        DOCKERFILE: apps/proxy/Dockerfile
         IMAGE: chronark/planetfall-pinger
 
   build-scheduler:
     - task: build-docker
       vars:
-        DOCKERFILE: svc/scheduler/Dockerfile
+        DOCKERFILE: apps/scheduler/Dockerfile
         IMAGE: chronark/planetfall-scheduler
     
   build-docker:

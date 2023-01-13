@@ -1,4 +1,4 @@
-module github.com/chronark/planetfall/svc/proxy
+module github.com/chronark/planetfall/apps/proxy
 
 go 1.18
 

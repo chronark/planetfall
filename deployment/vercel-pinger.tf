@@ -33,7 +33,7 @@ locals {
 
 
 
-#   root_directory             = "svc/proxy"
+#   root_directory             = "apps/proxy"
 #   serverless_function_region = each.value
 
 # #   git_repository = {

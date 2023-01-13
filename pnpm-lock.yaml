@@ -119,7 +119,7 @@ importers:
   pkg/tsconfig:
     specifiers: {}
 
-  svc/scheduler:
+  apps/scheduler:
     specifiers:
       '@axiomhq/axiom-node': ^0.10.0
       '@planetfall/assertions': workspace:*
@@ -160,7 +160,7 @@ importers:
       dotenv-cli: 6.0.0
       typescript: 4.9.4
 
-  svc/web:
+  apps/web:
     specifiers:
       '@ant-design/plots': ^1.2.2
       '@chronark/access': ^0.0.16
@@ -1038,7 +1038,7 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@next/swc-win32-arm64-msvc/13.0.6:
+  /@next/swc-win32-arm64-mapps/13.0.6:
     resolution: {integrity: sha512-QjeMB2EBqBFPb/ac0CYr7GytbhUkrG4EwFWbcE0vsRp4H8grt25kYpFQckL4Jak3SUrp7vKfDwZ/SwO7QdO8vw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
@@ -1046,7 +1046,7 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@next/swc-win32-ia32-msvc/13.0.6:
+  /@next/swc-win32-ia32-mapps/13.0.6:
     resolution: {integrity: sha512-EQzXtdqRTcmhT/tCq81rIwE36Y3fNHPInaCuJzM/kftdXfa0F+64y7FAoMO13npX8EG1+SamXgp/emSusKrCXg==}
     engines: {node: '>= 10'}
     cpu: [ia32]
@@ -1054,7 +1054,7 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@next/swc-win32-x64-msvc/13.0.6:
+  /@next/swc-win32-x64-mapps/13.0.6:
     resolution: {integrity: sha512-pSkqZ//UP/f2sS9T7IvHLfEWDPTX0vRyXJnAUNisKvO3eF3e1xdhDX7dix/X3Z3lnN4UjSwOzclAI87JFbOwmQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
@@ -4982,9 +4982,9 @@ packages:
       '@next/swc-linux-arm64-musl': 13.0.6
       '@next/swc-linux-x64-gnu': 13.0.6
       '@next/swc-linux-x64-musl': 13.0.6
-      '@next/swc-win32-arm64-msvc': 13.0.6
-      '@next/swc-win32-ia32-msvc': 13.0.6
-      '@next/swc-win32-x64-msvc': 13.0.6
+      '@next/swc-win32-arm64-mapps': 13.0.6
+      '@next/swc-win32-ia32-mapps': 13.0.6
+      '@next/swc-win32-x64-mapps': 13.0.6
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
