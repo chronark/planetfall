@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/chronark/planetfall/svc/proxy/pkg/ping"
+	"github.com/chronark/planetfall/apps/proxy/pkg/ping"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/chronark/planetfall/svc/proxy/pkg/ping"
+	"github.com/chronark/planetfall/apps/proxy/pkg/ping"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"

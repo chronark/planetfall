@@ -10,6 +10,6 @@ RUN pnpm install -r --offline
 RUN pnpm turbo run build --filter=scheduler
 
 
-CMD ["node", "./svc/scheduler/dist/main.js"]
+CMD ["node", "./apps/scheduler/dist/main.js"]
 
 

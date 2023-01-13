@@ -5,7 +5,7 @@ resource "vercel_project" "web" {
 
 
   build_command              = "cd ../.. && pnpm turbo run build --filter=web"
-  root_directory             = "svc/web"
+  root_directory             = "apps/web"
   serverless_function_region = "fra1"
 
   git_repository = {
