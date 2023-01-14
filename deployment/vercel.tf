@@ -114,6 +114,18 @@ resource "vercel_project" "web" {
 
 
 
+resource "vercel_dns_record" "pinger_v4" {
+  team_id = var.vercel_team_id
+  domain  = "planetfall.io"
+  name    = "ping"
+  type    = "A"
+  ttl     = 60
+  value   = fly_ip.pinger_v4.address
+}
+
+
+
+
 resource "vercel_dns_record" "proton_verification" {
   team_id = var.vercel_team_id
   domain  = "planetfall.io"

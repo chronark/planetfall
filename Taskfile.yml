@@ -2,7 +2,7 @@ version: '3'
 
 
 vars: 
-  VERSION: 
+  VERSION:
     sh: git describe --tags --always
   PINGER_IMAGE: chronark/planetfall-pinger
   SCHEDULER_IMAGE: chronark/planetfall-scheduler
@@ -28,7 +28,6 @@ tasks:
   deploy:
     deps:
       - clear
-      - install
     env:
           TF_VAR_pinger_image: "{{.PINGER_IMAGE}}:{{.VERSION}}"
           TF_VAR_scheduler_image: "{{.SCHEDULER_IMAGE}}:{{.VERSION}}"
@@ -36,8 +35,9 @@ tasks:
       - task: build-scheduler
       - task: build-pinger
        
-      - terraform -chdir=deployment init -upgrade
-      - terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
+      # - terraform -chdir=deployment init -upgrade
+      # - terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
+      - fly machines update --app=planetfall-scheduler 6e82975b764e68 --image={{.SCHEDULER_IMAGE}}:{{.VERSION}} --yes
        
      
   build-pinger:
@@ -55,6 +55,8 @@ tasks:
   build-docker:
     internal: true
     run: when_changed
+    env:
+      DOCKER_BUILDKIT: 1
     cmds:
       - docker build --platform=linux/amd64 -t {{.IMAGE}}:{{.VERSION}} -t {{.IMAGE}}:latest -f {{.DOCKERFILE}} .
       - docker push {{.IMAGE}}:{{.VERSION}}

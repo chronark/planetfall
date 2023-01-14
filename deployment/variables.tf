@@ -130,5 +130,5 @@ variable "fly_token" {
 
 variable "fly_org" {
   type = string
-  default = "personal"  
+  default = "planetfall"  
 }

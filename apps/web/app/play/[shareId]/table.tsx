@@ -41,7 +41,7 @@ export const Table: React.FC<Props> = ({ regions }) => {
 
 	const data = regions.map((r) => ({
 		name: r.name,
-		latency: r.checks.map((c) => fmt(c.latency)),
+		latency: r.checks.map((c) => fmt(c?.latency)),
 		status: r.checks.map((c) => c.status),
 		dns: r.checks.map((c) => fmt(c.timing.dnsDone - c.timing.dnsStart)),
 		connect: r.checks.map((c) =>
@@ -53,7 +53,7 @@ export const Table: React.FC<Props> = ({ regions }) => {
 		ttfb: r.checks.map((c) =>
 			fmt(c.timing.firstByteDone - c.timing.firstByteStart),
 		),
-		total: r.checks.map((c) => fmt(c.latency)),
+		total: r.checks.map((c) => fmt(c?.latency)),
 	}));
 	const { accessor } = createColumnHelper<typeof data[0]>();
 
@@ -94,7 +94,7 @@ export const Table: React.FC<Props> = ({ regions }) => {
 		}),
 	];
 
-	if (data[0].latency.length > 1) {
+	if (data.length > 0 && data[0].latency.length > 1) {
 		columns = [
 			columns[0],
 			accessor("latency", {
