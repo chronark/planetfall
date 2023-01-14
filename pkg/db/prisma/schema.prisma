@@ -116,7 +116,7 @@ model Team {
 
   plan Plan
 
-  stripeCustomerId                String    @unique
+  stripeCustomerId                String?    @unique
   stripeSubscriptionId            String?   @unique
   stripeCurrentBillingPeriodStart DateTime?
   stripeCurrentBillingPeriodEnd   DateTime?

@@ -22,7 +22,7 @@ export const billingRouter = t.router({
 				throw new TRPCError({ code: "UNAUTHORIZED" });
 			}
 
-			const team = await db.team.findUnique({
+			let team = await db.team.findUnique({
 				where: { id: input.teamId },
 				include: {
 					members: {
@@ -36,10 +36,34 @@ export const billingRouter = t.router({
 			if (!team) {
 				throw new TRPCError({ code: "NOT_FOUND" });
 			}
-			console.log({ input });
 
+			if (!team.stripeCustomerId) {
+				const user = await db.user.findUnique({
+					where: { id: ctx.session.user.id },
+				});
+				if (!user) {
+					throw new TRPCError({ code: "NOT_FOUND" });
+				}
+				const customer = await stripe.customers.create({
+					email: user.email,
+				});
+
+				team = await db.team.update({
+					where: { id: team.id },
+					data: {
+						stripeCustomerId: customer.id,
+					},
+					include: {
+						members: {
+							where: {
+								userId: ctx.session.user.id,
+							},
+						},
+					},
+				});
+			}
 			const checkoutSession = await stripe.checkout.sessions.create({
-				customer: team.stripeCustomerId,
+				customer: team.stripeCustomerId!, // we just created it, so we know it exists
 				payment_method_types: ["card"],
 				mode: "subscription",
 				line_items: [
@@ -80,7 +104,7 @@ export const billingRouter = t.router({
 			}
 
 			const portal = await stripe.billingPortal.sessions.create({
-				customer: team.stripeCustomerId,
+				customer: team.stripeCustomerId!,
 				return_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
 			});
 
