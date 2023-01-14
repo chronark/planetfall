@@ -14,20 +14,6 @@ const redis = Redis.fromEnv();
 
 export const revalidate = 3600;
 
-export async function generateStaticParams() {
-	const keys: string[] = [];
-	let cursor = 0;
-	do {
-		const [newCursor, newKeys] = await redis.scan(cursor, { match: "play:*" });
-		cursor = newCursor;
-		keys.push(...newKeys);
-	} while (cursor !== 0);
-
-	return keys.map((key) => ({
-		shareId: key.replace("play:", ""),
-	}));
-}
-
 export default async function Share(props: { params: { shareId: string } }) {
 	const res = await redis.get<PlayChecks>(
 		["play", props.params.shareId].join(":"),
