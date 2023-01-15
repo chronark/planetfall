@@ -54,8 +54,8 @@ resource "fly_machine" "pinger" {
   cputype  = "shared"
   memorymb = 1024
   env = {
-    AXIOM_TOKEN              = var.axiom_token
-    AXIOM_ORG                = var.axiom_org
+    AXIOM_TOKEN = var.axiom_token
+    AXIOM_ORG   = var.axiom_org
   }
   services = [
     {
@@ -104,7 +104,7 @@ variable "scheduler_image" {
 }
 resource "fly_machine" "scheduler" {
   app    = fly_app.scheduler.name
-  name = "scheduler"
+  name   = "scheduler"
   region = "ams"
   image  = var.scheduler_image
 
@@ -164,7 +164,7 @@ resource "fly_ip" "scheduler_v6" {
 
 
 
-# resource "fly_cert" "pinger" {
-#   app      = fly_app.pinger.name
-#   hostname = "pinger.planetfall.io"
-# }
+resource "fly_cert" "ping" {
+  app      = fly_app.pinger.name
+  hostname = "ping.planetfall.io"
+}

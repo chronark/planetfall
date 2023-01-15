@@ -174,7 +174,7 @@ func main() {
 		}
 	}()
 
-	err := app.Listen(fmt.Sprintf(":%s", port))
+	err = app.Listen(fmt.Sprintf(":%s", port))
 	if err != nil {
 		log.Fatalf("Error listening: %s", err.Error())
 	}

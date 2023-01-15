@@ -4,7 +4,6 @@ import { asyncComponent } from "lib/api/component";
 
 import CountingNumbers from "./counting-numbers";
 
-
 export const revalidate = 360; // revalidate every hour
 
 export const Stats = asyncComponent(async () => {

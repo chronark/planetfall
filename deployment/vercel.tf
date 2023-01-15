@@ -122,8 +122,15 @@ resource "vercel_dns_record" "pinger_v4" {
   ttl     = 60
   value   = fly_ip.pinger_v4.address
 }
+resource "vercel_dns_record" "fly_dns_challenge" {
+  domain  = "planetfall.io"
+  name    = trimsuffix(fly_cert.ping.dnsvalidationhostname, ".planetfall.io")
+  team_id = var.vercel_team_id
+  ttl     = 60
+  type    = "CNAME"
+  value   = fly_cert.ping.dnsvalidationtarget
 
-
+}
 
 
 resource "vercel_dns_record" "proton_verification" {

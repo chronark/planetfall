@@ -8,13 +8,8 @@ import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
 import { DEFAULT_QUOTA } from "plans";
 import slugify from "slugify";
-import Stripe from "stripe";
-const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2022-11-15",
-  typescript: true,
-});
+const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 
 export const authOptions: NextAuthOptions = {
@@ -44,9 +39,6 @@ export const authOptions: NextAuthOptions = {
 
       const name = data.name || data.email.split("@")[0];
       const slug = slugify(name, { lower: true, strict: true });
-      const customer = await stripe.customers.create({
-        email: data.email,
-      });
       const user = await db.user.create({
         data: {
           id: newId("user"),
@@ -68,7 +60,6 @@ export const authOptions: NextAuthOptions = {
                   minInterval: DEFAULT_QUOTA.FREE.minInterval,
                   retention: DEFAULT_QUOTA.FREE.retention,
                   plan: "FREE",
-                  stripeCustomerId: customer.id,
                 },
               },
             },
