@@ -60,14 +60,7 @@ export const Header: React.FC<Props> = (props: Props) => {
 									Play
 								</Link>
 							</li>
-							<li className="hidden md:block">
-								<Link
-									className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-400 hover:text-zinc-200 lg:px-5"
-									href="/docs"
-								>
-									Docs
-								</Link>
-							</li>
+
 							<li className="hidden md:block">
 								<Link
 									className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-400 hover:text-zinc-200 lg:px-5"

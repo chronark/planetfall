@@ -6,6 +6,9 @@ import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 import CountingNumbers from "./counting-numbers";
 
+
+export const revalidate = 360; // revalidate every hour
+
 export const Stats = asyncComponent(async () => {
 	const stats = await Promise.all([
 		{
