@@ -96,10 +96,10 @@ export default async function Share(props: { params: { shareId: string } }) {
 					{tags.length > 0 ? (
 						<div>
 							<Heading h3>Built with</Heading>
-							<ul className="grid w-full grid-cols-2 gap-4 mx-auto mt-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+							<ul className="grid w-full grid-cols-2 gap-4 mx-auto mt-4 md:grid-cols-4 xl:grid-cols-6">
 								{tags.map((tag) => (
 									<li
-										className="px-2 py-1 text-center duration-150 rounded ring-1 ring-zinc-900 hover:bg-zinc-50"
+										className="px-2 py-1 text-center duration-150 rounded whitespace-nowrap ring-1 ring-zinc-900 hover:bg-zinc-50"
 										key={tag}
 									>
 										{tag}
