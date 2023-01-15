@@ -6,9 +6,10 @@ const nextConfig = {
 	images: {
 		domains: ["www.gravatar.com", "avatars.githubusercontent.com"],
 	},
+	transpilePackages: ["@planetfall/emails"],
 	experimental: {
 		appDir: true,
-		transpilePackages: ["@planetfall/emails"],
+		esmExternals: "loose",
 		serverComponentsExternalPackages: ["@planetfall/db", "@prisma/client"],
 	},
 };
