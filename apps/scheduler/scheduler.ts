@@ -240,6 +240,7 @@ export class Scheduler {
 						latency?: number;
 						body?: string;
 						headers?: Record<string, string>;
+						tags?: string[];
 						timing: {
 							dnsStart: number;
 							dnsDone: number;
@@ -288,6 +289,7 @@ export class Scheduler {
 							regionId,
 							error: c.error,
 							body: c.body,
+							tags: c.tags,
 							header: JSON.stringify(c.headers),
 							timing: JSON.stringify(c.timing),
 						};

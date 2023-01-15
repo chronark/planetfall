@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/chronark/planetfall/apps/proxy/pkg/ping"
 	"log"
 	"net/http"
-	"github.com/chronark/planetfall/apps/proxy/pkg/ping"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {

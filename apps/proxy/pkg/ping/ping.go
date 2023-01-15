@@ -12,6 +12,8 @@ import (
 	"net/http/httptrace"
 	"strings"
 	"time"
+
+	"github.com/chronark/planetfall/apps/proxy/pkg/tags"
 )
 
 type Request struct {
@@ -47,6 +49,7 @@ type Response struct {
 	Time    int64             `json:"time"`
 	Timing  Timing            `json:"timing"`
 	Error   string            `json:"error,omitempty"`
+	Tags    []string          `json:"tags,omitempty"`
 }
 
 func Ping(ctx context.Context, req Request) ([]Response, error) {
@@ -135,6 +138,11 @@ func check(ctx context.Context, input Request) (Response, error) {
 	for key := range res.Header {
 		headers[key] = res.Header.Get(key)
 	}
+
+	foundTags, err := tags.Parse(string(body), res.Header.Clone())
+	if err != nil {
+		return Response{}, err
+	}
 	if len(body) > 1000 {
 		body = body[:1000]
 	}
@@ -145,5 +153,6 @@ func check(ctx context.Context, input Request) (Response, error) {
 		Headers: headers,
 		Timing:  timing,
 		Latency: latency,
+		Tags:    foundTags,
 	}, nil
 }

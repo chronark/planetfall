@@ -10,6 +10,7 @@ import { Table } from "./table";
 import { Details } from "./details";
 import { PlayChecks } from "lib/server/routers/play";
 import { DateDisplay } from "./DateDisplay";
+import { Text } from "@/components/text";
 const redis = Redis.fromEnv();
 
 export const revalidate = 3600;
@@ -23,6 +24,11 @@ export default async function Share(props: { params: { shareId: string } }) {
 	}
 
 	const { url, time } = res;
+	console.log(res.regions.map((r) => r.checks.map((c) => c.tags)));
+	const tags = [
+		...new Set(res.regions.flatMap((r) => r.checks).flatMap((c) => c.tags)),
+	];
+	console.log({ tags });
 	const regions = res.regions
 		.filter((r) => r.checks.length > 0)
 		.sort((a, b) => (b.checks[0].latency ?? 0) - (a.checks[0].latency ?? 0));
@@ -80,13 +86,29 @@ export default async function Share(props: { params: { shareId: string } }) {
 					<PageHeader title={url} description={<DateDisplay time={time} />} />
 
 					{regions.length >= 2 ? (
-						<>
+						<div>
 							<Heading h3={true}>Latency per Region</Heading>
 							<div className="h-80">
 								<Chart regions={regions} />
 							</div>
-						</>
+						</div>
 					) : null}
+					{tags.length > 0 ? (
+						<div>
+							<Heading h3>Built with</Heading>
+							<ul className="grid w-full grid-cols-2 gap-4 mx-auto mt-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+								{tags.map((tag) => (
+									<li
+										className="px-2 py-1 text-center duration-150 rounded ring-1 ring-zinc-900 hover:bg-zinc-50"
+										key={tag}
+									>
+										{tag}
+									</li>
+								))}
+							</ul>
+						</div>
+					) : null}
+
 					<Table regions={regions} />
 					<Details regions={regions} />
 				</div>

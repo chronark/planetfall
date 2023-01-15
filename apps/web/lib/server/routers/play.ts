@@ -27,6 +27,7 @@ const playChecks = z.object({
 					status: z.number(),
 					body: z.string(),
 					headers: z.record(z.string()),
+					tags: z.array(z.string()),
 					timing: z.object({
 						dnsStart: z.number(),
 						dnsDone: z.number(),
@@ -129,6 +130,7 @@ export const playRouter = t.router({
 						latency: number;
 						body: string;
 						headers: Record<string, string>;
+						tags: string[];
 						timing: {
 							dnsStart: number;
 							dnsDone: number;
@@ -176,9 +178,6 @@ export const playRouter = t.router({
 				});
 
 				if (r !== null) {
-					await ctx.res.revalidate(`/play/${id}`).catch((err) => {
-						console.error("revalidate failed", err);
-					});
 					return { shareId: id };
 				}
 			}
