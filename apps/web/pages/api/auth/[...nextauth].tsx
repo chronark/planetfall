@@ -21,8 +21,8 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       from: "chronark@planetfall.io",
       sendVerificationRequest: ({ identifier, url }) => {
+        console.log({ identifier });
         try {
-
           new Email().sendSignInLink({ from: "chronark@planetfall.io", to: identifier.trim(), link: url })
         } catch (err) {
           console.error("UNABLE TO SEND EMAIL",err)

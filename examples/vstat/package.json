@@ -1,0 +1,16 @@
+{
+  "name": "vstat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "httpstat": "^1.5.4",
+    "minimist": "^1.2.7",
+    "sprintf": "^0.1.5"
+  }
+}

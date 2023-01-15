@@ -1,0 +1,31 @@
+lockfileVersion: 5.3
+
+specifiers:
+  httpstat: ^1.5.4
+  minimist: ^1.2.7
+  sprintf: ^0.1.5
+
+dependencies:
+  httpstat: 1.5.4
+  minimist: 1.2.7
+  sprintf: 0.1.5
+
+packages:
+
+  /httpstat/1.5.4:
+    resolution: {integrity: sha512-8jXwzF/iZC9lnzS62csStkwTfHv3nD8sbkK4dU2GNoa67EaGUH2CWNUYjTCdhtV8iEpE0jZ2NEp5N/IiUB8+Bg==}
+    hasBin: true
+    dependencies:
+      minimist: 1.2.7
+      sprintf: 0.1.5
+    dev: false
+
+  /minimist/1.2.7:
+    resolution: {integrity: sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==}
+    dev: false
+
+  /sprintf/0.1.5:
+    resolution: {integrity: sha512-4X5KsuXFQ7f+d7Y+bi4qSb6eI+YoifDTGr0MQJXRoYO7BO7evfRCjds6kk3z7l5CiJYxgDN1x5Er4WiyCt+zTQ==}
+    engines: {node: '>=0.2.4'}
+    deprecated: The sprintf package is deprecated in favor of sprintf-js.
+    dev: false
