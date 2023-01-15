@@ -65,6 +65,13 @@ variable "axiom_token" {
 
 
 
+variable "axiom_org" {
+  type      = string
+  sensitive = true
+}
+
+
+
 variable "tinybird_token" {
   type = string
   sensitive = true

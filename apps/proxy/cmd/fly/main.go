@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -9,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/axiomhq/axiom-go/axiom"
+	"github.com/axiomhq/axiom-go/axiom/ingest"
 	"github.com/chronark/planetfall/apps/proxy/pkg/ping"
 	"github.com/gofiber/fiber/v2"
 )
@@ -27,6 +30,7 @@ func (i *IdleChecker) Heartbeat() {
 }
 
 func NewIdleChecker() *IdleChecker {
+
 	i := &IdleChecker{
 		lastHeartbeat: time.Now(),
 		Close:         make(chan struct{}),
@@ -58,7 +62,7 @@ type ResponseError struct {
 	} `json:"error"`
 }
 
-func handleError(c *fiber.Ctx, status int,code string, message string) error {
+func handleError(c *fiber.Ctx, status int, code string, message string) error {
 	re := ResponseError{}
 	re.Error.Code = code
 	re.Error.Message = message
@@ -81,6 +85,19 @@ func main() {
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: false,
 	})
+	ax, err := axiom.NewClient(
+		axiom.SetPersonalTokenConfig(os.Getenv("AXIOM_TOKEN"), os.Getenv("AXIOM_ORG")),
+	)
+	if err != nil {
+		log.Printf("Error creating axiom: %s\n", err.Error())
+		os.Exit(1)
+	}
+	err = ax.ValidateCredentials(context.Background())
+	if err != nil {
+		log.Printf("Error validating axiom credentials: %s\n", err.Error())
+		os.Exit(1)
+	}
+
 	idle := NewIdleChecker()
 
 	// Send a heartbeat for every incoming request
@@ -89,11 +106,35 @@ func main() {
 		return c.Next()
 	})
 
+	app.Use(func(c *fiber.Ctx) error {
+		err := c.Next()
+
+		errMessage := ""
+		if err != nil {
+			errMessage = err.Error()
+		}
+		_, axiomErr := ax.Datasets.IngestEvents(c.UserContext(), "ping-fly", []axiom.Event{
+			{
+				ingest.TimestampField: time.Now(),
+				"method":              c.Method(),
+				"path":                c.Path(),
+				"status":              c.Response().StatusCode(),
+				"error":               errMessage,
+			},
+		})
+		if axiomErr != nil {
+			log.Printf("Error sending event to axiom: %s\n", axiomErr.Error())
+		}
+		return err
+
+	})
+
 	app.Get("/health", func(c *fiber.Ctx) error {
 		log.Println("received health check")
 		return c.SendString("OK")
 	})
 	app.Post("/ping/:requestedRegion", func(c *fiber.Ctx) error {
+
 		requestedRegion := c.Params("requestedRegion")
 		if requestedRegion == "" {
 			return handleError(c, 404, "NOT_FOUND", "Invalid region")
@@ -110,7 +151,7 @@ func main() {
 
 		res, err := ping.Ping(c.UserContext(), req)
 		if err != nil {
-		return handleError(c, 500, "INTERNAL_SERVER_ERROR", err.Error())
+			return handleError(c, 500, "INTERNAL_SERVER_ERROR", err.Error())
 		}
 
 		return c.JSON(res)

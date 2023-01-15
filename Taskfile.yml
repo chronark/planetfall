@@ -35,9 +35,9 @@ tasks:
       - task: build-scheduler
       - task: build-pinger
        
-      # - terraform -chdir=deployment init -upgrade
-      # - terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
       - fly machines update --app=planetfall-scheduler 6e82975b764e68 --image={{.SCHEDULER_IMAGE}}:{{.VERSION}} --yes
+      - terraform -chdir=deployment init -upgrade
+      - terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
        
      
   build-pinger:

@@ -10,10 +10,10 @@ export const Footer: React.FC = (): JSX.Element => {
 					<div className="flex justify-center gap-1 -my-1 text-zinc-500">
 						Built by
 						<Link
-							href="https://twitter.com/chronarkdotdev"
+							href="https://twitter.com/chronark_"
 							className=" hover:text-zinc-300"
 						>
-							@chronarkdotdev
+							@chronark_
 						</Link>
 						{/* <Link href="/pricing" className="hover:text-zinc-600">
               Pricing

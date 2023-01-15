@@ -2,8 +2,6 @@ import React from "react";
 import { db } from "@planetfall/db";
 import { asyncComponent } from "lib/api/component";
 
-import { useEffect, useRef, useState } from "react";
-import { useInView } from "framer-motion";
 import CountingNumbers from "./counting-numbers";
 
 

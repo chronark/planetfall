@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-
 	"github.com/chronark/planetfall/apps/proxy/pkg/ping"
 )
 
