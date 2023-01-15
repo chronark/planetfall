@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "eslint": "^8.12.0"
+  },
+  "dependencies": {
+    "async-sema": "^3.1.1",
+    "csv-parser": "^3.0.0",
+    "csv-string": "^4.1.0",
+    "picocolors": "^1.0.0",
+    "remark": "^14.0.2",
+    "undici": "^5.0.0"
+  }
+}
