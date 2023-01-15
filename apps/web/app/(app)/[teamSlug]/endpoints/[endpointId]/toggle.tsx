@@ -17,14 +17,15 @@ export const Toggle: React.FC<Props> = ({ endpointId, active }) => {
 			<div className="flex items-center justify-center w-6 h-6 mr-2">
 				{active ? (
 					<>
-						<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 animate-ping-slow bg-emerald-400" />
-						<span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+						<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 bg-emerald-300 animate-pulse" />
+						<span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500  " />
 					</>
 				) : (
-					<span className="relative inline-flex w-2 h-2 rounded-full bg-amber-300" />
+					<span className="relative inline-flex w-2 h-2 rounded-full bg-zinc-500" />
 				)}
 			</div>
 			<Button
+				type="secondary"
 				onClick={async () => {
 					await trpc.endpoint.toggleActive.mutate({ endpointId });
 					router.refresh();

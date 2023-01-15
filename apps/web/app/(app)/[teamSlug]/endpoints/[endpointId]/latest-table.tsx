@@ -14,6 +14,7 @@ import ms from "ms";
 import Link from "next/link";
 import { MinusIcon } from "@heroicons/react/24/outline";
 import { usePathname, useSearchParams } from "next/navigation";
+import { Time } from "@/components/time";
 export type Props = {
 	endpointId: string;
 	checks: Check[];
@@ -51,7 +52,7 @@ export const LatestTable: React.FC<Props> = ({
 		// }),
 		accessor("time", {
 			header: "Time",
-			cell: (info) => new Date(info.getValue()).toLocaleString(),
+			cell: (info) => <Time time={info.getValue()} />,
 		}),
 
 		accessor("status", {

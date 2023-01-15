@@ -46,7 +46,7 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
 				 * Size for regular buttons
 				 */
 				!icon && {
-					"text-sm  px-2 py-1": size === "sm" || size === "xs",
+					"text-sm px-2 py-1": size === "sm" || size === "xs",
 					"text-md px-3 py-1": size === "md",
 					"text-lg px-6 py-2": size === "lg",
 				},
@@ -63,14 +63,13 @@ export const ButtonStyle: React.FC<ButtonStyleProps> = ({
 				 * type
 				 */
 				!disabled && {
-					"bg-zinc-800 text-zinc-50 hover:bg-zinc-50 hover:text-zinc-900 border-zinc-700 ":
+					"bg-zinc-900 text-zinc-50 hover:bg-zinc-50 hover:text-zinc-900 border-zinc-700":
 						type === "primary",
 					"bg-white text-zinc-900 border-zinc-700 hover:bg-zinc-900 hover:text-zinc-50":
 						type === "secondary",
 					"bg-white text-zinc-900 border-zinc-700 border-dashed hover:bg-zinc-700 hover:text-zinc-50":
 						type === "tertiary",
-
-					"bg-white0 text-red-500 border-red-500 hover:bg-red-50 hover:text-red-600":
+					"bg-white text-red-500 border-red-500 hover:bg-red-50 hover:text-red-600":
 						type === "alert",
 				},
 				disabled && {

@@ -61,6 +61,7 @@ export default async function Page(props: {
 		return notFound();
 	}
 
+	console.log({ stats, errors });
 	const availability = stats.count > 0 ? 1 - errors.length / stats.count : 1;
 	const degraded =
 		latestChecks && latestChecks.length > 0

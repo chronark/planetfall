@@ -8,8 +8,6 @@ import { Breadcrumbs } from "./breadcrumbs";
 import { db } from "@planetfall/db";
 import { getSession } from "lib/auth";
 
-const userNavigation = [{ name: "Settings", href: "/settings" }];
-
 export type NavbarProps = {
 	teamSlug: string;
 };
@@ -69,7 +67,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 						}}
 					/>
 				</div>
-				<div>
+				<div className="mt-2 lg:mt-4">
 					{navigation.map((item) => (
 						<NavLink key={item.name} href={item.href} label={item.name} />
 					))}
