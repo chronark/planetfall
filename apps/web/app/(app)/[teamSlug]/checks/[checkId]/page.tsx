@@ -26,8 +26,6 @@ type Timings = {
 	transferDone: number;
 };
 
-export const revalidate = 60;
-
 const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 	const start = Math.min(...Object.values(timings).filter((t) => t > 0));
 	const end = Math.max(...Object.values(timings).filter((t) => t > 0));
