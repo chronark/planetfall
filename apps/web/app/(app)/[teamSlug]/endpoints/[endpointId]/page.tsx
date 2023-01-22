@@ -15,6 +15,7 @@ import { Text } from "@/components/text";
 import { Charts } from "./chart";
 import { MultiSelect } from "@/components/multiselect";
 import { ChartsSection } from "./charts-section";
+import { Edu_NSW_ACT_Foundation } from "@next/font/google";
 
 export const revalidate = 10;
 
@@ -192,7 +193,14 @@ export default async function Page(props: {
 
 				{latestChecks.length > 0 ? (
 					<div className="py-4 md:py-8 lg:py-16">
-						<ChartsSection checks={checks24h} endpoint={endpoint} />
+						<ChartsSection
+							checks={checks24h}
+							endpoint={{
+								timeout: endpoint.timeout,
+								degradedAfter: endpoint.degradedAfter,
+								regions: endpoint.regions,
+							}}
+						/>
 					</div>
 				) : null}
 

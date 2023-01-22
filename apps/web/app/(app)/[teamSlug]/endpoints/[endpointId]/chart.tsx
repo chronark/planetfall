@@ -3,13 +3,15 @@
 import React from "react";
 import { Area, Line, TinyArea } from "@ant-design/plots";
 import { Check } from "@planetfall/tinybird";
-import { Endpoint, Region } from "@prisma/client";
-import { Heading } from "@/components/heading";
+import { Region } from "@prisma/client";
 
 type Props = {
 	checks: Check[];
 	regions: Region[];
-	endpoint: Endpoint;
+	endpoint: {
+		timeout: number | null;
+		degradedAfter: number | null;
+	};
 };
 
 export const Charts: React.FC<Props> = ({ checks, regions, endpoint }) => {
@@ -44,7 +46,10 @@ function toRGBA(color: number[], alpha: number = 1) {
 }
 
 type ChartProps = {
-	endpoint: Endpoint;
+	endpoint: {
+		timeout: number | null;
+		degradedAfter: number | null;
+	};
 	checks: Check[];
 };
 
