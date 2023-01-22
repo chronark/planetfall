@@ -58,7 +58,7 @@ func Parse(body string, header http.Header) ([]string, error) {
 
 	// body
 
-	if strings.Contains(body, `id="__next""`) {
+	if strings.Contains(body, `id="__next"`) {
 		tags = append(tags, nextjs, react)
 	}
 

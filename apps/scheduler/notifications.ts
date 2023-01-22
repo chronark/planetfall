@@ -85,7 +85,7 @@ export class Notifications {
 					teamSlug: team.slug,
 					endpointName: endpoint.name,
 					endpointId: endpoint.id,
-					checkLink: `https://planetfall.io/checks/${event.check.id}`,
+					checkLink: `https://planetfall.io/${team.slug}/checks/${event.check.id}`,
 				});
 			}),
 		);
