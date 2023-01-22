@@ -155,7 +155,7 @@ export const authOptions: NextAuthOptions = {
 
 
 
-      const whitelist = ["chronark.com", "upstash.com", "vercel.com", "fly.io", "dub.sh","markor.dk"]
+      const whitelist = ["chronark.com", "upstash.com", "vercel.com", "fly.io", "dub.sh","markor.dk", "discreet.net"]
       const domain = user.email.split("@")[1]
       return whitelist.includes(domain)
     },
