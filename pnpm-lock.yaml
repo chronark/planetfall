@@ -49,7 +49,7 @@ importers:
       eslint-config-oclif: 4.0.0_eslint@8.32.0
       eslint-config-oclif-typescript: 1.0.3_7uibuqfxkfaozanbtbziikiqje
       mocha: 10.2.0
-      oclif: 3.6.0_ouywoi5k3tbgwobbha5xympbsi
+      oclif: 3.6.0
       shx: 0.3.4
       ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
       tslib: 2.4.1
@@ -158,7 +158,6 @@ importers:
       next: 13.1.0
       next-auth: ^4.18.4
       next-axiom: ^0.16.0
-      nodemailer: ^6.8.0
       postcss: ^8.4.18
       prism-react-renderer: ^1.3.5
       prisma: ^4.9.0
@@ -7986,7 +7985,7 @@ packages:
     resolution: {integrity: sha512-9iN1ka/9zmX1ZvLV9ewJYEk9h7RyRRtqdK0woXcqohu8EWIerfPUjYJPg0ULy0UqP7cslmdGc8xKDJcojlKiaw==}
     dev: false
 
-  /next-auth/4.18.8_gru2niblrprbai56sdagiiy5sa:
+  /next-auth/4.18.8_s75y6mxmikaw2mhqmuko6w7njm:
     resolution: {integrity: sha512-USP8ihmvB7iCGtkS0+toe2QPrzdbZfkydQZX56JOI9Ft5n/BardOXh3D4wQ2An+vpq/jDKojGlgfv21wVElW7A==}
     engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0}
     peerDependencies:
@@ -7998,11 +7997,11 @@ packages:
       nodemailer:
         optional: true
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.20.13
       '@panva/hkdf': 1.0.2
       cookie: 0.5.0
       jose: 4.11.2
-      next: 13.1.4_biqbaboplfbrettd7655fr4n2y
+      next: 13.1.0_biqbaboplfbrettd7655fr4n2y
       oauth: 0.9.15
       openid-client: 5.3.1
       preact: 10.11.3
@@ -8163,6 +8162,7 @@ packages:
   /nodemailer/6.9.0:
     resolution: {integrity: sha512-jFaCEGTeT3E/m/5R2MHWiyQH3pSARECRUDM+1hokOYc3lQAAG7ASuy+2jIsYVf+RVa9zePopSQwKNVFH8DKUpA==}
     engines: {node: '>=6.0.0'}
+    dev: true
 
   /nopt/5.0.0:
     resolution: {integrity: sha512-Tbj67rffqceeLpcRXrT7vKAN8CwfPeIBgM7E6iBkmKLV7bEMwpGgYLGv0jACUsECaa/vuxP0IjEont6umdMgtQ==}
@@ -8409,7 +8409,7 @@ packages:
       es-abstract: 1.21.1
     dev: true
 
-  /oclif/3.6.0_ouywoi5k3tbgwobbha5xympbsi:
+  /oclif/3.6.0:
     resolution: {integrity: sha512-iM7M4SA8yapjTXy7uom1N3530CjaNBxRZ1jjCYgWLePeQyFLPOm9dbzOBLe0rLC7cZJ7ExPd1VcA8qW7N7Xq5Q==}
     engines: {node: '>=12.0.0'}
     hasBin: true
@@ -8430,14 +8430,12 @@ packages:
       semver: 7.3.8
       shelljs: 0.8.5
       tslib: 2.4.1
-      yeoman-environment: 3.13.0_ouywoi5k3tbgwobbha5xympbsi
+      yeoman-environment: 3.13.0
       yeoman-generator: 5.7.0_yeoman-environment@3.13.0
       yosay: 2.0.2
     transitivePeerDependencies:
       - bluebird
       - encoding
-      - mem-fs
-      - mem-fs-editor
       - supports-color
     dev: true
 
@@ -10962,13 +10960,10 @@ packages:
     requiresBuild: true
     dev: false
 
-  /yeoman-environment/3.13.0_ouywoi5k3tbgwobbha5xympbsi:
+  /yeoman-environment/3.13.0:
     resolution: {integrity: sha512-eBPpBZCvFzx6yk17x+ZrOHp8ADDv6qHradV+SgdugaQKIy9NjEX5AkbwdTHLOgccSTkQ9rN791xvYOu6OmqjBg==}
     engines: {node: '>=12.10.0'}
     hasBin: true
-    peerDependencies:
-      mem-fs: ^1.2.0 || ^2.0.0
-      mem-fs-editor: ^8.1.2 || ^9.0.0
     dependencies:
       '@npmcli/arborist': 4.3.1
       are-we-there-yet: 2.0.0
@@ -11033,7 +11028,7 @@ packages:
       shelljs: 0.8.5
       sort-keys: 4.2.0
       text-table: 0.2.0
-      yeoman-environment: 3.13.0_ouywoi5k3tbgwobbha5xympbsi
+      yeoman-environment: 3.13.0
     transitivePeerDependencies:
       - encoding
       - supports-color
