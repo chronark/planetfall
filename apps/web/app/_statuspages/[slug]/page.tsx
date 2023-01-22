@@ -132,7 +132,8 @@ export default async function Page(props: { params: { slug: string } }) {
 				<Heading h2>{statusPage.name}</Heading>
 
 				<Text>
-					Last updated <RelativeTime time={now} />
+					{/* This will cause a hydration error since date will differ between server and client */}
+					{/* Last updated <RelativeTime time={now} /> */}
 				</Text>
 			</header>
 			<main className="container min-h-screen mx-auto md:py-16 ">
