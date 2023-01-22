@@ -2,7 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import EmailProvider from "next-auth/providers/email";
 import { Email } from "@planetfall/emails";
-
+import * as edgeConfig from "@vercel/edge-config"
 
 import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
         try {
           new Email().sendSignInLink({ from: "chronark@planetfall.io", to: identifier.trim(), link: url })
         } catch (err) {
-          console.error("UNABLE TO SEND EMAIL",err)
+          console.error("UNABLE TO SEND EMAIL", err)
           throw err
         }
       }
@@ -153,9 +153,11 @@ export const authOptions: NextAuthOptions = {
         return false
       }
 
+      const whitelist = await edgeConfig.get<string[]>("whitelist")
+      if (!whitelist) {
+        throw new Error("unable to get email domain whitelist")
+      }
 
-
-      const whitelist = ["chronark.com", "upstash.com", "vercel.com", "fly.io", "dub.sh","markor.dk", "discreet.net"]
       const domain = user.email.split("@")[1]
       return whitelist.includes(domain)
     },

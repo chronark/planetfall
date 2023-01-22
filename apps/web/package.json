@@ -50,6 +50,7 @@
     "@upstash/ratelimit": "^0.1.5",
     "@upstash/redis": "^1.19.3",
     "@vercel/analytics": "^0.1.6",
+    "@vercel/edge-config": "^0.1.1",
     "base-x": "^4.0.0",
     "classnames": "^2.3.2",
     "client": "link:@†rpc/client",
