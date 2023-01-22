@@ -18,7 +18,7 @@
     "@planetfall/emails": "workspace:*",
     "@planetfall/id": "workspace:*",
     "@planetfall/tinybird": "workspace:*",
-    "@upstash/redis": "^1.18.1",
+    "@upstash/redis": "^1.19.3",
     "isomorphic-fetch": "^3.0.0",
     "kafkajs": "^2.2.3",
     "ms": "^2.1.3",
@@ -29,8 +29,8 @@
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",
     "@types/ms": "^0.7.31",
-    "@types/node": "18.11.12",
-    "dotenv-cli": "^6.0.0",
+    "@types/node": "18.11.18",
+    "dotenv-cli": "^7.0.0",
     "typescript": "^4.9.4"
   }
 }
