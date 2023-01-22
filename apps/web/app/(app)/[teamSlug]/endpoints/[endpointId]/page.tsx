@@ -14,6 +14,7 @@ import Toggle from "./toggle";
 import { Text } from "@/components/text";
 import { Charts } from "./chart";
 import { MultiSelect } from "@/components/multiselect";
+import { ChartsSection } from "./charts-section";
 
 export const revalidate = 10;
 
@@ -189,15 +190,11 @@ export default async function Page(props: {
 					</div>
 				) : null} */}
 
-				{/* {latestChecks.length > 0 ? (
+				{latestChecks.length > 0 ? (
 					<div className="py-4 md:py-8 lg:py-16">
-						<div className="flex items-center justify-between">
-							<Heading h3={true}>Checks by region</Heading>
-							<MultiSelect options={endpoint.regions.map(r => r.name)} />
-						</div>
-						<Charts checks={checks24h} regions={regions} endpoint={endpoint} />
+						<ChartsSection checks={checks24h} endpoint={endpoint} />
 					</div>
-				) : null} */}
+				) : null}
 
 				{latestChecks.length > 0 ? (
 					<div className="py-4 md:py-8 lg:py-16">

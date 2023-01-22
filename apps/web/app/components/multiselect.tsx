@@ -31,12 +31,12 @@ export function MultiSelect<TOptions extends { id: string; name: string }[]>({
 							<Dropdown.CheckboxItem
 								key={option.id}
 								className={`hover:ring-0 gap-4 lg:gap-8 xl:gap-16 group flex items-center justify-between rounded-md px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 ${
-									option.id === selected ? "bg-zinc-100" : ""
+									selected.includes(option.id) ? "bg-zinc-100" : ""
 								}`}
 								checked={selected.includes(option.id)}
-								onSelect={() => {
-									setSelected();
-								}}
+								// onSelect={() => {
+								// 	setSelected();
+								// }}
 							>
 								<Dropdown.ItemIndicator>
 									<CheckIcon className="w-4 h-4" />
