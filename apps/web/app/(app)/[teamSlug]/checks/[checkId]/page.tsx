@@ -26,7 +26,6 @@ type Timings = {
 };
 
 export const dynamic = "force-dynamic"
-export const revalidate = 60
 
 const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 	const start = Math.min(...Object.values(timings).filter((t) => t > 0));
