@@ -25,7 +25,6 @@ type Timings = {
 	transferDone: number;
 };
 
-export const dynamic = "force-dynamic"
 
 const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 	const start = Math.min(...Object.values(timings).filter((t) => t > 0));
