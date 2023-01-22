@@ -14,7 +14,6 @@
     "fmt": "npx rome@latest check . --apply-suggested && npx rome@latest format . --write",
     "test": "turbo run test"
   },
-  "keywords": [],
   "author": "Andreas Thomas",
   "license": "ISC",
   "devDependencies": {
