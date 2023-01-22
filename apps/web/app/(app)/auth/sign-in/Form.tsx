@@ -60,7 +60,7 @@ export const Form: React.FC = () => {
 					</Button>
 				</div>
 			</div>
-			<div className="px-4 sm:px-16">
+			{/* <div className="px-4 sm:px-16">
 				<form
 					className="flex flex-col w-full gap-4 py-4 lg:py-8"
 					onSubmit={async (e) => {
@@ -94,7 +94,7 @@ export const Form: React.FC = () => {
 						Send Magic Link
 					</Button>
 				</form>
-			</div>
+			</div> */}
 		</div>
 	);
 };
