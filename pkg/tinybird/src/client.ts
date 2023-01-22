@@ -141,6 +141,26 @@ export class Client {
 		}
 		return data.data;
 	}
+
+	public async getChecks24h(endpointId: string): Promise<Check[]> {
+		const url = new URL(
+			"/v0/pipes/production__checks_last_24h__v1.json",
+			this.baseUrl,
+		);
+		url.searchParams.set("endpointId", endpointId);
+		const res = await fetch(url.toString(), {
+			headers: { Authorization: `Bearer ${this.token}` },
+		});
+		if (!res.ok) {
+			throw new Error(await res.text());
+		}
+
+		const data = (await res.json()) as { data: Check[] };
+		if (data.data.length === 0) {
+			return [];
+		}
+		return data.data;
+	}
 }
 
 export type EndpointStats = {

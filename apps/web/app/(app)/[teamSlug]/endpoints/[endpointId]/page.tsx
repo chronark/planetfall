@@ -12,6 +12,8 @@ import { getSession } from "lib/auth";
 import Button from "@/components/button/button";
 import Toggle from "./toggle";
 import { Text } from "@/components/text";
+import { Charts } from "./chart";
+import { MultiSelect } from "@/components/multiselect";
 
 export const revalidate = 10;
 
@@ -29,6 +31,7 @@ export default async function Page(props: {
 			id: props.params.endpointId,
 		},
 		include: {
+			regions: true,
 			team: {
 				include: {
 					members: true,
@@ -49,10 +52,11 @@ export default async function Page(props: {
 
 	const tb = new Tinybird();
 
-	const [stats, latestChecks, errors] = await Promise.all([
+	const [stats, latestChecks, errors, checks24h] = await Promise.all([
 		tb.getEndpointStats(endpoint.id),
 		tb.getLatestChecksByEndpoint(endpoint.id),
 		tb.getLatestChecksByEndpoint(endpoint.id, true),
+		tb.getChecks24h(endpoint.id),
 	]);
 
 	if (!stats) {
@@ -60,6 +64,7 @@ export default async function Page(props: {
 
 		return notFound();
 	}
+	checks24h.sort((a, b) => a.time - b.time);
 
 	console.log({ stats, errors });
 	const availability = stats.count > 0 ? 1 - errors.length / stats.count : 1;
@@ -181,6 +186,16 @@ export default async function Page(props: {
 					<div className="py-4 md:py-8 lg:py-16">
 						<Heading h3={true}>Errors</Heading>
 						<ErrorsTable errors={errors} />
+					</div>
+				) : null} */}
+
+				{/* {latestChecks.length > 0 ? (
+					<div className="py-4 md:py-8 lg:py-16">
+						<div className="flex items-center justify-between">
+							<Heading h3={true}>Checks by region</Heading>
+							<MultiSelect options={endpoint.regions.map(r => r.name)} />
+						</div>
+						<Charts checks={checks24h} regions={regions} endpoint={endpoint} />
 					</div>
 				) : null} */}
 

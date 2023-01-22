@@ -49,10 +49,10 @@ export const Heading: React.FC<PropsWithChildren<HeadingProps>> = ({
 			className: classNames(
 				"text-zinc-900 text-left",
 				{
-					"text-6xl font-black": heading === "h1",
-					"text-5xl font-bold": heading === "h2",
-					"text-2xl font-semibold": heading === "h3",
-					"text-base font-medium": heading === "h4",
+					"text-6xl font-black mb-6": heading === "h1",
+					"text-5xl font-bold mb-4": heading === "h2",
+					"text-2xl font-semibold mb-3": heading === "h3",
+					"text-base font-medium mb-2": heading === "h4",
 				},
 				color,
 			),

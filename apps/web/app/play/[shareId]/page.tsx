@@ -10,7 +10,6 @@ import { Table } from "./table";
 import { Details } from "./details";
 import { PlayChecks } from "lib/server/routers/play";
 import { DateDisplay } from "./DateDisplay";
-import { Text } from "@/components/text";
 const redis = Redis.fromEnv();
 
 export const revalidate = 3600;
@@ -24,11 +23,9 @@ export default async function Share(props: { params: { shareId: string } }) {
 	}
 
 	const { url, time } = res;
-	console.log(res.regions.map((r) => r.checks.map((c) => c.tags)));
 	const tags = [
 		...new Set(res.regions.flatMap((r) => r.checks).flatMap((c) => c.tags)),
 	];
-	console.log({ tags });
 	const regions = res.regions
 		.filter((r) => r.checks.length > 0)
 		.sort((a, b) => (b.checks[0].latency ?? 0) - (a.checks[0].latency ?? 0));
