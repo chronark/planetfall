@@ -9,7 +9,6 @@ import { Heading } from "@/components/heading";
 import ms from "ms";
 import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { Text } from "@/components/text";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { HeaderTable } from "./header-table";
 import { getSession } from "lib/auth";
 
