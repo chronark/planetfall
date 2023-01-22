@@ -24,7 +24,7 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks }) => {
 					setSelected={setSelected}
 				/>
 			</div>
-			<Charts checks={checks} regions={regions} endpoint={endpoint} />
+			{/* <Charts checks={checks} regions={regions} endpoint={endpoint} /> */}
 		</>
 	);
 };
