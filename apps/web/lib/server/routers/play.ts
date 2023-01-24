@@ -98,7 +98,7 @@ export const playRouter = t.router({
 						body: JSON.stringify({
 							url: input.url,
 							method: input.method,
-							timeout: 2000,
+							timeout: 10000,
 							checks: input.repeat ? 2 : 1,
 						}),
 					}).catch((err) => {
