@@ -42,10 +42,11 @@ export default async function SettingsPage(props: {
 	const billingEnd =
 		team.stripeCurrentBillingPeriodEnd?.getTime() ?? monthEnd.getTime();
 
-	const usage = await new Tinybird().getUsage(team.id, [
-		billingStart,
-		billingEnd,
-	]);
+	const usage = await new Tinybird().getUsage(team.id, {
+		year: now.getUTCFullYear(),
+		month: now.getUTCMonth() + 1,
+	});
+	const totalUsage = usage.reduce((total, curr) => total + curr.day, 0);
 
 	return (
 		<div>
@@ -62,8 +63,8 @@ export default async function SettingsPage(props: {
 						plan: team.plan,
 						maxMonthlyRequests: team.maxMonthlyRequests,
 					}}
-					usage={usage}
-					usagePercentage={(usage / team.maxMonthlyRequests) * 100}
+					usage={totalUsage}
+					usagePercentage={(totalUsage / team.maxMonthlyRequests) * 100}
 					billingStart={billingStart}
 					billingEnd={billingEnd}
 				/>

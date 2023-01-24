@@ -90,15 +90,26 @@ export class Client {
 	 */
 	public async getUsage(
 		teamId: string,
-		interval: [number, number],
-	): Promise<number> {
+		time: {
+			year: number;
+			month: number;
+		},
+	): Promise<
+		{
+			teamId: string;
+			usage: number;
+			year: number;
+			month: number;
+			day: number;
+		}[]
+	> {
 		const url = new URL(
 			"/v0/pipes/production__usage_interval__v1.json",
 			this.baseUrl,
 		);
 		url.searchParams.set("teamId", teamId);
-		url.searchParams.set("start", interval[0].toString());
-		url.searchParams.set("end", interval[1].toString());
+		url.searchParams.set("year", time.year.toString());
+		url.searchParams.set("month", time.month.toString());
 		const res = await fetch(url.toString(), {
 			headers: { Authorization: `Bearer ${this.token}` },
 		});
@@ -107,13 +118,16 @@ export class Client {
 		}
 
 		const data = (await res.json()) as {
-			data: { teamId: string; usage: number }[];
+			data: {
+				teamId: string;
+				usage: number;
+				year: number;
+				month: number;
+				day: number;
+			}[];
 		};
-		if (data.data.length === 0) {
-			return 0;
-		}
 
-		return data.data[0].usage;
+		return data.data;
 	}
 
 	public async getLatestChecksByEndpoint(

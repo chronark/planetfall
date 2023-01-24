@@ -32,10 +32,10 @@ tasks:
           TF_VAR_pinger_image: "{{.PINGER_IMAGE}}:{{.VERSION}}"
           TF_VAR_scheduler_image: "{{.SCHEDULER_IMAGE}}:{{.VERSION}}"
     cmds:
-      # - task: build-scheduler
+      - task: build-scheduler
       - task: build-pinger
        
-      # - fly machines update --app=planetfall-scheduler 6e82975b764e68 --image={{.SCHEDULER_IMAGE}}:{{.VERSION}} --yes
+      - fly machines update --app=planetfall-scheduler 6e82975b764e68 --image={{.SCHEDULER_IMAGE}}:{{.VERSION}} --yes
       - terraform -chdir=deployment init -upgrade
       - terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
        

@@ -11,7 +11,7 @@ export class Scheduler {
 	// Map of endpoint id -> clearInterval function
 	private clearIntervals: Map<string, () => void>;
 	private db: PrismaClient;
-	private updatedAt: number = 0;
+	private updatedAt = 0;
 	private logger: Logger;
 	private tinybird: tb.Client;
 	private notifications: Notifications;
@@ -65,10 +65,11 @@ export class Scheduler {
 			const billingEnd =
 				t.stripeCurrentBillingPeriodEnd?.getTime() ?? monthEnd.getTime();
 
-			const usage = await this.tinybird.getUsage(t.id, [
-				billingStart,
-				billingEnd,
-			]);
+			const usage = await this.tinybird.getUsage(t.id, {
+				year: now.getUTCFullYear(),
+				month: now.getUTCMonth() + 1,
+			});
+			const totalUsage = usage.reduce((total, day) => total + day.day, 0);
 
 			this.logger.info("evaluating team usage", {
 				teamId: t.id,
@@ -77,7 +78,7 @@ export class Scheduler {
 				usage,
 			});
 
-			if (usage > t.maxMonthlyRequests) {
+			if (totalUsage > t.maxMonthlyRequests) {
 				this.logger.info("team has exceeded monthly requests", {
 					teamId: t.id,
 					maxMonthlyRequests: t.maxMonthlyRequests,
@@ -129,25 +130,12 @@ export class Scheduler {
 			throw new Error(`endpoint not found: ${endpointId}`);
 		}
 
-		const monthStart = new Date();
-		monthStart.setDate(1);
-		monthStart.setHours(0, 0, 0, 0);
-		const monthEnd = new Date();
-		monthEnd.setMonth(monthEnd.getMonth() + 1);
-		monthEnd.setDate(0);
-		monthEnd.setHours(0, 0, 0, 0);
-
-		const usage = await this.tinybird.getUsage(endpoint.team.id, [
-			Math.floor(
-				endpoint.team.stripeCurrentBillingPeriodStart?.getTime() ??
-					monthStart.getTime() / 1000,
-			),
-			Math.floor(
-				endpoint.team.stripeCurrentBillingPeriodEnd?.getTime() ??
-					monthEnd.getTime() / 1000,
-			),
-		]);
-		if (usage > endpoint.team.maxMonthlyRequests) {
+		const usage = await this.tinybird.getUsage(endpoint.team.id, {
+			year: new Date().getUTCFullYear(),
+			month: new Date().getUTCMonth() + 1,
+		});
+		const totalUsage = usage.reduce((total, day) => total + day.day, 0);
+		if (totalUsage > endpoint.team.maxMonthlyRequests) {
 			return;
 		}
 		this.removeEndpoint(endpoint.id);

@@ -44,11 +44,12 @@ export class Billing {
 
 		for (const t of teams) {
 			try {
-				const usage = await this.tinybird.getUsage(t.id, [
-					Math.floor(t.stripeCurrentBillingPeriodStart!.getTime() / 1000),
-					Math.floor(t.stripeCurrentBillingPeriodEnd!.getTime() / 1000),
-				]);
-				if (usage === 0) {
+				const usage = await this.tinybird.getUsage(t.id, {
+					year: t.stripeCurrentBillingPeriodStart!.getUTCFullYear(),
+					month: t.stripeCurrentBillingPeriodStart!.getUTCMonth() + 1,
+				});
+				const totalUsage = usage.reduce((total, day) => total + day.usage, 0);
+				if (totalUsage === 0) {
 					this.logger.info("Skipping team with no usage", {
 						teamId: t.id,
 					});
@@ -78,7 +79,7 @@ export class Billing {
 				}
 
 				await this.stripe.subscriptionItems.createUsageRecord(itemId, {
-					quantity: usage,
+					quantity: totalUsage,
 					action: "set",
 				});
 			} catch (e) {
