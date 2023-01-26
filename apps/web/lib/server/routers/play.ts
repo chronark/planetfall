@@ -118,7 +118,7 @@ export const playRouter = t.router({
 					if (res.status !== 200) {
 						throw new TRPCError({
 							code: "INTERNAL_SERVER_ERROR",
-							message: `unable to ping: ${region.id} [${
+							message: `unable to ping: ${region.url} [${
 								res.status
 							}]: ${await res.text()}`,
 						});

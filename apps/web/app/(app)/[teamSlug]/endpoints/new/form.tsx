@@ -422,19 +422,21 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 										/>
 										<div>
 											<Button
-												type="secondary"
-												square={true}
+												type="button"
+												variant="outline"
 												onClick={() => statusAssertions.remove(i)}
 												size="lg"
-												icon={<MinusSmallIcon className="w-6 h-6" />}
-											/>
+											>
+												<MinusSmallIcon className="w-6 h-6" />
+											</Button>
 										</div>
 									</div>
 								))}
 
 								<div className="w-full">
 									<Button
-										type="tertiary"
+										type="button"
+										variant="outline"
 										onClick={() =>
 											statusAssertions.append({
 												version: "v1",
@@ -444,9 +446,9 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 											})
 										}
 										size="lg"
-										block={true}
-										icon={<PlusIcon className="w-6 h-6" />}
-									/>
+									>
+										Add Assertion
+									</Button>
 								</div>
 							</div>
 						</div>
@@ -495,19 +497,21 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 										/>
 										<div>
 											<Button
-												type="secondary"
-												square={true}
+												type="button"
+												variant="outline"
 												onClick={() => headerAssertions.remove(i)}
 												size="lg"
-												icon={<MinusSmallIcon className="w-6 h-6" />}
-											/>
+											>
+												<MinusSmallIcon className="w-6 h-6" />
+											</Button>
 										</div>
 									</div>
 								))}
 
 								<div className="w-full">
 									<Button
-										type="tertiary"
+										type="button"
+										variant="outline"
 										onClick={() =>
 											headerAssertions.append({
 												version: "v1",
@@ -518,9 +522,9 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 											})
 										}
 										size="lg"
-										block={true}
-										icon={<PlusIcon className="w-6 h-6" />}
-									/>
+									>
+										Add Assertion
+									</Button>
 								</div>
 							</div>
 						</div>
@@ -539,7 +543,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 							</p>
 						</div>
 						<Button
-							type="secondary"
+							type="button"
+							variant="outline"
 							onClick={() => {
 								if (selectedRegions.length >= regions.length / 2) {
 									setSelectedRegions([]);

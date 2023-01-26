@@ -2,10 +2,11 @@ import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 import { Client as Tinybird } from "@planetfall/tinybird";
 
-import Button from "@/components/button/button";
+import { Button } from "@/components/button";
 import { EndpointsTable } from "./table";
 import { db } from "@planetfall/db";
 import { getSession } from "lib/auth";
+import Link from "next/link";
 export default async function Page(props: { params: { teamSlug: string } }) {
 	const session = await getSession();
 	if (!session) {
@@ -42,9 +43,9 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				title="Endpoints"
 				description="Over the last 24 hours"
 				actions={[
-					<Button key="new" href={`/${team.slug}/endpoints/new`}>
-						New Endpoint
-					</Button>,
+					<Link key="new" href={`/${team.slug}/endpoints/new`}>
+						<Button>New Endpoint</Button>
+					</Link>,
 				]}
 			/>
 			<main className="container mx-auto">

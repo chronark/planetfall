@@ -11,7 +11,10 @@ const nextConfig = {
 		appDir: true,
 		esmExternals: "loose",
 		serverComponentsExternalPackages: ["@planetfall/db", "@prisma/client"],
-	},
+
+	}
+
+
 };
 
 module.exports = withMarkdoc(nextConfig);

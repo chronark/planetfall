@@ -78,14 +78,12 @@ export const Confirm: React.FC<ConfirmProps> = (props): JSX.Element => {
 							<p className="text-left">{props.description}</p>
 						</AlertDialog.Description>
 
-						<div className="flex justify-end pt-4 border-t space-x-2 border-zinc-200 ">
+						<div className="flex justify-end pt-4 space-x-2 border-t border-zinc-200 ">
 							<AlertDialog.Cancel>
-								<Button type="secondary">Cancel</Button>
+								<Button variant="outline">Cancel</Button>
 							</AlertDialog.Cancel>
 							<AlertDialog.Action>
-								<Button type="primary" onClick={onConfirm}>
-									Confirm
-								</Button>
+								<Button onClick={onConfirm}>Confirm</Button>
 							</AlertDialog.Action>
 						</div>
 					</AlertDialog.Content>

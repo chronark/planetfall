@@ -2,7 +2,7 @@ import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 import { Client as Tinybird } from "@planetfall/tinybird";
 
-import Button from "@/components/button/button";
+import { Button } from "@/components/button";
 import { db } from "@planetfall/db";
 import { Stats } from "@/components/stats";
 import { Heading } from "@/components/heading";
@@ -11,6 +11,7 @@ import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { Text } from "@/components/text";
 import { HeaderTable } from "./header-table";
 import { getSession } from "lib/auth";
+import Link from "next/link";
 
 type Timings = {
 	dnsStart: number;
@@ -224,13 +225,9 @@ export default async function Page(props: {
 				title={check.id}
 				description={endpoint?.url}
 				actions={[
-					<Button
-						key="play"
-						href={`/play?${playParams.toString()}`}
-						newTab={true}
-					>
-						Open in playground
-					</Button>,
+					<Link href={`/play?${playParams.toString()}`} target="_blank">
+						<Button key="play">Open in playground</Button>,
+					</Link>,
 				]}
 			/>
 			<main className="container mx-auto divide-y">

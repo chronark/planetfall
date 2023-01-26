@@ -1,9 +1,10 @@
 "use client";
-import { Button } from "@/components/button";
-import React from "react";
+import React, { useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { trpc } from "lib/utils/trpc";
+import { Switch } from "@/components/switch";
+import Loading from "app/play/[shareId]/loading";
 
 type Props = {
 	endpointId: string;
@@ -12,28 +13,27 @@ type Props = {
 
 export const Toggle: React.FC<Props> = ({ endpointId, active }) => {
 	const router = useRouter();
+
+	const [loading, setLoading] = useState(false)
+	const [checked, setChecked] = useState(active)
 	return (
 		<div className="flex items-center">
-			<div className="flex items-center justify-center w-6 h-6 mr-2">
-				{active ? (
-					<>
-						<span className="absolute inline-flex w-4 h-4 rounded-full opacity-50 bg-emerald-300 animate-pulse" />
-						<span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500  " />
-					</>
-				) : (
-					<span className="relative inline-flex w-2 h-2 rounded-full bg-zinc-500" />
-				)}
-			</div>
-			<Button
-				type="secondary"
+			{loading ? <Loading /> : null}
+			<Switch
+				checked={checked}
 				onClick={async () => {
-					await trpc.endpoint.toggleActive.mutate({ endpointId });
-					router.refresh();
+					try {
+						setLoading(true)
+						const res = await trpc.endpoint.toggleActive.mutate({ endpointId });
+						setChecked(res.active)
+						router.refresh();
+					} finally {
+						setLoading(false)
+					}
 				}}
-			>
-				{active ? "Active" : "Disabled"}
-			</Button>
+			/>
 		</div>
+
 	);
 };
 

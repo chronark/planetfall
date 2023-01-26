@@ -251,9 +251,8 @@ export const Inner: React.FC<Props> = ({
 															z.string().url().safeParse(v).success,
 													})}
 													placeholder="https://example.com"
-													className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${
-														errors.url ? "border-red-500" : "border-zinc-700"
-													} hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+													className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-zinc-700"
+														} hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
 												/>
 											</div>
 											{errors.url ? (
@@ -312,7 +311,8 @@ export const Inner: React.FC<Props> = ({
 										</p>
 									</div>
 									<Button
-										type="secondary"
+										type="button"
+										variant="outline"
 										onClick={() => {
 											if (selectedRegions.length >= allRegions.length / 2) {
 												setSelectedRegions([]);
@@ -336,11 +336,10 @@ export const Inner: React.FC<Props> = ({
 															<button
 																type="button"
 																key={r.id}
-																className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-																	selectedRegions.includes(r.id)
+																className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${selectedRegions.includes(r.id)
 																		? "border-zinc-900 bg-zinc-50"
 																		: "border-zinc-300"
-																}`}
+																	}`}
 																onClick={() => {
 																	if (selectedRegions.includes(r.id)) {
 																		setSelectedRegions(

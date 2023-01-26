@@ -9,13 +9,15 @@ import { Heading } from "@/components/heading";
 import { LatestTable } from "./latest-table";
 import { DeleteButton } from "./delete";
 import { getSession } from "lib/auth";
-import Button from "@/components/button/button";
+import { Button } from "@/components/button";
 import Toggle from "./toggle";
 import { Text } from "@/components/text";
 import { Charts } from "./chart";
 import { MultiSelect } from "@/components/multiselect";
 import { ChartsSection } from "./charts-section";
 import { Edu_NSW_ACT_Foundation } from "@next/font/google";
+import Link from "next/link";
+import { Switch } from "@/components/switch";
 
 export const revalidate = 10;
 
@@ -87,15 +89,13 @@ export default async function Page(props: {
 				description={endpoint.url}
 				actions={[
 					<Toggle endpointId={endpoint.id} active={endpoint.active} />,
-
-					<Button
+					
+					<Link
 						key="settings"
-						type="secondary"
 						href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/settings`}
 					>
-						Settings
-					</Button>,
-
+						<Button variant="outline">Settings</Button>
+					</Link>,
 					<DeleteButton
 						endpointId={endpoint.id}
 						endpointName={endpoint.name}

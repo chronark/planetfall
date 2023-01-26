@@ -119,16 +119,16 @@ export const BillingCard: React.FC<Props> = ({
 						team?.plan === "FREE" ? (
 							<UpgradeButton teamId={team.id} />
 						) : team?.plan === "PRO" ? (
-							<Button href="mailto:support@planetfall.io?subject=planetfall.io enterprise upgrade">
-								Upgrade to Enterprise
-							</Button>
+							<Link href="mailto:support@planetfall.io?subject=planetfall.io enterprise upgrade">
+								<Button> Upgrade to Enterprise</Button>
+							</Link>
 						) : null
 					) : team?.plan === "DISABLED" ? (
 						<UpgradeButton teamId={team.id} />
 					) : (
-						<Button href="mailto:support@planetfall.io">
-							Upgrade to Enterprise
-						</Button>
+						<Link href="mailto:support@planetfall.io">
+							<Button>Upgrade to Enterprise</Button>
+						</Link>
 					)}
 				</Card.Footer.Actions>
 			</Card.Footer>

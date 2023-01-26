@@ -18,6 +18,7 @@ import {
 } from "@planetfall/assertions";
 import { z } from "zod";
 import classNames from "classnames";
+import Link from "next/link";
 type Props = {
 	teamSlug: string;
 	endpoint: Omit<Endpoint, "createdAt" | "updatedAt"> & { regions: Region[] };
@@ -89,9 +90,9 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 				title="Endpoint Settings"
 				description={endpoint.name}
 				actions={[
-					<Button key="cancel" href={`/${teamSlug}/endpoints/${endpoint.id}`}>
-						Go Back
-					</Button>,
+					<Link key="cancel" href={`/${teamSlug}/endpoints/${endpoint.id}`}>
+						<Button>Go Back</Button>
+					</Link>,
 				]}
 			/>
 
@@ -141,7 +142,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											type="secondary"
+											variant="outline"
 											onClick={nameForm.handleSubmit(async ({ name }) => {
 												await trpc.endpoint.update
 													.mutate({
@@ -248,7 +249,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											type="secondary"
+											variant="outline"
 											onClick={urlForm.handleSubmit(async ({ url, method }) => {
 												await trpc.endpoint.update
 													.mutate({
@@ -356,7 +357,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											type="secondary"
+											variant="outline"
 											onClick={requestForm.handleSubmit(
 												async ({ headers, body }) => {
 													await trpc.endpoint.update
@@ -484,7 +485,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											type="secondary"
+											variant="outline"
 											onClick={latencyForm.handleSubmit(
 												async ({ timeout, degradedAfter }) => {
 													await trpc.endpoint.update
@@ -575,19 +576,19 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 												/>
 												<div>
 													<Button
-														type="secondary"
-														square={true}
+														variant="outline"
 														onClick={() => statusAssertions.remove(i)}
 														size="lg"
-														icon={<MinusSmallIcon className="w-6 h-6" />}
-													/>
+													>
+														<MinusSmallIcon className="w-6 h-6" />
+													</Button>
 												</div>
 											</div>
 										))}
 
 										<div className="w-full">
 											<Button
-												type="tertiary"
+												variant="outline"
 												onClick={() =>
 													statusAssertions.append({
 														version: "v1",
@@ -597,14 +598,14 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 													})
 												}
 												size="lg"
-												block={true}
-												icon={<PlusIcon className="w-6 h-6" />}
-											/>
+											>
+												<PlusIcon className="w-6 h-6" />
+											</Button>
 										</div>
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											type="secondary"
+											variant="outline"
 											onClick={nameForm.handleSubmit(async ({ name }) => {
 												await trpc.endpoint.update
 													.mutate({
@@ -680,19 +681,19 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 												/>
 												<div>
 													<Button
-														type="secondary"
-														square={true}
+														variant="outline"
 														onClick={() => headerAssertions.remove(i)}
 														size="lg"
-														icon={<MinusSmallIcon className="w-6 h-6" />}
-													/>
+													>
+														<MinusSmallIcon className="w-6 h-6" />
+													</Button>
 												</div>
 											</div>
 										))}
 
 										<div className="w-full">
 											<Button
-												type="tertiary"
+												variant="outline"
 												onClick={() =>
 													headerAssertions.append({
 														version: "v1",
@@ -703,14 +704,14 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 													})
 												}
 												size="lg"
-												block={true}
-												icon={<PlusIcon className="w-6 h-6" />}
-											/>
+											>
+												<PlusIcon className="w-6 h-6" />
+											</Button>
 										</div>
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											type="secondary"
+											variant="outline"
 											onClick={nameForm.handleSubmit(async ({ name }) => {
 												await trpc.endpoint.update
 													.mutate({
@@ -803,7 +804,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											type="secondary"
+											variant="outline"
 											onClick={async () => {
 												await trpc.endpoint.update
 													.mutate({
@@ -909,7 +910,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											type="secondary"
+											variant="outline"
 											onClick={intervalForm.handleSubmit(
 												async ({ interval, distribution }) => {
 													await trpc.endpoint.update

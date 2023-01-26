@@ -18,7 +18,7 @@ variable "environment" {
 }
 
 variable "zip" {
-  type        = object({
+  type = object({
     path = string
     hash = string
   })
@@ -68,7 +68,7 @@ variable "zip" {
 #   name = "/aws/lambda/${aws_lambda_function.check_proxy.function_name}"
 
 #   retention_in_days = 7
-  
+
 # }
 
 # resource "aws_iam_role" "lambda_exec" {

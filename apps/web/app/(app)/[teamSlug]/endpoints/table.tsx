@@ -8,6 +8,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 type Endpoint = {
@@ -76,7 +77,11 @@ export const EndpointsTable: React.FC<Props> = ({ endpoints }) => {
 		}),
 		accessor("id", {
 			header: "",
-			cell: (info) => <Button href={`${path}/${info.getValue()}`}>Go</Button>,
+			cell: (info) => (
+				<Link href={`${path}/${info.getValue()}`}>
+					<Button>Details</Button>
+				</Link>
+			),
 		}),
 	];
 	const table = useReactTable({

@@ -12,7 +12,7 @@ terraform {
       source  = "fly-apps/fly"
       version = ">=0.0.20"
     }
-docker = {
+    docker = {
       source  = "kreuzwerker/docker"
       version = "2.23.1"
     }

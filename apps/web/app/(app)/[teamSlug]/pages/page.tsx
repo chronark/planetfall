@@ -2,10 +2,11 @@ import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 import { Client as Tinybird } from "@planetfall/tinybird";
 
-import Button from "@/components/button/button";
+import { Button } from "@/components/button";
 import { StatuspagesTable } from "./table";
 import { db } from "@planetfall/db";
 import { getSession } from "lib/auth";
+import Link from "next/link";
 export default async function Page(props: { params: { teamSlug: string } }) {
 	const session = await getSession();
 	if (!session) {
@@ -29,9 +30,9 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				title="Status Pages"
 				description=""
 				actions={[
-					<Button key="new" href={`/${team.slug}/pages/new`}>
-						New Status Page
-					</Button>,
+					<Link key="new" href={`/${team.slug}/pages/new`}>
+						<Button>New Status Page</Button>
+					</Link>,
 				]}
 			/>
 			<main className="container mx-auto">

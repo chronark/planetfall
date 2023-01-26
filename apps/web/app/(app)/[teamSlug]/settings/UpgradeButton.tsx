@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/button";
+import { Loading } from "@/components/loading";
 import { trpc } from "lib/utils/trpc";
 import { useState } from "react";
 
@@ -29,10 +30,9 @@ export const UpgradeButton: React.FC<Props> = (props): JSX.Element => {
 					setLoading(false);
 				}
 			}}
-			loading={loading}
 			disabled={!loading}
 		>
-			Upgrade
+			{loading ? <Loading /> : "Upgrade"}
 		</Button>
 	);
 };

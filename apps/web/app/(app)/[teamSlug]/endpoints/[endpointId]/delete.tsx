@@ -23,7 +23,7 @@ export const DeleteButton: React.FC<Props> = ({
 		<Confirm
 			title="Delete endpoint?"
 			description={endpointName ?? endpointUrl}
-			trigger={<Button type="alert">Delete</Button>}
+			trigger={<Button variant="danger">Delete</Button>}
 			onConfirm={async () => {
 				await trpc.endpoint.delete.mutate({ endpointId });
 				router.refresh();

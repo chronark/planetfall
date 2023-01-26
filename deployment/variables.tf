@@ -73,7 +73,7 @@ variable "axiom_org" {
 
 
 variable "tinybird_token" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -85,57 +85,57 @@ variable "github_oauth_id" {
 
 
 variable "github_oauth_secret" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 
 
 variable "nextauth_secret" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 
-variable "proton_verification"{
-  type =string
+variable "proton_verification" {
+  type      = string
   sensitive = true
 }
-variable "proton_spf"{
-  type =string
+variable "proton_spf" {
+  type      = string
   sensitive = true
 }
 
 
-variable "proton_domainkey"{
-  type =string
+variable "proton_domainkey" {
+  type      = string
   sensitive = true
 }
-variable "proton_domainkey2"{
-  type =string
+variable "proton_domainkey2" {
+  type      = string
   sensitive = true
 }
-variable "proton_domainkey3"{
-  type =string
+variable "proton_domainkey3" {
+  type      = string
   sensitive = true
 }
-variable "proton_dmarc"{
-  type = string
-  sensitive =true
+variable "proton_dmarc" {
+  type      = string
+  sensitive = true
 }
 variable "git_credentials" {
-  type = string
+  type      = string
   sensitive = true
-  
+
 }
 
 variable "fly_token" {
-  type = string
+  type      = string
   sensitive = true
-  
+
 }
 
 variable "fly_org" {
-  type = string
-  default = "planetfall"  
+  type    = string
+  default = "planetfall"
 }

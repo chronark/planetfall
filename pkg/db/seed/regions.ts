@@ -1,6 +1,29 @@
 import { Platform, PrismaClient } from "@prisma/client";
 
-const regions = [
+const vercelRegions = [
+
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-arn1.vercel.app/api/v1/ping", region: "arn1", name: "▲ Stockholm, Sweden" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-bom1.vercel.app/api/v1/ping", region: "bom1", name: "▲ Mumbai, India" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-cdg1.vercel.app/api/v1/ping", region: "cdg1", name: "▲ Paris, France" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-cle1.vercel.app/api/v1/ping", region: "cle1", name: "▲ Cleveland, USA" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-cpt1.vercel.app/api/v1/ping", region: "cpt1", name: "▲ Cape Town, South Africa" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-dub1.vercel.app/api/v1/ping", region: "dub1", name: "▲ Dublin, Ireland" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-fra1.vercel.app/api/v1/ping", region: "fra1", name: "▲ Frankfurt, Germany" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-gru1.vercel.app/api/v1/ping", region: "gru1", name: "▲ São Paulo, Brazil" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-hkg1.vercel.app/api/v1/ping", region: "hkg1", name: "▲ Hong Kong" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-hnd1.vercel.app/api/v1/ping", region: "hnd1", name: "▲ Tokyo, Japan" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-iad1.vercel.app/api/v1/ping", region: "iad1", name: "▲ Washington, D.C., USA" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-icn1.vercel.app/api/v1/ping", region: "icn1", name: "▲ Seoul, South Korea" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-kix1.vercel.app/api/v1/ping", region: "kix1", name: "▲ Osaka, Japan" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-lhr1.vercel.app/api/v1/ping", region: "lhr1", name: "▲ London, United Kingdom" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-pdx1.vercel.app/api/v1/ping", region: "pdx1", name: "▲ Portland, USA" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-sfo1.vercel.app/api/v1/ping", region: "sfo1", name: "▲ San Francisco, USA" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-sin1.vercel.app/api/v1/ping", region: "sin1", name: "▲ Singapore" },
+	{ platform: Platform.vercel, url: "https://planetfall-pinger-serverless-syd1.vercel.app/api/v1/ping", region: "syd1", name: "▲ Sydney, Australia" },
+
+
+]
+const flyRegions = [
 	{
 		platform: Platform.fly,
 		url: "https://ping.planetfall.io/ping/ams",
@@ -158,6 +181,9 @@ const regions = [
 		name: "Toronto, Canada",
 	},
 ];
+
+
+const regions = [...vercelRegions, ...flyRegions];
 
 async function main() {
 	const db = new PrismaClient();

@@ -102,50 +102,50 @@ variable "scheduler_image" {
   type = string
 
 }
-resource "fly_machine" "scheduler" {
-  app    = fly_app.scheduler.name
-  name   = "scheduler"
-  region = "ams"
-  image  = var.scheduler_image
+# resource "fly_machine" "scheduler" {
+#   app    = fly_app.scheduler.name
+#   name   = "scheduler"
+#   region = "ams"
+#   image  = var.scheduler_image
 
-  cpus     = 1
-  cputype  = "shared"
-  memorymb = 1024
+#   cpus     = 1
+#   cputype  = "shared"
+#   memorymb = 1024
 
-  services = [
-    {
-      ports = [
-        {
-          port     = 443
-          handlers = ["tls", "http"]
-        },
-        {
-          port     = 80
-          handlers = ["http"]
-        }
-      ]
-      "protocol" : "tcp",
-      "internal_port" : 8080
-    }
-  ]
+#   services = [
+#     {
+#       ports = [
+#         {
+#           port     = 443
+#           handlers = ["tls", "http"]
+#         },
+#         {
+#           port     = 80
+#           handlers = ["http"]
+#         }
+#       ]
+#       "protocol" : "tcp",
+#       "internal_port" : 8080
+#     }
+#   ]
 
-  env = {
+#   env = {
 
-    UPSTASH_REDIS_REST_URL   = "https://${upstash_redis_database.planetfall.endpoint}"
-    UPSTASH_REDIS_REST_TOKEN = upstash_redis_database.planetfall.rest_token
-    KAFKA_BROKER             = "${upstash_kafka_cluster.planetfall.tcp_endpoint}:9092"
-    KAFKA_USERNAME           = upstash_kafka_cluster.planetfall.username
-    KAFKA_PASSWORD           = upstash_kafka_cluster.planetfall.password
-    AXIOM_TOKEN              = var.axiom_token
-    TINYBIRD_TOKEN           = var.tinybird_token
-    DATABASE_URL             = var.database_url
-    SENDGRID_API_KEY         = var.sendgrid_api_key
-    STRIPE_SECRET_KEY        = var.stripe_secret_key
+#     UPSTASH_REDIS_REST_URL   = "https://${upstash_redis_database.planetfall.endpoint}"
+#     UPSTASH_REDIS_REST_TOKEN = upstash_redis_database.planetfall.rest_token
+#     KAFKA_BROKER             = "${upstash_kafka_cluster.planetfall.tcp_endpoint}:9092"
+#     KAFKA_USERNAME           = upstash_kafka_cluster.planetfall.username
+#     KAFKA_PASSWORD           = upstash_kafka_cluster.planetfall.password
+#     AXIOM_TOKEN              = var.axiom_token
+#     TINYBIRD_TOKEN           = var.tinybird_token
+#     DATABASE_URL             = var.database_url
+#     SENDGRID_API_KEY         = var.sendgrid_api_key
+#     STRIPE_SECRET_KEY        = var.stripe_secret_key
 
-  }
+#   }
 
 
-}
+# }
 
 
 

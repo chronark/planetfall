@@ -43,7 +43,7 @@ resource "upstash_kafka_topic" "endpoint_deleted" {
 
 resource "upstash_redis_database" "planetfall" {
   database_name = "prod"
-  region       = "eu-west-1"
-  tls = true
-  multizone = true
+  region        = "eu-west-1"
+  tls           = true
+  multizone     = true
 }

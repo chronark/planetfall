@@ -32,6 +32,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "middleware.ts"
-  ],
+, "../edge-pinger/pinger.ts"  ],
   "exclude": ["node_modules"]
 }
