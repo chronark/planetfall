@@ -142,6 +142,7 @@ model Team {
 
 enum Platform {
   vercel
+  vercelEdge
   aws
   fly
 }

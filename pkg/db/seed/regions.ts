@@ -1,5 +1,115 @@
 import { Platform, PrismaClient } from "@prisma/client";
 
+const edgeRegions = [
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/arn1",
+		region: "arn1",
+		name: "▲ Stockholm, Sweden @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/bom1",
+		region: "bom1",
+		name: "▲ Mumbai, India @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/cdg1",
+		region: "cdg1",
+		name: "▲ Paris, France @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/cle1",
+		region: "cle1",
+		name: "▲ Cleveland, USA @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/cpt1",
+		region: "cpt1",
+		name: "▲ Cape Town, South Africa @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/dub1",
+		region: "dub1",
+		name: "▲ Dublin, Ireland @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/fra1",
+		region: "fra1",
+		name: "▲ Frankfurt, Germany @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/gru1",
+		region: "gru1",
+		name: "▲ São Paulo, Brazil @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/hkg1",
+		region: "hkg1",
+		name: "▲ Hong Kong @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/hnd1",
+		region: "hnd1",
+		name: "▲ Tokyo, Japan @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/iad1",
+		region: "iad1",
+		name: "▲ Washington, D.C., USA @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/icn1",
+		region: "icn1",
+		name: "▲ Seoul, South Korea @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/kix1",
+		region: "kix1",
+		name: "▲ Osaka, Japan @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/lhr1",
+		region: "lhr1",
+		name: "▲ London, United Kingdom @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/pdx1",
+		region: "pdx1",
+		name: "▲ Portland, USA @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/sfo1",
+		region: "sfo1",
+		name: "▲ San Francisco, USA @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/sin1",
+		region: "sin1",
+		name: "▲ Singapore @edge",
+	},
+	{
+		platform: Platform.vercelEdge,
+		url: "https://planetfall.io/api/v1/edge-ping/syd1",
+		region: "syd1",
+		name: "▲ Sydney, Australia @edge",
+	},
+];
 const vercelRegions = [
 	{
 		platform: Platform.vercel,
@@ -269,7 +379,7 @@ const flyRegions = [
 	},
 ];
 
-const regions = [...vercelRegions, ...flyRegions];
+const regions = [...vercelRegions, ...flyRegions, ...edgeRegions];
 
 async function main() {
 	const db = new PrismaClient();

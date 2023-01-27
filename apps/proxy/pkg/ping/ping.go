@@ -117,14 +117,14 @@ func check(ctx context.Context, input Request) (Response, error) {
 	res, err := client.Do(req)
 	timing.TransferDone = time.Now().UnixMilli()
 	latency := time.Since(start).Milliseconds()
+	if errors.Is(err, context.DeadlineExceeded) {
+		return Response{
+			Time:   now.UnixMilli(),
+			Timing: timing,
+			Error:  fmt.Sprintf("Timeout after %d ms", input.Timeout),
+		}, nil
+	}
 	if err != nil {
-		if errors.Is(err, context.DeadlineExceeded) {
-			return Response{
-				Time:   now.UnixMilli(),
-				Timing: timing,
-				Error:  fmt.Sprintf("Timeout after %d ms", input.Timeout),
-			}, nil
-		}
 		return Response{}, err
 	}
 
