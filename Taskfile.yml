@@ -39,7 +39,9 @@ tasks:
       - terraform -chdir=deployment init -upgrade
       - terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
        
-     
+  tinybird:
+    cmds:
+      - docker run -v $(pwd)/pkg/tinybird:/mnt/data -it tinybirdco/tinybird-cli-docker
   build-pinger:
     - task: build-docker
       vars:

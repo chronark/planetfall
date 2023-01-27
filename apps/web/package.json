@@ -24,6 +24,7 @@
     "@planetfall/id": "workspace:*",
     "@planetfall/tinybird": "workspace:*",
     "@prisma/client": "^4.9.0",
+    "@radix-ui/react-accordion": "^1.1.0",
     "@radix-ui/react-alert-dialog": "^1.0.2",
     "@radix-ui/react-avatar": "^1.0.1",
     "@radix-ui/react-collapsible": "^1.0.1",

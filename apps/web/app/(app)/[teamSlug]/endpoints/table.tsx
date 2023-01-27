@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-table";
 import classNames from "classnames";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 type Endpoint = {
 	id: string;

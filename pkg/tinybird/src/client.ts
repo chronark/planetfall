@@ -32,14 +32,14 @@ export class Client {
 	}
 
 	public async publishChecks(checks: Check[]): Promise<void> {
-		await this.publish("production__checks__v4", checks);
+		await this.publish("checks__v1", checks);
 	}
 
 	public async getEndpointStats(
 		endpointId: string,
 	): Promise<EndpointStats | null> {
 		const url = new URL(
-			"/v0/pipes/production__endpoint_stats_24h__v1.json",
+			"/v0/pipes/endpoint_stats_over_24h__v1.json",
 			this.baseUrl,
 		);
 		url.searchParams.set("endpointId", endpointId);
@@ -65,7 +65,7 @@ export class Client {
 	}
 
 	public async getCheckById(checkId: string): Promise<Check | null> {
-		const url = new URL("/v0/pipes/check_by_id.json", this.baseUrl);
+		const url = new URL("/v0/pipes/check_by_id__v1.json", this.baseUrl);
 		url.searchParams.set("checkId", checkId);
 		const res = await fetch(url.toString(), {
 			headers: { Authorization: `Bearer ${this.token}` },
@@ -103,10 +103,7 @@ export class Client {
 			day: number;
 		}[]
 	> {
-		const url = new URL(
-			"/v0/pipes/production__usage_interval__v1.json",
-			this.baseUrl,
-		);
+		const url = new URL("/v0/pipes/usage__v1.json", this.baseUrl);
 		url.searchParams.set("teamId", teamId);
 		url.searchParams.set("year", time.year.toString());
 		url.searchParams.set("month", time.month.toString());
@@ -135,7 +132,7 @@ export class Client {
 		errorsOnly?: boolean,
 	): Promise<Check[]> {
 		const url = new URL(
-			"/v0/pipes/production__latest_checks_by_endpoint__v1.json",
+			"/v0/pipes/latest_checks_by_endpoint__v1.json",
 			this.baseUrl,
 		);
 		url.searchParams.set("endpointId", endpointId);
@@ -157,10 +154,7 @@ export class Client {
 	}
 
 	public async getChecks24h(endpointId: string): Promise<Check[]> {
-		const url = new URL(
-			"/v0/pipes/production__checks_last_24h__v1.json",
-			this.baseUrl,
-		);
+		const url = new URL("/v0/pipes/checks_last_24h__v1.json", this.baseUrl);
 		url.searchParams.set("endpointId", endpointId);
 		const res = await fetch(url.toString(), {
 			headers: { Authorization: `Bearer ${this.token}` },
@@ -192,7 +186,7 @@ export type Check = {
 	regionId: string;
 	status?: number;
 	teamId: string;
-	// unix timestamp with millisecond precision
+	// Unix timestamp with millisecond precision
 	time: number;
 	timing?: string;
 	body?: string;

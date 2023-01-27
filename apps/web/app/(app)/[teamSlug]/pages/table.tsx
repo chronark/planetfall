@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/button";
+import { Confirm } from "@/components/confirm";
 import {
 	createColumnHelper,
 	flexRender,
@@ -9,6 +10,8 @@ import {
 } from "@tanstack/react-table";
 import classNames from "classnames";
 import Link from "next/link";
+import { trpc } from "@/lib/utils/trpc";
+import { useRouter } from "next/navigation";
 
 type Page = {
 	id: string;
@@ -27,6 +30,7 @@ type Props = {
 export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 	const protocol = process.env.NEXT_PUBLIC_VERCEL_URL ? "https" : "http";
 	const host = process.env.NEXT_PUBLIC_VERCEL_URL ?? "localhost:3000";
+	const router = useRouter();
 
 	const { accessor } = createColumnHelper<Page>();
 
@@ -60,11 +64,24 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 			cell: (info) => (
 				<Link
 					target="_blank"
-					className="text-zinc-500 hover:text-primary-600 duration-500 hover:underline"
+					className="duration-500 text-zinc-500 hover:text-primary-600 hover:underline"
 					href={`${protocol}://${info.getValue()}.${host}`}
 				>
 					{`${protocol}://${info.getValue()}.${host}`}
 				</Link>
+			),
+		}),
+		accessor("id", {
+			cell: (info) => (
+				<Confirm
+					title="Delete page"
+					description="Are you sure you want to delete this page?"
+					onConfirm={async () => {
+						await trpc.page.delete.mutate({ pageId: info.getValue() });
+						router.refresh();
+					}}
+					trigger={<Button variant="danger">Delete</Button>}
+				/>
 			),
 		}),
 	];

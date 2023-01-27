@@ -1,0 +1,22 @@
+VERSION 1
+TOKEN "latest_checks_by_endpoint" READ
+
+NODE latest_checks_by_endpoint_0
+SQL >
+
+    %
+    SELECT * 
+    FROM checks
+    WHERE 
+      endpointId = {{String(endpointId, required=True)}}
+     AND
+      time > now() - interval 1 day
+    {% if defined(errorsOnly) %}
+    AND
+     error is not null
+    {% end %}
+    ORDER BY time DESC
+    LIMIT 10
+
+
+

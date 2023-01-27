@@ -9,7 +9,6 @@ type NotificationEvent = {
 		id: string;
 		endpointId: string;
 		teamId: string;
-		// unix timestamp with millisecond precision
 		time: number;
 		error: string;
 	};

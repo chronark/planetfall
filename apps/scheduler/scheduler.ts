@@ -297,7 +297,14 @@ export class Scheduler {
 						}
 					}
 
-					await this.tinybird.publishChecks(data);
+					await this.tinybird.publishChecks(data).catch((err) => {
+						this.logger.error("error publishing checks", {
+							endpointId: endpoint.id,
+							regionId: region.id,
+							error: (err as Error).message,
+						});
+						throw err;
+					});
 				}),
 			);
 		} catch (err) {

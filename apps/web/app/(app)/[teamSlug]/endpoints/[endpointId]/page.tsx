@@ -89,7 +89,7 @@ export default async function Page(props: {
 				description={endpoint.url}
 				actions={[
 					<Toggle endpointId={endpoint.id} active={endpoint.active} />,
-					
+
 					<Link
 						key="settings"
 						href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/settings`}

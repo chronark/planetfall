@@ -1,16 +1,12 @@
 "use client";
-import { Endpoint, Region } from "@planetfall/db";
+import { Endpoint } from "@planetfall/db";
 import React, { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import Link from "next/link";
-import { z } from "zod";
-import { MinusSmallIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { Button } from "@/components/button";
 import { Loading } from "@/components/loading";
 import { useRouter } from "next/navigation";
-import type { Input as Req, Output as Res } from "pages/api/v1/pages";
-import { mutate } from "lib/api/call";
+import { trpc } from "@/lib/utils/trpc";
 type Props = {
 	teamId: string;
 	teamSlug: string;
@@ -46,19 +42,14 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 		}
 		setLoading(true);
 		try {
-			const res = await mutate<Req["body"], Res>("/api/v1/pages", {
+			const res = await trpc.page.create.mutate({
 				name: data.name,
 				slug: data.slug.toLowerCase(),
 				endpointIds: selectedEndpoints,
 				teamId: teamId,
 			});
 
-			if (res.error) {
-				console.error(res.error);
-				throw new Error(res.error.message);
-			}
-
-			const url = `https://${data.slug.toLowerCase()}.planetfall.io`;
+			const url = `https://${res.slug}.planetfall.io`;
 			router.push(url);
 		} catch (err) {
 			console.error(err);
@@ -70,7 +61,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 
 	return (
 		<form className="space-y-8 divide-y divide-zinc-200">
-			<div className="space-y-8  sm:space-y-5 lg:space-y-24">
+			<div className="space-y-8 sm:space-y-5 lg:space-y-24">
 				<div className="space-y-6 sm:space-y-5">
 					<div>
 						<h3 className="text-lg font-medium leading-6 text-zinc-900">
@@ -158,7 +149,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 							<div role="group" aria-labelledby="label-email">
 								<div className="sm:grid sm:items-baseline sm:gap-4">
 									<div className="mt-4 sm:col-span-3 sm:mt-0">
-										<fieldset className="w-full gap-4 grid grid-cols-1 sm:grid-cols-2">
+										<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
 											{endpoints.map((e) => (
 												<button
 													type="button"
@@ -205,14 +196,14 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 					<div className="flex justify-end gap-8">
 						<Link
 							href={`/${teamSlug}/pages`}
-							className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 duration-300 ease-in-out  text-zinc-900 md:hover:bg-zinc-50 hover:text-zinc-900 shadow-sm group"
+							className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 text-zinc-900 md:hover:bg-zinc-50 hover:text-zinc-900 group"
 						>
 							Cancel
 						</Link>
 						<button
 							type="button"
 							onClick={handleSubmit(submit)}
-							className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 duration-300 ease-in-out md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900  shadow-sm group"
+							className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
 						>
 							{loading ? <Loading /> : "Create"}
 						</button>

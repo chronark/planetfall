@@ -1,12 +1,11 @@
 import { db } from "@planetfall/db";
 import { Metric, Row } from "./chart";
-import { RelativeTime } from "./RelativeTime";
 
 export const revalidate = 60;
 
 async function getEndpointData(endpointId: string) {
 	const res = await fetch(
-		`https://api.tinybird.co/v0/pipes/production__endpoint_buckets__v1.json?endpointId=${endpointId}`,
+		`https://api.tinybird.co/v0/pipes/endpoint_stats_per_hour__v1.json?endpointId=${endpointId}`,
 		{
 			headers: {
 				Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
@@ -17,6 +16,7 @@ async function getEndpointData(endpointId: string) {
 	const data = (await res.json()) as {
 		data: Metric[];
 	};
+
 	const missing = 72 - data.data.length;
 	if (missing > 0) {
 		const empty = new Array(missing).fill({
@@ -29,13 +29,14 @@ async function getEndpointData(endpointId: string) {
 		});
 		data.data = empty.concat(data.data);
 	}
+	console.log(JSON.stringify(data, null, 2));
 
 	return data.data;
 }
 
 async function getEndpointDataByRegion(endpointId: string) {
 	const res = await fetch(
-		`https://api.tinybird.co/v0/pipes/production__endpoint_buckets__v1.json?endpointId=${endpointId}&byRegion=true`,
+		`https://api.tinybird.co/v0/pipes/endpoint_stats_per_hour__v1.json?endpointId=${endpointId}&byRegion=true`,
 		{
 			headers: {
 				Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
@@ -65,7 +66,6 @@ async function getEndpointDataByRegion(endpointId: string) {
 
 import React from "react";
 import Link from "next/link";
-import { Heading } from "@/components/heading";
 import { Text } from "@/components/text";
 
 type Series = {
@@ -127,9 +127,11 @@ export default async function Page(props: { params: { slug: string } }) {
 	);
 
 	return (
-		<div>
+		<div className="flex flex-col min-h-screen overflow-hidden">
 			<header className="container flex items-center justify-between w-full mx-auto mt-4 lg:mt-8 ">
-				<Heading h2>{statusPage.name}</Heading>
+				<h2 className="mb-4 text-5xl font-bold text-zinc-900">
+					{statusPage.name}
+				</h2>
 
 				<Text>
 					{/* This will cause a hydration error since date will differ between server and client */}

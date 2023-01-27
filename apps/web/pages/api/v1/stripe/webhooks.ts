@@ -166,6 +166,7 @@ export default async function webhookHandler(
 		return res.end();
 	} catch (e) {
 		const err = e as Error;
+		console.error(err.message);
 		res.status(500).send(err.message);
 		return res.end();
 	}

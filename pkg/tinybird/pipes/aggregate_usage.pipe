@@ -1,0 +1,22 @@
+VERSION 1
+NODE aggreagate_usage
+SQL >
+
+    SELECT
+        teamId,
+        COUNTState() AS usage,
+        toYear(fromUnixTimestamp64Milli(time)) AS year,
+        toMonth(fromUnixTimestamp64Milli(time)) AS month,
+        toDayOfMonth(fromUnixTimestamp64Milli(time)) AS day
+    FROM checks
+    GROUP BY
+        teamId,
+        year,
+        month,
+        day
+
+TYPE materialized
+DATASOURCE daily_usage
+ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "teamId, year, month, day"
+
