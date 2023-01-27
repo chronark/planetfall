@@ -148,11 +148,13 @@
 		);
 	}
 
-	if (!globalThis.performance) {
-		throw new Error(
-			"globalThis.performance is not available, polyfill required (performance.now only)",
-		);
-	}
+	if (!globalThis.performance){
+		globalThis.performance = {
+			now(){
+				return Date.now();
+			}
+		}
+	};
 
 	if (!globalThis.TextEncoder) {
 		throw new Error(
