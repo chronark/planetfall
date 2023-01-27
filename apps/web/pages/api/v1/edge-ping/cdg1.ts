@@ -1,6 +1,5 @@
 // @ts-nocheck
 import wasmModule from "./pinger.wasm?module";
-import "./performance-polyfill";
 import "./wasm_exec.js";
 import { NextResponse } from "next/server";
 export const config = {
