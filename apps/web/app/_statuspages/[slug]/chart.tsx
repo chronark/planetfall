@@ -120,7 +120,29 @@ export const Row: React.FC<{
 										<h4 className="text-bold text-zinc-400">{region}</h4>
 									</AccordionTrigger>
 									<AccordionContent>
-										<div className="hidden lg:block">
+										<div className="flex flex-wrap items-center justify-end w-full gap-2 mb-2 sm:gap-4 xl:gap-6 md:flex-nowrap">
+											<Stat
+												label="min"
+												value={Math.round(metrics.at(-1)?.min ?? 0)}
+											/>
+											<Stat
+												label="max"
+												value={Math.round(metrics.at(-1)?.max ?? 0)}
+											/>
+											<Stat
+												label="p50"
+												value={Math.round(metrics.at(-1)?.p50 ?? 0)}
+											/>
+											<Stat
+												label="p95"
+												value={Math.round(metrics.at(-1)?.p95 ?? 0)}
+											/>
+											<Stat
+												label="p99"
+												value={Math.round(metrics.at(-1)?.p99 ?? 0)}
+											/>
+										</div>
+										<div className="hidden lg:block ">
 											<Chart
 												metrics={metrics}
 												nBuckets={72}
@@ -221,21 +243,17 @@ const Chart: React.FC<{
 						// ? p99 > endpoint.degradedAfter
 						// : 0;
 						const cn = [
-							"flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:mx-1 py-1 ",
+							"flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
 						];
 
 						if (bucket.time === "") {
 							cn.push("bg-gradient-to-t bg-zinc-400/20 hover:bg-zinc-400/50 ");
 						} else if (bucketTimeout) {
-							cn.push("bg-gradient-to-t bg-red-500  hover:border-red-500  ");
+							cn.push("bg-gradient-to-t bg-red-500  ");
 						} else if (bucketDegraded) {
-							cn.push(
-								"bg-gradient-to-t bg-yellow-400  hover:border-yellow-400  ",
-							);
+							cn.push("bg-gradient-to-t bg-yellow-400  ");
 						} else {
-							cn.push(
-								"bg-gradient-to-t bg-emerald-400  hover:border-emerald-400",
-							);
+							cn.push("bg-gradient-to-t bg-emerald-400");
 						}
 
 						return (

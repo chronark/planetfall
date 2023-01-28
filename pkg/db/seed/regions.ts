@@ -107,7 +107,7 @@ const edgeRegions = [
 		platform: Platform.vercelEdge,
 		url: "https://planetfall.io/api/v1/edge-ping/syd1",
 		region: "syd1",
-		name: "▲ Sydney, Australia @edge",
+		name: "▲ ℇ Sydney, Australia",
 	},
 ];
 const vercelRegions = [
