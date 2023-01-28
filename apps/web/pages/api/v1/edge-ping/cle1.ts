@@ -1,22 +1,11 @@
-// @ts-nocheck
-import wasmModule from "./pinger.wasm?module";
-import "./wasm_exec.js";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 export const config = {
 	runtime: "edge",
 	regions: ["cle1"],
 };
-
-export default async function handler(req) {
-	const body = await req.text();
-	const go = new Go();
-
-	await WebAssembly.instantiate(wasmModule, go.importObject).then(
-		async (wasm) => {
-			go.run(wasm);
-		},
-	);
+import { ping } from "./_ping";
+export default async function handler(req: NextRequest): Promise<NextResponse> {
+	const body = await req.json();
 	const res = await ping(body);
-
-	return NextResponse.json(JSON.parse(res));
+	return NextResponse.json(res);
 }
