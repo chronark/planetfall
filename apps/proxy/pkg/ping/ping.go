@@ -57,11 +57,22 @@ func Ping(ctx context.Context, req Request) ([]Response, error) {
 	if req.Checks == 0 {
 		req.Checks = 1
 	}
+	t := &http.Transport{}
+	client := &http.Client{
+		Transport: t,
+		Timeout:   time.Duration(req.Timeout) * time.Millisecond,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			// Do not follow redirects
+			return http.ErrUseLastResponse
+		},
+	}
+	defer t.CloseIdleConnections()
+
 
 	responses := make([]Response, req.Checks)
 	for i := 0; i < req.Checks; i++ {
 		var err error
-		responses[i], err = check(ctx, req)
+		responses[i], err = check(ctx, client, req)
 		if err != nil {
 			return []Response{}, err
 		}
@@ -70,7 +81,7 @@ func Ping(ctx context.Context, req Request) ([]Response, error) {
 
 }
 
-func check(ctx context.Context, input Request) (Response, error) {
+func check(ctx context.Context, client *http.Client, input Request) (Response, error) {
 	log.Printf("Checking [%s] %s: %#v\n", input.Method, input.Url, input)
 
 	now := time.Now()
@@ -102,17 +113,7 @@ func check(ctx context.Context, input Request) (Response, error) {
 	req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
 
 	log.Printf("Request: %#v\n", req)
-	t := &http.Transport{}
 
-	defer t.CloseIdleConnections()
-	client := &http.Client{
-		Transport: t,
-		Timeout:   time.Duration(input.Timeout) * time.Millisecond,
-		CheckRedirect: func(req *http.Request, via []*http.Request) error {
-			// Do not follow redirects
-			return http.ErrUseLastResponse
-		},
-	}
 	start := time.Now()
 	res, err := client.Do(req)
 	timing.TransferDone = time.Now().UnixMilli()
