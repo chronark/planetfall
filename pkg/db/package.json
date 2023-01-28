@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^4.9.0",
-    "@xata.io/client": "^0.21.3"
+    "@xata.io/client": "^0.22.0"
   },
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",

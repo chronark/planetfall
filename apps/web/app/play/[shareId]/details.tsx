@@ -102,11 +102,13 @@ export const Details: React.FC<Props> = ({ regions }) => {
 									<Stats label="Status" value={c.status} />
 								</div>
 							</div>
-							<div className="py-4 md:py-8">
-								<Heading h4={true}>Trace</Heading>
+							{c.timing ? (
+								<div className="py-4 md:py-8">
+									<Heading h4={true}>Trace</Heading>
 
-								<Trace timings={c.timing} />
-							</div>
+									<Trace timings={c.timing} />
+								</div>
+							) : null}
 							<div className="py-4 md:py-8">
 								<Heading h4={true}>Response Header</Heading>
 								<pre className="p-2 overflow-x-auto rounded bg-zinc-50">

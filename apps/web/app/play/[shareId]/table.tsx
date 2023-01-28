@@ -43,15 +43,21 @@ export const Table: React.FC<Props> = ({ regions }) => {
 		name: r.name,
 		latency: r.checks.map((c) => fmt(c?.latency)),
 		status: r.checks.map((c) => c.status),
-		dns: r.checks.map((c) => fmt(c.timing.dnsDone - c.timing.dnsStart)),
+		dns: r.checks.map((c) =>
+			c.timing ? fmt(c.timing.dnsDone - c.timing.dnsStart) : undefined,
+		),
 		connect: r.checks.map((c) =>
-			fmt(c.timing.connectDone - c.timing.connectStart),
+			c.timing ? fmt(c.timing.connectDone - c.timing.connectStart) : undefined,
 		),
 		tls: r.checks.map((c) =>
-			fmt(c.timing.tlsHandshakeDone - c.timing.tlsHandshakeStart),
+			c.timing
+				? fmt(c.timing.tlsHandshakeDone - c.timing.tlsHandshakeStart)
+				: undefined,
 		),
 		ttfb: r.checks.map((c) =>
-			fmt(c.timing.firstByteDone - c.timing.firstByteStart),
+			c.timing
+				? fmt(c.timing.firstByteDone - c.timing.firstByteStart)
+				: undefined,
 		),
 		total: r.checks.map((c) => fmt(c?.latency)),
 	}));

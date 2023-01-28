@@ -34,7 +34,7 @@ export function newLogger(opts?: { dataset: string }): Logger {
 					: undefined),
 			};
 
-			axiom.datasets.ingestEvents(opts.dataset, event).catch((err) => {
+			axiom.ingestEvents(opts.dataset, event).catch((err) => {
 				console.error("Unable to ingest log event");
 			});
 		};

@@ -42,10 +42,12 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
 			for (const [key, value] of res.headers) {
 				headers[key] = value;
 			}
+			const body = await (await res.text()).slice(0, 500); // 1kb
+
 			responses.push({
 				status: res.status,
 				latency,
-				body: btoa(await res.text()),
+				body: btoa(body),
 				headers,
 				time: now,
 			});
