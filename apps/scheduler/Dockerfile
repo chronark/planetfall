@@ -18,8 +18,7 @@ WORKDIR /planetfall
 
 COPY --from=installer /planetfall/node_modules .
 
-COPY pkg .
-COPY apps/scheduler ./apps/
+COPY . .
 
 RUN pnpm install -r 
 RUN pnpm turbo run build --filter=scheduler
