@@ -31,7 +31,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          platform: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64
           tags: chronark/planetfall-scheduler:${{env.VERSION}},chronark/planetfall-scheduler:latest
           context: .
           file: apps/scheduler/Dockerfile
@@ -39,7 +39,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          platform: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64
           tags: chronark/planetfall-check-runner:${{env.VERSION}},chronark/planetfall-check-runner:latest
           context: .
           file: apps/proxy/Dockerfile
