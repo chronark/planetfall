@@ -114,23 +114,23 @@ resource "vercel_project" "web" {
 
 
 
-resource "vercel_dns_record" "pinger_v4" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "ping"
-  type    = "A"
-  ttl     = 60
-  value   = fly_ip.pinger_v4.address
-}
-resource "vercel_dns_record" "fly_dns_challenge" {
-  domain  = "planetfall.io"
-  name    = trimsuffix(fly_cert.ping.dnsvalidationhostname, ".planetfall.io")
-  team_id = var.vercel_team_id
-  ttl     = 60
-  type    = "CNAME"
-  value   = fly_cert.ping.dnsvalidationtarget
+ resource "vercel_dns_record" "check_runner_v4" {
+   team_id = var.vercel_team_id
+   domain  = "planetfall.io"
+   name    = "ping"
+   type    = "A"
+   ttl     = 60
+   value   = fly_ip.check_runner_v4.address
+ }
+ resource "vercel_dns_record" "fly_dns_challenge" {
+   domain  = "planetfall.io"
+   name    = trimsuffix(fly_cert.check_runner.dnsvalidationhostname, ".planetfall.io")
+   team_id = var.vercel_team_id
+   ttl     = 60
+   type    = "CNAME"
+   value   = fly_cert.check_runner.dnsvalidationtarget
 
-}
+ }
 
 
 resource "vercel_dns_record" "proton_verification" {
@@ -324,12 +324,12 @@ data "vercel_project_directory" "pinger" {
   path = "../apps/proxy/"
 }
 
-resource "vercel_deployment" "pinger" {
-  for_each    = vercel_project.pinger
-  project_id  = each.value.id
-  team_id     = var.vercel_team_id
-  files       = data.vercel_project_directory.pinger.files
-  path_prefix = data.vercel_project_directory.pinger.path
-  production  = true
-}
+ resource "vercel_deployment" "pinger" {
+   for_each    = vercel_project.pinger
+   project_id  = each.value.id
+   team_id     = var.vercel_team_id
+   files       = data.vercel_project_directory.pinger.files
+   path_prefix = data.vercel_project_directory.pinger.path
+   production  = true
+ }
 

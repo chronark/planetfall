@@ -16,6 +16,10 @@ terraform {
       source  = "kreuzwerker/docker"
       version = "2.23.1"
     }
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">=4.52.0"
+    }
   }
 }
 
@@ -40,7 +44,7 @@ provider "fly" {
   internaltunnelregion = "fra"
 }
 
+# provider "aws" {
+#   region = "eu-central-1"
 
-provider "docker" {
-  # host = "unix:///var/run/docker.sock"
-}
+# }

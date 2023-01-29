@@ -139,3 +139,10 @@ variable "fly_org" {
   type    = string
   default = "planetfall"
 }
+
+
+
+variable "planetfall_version" {
+  type    = string
+  
+}

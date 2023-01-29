@@ -2,9 +2,8 @@ version: '3'
 
 
 vars: 
-  VERSION:
-    sh: git describe --tags --always
-  PINGER_IMAGE: chronark/planetfall-pinger
+  VERSION: 
+  CHECK_RUNNER_IMAGE: chronark/planetfall-check-runner
   SCHEDULER_IMAGE: chronark/planetfall-scheduler
 
 tasks:
@@ -29,19 +28,16 @@ tasks:
     deps:
       - clear
     env:
-          TF_VAR_pinger_image: "{{.PINGER_IMAGE}}:{{.VERSION}}"
+          TF_VAR_check_runner_image: "{{.CHECK_RUNNER_IMAGE}}:{{.VERSION}}"
           TF_VAR_scheduler_image: "{{.SCHEDULER_IMAGE}}:{{.VERSION}}"
     cmds:
       - task: build-scheduler
       - task: build-pinger
        
-      - fly machines update --app=planetfall-scheduler 6e82975b764e68 --image={{.SCHEDULER_IMAGE}}:{{.VERSION}} --yes
       - terraform -chdir=deployment init -upgrade
       - terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
        
-  tinybird:
-    cmds:
-      - docker run -v $(pwd)/pkg/tinybird:/mnt/data -it tinybirdco/tinybird-cli-docker
+  
   build-pinger:
     - task: build-docker
       vars:

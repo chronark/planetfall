@@ -28,27 +28,25 @@ locals {
     "yul",
     "yyz"
   ])
-  replicas = 3
+  replicas = 1
+
+  check_runner_image = "chronark/planetfall-check-runner:${var.planetfall_version}"
+  scheduler_image = "chronark/planetfall-scheduler:${var.planetfall_version}"
 }
 
 
 
 
-resource "fly_app" "pinger" {
-  name = "pinger"
+resource "fly_app" "check_runner" {
+  name = "check-runner"
   org  = var.fly_org
 }
-variable "pinger_image" {
-  type = string
-
-}
-
-resource "fly_machine" "pinger" {
+resource "fly_machine" "check_runner" {
   for_each = toset([for x in setproduct(local.fly_regions, range(1, local.replicas + 1)) : join("-", x)])
-  app      = fly_app.pinger.name
+  app      = fly_app.check_runner.name
   region   = split("-", each.value)[0]
   name     = each.value
-  image    = var.pinger_image
+  image    = local.check_runner_image
 
   cpus     = 1
   cputype  = "shared"
@@ -78,14 +76,14 @@ resource "fly_machine" "pinger" {
 }
 
 
-resource "fly_ip" "pinger_v4" {
-  app  = fly_app.pinger.name
+resource "fly_ip" "check_runner_v4" {
+  app  = fly_app.check_runner.name
   type = "v4"
 
 
 }
-resource "fly_ip" "pinger_v6" {
-  app  = fly_app.pinger.name
+resource "fly_ip" "check_runner_v6" {
+  app  = fly_app.check_runner.name
   type = "v6"
 
 
@@ -98,73 +96,54 @@ resource "fly_app" "scheduler" {
   org  = var.fly_org
 }
 
-variable "scheduler_image" {
-  type = string
 
-}
-# resource "fly_machine" "scheduler" {
-#   app    = fly_app.scheduler.name
-#   name   = "scheduler"
-#   region = "ams"
-#   image  = var.scheduler_image
+resource "fly_machine" "scheduler" {
+  app    = fly_app.scheduler.name
+  name   = "scheduler"
+  region = "ams"
+  image  = local.scheduler_image
 
-#   cpus     = 1
-#   cputype  = "shared"
-#   memorymb = 1024
+  cpus     = 1
+  cputype  = "shared"
+  memorymb = 1024
 
-#   services = [
-#     {
-#       ports = [
-#         {
-#           port     = 443
-#           handlers = ["tls", "http"]
-#         },
-#         {
-#           port     = 80
-#           handlers = ["http"]
-#         }
-#       ]
-#       "protocol" : "tcp",
-#       "internal_port" : 8080
-#     }
-#   ]
+  services = [
+    {
+      ports = [
+        {
+          port     = 443
+          handlers = ["tls", "http"]
+        },
+        {
+          port     = 80
+          handlers = ["http"]
+        }
+      ]
+      "protocol" : "tcp",
+      "internal_port" : 8080
+    }
+  ]
 
-#   env = {
+  env = {
+    # KAFKA_BROKER     = "${upstash_kafka_cluster.planetfall.tcp_endpoint}:9092"
+    # KAFKA_USERNAME   = upstash_kafka_cluster.planetfall.username
+    # KAFKA_PASSWORD   = upstash_kafka_cluster.planetfall.password
+    AXIOM_TOKEN      = var.axiom_token
+    TINYBIRD_TOKEN   = var.tinybird_token
+    DATABASE_URL     = var.database_url
+    SENDGRID_API_KEY = var.sendgrid_api_key
 
-#     UPSTASH_REDIS_REST_URL   = "https://${upstash_redis_database.planetfall.endpoint}"
-#     UPSTASH_REDIS_REST_TOKEN = upstash_redis_database.planetfall.rest_token
-#     KAFKA_BROKER             = "${upstash_kafka_cluster.planetfall.tcp_endpoint}:9092"
-#     KAFKA_USERNAME           = upstash_kafka_cluster.planetfall.username
-#     KAFKA_PASSWORD           = upstash_kafka_cluster.planetfall.password
-#     AXIOM_TOKEN              = var.axiom_token
-#     TINYBIRD_TOKEN           = var.tinybird_token
-#     DATABASE_URL             = var.database_url
-#     SENDGRID_API_KEY         = var.sendgrid_api_key
-#     STRIPE_SECRET_KEY        = var.stripe_secret_key
-
-#   }
-
-
-# }
-
-
-
-resource "fly_ip" "scheduler_v4" {
-  app  = fly_app.scheduler.name
-  type = "v4"
-
-
-}
-resource "fly_ip" "scheduler_v6" {
-  app  = fly_app.scheduler.name
-  type = "v6"
+  }
 
 
 }
 
 
 
-resource "fly_cert" "ping" {
-  app      = fly_app.pinger.name
+
+
+resource "fly_cert" "check_runner" {
+  app      = fly_app.check_runner.name
   hostname = "ping.planetfall.io"
+
 }
