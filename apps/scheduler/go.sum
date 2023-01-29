@@ -1,0 +1,4 @@
+github.com/madflojo/tasks v1.0.4 h1:9pcztiBIw7BJYqStv+sckDNg+QO0/OHl7/0n6wfL0o8=
+github.com/madflojo/tasks v1.0.4/go.mod h1:8rVfjFGgxJ7aBxk4Ez/vHNKk5we9/DZDtzrBQbqsbkk=
+github.com/rs/xid v1.3.0 h1:6NjYksEUlhurdVehpc7S7dk6DAmcKv8V9gG0FsVN2U4=
+github.com/rs/xid v1.3.0/go.mod h1:trrq9SKmegXys3aeAKXMUTdJsYXVwGY3RLcfgqegfbg=

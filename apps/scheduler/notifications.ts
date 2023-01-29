@@ -1,4 +1,3 @@
-import { Redis } from "@upstash/redis";
 import { Email } from "@planetfall/emails";
 import { PrismaClient } from "@planetfall/db";
 import { Logger } from "./logger";
@@ -14,20 +13,43 @@ type NotificationEvent = {
 	};
 };
 
+
+class Cache {
+	private readonly state: Map<string, number>;
+	private readonly ttl: number;
+	constructor() {
+		this.state = new Map();
+		this.ttl = 5 * 60 * 1000;
+	}
+
+	public async debounce(key: string): Promise<boolean> {
+		const now = Date.now();
+		const existing = this.state.get(key);
+		if (existing && existing < now) {
+			return false
+
+		}
+		this.state.set(key, now + this.ttl);
+		return true;
+
+
+
+	}
+
+}
+
 export class Notifications {
-	private readonly redis: Redis;
 	private readonly email: Email;
 	private readonly db: PrismaClient;
-	private readonly debounceInterval = 600; // 10 minutes in seconds, because redis ttl is in seconds
 	private readonly logger: Logger;
+	private readonly cache: Cache;
 
 	constructor(opts: {
-		redis: Redis;
 		email: Email;
 		db: PrismaClient;
 		logger: Logger;
 	}) {
-		this.redis = opts.redis;
+		this.cache = new Cache();
 		this.email = opts.email;
 		this.db = opts.db;
 		this.logger = opts.logger;
@@ -41,11 +63,8 @@ export class Notifications {
 			event.check.endpointId,
 		].join(":");
 
-		const res = await this.redis.set(debounceKey, "true", {
-			nx: true,
-			ex: this.debounceInterval,
-		});
-		if (res === null) {
+		const shouldSend = await this.cache.debounce(debounceKey);
+		if (!shouldSend) {
 			this.logger.info("debounced:", { debounceKey });
 			return;
 		}

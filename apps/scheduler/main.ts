@@ -12,15 +12,14 @@ const logger = newLogger({ dataset: "scheduler" });
 
 const notifications = new Notifications({
 	logger,
-	redis: Redis.fromEnv(),
 	db: db,
 	email: new Email(),
 });
 
 const s = new Scheduler({ logger, notifications });
-const e = new Events({ scheduler: s, logger });
+// const e = new Events({ scheduler: s, logger });
 
-e.run();
+// e.run();
 
 s.syncEndpoints();
 setInterval(() => s.syncEndpoints(), 60 * 1000);

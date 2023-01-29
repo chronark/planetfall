@@ -5,9 +5,6 @@ FROM node:18 as base
 RUN npm i -g pnpm turbo
 
 
-
-
-
 FROM base AS installer
 WORKDIR /planetfall
 
@@ -21,7 +18,9 @@ WORKDIR /planetfall
 
 COPY --from=installer /planetfall/node_modules .
 
-COPY . .
+COPY pkg .
+COPY apps/scheduler ./apps/
+
 RUN pnpm install -r 
 RUN pnpm turbo run build --filter=scheduler
 
