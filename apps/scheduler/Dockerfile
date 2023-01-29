@@ -16,9 +16,9 @@ RUN pnpm fetch
 FROM base 
 WORKDIR /planetfall
 
+COPY . .
 COPY --from=installer /planetfall/node_modules .
 
-COPY . .
 
 RUN pnpm install -r 
 RUN pnpm turbo run build --filter=scheduler
