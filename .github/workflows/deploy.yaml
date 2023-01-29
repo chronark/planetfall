@@ -28,13 +28,13 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: chronark/planetfall-scheduler:{{env.VERSION}}
+          tags: chronark/planetfall-scheduler:${{env.VERSION}}
           context: .
           file: apps/scheduler/Dockerfile
       - name: Build Check Runner
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: chronark/planetfall-check-runner:{{env.VERSION}}
+          tags: chronark/planetfall-check-runner:${{env.VERSION}}
           context: .
           file: apps/proxy/Dockerfile
