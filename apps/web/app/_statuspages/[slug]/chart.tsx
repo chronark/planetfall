@@ -15,16 +15,15 @@ import {
 	AccordionTrigger,
 } from "@/components/accordion";
 
-
-function format(n:number): string {
-	return Intl.NumberFormat(undefined, {notation: "compact"}).format(Math.round(n));
+function format(n: number): string {
+	return Intl.NumberFormat(undefined).format(Math.round(n));
 }
 
 const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
 	return (
 		<div className="flex items-center space-x-1 text-xs md:text-sm text-zinc-700 whitespace-nowrap">
 			<span className="flex-shrink-0 font-semibold">{label}:</span>
-			<span>{ format(value)} ms</span>
+			<span>{format(value)} ms</span>
 		</div>
 	);
 };
@@ -68,27 +67,12 @@ export const Row: React.FC<{
 					</span>
 				</div>
 				<div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
-					<Stat
-						label="min"
-						value={endpoint.min}
-					/>
+					<Stat label="min" value={endpoint.min} />
 
-					<Stat
-						label="p50"
-						value={endpoint.p50}
-					/>
-					<Stat
-						label="p95"
-						value={endpoint.p95}
-					/>
-					<Stat
-						label="p99"
-						value={endpoint.p99}
-					/>
-					<Stat
-						label="max"
-						value={endpoint.max}
-					/>
+					<Stat label="p50" value={endpoint.p50} />
+					<Stat label="p95" value={endpoint.p95} />
+					<Stat label="p99" value={endpoint.p99} />
+					<Stat label="max" value={endpoint.max} />
 				</div>
 			</div>
 
@@ -274,7 +258,7 @@ const Chart: React.FC<{
 										<>
 											{bucket.time >= 0 ? (
 												<>
-													<div className="max-w-xl px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
+													<div className="px-4 py-5 overflow-hidden bg-white rounded-sm shadow  sm:p-6">
 														<dt className="text-sm font-medium truncate text-zinc-500">
 															{start.toLocaleDateString()}
 														</dt>
@@ -287,27 +271,26 @@ const Chart: React.FC<{
 																{start.toLocaleTimeString()} -{" "}
 																{end.toLocaleTimeString()}
 															</h3>
-															<dl className="grid grid-cols-1 mt-5 md:grid-cols-3 ">
-																{[
-																	{ name: "p50", value: bucket.p50 },
-																	{
-																		name: "p95",
-																		value: bucket.p95,
-																	},
-																	{ name: "p99", value: bucket.p99 },
-																].map((item) => (
-																	<Stats
-																		key={item.name}
-																		label={item.name}
-																		value={format(item.value)}
-																		suffix="ms"
-																		// status={endpoint.degradedAfter
-																		//     ? item.value >= endpoint.degradedAfter
-																		//         ? "warn"
-																		//         : "success"
-																		//     : undefined}
-																	/>
-																))}
+															<dl className="grid grid-cols-1 gap-2 mt-5 md:grid-cols-4 ">
+																<Stats
+																	label="Checks"
+																	value={format(bucket.count)}
+																/>
+																<Stats
+																	label="P50"
+																	value={format(bucket.p50)}
+																	suffix="ms"
+																/>
+																<Stats
+																	label="P95"
+																	value={format(bucket.p95)}
+																	suffix="ms"
+																/>
+																<Stats
+																	label="P99"
+																	value={format(bucket.p99)}
+																	suffix="ms"
+																/>
 															</dl>
 														</div>
 													</div>

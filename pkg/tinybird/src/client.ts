@@ -60,7 +60,6 @@ export class Client {
 			"endpoint_stats_globally__v1",
 			{ endpointId, days: 1 },
 		);
-		console.log({ endpointId, data });
 
 		if (data.length === 0) {
 			return {

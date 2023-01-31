@@ -384,7 +384,6 @@ const regions = [...vercelRegions, ...flyRegions, ...edgeRegions];
 async function main() {
 	const db = new PrismaClient();
 	for (const r of regions) {
-		console.log("Upserting", r.platform, r.region);
 		await db.region.upsert({
 			where: {
 				platform_region: {

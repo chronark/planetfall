@@ -58,6 +58,7 @@ export function Text<As extends React.ElementType>({
 	return (
 		<Component
 			className={classNames(
+				"leading-7",
 				{
 					"text-xs": size === "xs",
 					"text-sm": size === "sm",

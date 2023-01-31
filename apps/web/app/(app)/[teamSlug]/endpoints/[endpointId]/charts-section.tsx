@@ -5,7 +5,7 @@ import { MultiSelect } from "@/components/multiselect";
 import { Check } from "@planetfall/tinybird";
 import { Endpoint, Region } from "@prisma/client";
 import { useMemo, useState } from "react";
-import { Charts } from "./chart";
+import { Charts } from "./charts";
 
 type Props = {
 	checks: Check[];

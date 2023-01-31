@@ -46,7 +46,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 		accessor("endpoints", {
 			header: "Endpoints",
 			cell: (info) => (
-				<ul className="flex items-center">
+				<ul className="flex items-center gap-2">
 					{info.getValue().map((endpoint) => (
 						<li key={endpoint.id}>
 							<Link
@@ -74,6 +74,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 			),
 		}),
 		accessor("id", {
+			header: "",
 			cell: (info) => (
 				<Confirm
 					title="Delete page"

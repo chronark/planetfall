@@ -12,12 +12,13 @@ import { getSession } from "lib/auth";
 import { Button } from "@/components/button";
 import Toggle from "./toggle";
 import { Text } from "@/components/text";
-import { Charts } from "./chart";
+import { Charts } from "./charts";
 import { MultiSelect } from "@/components/multiselect";
 import { ChartsSection } from "./charts-section";
 import { Edu_NSW_ACT_Foundation } from "@next/font/google";
 import Link from "next/link";
 import { Switch } from "@/components/switch";
+import { Chart } from "./chart";
 
 export const revalidate = 10;
 
@@ -56,9 +57,10 @@ export default async function Page(props: {
 
 	const tb = new Tinybird();
 
-	const [stats, checks] = await Promise.all([
+	const [stats, checks, statsByRegion] = await Promise.all([
 		tb.getEndpointStats(endpoint.id),
 		tb.getLatestChecksByEndpoint(endpoint.id),
+		tb.getEndpointStatsPerRegion(endpoint.id),
 	]);
 
 	if (!stats) {
@@ -187,8 +189,23 @@ export default async function Page(props: {
 						<ErrorsTable errors={errors} />
 					</div>
 				) : null} */}
-
 				{checks.length > 0 ? (
+					<div className="h-full py-4 md:py-8 lg:py-16">
+						<Chart
+							regions={statsByRegion.map((region) => ({
+								...region,
+								region:
+									regions.find((r) => r.id === region.regionId)?.name ??
+									region.regionId,
+							}))}
+							endpoint={{
+								timeout: endpoint.timeout ?? undefined,
+								degradedAfter: endpoint.degradedAfter ?? undefined,
+							}}
+						/>
+					</div>
+				) : null}
+				{/* {checks.length > 0 ? (
 					<div className="py-4 md:py-8 lg:py-16">
 						<ChartsSection
 							checks={checks}
@@ -199,10 +216,10 @@ export default async function Page(props: {
 							}}
 						/>
 					</div>
-				) : null}
+				) : null} */}
 
 				{checks.length > 0 ? (
-					<div className="py-4 md:py-8 lg:py-16">
+					<div className="py-4 space-y-4 md:py-8 lg:py-16">
 						<Heading h3={true}>Latest Checks</Heading>
 						<LatestTable
 							endpointId={props.params.endpointId}

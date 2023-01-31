@@ -1,147 +1,109 @@
 "use client";
 
-import React from "react";
-import { Area, Line, TinyArea } from "@ant-design/plots";
-import { Check } from "@planetfall/tinybird";
-import { Region } from "@prisma/client";
-
+import React, { useEffect, useState } from "react";
+import { Bar, Column } from "@ant-design/plots";
+import { PlayChecks } from "lib/server/routers/play";
+import { EndpointStats } from "@planetfall/tinybird";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/select";
+import { Heading } from "@/components/heading";
+import { BarList } from "@tremor/react";
+import { Text } from "@/components/text";
 type Props = {
-	checks: Check[];
-	regions: Region[];
+	regions: (EndpointStats & { region: string })[];
 	endpoint: {
-		timeout: number | null;
-		degradedAfter: number | null;
+		timeout?: number;
+		degradedAfter?: number;
 	};
 };
 
-export const Charts: React.FC<Props> = ({ checks, regions, endpoint }) => {
-	const checksByRegion = checks.reduce((acc, check) => {
-		if (!acc[check.regionId]) {
-			acc[check.regionId] = [];
-		}
-		acc[check.regionId].push(check);
+export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
+	const [selected, setSelected] = useState("p99");
+	const [showTopBottom, setShowTopBottom] = useState(regions.length > 10);
+	const lookup = regions.reduce((acc, r) => {
+		// @ts-ignore
+		acc[r.region] = r[selected];
 		return acc;
-	}, {} as Record<string, Check[]>);
+	}, {} as Record<string, number>);
+	// @ts-ignore
+	const sorted = regions.sort((a, b) => a[selected] - b[selected]);
+	const data = showTopBottom
+		? sorted.slice(0, 5).concat(sorted.slice(-5))
+		: sorted;
+
 	return (
-		<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-			{Object.entries(checksByRegion).map(([regionId, checks]) => (
-				<div
-					key={regionId}
-					className="relative col-span-1 border rounded border-zinc-300"
-				>
-					<span className="p-2 text-sm font-medium text-zinc-700">
-						{regions.find((r) => r.id === regionId)?.name ?? regionId}
-					</span>
-					<div className="w-full h-20">
-						<Chart endpoint={endpoint} checks={checks} />
-					</div>
+		<div className="flex flex-col space-y-4">
+			<div className="flex items-center justify-between w-full gap-4">
+				<Heading h3={true}>Latency by Region</Heading>
+
+				<div className="flex items-center justify-between gap-4">
+					{regions.length > 10 ? (
+						<Select onValueChange={(v) => setShowTopBottom(v === "true")}>
+							<SelectTrigger>
+								<SelectValue placeholder="Show Best and Worst" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="true">Show Best and Worst</SelectItem>
+								<SelectItem value="false">Show All</SelectItem>
+							</SelectContent>
+						</Select>
+					) : null}
+					<Select onValueChange={(v) => setSelected(v)}>
+						<SelectTrigger className="w-[180px]">
+							<SelectValue placeholder={selected} />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="p50">P50</SelectItem>
+							<SelectItem value="p95">P95</SelectItem>
+							<SelectItem value="p99">P99</SelectItem>
+						</SelectContent>
+					</Select>
 				</div>
-			))}
+			</div>
+			<div className="">
+				<Bar
+					// @ts-ignore
+					data={data}
+					yField="region"
+					xField={selected}
+					legend={{
+						position: "top",
+					}}
+					isStack={true}
+					color={(datum) => {
+						if (endpoint.timeout && lookup[datum.region] > endpoint.timeout) {
+							return "#ef4444";
+						}
+						if (
+							endpoint.degradedAfter &&
+							lookup[datum.region] > endpoint.degradedAfter
+						) {
+							return "#f97316";
+						}
+						return "#3366FF";
+					}}
+					xAxis={{
+						maxTickCount: 3,
+
+						title: { text: "Latency (ms)" },
+					}}
+					tooltip={{
+						formatter: (datum) => {
+							return {
+								name: selected,
+								value: `${Intl.NumberFormat(undefined).format(
+									Math.round(datum[selected]),
+								)} ms`,
+							};
+						},
+					}}
+				/>
+			</div>
 		</div>
-	);
-};
-
-function toRGBA(color: number[], alpha: number = 1) {
-	return `rgba(${color.join(",")},${alpha})`;
-}
-
-type ChartProps = {
-	endpoint: {
-		timeout: number | null;
-		degradedAfter: number | null;
-	};
-	checks: Check[];
-};
-
-const Chart: React.FC<ChartProps> = ({ endpoint, checks }) => {
-	const colors = {
-		success: [59, 130, 246],
-		degraded: [259, 115, 22],
-		failed: [239, 68, 68],
-	};
-
-	let state: keyof typeof colors = "success";
-	for (const check of checks) {
-		if (check.latency && endpoint.timeout && check.latency > endpoint.timeout) {
-			state = "failed";
-			break;
-		}
-		if (
-			check.latency &&
-			endpoint.degradedAfter &&
-			check.latency > endpoint.degradedAfter
-		) {
-			state = "degraded";
-			break;
-		}
-	}
-	const annotations: any = [];
-
-	if (endpoint.timeout) {
-		annotations.push({
-			type: "line",
-			start: ["min", endpoint.timeout],
-			end: ["max", endpoint.timeout],
-			text: {
-				content: "Timeout",
-				offsetY: -2,
-				style: {
-					textAlign: "left",
-					fontSize: 10,
-					fill: colors.failed,
-					textBaseline: "bottom",
-				},
-			},
-			style: {
-				stroke: toRGBA(colors.failed, 0.5),
-			},
-		});
-	}
-	if (endpoint.degradedAfter) {
-		annotations.push({
-			type: "line",
-			start: ["min", endpoint.degradedAfter],
-			end: ["max", endpoint.degradedAfter],
-			text: {
-				content: "Degraded",
-				offsetY: -2,
-				style: {
-					textAlign: "left",
-					fontSize: 10,
-					fill: colors.degraded,
-					textBaseline: "bottom",
-				},
-			},
-			style: {
-				stroke: toRGBA(colors.degraded, 0.5),
-			},
-		});
-	}
-
-	return (
-		<Area
-			padding={[0, -4, 0, -4]}
-			data={checks.map((c) => ({
-				latency: c.latency ?? 0,
-				time: new Date(c.time).toLocaleString(),
-			}))}
-			xField="time"
-			yField="latency"
-			smooth={true}
-			annotations={annotations}
-			line={{
-				color: toRGBA(colors[state]),
-			}}
-			autoFit={true}
-			color={toRGBA(colors[state], 0.1)}
-			xAxis={false}
-			yAxis={false}
-			tooltip={{
-				formatter: (datum) => ({
-					name: "Latency Latency",
-					value: `${Intl.NumberFormat().format(datum.latency)} ms`,
-				}),
-			}}
-		/>
 	);
 };

@@ -2,8 +2,8 @@ import { Text } from "../text";
 export type StatsProps = {
 	label: string;
 	value: string | React.ReactNode;
-suffix ?: string;
-status ?: "success" | "warn" | "error";
+	suffix?: string;
+	status?: "success" | "warn" | "error";
 };
 export const Stats: React.FC<StatsProps> = ({
 	label,
@@ -16,14 +16,15 @@ export const Stats: React.FC<StatsProps> = ({
 			<Text color="text-zinc-500">{label}</Text>
 			<div className="flex items-baseline gap-2">
 				<span
-					className={`text-2xl md:text-4xl ${status === "success"
-							? "text-emerald-500"
+					className={`text-2xl md:text-4xl ${
+						status === "success"
+							? "text-zinc-800"
 							: status === "warn"
-								? "text-amber-500"
-								: status === "error"
-									? "text-rose-500"
-									: "text-zinc-800"
-						}`}
+							? "text-amber-500"
+							: status === "error"
+							? "text-rose-500"
+							: "text-zinc-800"
+					}`}
 				>
 					{value}
 				</span>
