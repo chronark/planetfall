@@ -272,7 +272,6 @@ const Chart: React.FC<{
 								<HoverCard.Portal>
 									<HoverCard.Content>
 										<>
-											{bucket.time}
 											{bucket.time >= 0 ? (
 												<>
 													<div className="max-w-xl px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
