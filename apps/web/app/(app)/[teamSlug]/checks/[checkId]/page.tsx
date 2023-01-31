@@ -241,7 +241,6 @@ export default async function Page(props: {
 								<CheckIcon className="w-8 h-8 m-1" />
 							)
 						}
-						status={check.error ? "error" : "success"}
 					/>
 					<Stats
 						label={new Date(check.time).toLocaleString() ?? ""}
@@ -254,13 +253,6 @@ export default async function Page(props: {
 					<Stats
 						label="Latency"
 						value={check.latency?.toLocaleString() ?? "None"}
-						status={
-							endpoint?.degradedAfter &&
-							check.latency &&
-							check.latency >= endpoint.degradedAfter
-								? "warn"
-								: undefined
-						}
 						suffix="ms"
 					/>
 					<Stats

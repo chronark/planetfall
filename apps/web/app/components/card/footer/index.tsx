@@ -7,7 +7,7 @@ export const CardFooter: React.FC<PropsWithChildren<CardFooterProps>> = ({
 	children,
 }): JSX.Element => {
 	return (
-		<div className="flex items-center justify-between p-4 border-t rounded-b border-slate-200 sm:p-8 bg-slate-50">
+		<div className="flex items-center justify-between p-4 border-t rounded-b border-zinc-300 sm:p-8 bg-zinc-50">
 			{children}
 		</div>
 	);

@@ -12,13 +12,20 @@ import { getSession } from "lib/auth";
 import { Button } from "@/components/button";
 import Toggle from "./toggle";
 import { Text } from "@/components/text";
-import { Charts } from "./charts";
-import { MultiSelect } from "@/components/multiselect";
-import { ChartsSection } from "./charts-section";
+import { ChartsSection } from "./chart-by-region";
 import { Edu_NSW_ACT_Foundation } from "@next/font/google";
 import Link from "next/link";
 import { Switch } from "@/components/switch";
 import { Chart } from "./chart";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardFooterStatus,
+	CardHeader,
+	CardHeaderTitle,
+} from "@/components/card";
+import { Divider } from "@/components/divider";
 
 export const revalidate = 10;
 
@@ -59,7 +66,7 @@ export default async function Page(props: {
 
 	const [stats, checks, statsByRegion] = await Promise.all([
 		tb.getEndpointStats(endpoint.id),
-		tb.getLatestChecksByEndpoint(endpoint.id),
+		tb.getLatestChecksByEndpoint(endpoint.id, { limit: 10000 }),
 		tb.getEndpointStatsPerRegion(endpoint.id),
 	]);
 
@@ -88,7 +95,6 @@ export default async function Page(props: {
 				description={endpoint.url}
 				actions={[
 					<Toggle endpointId={endpoint.id} active={endpoint.active} />,
-
 					<Link
 						key="settings"
 						href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/settings`}
@@ -102,85 +108,44 @@ export default async function Page(props: {
 					/>,
 				]}
 			/>
-			<main className="container mx-auto divide-y">
-				<div className="flex flex-col items-center gap-4 pb-4 md:pb-8 lg:pb-16">
-					<div className="flex items-center justify-between w-full gap-2 md:gap-4 lg:gap-8">
-						<Stats
-							label="Availability"
-							status={
-								availability > 0.99
-									? undefined
-									: availability >= 0.95
-									? "warn"
-									: "error"
-							}
-							value={(availability * 100).toLocaleString(undefined, {
-								maximumFractionDigits: 2,
-							})}
-							suffix="%"
-						/>
-						{endpoint.degradedAfter ? (
+			<main className="container mx-auto">
+				<div className="pt-2 mb-4 md:pt-4 lg:pt-8 md:mb-8 lg:mb-16">
+					<div>
+						<div className="flex items-center justify-between w-full gap-2 md:gap-4 lg:gap-8">
 							<Stats
-								label="Degraded"
-								status={
-									degraded <= 0.01
-										? "success"
-										: degraded <= 0.05
-										? "warn"
-										: "error"
-								}
-								value={(degraded * 100).toLocaleString(undefined, {
+								label="Availability"
+								value={(availability * 100).toLocaleString(undefined, {
 									maximumFractionDigits: 2,
 								})}
 								suffix="%"
 							/>
-						) : null}
-						<Stats
-							label="Errors"
-							status={errors.length > 0 ? "error" : undefined}
-							value={errors.length.toLocaleString()}
-						/>
-						<Stats
-							label="P50"
-							status={
-								endpoint.degradedAfter
-									? stats.p50 >= endpoint.degradedAfter
-										? "warn"
-										: undefined
-									: undefined
-							}
-							value={stats.p50.toLocaleString()}
-							suffix="ms"
-						/>
-						<Stats
-							label="P95"
-							status={
-								endpoint.degradedAfter
-									? stats.p95 >= endpoint.degradedAfter
-										? "warn"
-										: undefined
-									: undefined
-							}
-							value={stats.p95.toLocaleString()}
-							suffix="ms"
-						/>
-						<Stats
-							label="P99"
-							status={
-								endpoint.degradedAfter
-									? stats.p99 >= endpoint.degradedAfter
-										? "warn"
-										: undefined
-									: undefined
-							}
-							value={stats.p99.toLocaleString()}
-							suffix="ms"
-						/>
+							{endpoint.degradedAfter ? (
+								<Stats
+									label="Degraded"
+									value={(degraded * 100).toLocaleString(undefined, {
+										maximumFractionDigits: 2,
+									})}
+									suffix="%"
+								/>
+							) : null}
+							<Stats label="Errors" value={errors.length.toLocaleString()} />
+							<Stats
+								label="P50"
+								value={stats.p50.toLocaleString()}
+								suffix="ms"
+							/>
+							<Stats
+								label="P95"
+								value={stats.p95.toLocaleString()}
+								suffix="ms"
+							/>
+							<Stats
+								label="P99"
+								value={stats.p99.toLocaleString()}
+								suffix="ms"
+							/>
+						</div>
 					</div>
-					<Text color="text-zinc-500" size="xs">
-						{" "}
-						Metrics are aggregated over the past 24h
-					</Text>
 				</div>
 
 				{/* {errors.length > 0 ? (
@@ -190,7 +155,7 @@ export default async function Page(props: {
 					</div>
 				) : null} */}
 				{checks.length > 0 ? (
-					<div className="h-full py-4 md:py-8 lg:py-16">
+					<>
 						<Chart
 							regions={statsByRegion.map((region) => ({
 								...region,
@@ -203,10 +168,11 @@ export default async function Page(props: {
 								degradedAfter: endpoint.degradedAfter ?? undefined,
 							}}
 						/>
-					</div>
+						<Divider />
+					</>
 				) : null}
-				{/* {checks.length > 0 ? (
-					<div className="py-4 md:py-8 lg:py-16">
+				{checks.length > 0 ? (
+					<>
 						<ChartsSection
 							checks={checks}
 							endpoint={{
@@ -215,21 +181,28 @@ export default async function Page(props: {
 								regions: endpoint.regions,
 							}}
 						/>
-					</div>
-				) : null} */}
+						<Divider />
+					</>
+				) : null}
 
 				{checks.length > 0 ? (
-					<div className="py-4 space-y-4 md:py-8 lg:py-16">
-						<Heading h3={true}>Latest Checks</Heading>
-						<LatestTable
-							endpointId={props.params.endpointId}
-							teamSlug={props.params.teamSlug}
-							checks={checks.slice(0, 10)}
-							degradedAfter={endpoint.degradedAfter}
-							timeout={endpoint.timeout}
-							regions={regions}
-						/>
-					</div>
+					<>
+						<Card>
+							<CardHeader>
+								<CardHeaderTitle title="Latest Checks" />
+							</CardHeader>
+							<CardContent>
+								<LatestTable
+									endpointId={props.params.endpointId}
+									teamSlug={props.params.teamSlug}
+									checks={checks.slice(0, 10)}
+									degradedAfter={endpoint.degradedAfter}
+									timeout={endpoint.timeout}
+									regions={regions}
+								/>
+							</CardContent>
+						</Card>
+					</>
 				) : null}
 			</main>
 		</div>

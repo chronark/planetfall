@@ -7,6 +7,9 @@ import { PageHeader } from "@/components/page/header";
 import { UpgradeButton } from "./UpgradeButton";
 import { address } from "lib/env/address";
 import { BillingCard } from "./BillingCard";
+
+export const revalidate = 60; // 1 minute
+
 export default async function SettingsPage(props: {
 	params: { teamSlug: string };
 }) {
@@ -34,19 +37,14 @@ export default async function SettingsPage(props: {
 	// }
 
 	const now = new Date();
-	const monthStart = new Date(now.getUTCFullYear(), now.getUTCMonth());
-	const monthEnd = new Date(now.getUTCFullYear(), now.getUTCMonth() + 1);
-
-	const billingStart =
-		team.stripeCurrentBillingPeriodStart?.getTime() ?? monthStart.getTime();
-	const billingEnd =
-		team.stripeCurrentBillingPeriodEnd?.getTime() ?? monthEnd.getTime();
+	const year = now.getUTCFullYear();
+	const month = now.getUTCMonth() + 1;
 
 	const usage = await new Tinybird().getUsage(team.id, {
-		year: now.getUTCFullYear(),
-		month: now.getUTCMonth() + 1,
+		year,
+		month,
 	});
-	const totalUsage = usage.reduce((total, curr) => total + curr.day, 0);
+	const totalUsage = usage.reduce((total, curr) => total + curr.usage, 0);
 
 	return (
 		<div>
@@ -65,8 +63,8 @@ export default async function SettingsPage(props: {
 					}}
 					usage={totalUsage}
 					usagePercentage={(totalUsage / team.maxMonthlyRequests) * 100}
-					billingStart={billingStart}
-					billingEnd={billingEnd}
+					year={year}
+					month={month}
 				/>
 			</main>
 		</div>

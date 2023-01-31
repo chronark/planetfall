@@ -10,10 +10,11 @@ export type PageHeaderProps = {
 	sticky?: boolean;
 };
 export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
-	let [isScrolled, setIsScrolled] = useState(false);
+	let [offset, setOffset] = useState(0);
+
 	useEffect(() => {
 		function onScroll() {
-			setIsScrolled(window.scrollY > 0);
+			setOffset(window.scrollY);
 		}
 		onScroll();
 		window.addEventListener("scroll", onScroll, { passive: true });
@@ -23,14 +24,11 @@ export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
 	}, []);
 	return (
 		<div
-			className={classNames(
-				" transition-all duration-500  bg-white my-5 lg:my-16 ",
-				{
-					"sticky z-20 top-0 py-2 lg:py-4": props.sticky,
-					"bg-white/95 backdrop-blur [@supports(backdrop-filter:blur(0))]:bg-white/75":
-						isScrolled,
-				},
-			)}
+			className={classNames(" transition-all duration-500   ", {
+				"sticky z-20 top-0 py-2 lg:py-4": props.sticky,
+				"bg-white border-b border-zinc-300": offset > 8 * 8,
+				"bg-zinc-50": offset <= 8 * 8,
+			})}
 		>
 			<div className="container w-full mx-auto sm:flex sm:items-center sm:justify-between">
 				<div>

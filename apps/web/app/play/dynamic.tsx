@@ -100,7 +100,7 @@ export const Inner: React.FC<Props> = ({
 					>
 						<Dialog.Overlay
 							forceMount={true}
-							className="fixed inset-0 z-20 bg-slate-900/50"
+							className="fixed inset-0 z-20 bg-zinc-900/50"
 						/>
 					</Transition.Child>
 					<Transition.Child
@@ -117,7 +117,7 @@ export const Inner: React.FC<Props> = ({
 							className={classNames(
 								"fixed z-50",
 								"w-[95vw] max-w-md rounded p-4 md:w-full",
-								"top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]",
+								"top-[50%] left-[50%] -tranzinc-x-[50%] -tranzinc-y-[50%]",
 								"bg-white dark:bg-gray-800",
 								"focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75",
 							)}
@@ -134,7 +134,7 @@ export const Inner: React.FC<Props> = ({
 								</Link>
 							</Dialog.Description>
 
-							<div className="flex justify-end pt-4 space-x-2 border-t border-slate-200 ">
+							<div className="flex justify-end pt-4 space-x-2 border-t border-zinc-200 ">
 								<Dialog.Cancel>
 									<Button type="secondary">Close</Button>
 								</Dialog.Cancel>

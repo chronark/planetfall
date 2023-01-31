@@ -12,7 +12,7 @@ export default async function AppLayout(props: {
 	}
 
 	return (
-		<div className="min-h-screen bg-white">
+		<div className="min-h-screen bg-zinc-50">
 			<DesktopNavbar teamSlug={props.params.teamSlug} />
 
 			<main>{props.children}</main>

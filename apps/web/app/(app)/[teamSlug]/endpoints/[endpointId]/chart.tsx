@@ -14,6 +14,12 @@ import {
 import { Heading } from "@/components/heading";
 import { BarList } from "@tremor/react";
 import { Text } from "@/components/text";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardHeaderTitle,
+} from "@/components/card";
 type Props = {
 	regions: (EndpointStats & { region: string })[];
 	endpoint: {
@@ -37,10 +43,9 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
 		: sorted;
 
 	return (
-		<div className="flex flex-col space-y-4">
-			<div className="flex items-center justify-between w-full gap-4">
-				<Heading h3={true}>Latency by Region</Heading>
-
+		<Card>
+			<CardHeader border={false}>
+				<CardHeaderTitle title="Latency by Region" />
 				<div className="flex items-center justify-between gap-4">
 					{regions.length > 10 ? (
 						<Select onValueChange={(v) => setShowTopBottom(v === "true")}>
@@ -64,17 +69,15 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
 						</SelectContent>
 					</Select>
 				</div>
-			</div>
-			<div className="">
+			</CardHeader>
+			<CardContent>
 				<Bar
-					// @ts-ignore
 					data={data}
 					yField="region"
 					xField={selected}
 					legend={{
 						position: "top",
 					}}
-					isStack={true}
 					color={(datum) => {
 						if (endpoint.timeout && lookup[datum.region] > endpoint.timeout) {
 							return "#ef4444";
@@ -103,7 +106,7 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
 						},
 					}}
 				/>
-			</div>
-		</div>
+			</CardContent>
+		</Card>
 	);
 };
