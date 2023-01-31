@@ -120,13 +120,12 @@ export const playRouter = t.router({
 					if (res.status !== 200) {
 						throw new TRPCError({
 							code: "INTERNAL_SERVER_ERROR",
-							message: `unable to ping: ${region.url} [${
-								res.status
-							}]: ${await res.text()}`,
+							message: `unable to ping: ${region.url} [${res.status
+								}]: ${await res.text()}`,
 						});
 					}
 
-					const checks = (await res.json()) as {
+					let checks: {
 						time: number;
 						status: number;
 						latency: number;
@@ -145,7 +144,15 @@ export const playRouter = t.router({
 							transferStart: number;
 							transferDone: number;
 						};
-					}[];
+					}[] = []
+
+					try {
+
+
+						checks = await res.json()
+					} catch (e) {
+						console.error(e)
+					}
 
 					return {
 						id: region.id,

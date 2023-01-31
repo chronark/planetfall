@@ -172,6 +172,15 @@ const sections: {
 				},
 				tag: "Planned",
 			},
+			{
+				name: "Opsgenie",
+				tiers: {
+					Free: false,
+					Pro: true,
+					Enterprise: true,
+				},
+				tag: "Planned",
+			},
 		],
 	},
 ];
