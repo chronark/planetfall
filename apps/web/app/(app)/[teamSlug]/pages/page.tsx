@@ -7,6 +7,7 @@ import { StatuspagesTable } from "./table";
 import { db } from "@planetfall/db";
 import { getSession } from "lib/auth";
 import Link from "next/link";
+import { Card, CardContent } from "@/components/card";
 export default async function Page(props: { params: { teamSlug: string } }) {
 	const session = await getSession();
 	if (!session) {
@@ -36,7 +37,14 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				]}
 			/>
 			<main className="container mx-auto">
-				<StatuspagesTable teamSlug={props.params.teamSlug} pages={team.pages} />
+				<Card>
+					<CardContent>
+						<StatuspagesTable
+							teamSlug={props.params.teamSlug}
+							pages={team.pages}
+						/>
+					</CardContent>
+				</Card>
 			</main>
 		</div>
 	);

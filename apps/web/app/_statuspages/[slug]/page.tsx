@@ -5,6 +5,7 @@ import { Client as Tinybird } from "@planetfall/tinybird";
 import React from "react";
 import Link from "next/link";
 import { Text } from "@/components/text";
+import { Divider } from "@/components/divider";
 
 export const revalidate = 60;
 
@@ -105,7 +106,7 @@ export default async function Page(props: { params: { slug: string } }) {
 					//   },
 					// }}
 				>
-					{endpoints.map((endpoint) => (
+					{endpoints.map((endpoint, i) => (
 						<li
 							key={endpoint.url}
 							// variants={{
@@ -113,6 +114,7 @@ export default async function Page(props: { params: { slug: string } }) {
 							//   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
 							// }}
 						>
+							{i > 0 ? <Divider /> : null}
 							<Row key={endpoint.url} endpoint={endpoint} />
 						</li>
 					))}

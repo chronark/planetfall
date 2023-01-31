@@ -7,6 +7,7 @@ import { EndpointsTable } from "./table";
 import { db } from "@planetfall/db";
 import { getSession } from "lib/auth";
 import Link from "next/link";
+import { Card, CardContent } from "@/components/card";
 export default async function Page(props: { params: { teamSlug: string } }) {
 	const session = await getSession();
 	if (!session) {
@@ -41,7 +42,7 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 			<PageHeader
 				sticky={true}
 				title="Endpoints"
-				description="Over the last 24 hours"
+				description="Aggregated over the last 24 hours"
 				actions={[
 					<Link key="new" href={`/${team.slug}/endpoints/new`}>
 						<Button>New Endpoint</Button>
@@ -49,7 +50,11 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				]}
 			/>
 			<main className="container mx-auto">
-				<EndpointsTable endpoints={endpointStats} />
+				<Card>
+					<CardContent>
+						<EndpointsTable endpoints={endpointStats} />
+					</CardContent>
+				</Card>
 			</main>
 		</div>
 	);

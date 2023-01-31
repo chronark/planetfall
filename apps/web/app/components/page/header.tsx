@@ -10,11 +10,11 @@ export type PageHeaderProps = {
 	sticky?: boolean;
 };
 export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
-	let [offset, setOffset] = useState(0);
+	let [scrolled, setScrolled] = useState(false);
 
 	useEffect(() => {
 		function onScroll() {
-			setOffset(window.scrollY);
+			setScrolled(window.scrollY >= 64);
 		}
 		onScroll();
 		window.addEventListener("scroll", onScroll, { passive: true });
@@ -25,9 +25,9 @@ export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
 	return (
 		<div
 			className={classNames(" transition-all duration-500   ", {
-				"sticky z-20 top-0 py-2 lg:py-4": props.sticky,
-				"bg-white border-b border-zinc-300": offset > 8 * 8,
-				"bg-zinc-50": offset <= 8 * 8,
+				"sticky z-20 top-0 py-2 lg:py-4 my-2 lg:my-4": props.sticky,
+				"bg-white border-b border-zinc-300": scrolled,
+				"bg-zinc-50": !scrolled,
 			})}
 		>
 			<div className="container w-full mx-auto sm:flex sm:items-center sm:justify-between">
