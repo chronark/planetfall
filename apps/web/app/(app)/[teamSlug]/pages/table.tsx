@@ -28,8 +28,8 @@ type Props = {
 };
 
 export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
-	const protocol = process.env.NEXT_PUBLIC_VERCEL_URL ? "https" : "http";
-	const host = process.env.NEXT_PUBLIC_VERCEL_URL ?? "localhost:3000";
+	const protocol = process.env.NEXT_PUBLIC_VERCEL ? "https" : "http";
+	const host = process.env.NEXT_PUBLIC_VERCEL_URL ? "planetfall.io" : "localhost:3000";
 	const router = useRouter();
 
 	const { accessor } = createColumnHelper<Page>();
@@ -111,9 +111,9 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 								{header.isPlaceholder
 									? null
 									: flexRender(
-											header.column.columnDef.header,
-											header.getContext(),
-									  )}
+										header.column.columnDef.header,
+										header.getContext(),
+									)}
 							</th>
 						))}
 					</tr>
@@ -141,9 +141,9 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 								{header.isPlaceholder
 									? null
 									: flexRender(
-											header.column.columnDef.footer,
-											header.getContext(),
-									  )}
+										header.column.columnDef.footer,
+										header.getContext(),
+									)}
 							</th>
 						))}
 					</tr>
