@@ -167,10 +167,10 @@ export class Scheduler {
 				endpoint.distribution === "ALL"
 					? endpoint.regions
 					: [
-						endpoint.regions[
-						Math.floor(Math.random() * endpoint.regions.length)
-						],
-					];
+							endpoint.regions[
+								Math.floor(Math.random() * endpoint.regions.length)
+							],
+					  ];
 			this.logger.info("testing endpoint", {
 				endpointId: endpoint.id,
 				regions: regions.map((r) => r.id),
@@ -304,8 +304,6 @@ export class Scheduler {
 							});
 						}
 					}
-
-
 				}),
 			);
 		} catch (err) {

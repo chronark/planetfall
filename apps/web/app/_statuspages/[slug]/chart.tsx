@@ -15,17 +15,23 @@ import {
 	AccordionTrigger,
 } from "@/components/accordion";
 
+
+function format(n:number): string {
+	return Intl.NumberFormat(undefined, {notation: "compact"}).format(Math.round(n));
+}
+
 const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
 	return (
 		<div className="flex items-center space-x-1 text-xs md:text-sm text-zinc-700 whitespace-nowrap">
 			<span className="flex-shrink-0 font-semibold">{label}:</span>
-			<span>{value.toLocaleString()} ms</span>
+			<span>{ format(value)} ms</span>
 		</div>
 	);
 };
 
 export type Metric = {
-	time: string;
+	time: number;
+	count: number;
 	min: number;
 	max: number;
 	p50: number;
@@ -36,12 +42,19 @@ export type Metric = {
 export const Row: React.FC<{
 	endpoint: {
 		id: string;
-		name?: string;
+		name: string;
 		url: string;
-		metrics: Metric[];
-		regions: Record<string, Metric[]>;
 		degradedAfter?: number;
 		timeout?: number;
+		count: number;
+		min: number;
+		max: number;
+		p50: number;
+		p95: number;
+		p99: number;
+		metrics: Metric[];
+
+		regions: Record<string, Omit<Metric, "time"> & { series: Metric[] }>;
 	};
 }> = ({ endpoint }): JSX.Element => {
 	const [expanded, setExpanded] = useState(false);
@@ -57,24 +70,24 @@ export const Row: React.FC<{
 				<div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
 					<Stat
 						label="min"
-						value={Math.round(endpoint.metrics.at(-1)?.min ?? 0)}
+						value={endpoint.min}
 					/>
 
 					<Stat
 						label="p50"
-						value={Math.round(endpoint.metrics.at(-1)?.p50 ?? 0)}
+						value={endpoint.p50}
 					/>
 					<Stat
 						label="p95"
-						value={Math.round(endpoint.metrics.at(-1)?.p95 ?? 0)}
+						value={endpoint.p95}
 					/>
 					<Stat
 						label="p99"
-						value={Math.round(endpoint.metrics.at(-1)?.p99 ?? 0)}
+						value={endpoint.p99}
 					/>
 					<Stat
 						label="max"
-						value={Math.round(endpoint.metrics.at(-1)?.max ?? 0)}
+						value={endpoint.max}
 					/>
 				</div>
 			</div>
@@ -113,62 +126,45 @@ export const Row: React.FC<{
 						</AccordionPrimitive.Header>
 						<AccordionContent>
 							{Object.entries(endpoint.regions)
-								.sort(
-									(a, b) => a[1]?.at(-1)?.max ?? 0 - (b[1]?.at(-1)?.max ?? 0),
-								)
-								.map(([region, metrics]) => {
-									if (!region) return null;
-									return (
-										<li className="py-4 space-y-2">
-											<div className="flex flex-col items-start justify-between lg:flex-row md:items-center">
-												<div className="lg:w-1/2">
-													<h4 className="text-lg text-bold text-zinc-600 whitespace-nowrap">
-														{region}
-													</h4>
-												</div>
-												<div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
-													<Stat
-														label="min"
-														value={Math.round(metrics.at(-1)?.min ?? 0)}
-													/>
 
-													<Stat
-														label="p50"
-														value={Math.round(metrics.at(-1)?.p50 ?? 0)}
-													/>
-													<Stat
-														label="p95"
-														value={Math.round(metrics.at(-1)?.p95 ?? 0)}
-													/>
-													<Stat
-														label="p99"
-														value={Math.round(metrics.at(-1)?.p99 ?? 0)}
-													/>
-													<Stat
-														label="max"
-														value={Math.round(metrics.at(-1)?.max ?? 0)}
-													/>
-												</div>
+							.map(([region, metrics]) => {
+								if (!region) return null;
+								return (
+									<li className="py-4 space-y-2">
+										<div className="flex flex-col items-start justify-between lg:flex-row md:items-center">
+											<div className="lg:w-1/2">
+												<h4 className="text-lg text-bold text-zinc-600 whitespace-nowrap">
+													{region}
+												</h4>
 											</div>
-											<div className="hidden lg:block ">
-												<Chart
-													metrics={metrics}
-													nBuckets={72}
-													degradedAfter={endpoint.degradedAfter}
-													timeout={endpoint.timeout}
-												/>
+											<div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
+												<Stat label="min" value={metrics.min} />
+
+												<Stat label="p50" value={metrics.p50} />
+												<Stat label="p95" value={metrics.p95} />
+												<Stat label="p99" value={metrics.p99} />
+												<Stat label="max" value={metrics.max} />
 											</div>
-											<div className="lg:hidden">
-												<Chart
-													metrics={metrics}
-													nBuckets={24}
-													degradedAfter={endpoint.degradedAfter}
-													timeout={endpoint.timeout}
-												/>
-											</div>
-										</li>
-									);
-								})}
+										</div>
+										<div className="hidden lg:block ">
+											<Chart
+												metrics={metrics.series}
+												nBuckets={72}
+												degradedAfter={endpoint.degradedAfter}
+												timeout={endpoint.timeout}
+											/>
+										</div>
+										<div className="lg:hidden">
+											<Chart
+												metrics={metrics.series}
+												nBuckets={24}
+												degradedAfter={endpoint.degradedAfter}
+												timeout={endpoint.timeout}
+											/>
+										</div>
+									</li>
+								);
+							})}
 						</AccordionContent>
 					</AccordionItem>
 				</Accordion>
@@ -244,7 +240,7 @@ const Chart: React.FC<{
 						const end = new Date(start.getTime() + 60 * 60 * 1000);
 
 						const percentageHeight =
-							bucket.time === "" ? 100 : Math.max(5, (bucket.p99 / p99) * 100);
+							bucket.time >= 0 ? Math.max(5, (bucket.p99 / p99) * 100) : 100;
 
 						const bucketTimeout = timeout && bucket.max > timeout;
 						const bucketDegraded = degradedAfter && bucket.max > degradedAfter;
@@ -254,7 +250,7 @@ const Chart: React.FC<{
 							"flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
 						];
 
-						if (bucket.time === "") {
+						if (bucket.time < 0) {
 							cn.push("bg-gradient-to-t bg-zinc-400/20 hover:bg-zinc-400/50 ");
 						} else if (bucketTimeout) {
 							cn.push("bg-gradient-to-t bg-red-500  ");
@@ -272,84 +268,54 @@ const Chart: React.FC<{
 									style={{
 										height: `${percentageHeight}%`,
 									}}
-								/>{" "}
+								/>
 								<HoverCard.Portal>
 									<HoverCard.Content>
-										{bucket.time !== "" ? (
-											<>
-												<div className="max-w-xl px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
-													<dt className="text-sm font-medium truncate text-zinc-500">
-														{start.toLocaleDateString()}
-													</dt>
-													<dt className="text-sm font-medium truncate text-zinc-500" />
-													<dt className="text-sm font-medium truncate text-zinc-500">
-														{/* {bucket.region} */}
-													</dt>
-													<div>
-														<h3 className="text-lg font-medium leading-6 text-zinc-900">
-															{start.toLocaleTimeString()} -{" "}
-															{end.toLocaleTimeString()}
-														</h3>
-														<dl className="grid grid-cols-1 mt-5 md:grid-cols-3 ">
-															{[
-																{ name: "p50", value: bucket.p50 },
-																{
-																	name: "p95",
-																	value: bucket.p95,
-																},
-																{ name: "p99", value: bucket.p99 },
-															].map((item) => (
-																<Stats
-																	key={item.name}
-																	label={item.name}
-																	value={item.value.toLocaleString()}
-																	suffix="ms"
-																	// status={endpoint.degradedAfter
-																	//     ? item.value >= endpoint.degradedAfter
-																	//         ? "warn"
-																	//         : "success"
-																	//     : undefined}
-																/>
-															))}
-														</dl>
-														{/* <Divider /> */}
-														{/* {bucketErrors > 0
-                                                                    ? (
-                                                                        <div>
-                                                                            <Heading h3>Errors</Heading>
-                                                                            <ul className="divide-y divide-zinc-100">
-                                                                                {bucketErrors.map((err, i) => (
-                                                                                    <li
-                                                                                        key={i}
-                                                                                        className="relative py-3 bg-white hover:bg-zinc-50 "
-                                                                                    >
-                                                                                        <div className="flex justify-between space-x-3">
-                                                                                            <time
-                                                                                                dateTime={new Date(err.time)
-                                                                                                    .toLocaleString()}
-                                                                                                className="text-sm font-medium truncate text-zinc-900"
-                                                                                            >
-                                                                                                {new Date(err.time)
-                                                                                                    .toLocaleString()}
-                                                                                            </time>
-                                                                                            <span className="flex-shrink-0 text-sm whitespace-nowrap text-zinc-500">
-                                                                                                {err.region}
-                                                                                            </span>
-                                                                                        </div>
-                                                                                        <span className="text-sm text-zinc-600 line-clamp-2">
-                                                                                            {err.error}
-                                                                                        </span>
-                                                                                    </li>
-                                                                                ))}
-                                                                            </ul>
-                                                                        </div>
-                                                                    )
-                                                                    : null} */}
+										<>
+											{bucket.time}
+											{bucket.time >= 0 ? (
+												<>
+													<div className="max-w-xl px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
+														<dt className="text-sm font-medium truncate text-zinc-500">
+															{start.toLocaleDateString()}
+														</dt>
+														<dt className="text-sm font-medium truncate text-zinc-500" />
+														<dt className="text-sm font-medium truncate text-zinc-500">
+															{/* {bucket.region} */}
+														</dt>
+														<div>
+															<h3 className="text-lg font-medium leading-6 text-zinc-900">
+																{start.toLocaleTimeString()} -{" "}
+																{end.toLocaleTimeString()}
+															</h3>
+															<dl className="grid grid-cols-1 mt-5 md:grid-cols-3 ">
+																{[
+																	{ name: "p50", value: bucket.p50 },
+																	{
+																		name: "p95",
+																		value: bucket.p95,
+																	},
+																	{ name: "p99", value: bucket.p99 },
+																].map((item) => (
+																	<Stats
+																		key={item.name}
+																		label={item.name}
+																		value={format(item.value)}
+																		suffix="ms"
+																		// status={endpoint.degradedAfter
+																		//     ? item.value >= endpoint.degradedAfter
+																		//         ? "warn"
+																		//         : "success"
+																		//     : undefined}
+																	/>
+																))}
+															</dl>
+														</div>
 													</div>
-												</div>
-												<HoverCard.Arrow />
-											</>
-										) : null}
+													<HoverCard.Arrow />
+												</>
+											) : null}
+										</>
 									</HoverCard.Content>
 								</HoverCard.Portal>
 							</HoverCard.Root>

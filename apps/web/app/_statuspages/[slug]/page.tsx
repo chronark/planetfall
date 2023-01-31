@@ -1,79 +1,29 @@
 import { db } from "@planetfall/db";
 import { Metric, Row } from "./chart";
-
-export const revalidate = 60;
-
-async function getEndpointData(endpointId: string) {
-	const res = await fetch(
-		`https://api.tinybird.co/v0/pipes/endpoint_stats_per_hour__v1.json?endpointId=${endpointId}`,
-		{
-			headers: {
-				Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
-			},
-		},
-	);
-
-	const data = (await res.json()) as {
-		data: Metric[];
-	};
-
-	const missing = 72 - data.data.length;
-	if (missing > 0) {
-		const empty = new Array(missing).fill({
-			time: "",
-			min: -1,
-			max: -1,
-			p50: -1,
-			p95: -1,
-			p99: -1,
-		});
-		data.data = empty.concat(data.data);
-	}
-	console.log(JSON.stringify(data, null, 2));
-
-	return data.data;
-}
-
-async function getEndpointDataByRegion(endpointId: string) {
-	const res = await fetch(
-		`https://api.tinybird.co/v0/pipes/endpoint_stats_per_hour__v1.json?endpointId=${endpointId}&byRegion=true`,
-		{
-			headers: {
-				Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
-			},
-		},
-	);
-
-	const data = (await res.json()) as {
-		data: (Metric & { regionId: string })[];
-	};
-	const missing = 72 - data.data.length;
-	if (missing > 0) {
-		const empty = new Array(missing).fill({
-			time: "",
-			min: -1,
-			max: -1,
-			p50: -1,
-			p95: -1,
-			p99: -1,
-			regionId: "",
-		});
-		data.data = empty.concat(data.data);
-	}
-
-	return data.data;
-}
+import { Client as Tinybird } from "@planetfall/tinybird";
 
 import React from "react";
 import Link from "next/link";
 import { Text } from "@/components/text";
 
-type Series = {
-	time: number;
-	latency?: number;
-	error?: string;
-	region: string;
-}[];
+export const revalidate = 60;
+
+const tinybird = new Tinybird();
+
+function fillSeries(series: Metric[], buckets: number): Metric[] {
+	while (series.length < buckets) {
+		series.unshift({
+			time: -1,
+			count: 0,
+			min: 0,
+			max: 0,
+			p50: 0,
+			p95: 0,
+			p99: 0,
+		});
+	}
+	return series;
+}
 
 export default async function Page(props: { params: { slug: string } }) {
 	const now = Date.now();
@@ -90,37 +40,41 @@ export default async function Page(props: { params: { slug: string } }) {
 	}
 
 	const endpoints = await Promise.all(
-		statusPage.endpoints.map(async (e) => {
-			const regions: Record<string, Metric[]> = {};
+		statusPage.endpoints.map(async (endpoint) => {
+			const regions: Record<
+				string,
+				Omit<Metric, "time"> & { series: Metric[] }
+			> = {};
 
-			const metricsWithRegions = await getEndpointDataByRegion(e.id);
-			for (const metric of metricsWithRegions) {
-				const regionName =
-					e.regions.find((r) => r.id === metric.regionId)?.name ||
-					metric.regionId;
-				if (!regions[regionName]) {
-					regions[regionName] = [];
-				}
-				regions[regionName].push(metric);
+			const [endpointStats, regionStats, endpointSeries, regionsSeries] =
+				await Promise.all([
+					tinybird.getEndpointStats(endpoint.id),
+					tinybird.getEndpointStatsPerRegion(endpoint.id),
+					tinybird.getEndpointStatsPerHour(endpoint.id),
+					tinybird.getEndpointStatsPerRegionPerHour(endpoint.id),
+				]);
+
+			for (const region of regionStats) {
+				regions[region.regionId] = {
+					...region,
+					series: [],
+				};
 			}
-			for (const metrics of Object.values(regions)) {
-				while (metrics.length < 72) {
-					metrics.unshift({
-						time: "",
-						min: -1,
-						max: -1,
-						p50: -1,
-						p95: -1,
-						p99: -1,
-					});
-				}
+			for (const metric of regionsSeries) {
+				regions[metric.regionId].series.push(metric);
 			}
+			for (const region of Object.values(regions)) {
+				region.series = fillSeries(region.series, 72);
+			}
+
 			return {
-				id: e.id,
-				degradedAfter: e.degradedAfter ?? undefined,
-				name: e.name ?? undefined,
-				url: e.url,
-				metrics: await getEndpointData(e.id),
+				id: endpoint.id,
+				name: endpoint.name,
+				url: endpoint.url,
+				degradedAfter: endpoint.degradedAfter ?? undefined,
+				timeout: endpoint.timeout ?? undefined,
+				...endpointStats,
+				metrics: fillSeries(endpointSeries, 72),
 				regions,
 			};
 		}),

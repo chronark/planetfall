@@ -56,11 +56,9 @@ export default async function Page(props: {
 
 	const tb = new Tinybird();
 
-	const [stats, latestChecks, errors, checks24h] = await Promise.all([
+	const [stats, checks] = await Promise.all([
 		tb.getEndpointStats(endpoint.id),
 		tb.getLatestChecksByEndpoint(endpoint.id),
-		tb.getLatestChecksByEndpoint(endpoint.id, true),
-		tb.getChecks24h(endpoint.id),
 	]);
 
 	if (!stats) {
@@ -68,17 +66,16 @@ export default async function Page(props: {
 
 		return notFound();
 	}
-	checks24h.sort((a, b) => a.time - b.time);
+	const errors = checks.filter((c) => Boolean(c.error));
 
-	console.log({ stats, errors });
 	const availability = stats.count > 0 ? 1 - errors.length / stats.count : 1;
 	const degraded =
-		latestChecks && latestChecks.length > 0
+		checks && checks.length > 0
 			? (endpoint.degradedAfter
-					? latestChecks.filter(
+					? checks.filter(
 							(d) => d.latency && d.latency >= endpoint.degradedAfter!,
 					  ).length
-					: 0) / latestChecks.length
+					: 0) / checks.length
 			: 1;
 
 	return (
@@ -191,10 +188,10 @@ export default async function Page(props: {
 					</div>
 				) : null} */}
 
-				{latestChecks.length > 0 ? (
+				{checks.length > 0 ? (
 					<div className="py-4 md:py-8 lg:py-16">
 						<ChartsSection
-							checks={checks24h}
+							checks={checks}
 							endpoint={{
 								timeout: endpoint.timeout,
 								degradedAfter: endpoint.degradedAfter,
@@ -204,13 +201,13 @@ export default async function Page(props: {
 					</div>
 				) : null}
 
-				{latestChecks.length > 0 ? (
+				{checks.length > 0 ? (
 					<div className="py-4 md:py-8 lg:py-16">
 						<Heading h3={true}>Latest Checks</Heading>
 						<LatestTable
 							endpointId={props.params.endpointId}
 							teamSlug={props.params.teamSlug}
-							checks={latestChecks}
+							checks={checks.slice(0, 10)}
 							degradedAfter={endpoint.degradedAfter}
 							timeout={endpoint.timeout}
 							regions={regions}

@@ -1,7 +1,10 @@
 VERSION 1
-TOKEN "latest_checks_by_endpoint" READ
+TOKEN "checks_by_endpoint" READ
+DESCRIPTION >
+  Get the latest checks (within the last day) for an endpoint
+  Optionally filter by errors only and limit the number of results
 
-NODE latest_checks_by_endpoint_0
+NODE checks_by_endpoint_0
 SQL >
 
     %
@@ -16,7 +19,8 @@ SQL >
      error is not null
     {% end %}
     ORDER BY time DESC
-    LIMIT 10
+    LIMIT {{Int(limit, default=10)}}
+    
 
 
 

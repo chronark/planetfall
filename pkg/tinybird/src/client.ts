@@ -11,6 +11,26 @@ export class Client {
 		this.token = token;
 	}
 
+	private async fetch<T>(
+		pipe: string,
+		opts?: Record<string, string | number | boolean>,
+	): Promise<T> {
+		const url = new URL(`/v0/pipes/${pipe}.json`, this.baseUrl);
+		if (opts) {
+			for (const [key, value] of Object.entries(opts)) {
+				url.searchParams.set(key, String(value));
+			}
+		}
+		const res = await fetch(url, {
+			headers: { Authorization: `Bearer ${this.token}` },
+		});
+		if (!res.ok) {
+			throw new Error(await res.text());
+		}
+		const json = await res.json();
+		return json.data as T;
+	}
+
 	public async publish<TEvent extends Record<string, unknown>>(
 		event: string,
 		payload: TEvent | TEvent[],
@@ -35,52 +55,64 @@ export class Client {
 		await this.publish("checks__v1", checks);
 	}
 
-	public async getEndpointStats(
-		endpointId: string,
-	): Promise<EndpointStats | null> {
-		const url = new URL(
-			"/v0/pipes/endpoint_stats_over_24h__v1.json",
-			this.baseUrl,
+	public async getEndpointStats(endpointId: string): Promise<EndpointStats> {
+		const data = await this.fetch<EndpointStats[]>(
+			"endpoint_stats_globally__v1",
+			{ endpointId, days: 1 },
 		);
-		url.searchParams.set("endpointId", endpointId);
-		const res = await fetch(url.toString(), {
-			headers: { Authorization: `Bearer ${this.token}` },
-		});
-		if (!res.ok) {
-			throw new Error(await res.text());
+		console.log({ endpointId, data });
+
+		if (data.length === 0) {
+			return {
+				count: 0,
+				min: 0,
+				max: 0,
+				p50: 0,
+				p95: 0,
+				p99: 0,
+			};
 		}
 
-		const data = (await res.json()) as { data: EndpointStats[] };
-		if (data.data.length === 0) {
-			return null;
-		}
-		// Set defaults
-		data.data[0].count ??= 0;
-		data.data[0].min ??= 0;
-		data.data[0].max ??= 0;
-		data.data[0].p50 ??= 0;
-		data.data[0].p95 ??= 0;
-		data.data[0].p99 ??= 0;
-		return data.data[0];
+		return data[0];
+	}
+	public async getEndpointStatsPerRegion(
+		endpointId: string,
+	): Promise<(EndpointStats & { regionId: string })[]> {
+		const data = await this.fetch<(EndpointStats & { regionId: string })[]>(
+			"endpoint_stats_per_region__v1",
+			{ endpointId, days: 7 },
+		);
+
+		return data;
+	}
+
+	public async getEndpointStatsPerHour(endpointId: string): Promise<Metric[]> {
+		const data = await this.fetch<Metric[]>(
+			"endpoint_stats_globally_per_hour__v1",
+			{ endpointId, days: 7 },
+		);
+
+		return data;
+	}
+	public async getEndpointStatsPerRegionPerHour(
+		endpointId: string,
+	): Promise<({ regionId: string } & Metric)[]> {
+		const data = await this.fetch<({ regionId: string } & Metric)[]>(
+			"endpoint_stats_per_region_per_hour__v1",
+			{ endpointId, days: 7 },
+		);
+
+		return data;
 	}
 
 	public async getCheckById(checkId: string): Promise<Check | null> {
-		const url = new URL("/v0/pipes/check_by_id__v1.json", this.baseUrl);
-		url.searchParams.set("checkId", checkId);
-		const res = await fetch(url.toString(), {
-			headers: { Authorization: `Bearer ${this.token}` },
-		});
-		if (!res.ok) {
-			throw new Error(await res.text());
-		}
+		const data = await this.fetch<Check[]>("check_by_id__v1", { checkId });
 
-		const data = (await res.json()) as { data: Check[] };
-		if (data.data.length === 0) {
+		if (data.length === 0) {
 			return null;
 		}
-		// Set defaults
 
-		return data.data[0];
+		return data[0];
 	}
 	/**
 	 *
@@ -103,71 +135,37 @@ export class Client {
 			day: number;
 		}[]
 	> {
-		const url = new URL("/v0/pipes/usage__v1.json", this.baseUrl);
-		url.searchParams.set("teamId", teamId);
-		url.searchParams.set("year", time.year.toString());
-		url.searchParams.set("month", time.month.toString());
-		const res = await fetch(url.toString(), {
-			headers: { Authorization: `Bearer ${this.token}` },
-		});
-		if (!res.ok) {
-			throw new Error(await res.text());
-		}
-
-		const data = (await res.json()) as {
-			data: {
+		const data = await this.fetch<
+			{
 				teamId: string;
 				usage: number;
 				year: number;
 				month: number;
 				day: number;
-			}[];
-		};
+			}[]
+		>("usage__v1", { teamId, year: time.year, month: time.month });
 
-		return data.data;
+		return data;
 	}
 
 	public async getLatestChecksByEndpoint(
 		endpointId: string,
-		errorsOnly?: boolean,
+		opts?: {
+			errorsOnly?: boolean;
+			limit?: number;
+		},
 	): Promise<Check[]> {
-		const url = new URL(
-			"/v0/pipes/latest_checks_by_endpoint__v1.json",
-			this.baseUrl,
-		);
-		url.searchParams.set("endpointId", endpointId);
-		if (errorsOnly) {
-			url.searchParams.set("errorsOnly", "true");
-		}
-		const res = await fetch(url.toString(), {
-			headers: { Authorization: `Bearer ${this.token}` },
-		});
-		if (!res.ok) {
-			throw new Error(await res.text());
-		}
+		const params: Record<string, string> = { endpointId };
 
-		const data = (await res.json()) as { data: Check[] };
-		if (data.data.length === 0) {
-			return [];
+		if (opts?.errorsOnly) {
+			params.errorsOnly = "true";
 		}
-		return data.data;
-	}
+		if (opts?.limit) {
+			params.limit = opts.limit.toString();
+		}
+		const data = await this.fetch<Check[]>("checks_by_endpoint__v1", params);
 
-	public async getChecks24h(endpointId: string): Promise<Check[]> {
-		const url = new URL("/v0/pipes/checks_last_24h__v1.json", this.baseUrl);
-		url.searchParams.set("endpointId", endpointId);
-		const res = await fetch(url.toString(), {
-			headers: { Authorization: `Bearer ${this.token}` },
-		});
-		if (!res.ok) {
-			throw new Error(await res.text());
-		}
-
-		const data = (await res.json()) as { data: Check[] };
-		if (data.data.length === 0) {
-			return [];
-		}
-		return data.data;
+		return data;
 	}
 }
 
@@ -193,4 +191,14 @@ export type Check = {
 	header?: string;
 	source?: string;
 	error?: string;
+};
+
+export type Metric = {
+	time: number;
+	count: number;
+	min: number;
+	max: number;
+	p50: number;
+	p95: number;
+	p99: number;
 };

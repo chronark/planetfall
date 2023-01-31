@@ -1,4 +1,7 @@
 VERSION 1
+DESCRIPTION >
+    Collect usage data for each team, day by day and store it in a materialized view.
+    
 NODE aggreagate_usage
 SQL >
 
