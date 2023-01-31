@@ -7,6 +7,7 @@ import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import { Stats } from "@/components/stats";
 import { Heading } from "@/components/heading";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import {
 	AccordionItem,
 	Accordion,
@@ -58,10 +59,7 @@ export const Row: React.FC<{
 						label="min"
 						value={Math.round(endpoint.metrics.at(-1)?.min ?? 0)}
 					/>
-					<Stat
-						label="max"
-						value={Math.round(endpoint.metrics.at(-1)?.max ?? 0)}
-					/>
+
 					<Stat
 						label="p50"
 						value={Math.round(endpoint.metrics.at(-1)?.p50 ?? 0)}
@@ -73,6 +71,10 @@ export const Row: React.FC<{
 					<Stat
 						label="p99"
 						value={Math.round(endpoint.metrics.at(-1)?.p99 ?? 0)}
+					/>
+					<Stat
+						label="max"
+						value={Math.round(endpoint.metrics.at(-1)?.max ?? 0)}
 					/>
 				</div>
 			</div>
@@ -92,55 +94,56 @@ export const Row: React.FC<{
 						nBuckets={24}
 					/>
 				</div>
+				<Accordion type="multiple">
+					<AccordionItem value={endpoint.id}>
+						<AccordionPrimitive.Header>
+							<AccordionPrimitive.Trigger className="flex items-center justify-center w-full">
+								<div className="w-full border-t border-zinc-500" />
+								<div className="relative flex justify-center">
+									<span className="px-2 text-zinc-500 hover:text-primary-500">
+										{expanded ? (
+											<MinusIcon className="w-6 h-6" />
+										) : (
+											<PlusIcon className="w-6 h-6" />
+										)}
+									</span>
+								</div>
+								<div className="w-full border-t border-zinc-500" />
+							</AccordionPrimitive.Trigger>
+						</AccordionPrimitive.Header>
+						<AccordionContent>
+							{Object.entries(endpoint.regions).map(([region, metrics]) => {
+								if (!region) return null;
+								return (
+									<li className="py-4">
+										<div className="flex items-center justify-between">
+											<h4 className="text-bold text-zinc-600 whitespace-nowrap">
+												{region}
+											</h4>
 
-				<button
-					className="flex items-center justify-center"
-					onClick={() => setExpanded(!expanded)}
-				>
-					<div className="w-full border-t border-zinc-500" />
-					<div className="relative flex justify-center">
-						<span className="px-2 text-zinc-500 hover:text-primary-500">
-							{expanded ? (
-								<MinusIcon className="w-6 h-6" />
-							) : (
-								<PlusIcon className="w-6 h-6" />
-							)}
-						</span>
-					</div>
-					<div className="w-full border-t border-zinc-500" />
-				</button>
+											<div className="flex flex-wrap items-center justify-end w-full gap-2 mb-2 sm:gap-4 xl:gap-6 md:flex-nowrap">
+												<Stat
+													label="min"
+													value={Math.round(metrics.at(-1)?.min ?? 0)}
+												/>
 
-				{expanded ? (
-					<Accordion type="multiple">
-						{Object.entries(endpoint.regions).map(([region, metrics]) => {
-							if (!region) return null;
-							return (
-								<AccordionItem value={region} key={region}>
-									<AccordionTrigger>
-										<h4 className="text-bold text-zinc-400">{region}</h4>
-									</AccordionTrigger>
-									<AccordionContent>
-										<div className="flex flex-wrap items-center justify-end w-full gap-2 mb-2 sm:gap-4 xl:gap-6 md:flex-nowrap">
-											<Stat
-												label="min"
-												value={Math.round(metrics.at(-1)?.min ?? 0)}
-											/>
-											<Stat
-												label="max"
-												value={Math.round(metrics.at(-1)?.max ?? 0)}
-											/>
-											<Stat
-												label="p50"
-												value={Math.round(metrics.at(-1)?.p50 ?? 0)}
-											/>
-											<Stat
-												label="p95"
-												value={Math.round(metrics.at(-1)?.p95 ?? 0)}
-											/>
-											<Stat
-												label="p99"
-												value={Math.round(metrics.at(-1)?.p99 ?? 0)}
-											/>
+												<Stat
+													label="p50"
+													value={Math.round(metrics.at(-1)?.p50 ?? 0)}
+												/>
+												<Stat
+													label="p95"
+													value={Math.round(metrics.at(-1)?.p95 ?? 0)}
+												/>
+												<Stat
+													label="p99"
+													value={Math.round(metrics.at(-1)?.p99 ?? 0)}
+												/>
+												<Stat
+													label="max"
+													value={Math.round(metrics.at(-1)?.max ?? 0)}
+												/>
+											</div>
 										</div>
 										<div className="hidden lg:block ">
 											<Chart
@@ -158,12 +161,12 @@ export const Row: React.FC<{
 												timeout={endpoint.timeout}
 											/>
 										</div>
-									</AccordionContent>
-								</AccordionItem>
-							);
-						})}
-					</Accordion>
-				) : null}
+									</li>
+								);
+							})}
+						</AccordionContent>
+					</AccordionItem>
+				</Accordion>
 			</div>
 		</div>
 	);

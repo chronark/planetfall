@@ -13,7 +13,6 @@ type NotificationEvent = {
 	};
 };
 
-
 class Cache {
 	private readonly state: Map<string, number>;
 	private readonly ttl: number;
@@ -26,16 +25,11 @@ class Cache {
 		const now = Date.now();
 		const existing = this.state.get(key);
 		if (existing && existing < now) {
-			return false
-
+			return false;
 		}
 		this.state.set(key, now + this.ttl);
 		return true;
-
-
-
 	}
-
 }
 
 export class Notifications {

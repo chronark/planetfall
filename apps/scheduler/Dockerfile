@@ -1,23 +1,12 @@
 
-# base image that contains global dependencies
-FROM node:18 as base
+FROM node:18 
 
 RUN npm i -g pnpm turbo
 
 
-FROM base AS installer
-WORKDIR /planetfall
-
-
-COPY pnpm-lock.yaml .
-RUN pnpm fetch
-
-
-FROM base 
 WORKDIR /planetfall
 
 COPY . .
-COPY --from=installer /planetfall/node_modules .
 
 
 RUN pnpm install -r 
