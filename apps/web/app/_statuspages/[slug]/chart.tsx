@@ -112,58 +112,62 @@ export const Row: React.FC<{
 							</AccordionPrimitive.Trigger>
 						</AccordionPrimitive.Header>
 						<AccordionContent>
-							{Object.entries(endpoint.regions).map(([region, metrics]) => {
-								if (!region) return null;
-								return (
-									<li className="py-4">
-										<div className="flex items-center justify-between">
-											<h4 className="text-bold text-zinc-600 whitespace-nowrap">
-												{region}
-											</h4>
+							{Object.entries(endpoint.regions)
+								.sort(
+									(a, b) => a[1]?.at(-1)?.max ?? 0 - (b[1]?.at(-1)?.max ?? 0),
+								)
+								.map(([region, metrics]) => {
+									if (!region) return null;
+									return (
+										<li className="py-4">
+											<div className="flex items-center justify-between">
+												<h4 className="text-bold text-zinc-600 whitespace-nowrap">
+													{region}
+												</h4>
 
-											<div className="flex flex-wrap items-center justify-end w-full gap-2 mb-2 sm:gap-4 xl:gap-6 md:flex-nowrap">
-												<Stat
-													label="min"
-													value={Math.round(metrics.at(-1)?.min ?? 0)}
-												/>
+												<div className="flex flex-wrap items-center justify-end w-full gap-2 mb-2 sm:gap-4 xl:gap-6 md:flex-nowrap">
+													<Stat
+														label="min"
+														value={Math.round(metrics.at(-1)?.min ?? 0)}
+													/>
 
-												<Stat
-													label="p50"
-													value={Math.round(metrics.at(-1)?.p50 ?? 0)}
-												/>
-												<Stat
-													label="p95"
-													value={Math.round(metrics.at(-1)?.p95 ?? 0)}
-												/>
-												<Stat
-													label="p99"
-													value={Math.round(metrics.at(-1)?.p99 ?? 0)}
-												/>
-												<Stat
-													label="max"
-													value={Math.round(metrics.at(-1)?.max ?? 0)}
+													<Stat
+														label="p50"
+														value={Math.round(metrics.at(-1)?.p50 ?? 0)}
+													/>
+													<Stat
+														label="p95"
+														value={Math.round(metrics.at(-1)?.p95 ?? 0)}
+													/>
+													<Stat
+														label="p99"
+														value={Math.round(metrics.at(-1)?.p99 ?? 0)}
+													/>
+													<Stat
+														label="max"
+														value={Math.round(metrics.at(-1)?.max ?? 0)}
+													/>
+												</div>
+											</div>
+											<div className="hidden lg:block ">
+												<Chart
+													metrics={metrics}
+													nBuckets={72}
+													degradedAfter={endpoint.degradedAfter}
+													timeout={endpoint.timeout}
 												/>
 											</div>
-										</div>
-										<div className="hidden lg:block ">
-											<Chart
-												metrics={metrics}
-												nBuckets={72}
-												degradedAfter={endpoint.degradedAfter}
-												timeout={endpoint.timeout}
-											/>
-										</div>
-										<div className="lg:hidden">
-											<Chart
-												metrics={metrics}
-												nBuckets={24}
-												degradedAfter={endpoint.degradedAfter}
-												timeout={endpoint.timeout}
-											/>
-										</div>
-									</li>
-								);
-							})}
+											<div className="lg:hidden">
+												<Chart
+													metrics={metrics}
+													nBuckets={24}
+													degradedAfter={endpoint.degradedAfter}
+													timeout={endpoint.timeout}
+												/>
+											</div>
+										</li>
+									);
+								})}
 						</AccordionContent>
 					</AccordionItem>
 				</Accordion>
