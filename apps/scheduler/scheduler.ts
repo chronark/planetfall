@@ -167,10 +167,10 @@ export class Scheduler {
 				endpoint.distribution === "ALL"
 					? endpoint.regions
 					: [
-							endpoint.regions[
-								Math.floor(Math.random() * endpoint.regions.length)
-							],
-					  ];
+						endpoint.regions[
+						Math.floor(Math.random() * endpoint.regions.length)
+						],
+					];
 			this.logger.info("testing endpoint", {
 				endpointId: endpoint.id,
 				regions: regions.map((r) => r.id),
@@ -282,6 +282,14 @@ export class Scheduler {
 							timing: JSON.stringify(c.timing),
 						};
 					});
+					await this.tinybird.publishChecks(data).catch((err) => {
+						this.logger.error("error publishing checks", {
+							endpointId: endpoint.id,
+							regionId: region.id,
+							error: (err as Error).message,
+						});
+						throw err;
+					});
 					for (const d of data) {
 						if (d.error) {
 							this.notifications.notify({
@@ -297,14 +305,7 @@ export class Scheduler {
 						}
 					}
 
-					await this.tinybird.publishChecks(data).catch((err) => {
-						this.logger.error("error publishing checks", {
-							endpointId: endpoint.id,
-							regionId: region.id,
-							error: (err as Error).message,
-						});
-						throw err;
-					});
+
 				}),
 			);
 		} catch (err) {
