@@ -17,7 +17,7 @@ import {
 
 const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
 	return (
-		<div className="flex items-center space-x-1 text-sm text-zinc-700 whitespace-nowrap">
+		<div className="flex items-center space-x-1 text-xs md:text-sm text-zinc-700 whitespace-nowrap">
 			<span className="flex-shrink-0 font-semibold">{label}:</span>
 			<span>{value.toLocaleString()} ms</span>
 		</div>
@@ -47,7 +47,7 @@ export const Row: React.FC<{
 	const [expanded, setExpanded] = useState(false);
 
 	return (
-		<div className="my-16 list-none duration-1000 border-t sm:border border-zinc-300 sm:shadow-ambient md:rounded hover:border-zinc-500">
+		<div className="my-16 list-none duration-1000 border-t sm:border border-zinc-300 sm:shadow-ambient md:rounded">
 			<div className="flex flex-col items-start justify-between gap-2 px-4 py-5 border-b lg:flex-row border-zinc-300 sm:px-6 md:items-center">
 				<div className="lg:w-1/2">
 					<span className="text-lg font-medium leading-6 text-zinc-900">
@@ -119,13 +119,14 @@ export const Row: React.FC<{
 								.map(([region, metrics]) => {
 									if (!region) return null;
 									return (
-										<li className="py-4">
-											<div className="flex items-center justify-between">
-												<h4 className="text-bold text-zinc-600 whitespace-nowrap">
-													{region}
-												</h4>
-
-												<div className="flex flex-wrap items-center justify-end w-full gap-2 mb-2 sm:gap-4 xl:gap-6 md:flex-nowrap">
+										<li className="py-4 space-y-2">
+											<div className="flex flex-col items-start justify-between lg:flex-row md:items-center">
+												<div className="lg:w-1/2">
+													<h4 className="text-lg text-bold text-zinc-600 whitespace-nowrap">
+														{region}
+													</h4>
+												</div>
+												<div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
 													<Stat
 														label="min"
 														value={Math.round(metrics.at(-1)?.min ?? 0)}

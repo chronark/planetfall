@@ -4,7 +4,7 @@ import { asyncComponent } from "lib/api/component";
 
 import CountingNumbers from "./counting-numbers";
 
-export const revalidate = 360; // revalidate every hour
+export const revalidate = 86400; // revalidate every day
 
 export const Stats = asyncComponent(async () => {
 	const stats = await Promise.all([
@@ -19,7 +19,7 @@ export const Stats = asyncComponent(async () => {
 		{
 			label: "Ø Checks Per Day",
 			value: await fetch(
-				"https://api.tinybird.co/v0/pipes/production__checks_in_last_day__v1.json",
+				"https://api.tinybird.co/v0/pipes/average_usage__v1.json",
 				{
 					headers: {
 						Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
@@ -27,7 +27,7 @@ export const Stats = asyncComponent(async () => {
 				},
 			)
 				.then(
-					async (res) => (await res.json()) as { data: { checks: number }[] },
+					async (res) => (await res.json()) as { data: { average: number }[] },
 				)
 				.then((res) => {
 					if (!Array.isArray(res.data)) {
@@ -37,7 +37,7 @@ export const Stats = asyncComponent(async () => {
 						return -1;
 					}
 
-					return res.data[0].checks;
+					return res.data[0].average;
 				}),
 		},
 	]);

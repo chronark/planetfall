@@ -13,7 +13,7 @@ SCHEMA >
     `time` Int64 `json:$.time`,
     `timing` Nullable(String) `json:$.timing`,
     `error` Nullable(String) `json:$.error`,
-    `tags` Array(String) `json:$.tags[:]`
+    `tags` Array(Nullable(String)) `json:$.tags[:]`
 
 ENGINE "MergeTree"
 ENGINE_TTL "toDate(fromUnixTimestamp64Milli(time)) + INTERVAL 90 DAY"
