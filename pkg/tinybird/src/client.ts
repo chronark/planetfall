@@ -73,7 +73,16 @@ export class Client {
 			};
 		}
 
-		return data[0];
+		// These can be null if there are no checks and crash the page
+		const stats = data[0];
+		stats.count ??= 0;
+		stats.min ??= 0;
+		stats.max ??= 0;
+		stats.p50 ??= 0;
+		stats.p95 ??= 0;
+		stats.p99 ??= 0;
+		stats.errors ??= 0;
+		return stats;
 	}
 	public async getEndpointStatsPerRegion(
 		endpointId: string,

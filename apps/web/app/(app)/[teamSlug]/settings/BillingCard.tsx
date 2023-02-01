@@ -100,7 +100,7 @@ export const BillingCard: React.FC<Props> = ({
 					<div className="flex flex-col w-1/3 gap-2 px-8">
 						<Text size="xl">Current Billing Cycle</Text>
 						<Text>
-							{new Date(year, month, 1).toLocaleString(undefined, {
+							{new Date(year, month - 1, 1).toLocaleString(undefined, {
 								month: "long",
 							})}{" "}
 							{year}
