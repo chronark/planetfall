@@ -196,17 +196,17 @@ const Chart: React.FC<{
 					// ? p99 > endpoint.degradedAfter
 					// : 0;
 					const cn = [
-						"flex-1  rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
+						"flex-1 bg-white rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
 					];
 
 					if (bucket.time < 0) {
-						cn.push("bg-gradient-to-t bg-zinc-400/20 hover:bg-zinc-400/50 ");
+						cn.push("  bg-zinc-400/20 hover:bg-zinc-400/50 ");
 					} else if (bucketTimeout) {
-						cn.push("bg-gradient-to-t bg-red-500  ");
+						cn.push(" bg-red-500  ");
 					} else if (bucketDegraded) {
-						cn.push("bg-gradient-to-t bg-yellow-400  ");
+						cn.push(" bg-yellow-400  ");
 					} else {
-						cn.push("bg-gradient-to-t bg-emerald-400");
+						cn.push(" bg-emerald-400");
 					}
 
 					return (
