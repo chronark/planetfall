@@ -2,20 +2,13 @@ terraform {
   required_providers {
     vercel = {
       source  = "vercel/vercel"
-      version = ">=0.10.3"
+      version = ">=0.11.4"
     }
     upstash = {
       source  = "upstash/upstash"
       version = ">=1.2.1"
     }
-    fly = {
-      source  = "fly-apps/fly"
-      version = ">=0.0.20"
-    }
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "2.23.1"
-    }
+   
     aws = {
       source  = "hashicorp/aws"
       version = ">=4.52.0"
@@ -35,12 +28,5 @@ provider "upstash" {
 
 provider "vercel" {
   api_token = var.vercel_token
-}
-
-provider "fly" {
-  fly_api_token        = var.fly_token
-  useinternaltunnel    = true
-  internaltunnelorg    = "personal"
-  internaltunnelregion = "fra"
 }
 
