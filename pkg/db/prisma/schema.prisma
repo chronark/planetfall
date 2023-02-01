@@ -144,7 +144,6 @@ enum Platform {
   vercel
   vercelEdge
   aws
-  fly
 }
 
 model Region {
