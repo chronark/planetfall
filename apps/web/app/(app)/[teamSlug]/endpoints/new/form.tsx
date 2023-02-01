@@ -8,12 +8,9 @@ import { z } from "zod";
 import { Button } from "@/components/button";
 import { Loading } from "@/components/loading";
 import { useRouter } from "next/navigation";
-import type { Input as Req, Output as Res } from "pages/api/v1/endpoints/";
-import { mutate } from "lib/api/call";
 import * as assertions from "@planetfall/assertions";
 import { trpc } from "lib/utils/trpc";
-import { TRPCError } from "@trpc/server";
-import { MinusIcon } from "lucide-react";
+import { Minus } from "lucide-react";
 type Props = {
 	teamId: string;
 	teamSlug: string;
@@ -427,7 +424,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 												onClick={() => statusAssertions.remove(i)}
 												size="lg"
 											>
-												<MinusIcon className="w-6 h-6" />
+												<Minus className="w-6 h-6" />
 											</Button>
 										</div>
 									</div>
@@ -502,7 +499,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 												onClick={() => headerAssertions.remove(i)}
 												size="lg"
 											>
-												<MinusIcon className="w-6 h-6" />
+												<Minus className="w-6 h-6" />
 											</Button>
 										</div>
 									</div>

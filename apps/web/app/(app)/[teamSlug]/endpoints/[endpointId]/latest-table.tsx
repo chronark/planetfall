@@ -14,7 +14,7 @@ import ms from "ms";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Time } from "@/components/time";
-import { MinusIcon } from "lucide-react";
+import { Minus } from "lucide-react";
 export type Props = {
 	endpointId: string;
 	checks: Check[];
@@ -66,7 +66,7 @@ export const LatestTable: React.FC<Props> = ({
 		accessor("error", {
 			header: "Error",
 			cell: (info) =>
-				info.getValue() ?? <MinusIcon className="w-4 h-4 text-zinc-400" />,
+				info.getValue() ?? <Minus className="w-4 h-4 text-zinc-400" />,
 		}),
 		accessor("latency", {
 			header: "Latency",

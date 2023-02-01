@@ -146,7 +146,6 @@ importers:
       '@upstash/ratelimit': ^0.1.5
       '@upstash/redis': ^1.19.3
       '@vercel/analytics': ^0.1.6
-      '@vercel/edge-config': ^0.1.1
       autoprefixer: ^10.4.12
       base-x: ^4.0.0
       class-variance-authority: ^0.4.0
@@ -221,7 +220,6 @@ importers:
       '@upstash/ratelimit': 0.1.5_@upstash+redis@1.19.3
       '@upstash/redis': 1.19.3
       '@vercel/analytics': 0.1.8_react@18.2.0
-      '@vercel/edge-config': 0.1.1
       base-x: 4.0.0
       class-variance-authority: 0.4.0_typescript@4.9.4
       classnames: 2.3.2
@@ -3302,11 +3300,6 @@ packages:
       react: ^16.8||^17||^18
     dependencies:
       react: 18.2.0
-    dev: false
-
-  /@vercel/edge-config/0.1.1:
-    resolution: {integrity: sha512-HDl+12tzW2RHIu8Y804kXg2VpZ02KVb7Nqsa+e1AFoACXXMb+7TfjI1wR19tXoDIu5enQz1dbat40YMEgaH13Q==}
-    engines: {node: '>=14.6'}
     dev: false
 
   /@xata.io/client/0.22.0_typescript@4.9.4:

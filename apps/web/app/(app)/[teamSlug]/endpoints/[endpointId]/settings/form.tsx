@@ -18,7 +18,7 @@ import {
 import { z } from "zod";
 import classNames from "classnames";
 import Link from "next/link";
-import { MinusIcon, PlusIcon } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 type Props = {
 	teamSlug: string;
 	endpoint: Omit<Endpoint, "createdAt" | "updatedAt"> & { regions: Region[] };
@@ -580,7 +580,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 														onClick={() => statusAssertions.remove(i)}
 														size="lg"
 													>
-														<MinusIcon className="w-6 h-6" />
+														<Minus className="w-6 h-6" />
 													</Button>
 												</div>
 											</div>
@@ -599,7 +599,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 												}
 												size="lg"
 											>
-												<PlusIcon className="w-6 h-6" />
+												<Plus className="w-6 h-6" />
 											</Button>
 										</div>
 									</div>
@@ -685,7 +685,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 														onClick={() => headerAssertions.remove(i)}
 														size="lg"
 													>
-														<MinusIcon className="w-6 h-6" />
+														<Minus className="w-6 h-6" />
 													</Button>
 												</div>
 											</div>
@@ -705,7 +705,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 												}
 												size="lg"
 											>
-												<PlusIcon className="w-6 h-6" />
+												<Plus className="w-6 h-6" />
 											</Button>
 										</div>
 									</div>

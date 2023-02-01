@@ -1,6 +1,6 @@
 "use client";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
-import { CheckIcon, ChevronDownIcon } from "lucide-react";
+import { Check, ChevronDownIcon } from "lucide-react";
 
 type Props<TOptions extends unknown[]> = {
 	options: TOptions;
@@ -43,7 +43,7 @@ export function MultiSelect<TOptions extends { id: string; name: string }[]>({
 							>
 								{option.name}
 								<Dropdown.ItemIndicator>
-									<CheckIcon className="w-4 h-4" />
+									<Check className="w-4 h-4" />
 								</Dropdown.ItemIndicator>
 							</Dropdown.CheckboxItem>
 						))}
