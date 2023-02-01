@@ -1,31 +1,12 @@
 import { db } from "@planetfall/db";
-import { Metric, Row } from "./chart";
-import { Client as Tinybird } from "@planetfall/tinybird";
+import { Row } from "./chart";
 
 import React from "react";
 import Link from "next/link";
 import { Text } from "@/components/text";
-import { Divider } from "@/components/divider";
+import { getStats } from "./get-stats";
 
 export const revalidate = 60;
-
-const tinybird = new Tinybird();
-
-function fillSeries(series: Metric[], buckets: number): Metric[] {
-	while (series.length < buckets) {
-		series.unshift({
-			time: -1,
-			count: 0,
-			min: 0,
-			max: 0,
-			p50: 0,
-			p95: 0,
-			p99: 0,
-			errors: 0,
-		});
-	}
-	return series;
-}
 
 export default async function Page(props: { params: { slug: string } }) {
 	const now = Date.now();
@@ -44,44 +25,9 @@ export default async function Page(props: { params: { slug: string } }) {
 	const regions = await db.region.findMany({});
 
 	const endpoints = await Promise.all(
-		statusPage.endpoints.map(async (endpoint) => {
-			const regions: Record<
-				string,
-				Omit<Metric, "time"> & { series: Metric[] }
-			> = {};
-
-			const [endpointStats, regionStats, endpointSeries, regionsSeries] =
-				await Promise.all([
-					tinybird.getEndpointStats(endpoint.id),
-					tinybird.getEndpointStatsPerRegion(endpoint.id),
-					tinybird.getEndpointStatsPerHour(endpoint.id),
-					tinybird.getEndpointStatsPerRegionPerHour(endpoint.id),
-				]);
-
-			for (const region of regionStats) {
-				regions[region.regionId] = {
-					...region,
-					series: [],
-				};
-			}
-			for (const metric of regionsSeries) {
-				regions[metric.regionId].series.push(metric);
-			}
-			for (const region of Object.values(regions)) {
-				region.series = fillSeries(region.series, 72);
-			}
-
-			return {
-				id: endpoint.id,
-				name: endpoint.name,
-				url: endpoint.url,
-				degradedAfter: endpoint.degradedAfter ?? undefined,
-				timeout: endpoint.timeout ?? statusPage.team.maxTimeout,
-				...endpointStats,
-				metrics: fillSeries(endpointSeries, 72),
-				regions,
-			};
-		}),
+		statusPage.endpoints.map(async (endpoint) =>
+			getStats(endpoint, statusPage.team.maxTimeout),
+		),
 	);
 
 	return (

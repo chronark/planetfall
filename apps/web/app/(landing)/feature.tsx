@@ -1,103 +1,71 @@
-import classNames from "classnames";
+import type { LucideIcon } from "lucide-react";
 
 import React from "react";
 
 export type FeatureProps = {
 	hash: string;
+	tag?: string;
 	title: string;
-	image?: React.ReactNode;
+	image?: React.ReactNode | string;
 	description: string;
-	bullets: { title: string; description: string }[];
+	bullets: {
+		title: string;
+		description: string;
+		icon?: LucideIcon;
+	}[];
 };
 export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 	feature,
 	i,
 }) => {
 	return (
-		<div
-			className="container px-4 mx-auto text-center lg:px-8"
-			id={feature.hash}
-		>
-			{/* <h2 className="text-lg font-semibold text-zinc-600"></h2> */}
-			<div className="w-full h-6 max-w-md mx-auto drop-shadow-radiant" />
-
-			<h3 className="py-2 mt-2 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-t from-zinc-100/80 to-white md:text-6xl">
-				{feature.title}
-			</h3>
-			<p className="mx-auto mt-4 text-lg md:mt-8 lg:mt-16 max-w-prose text-zinc-200">
-				{feature.description}
-			</p>
-			<div
-				className={classNames(
-					"flex flex-col items-center justify-center md:mt-8 lg:mt-16",
-					{
-						"lg:flex-row": i % 2 === 0,
-						"lg:flex-row-reverse": i % 2 === 1,
-					},
-				)}
-			>
-				{feature.image ? (
-					<div className="z-10 mx-auto border rounded lg:w-3/5 drop-shadow-feature border-zinc-300/20">
-						{feature.image}
-					</div>
-				) : null}
-
-				<div
-					className={classNames("grid grid-cols-1 mt-4 lg:gap-8", {
-						"lg:w-2/5": feature.image,
-					})}
-				>
-					{feature.bullets.map((b) => {
-						return (
-							<div
-								key={b.title}
-								className="group from-zinc-600/50 to-transparent drop-shadow-feature"
-							>
-								<div
-									className={classNames(
-										"absolute w-full group-hover:w-2/3  h-px -top-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0 transition-all duration-1000",
-										{
-											"lg:bg-gradient-to-r lg:right-8 group-hover:right-4":
-												i % 2 === 1,
-											"lg:bg-gradient-to-l lg:left-8 group-hover:left-4":
-												i % 2 === 0,
-										},
-									)}
-								/>
-								<div
-									className={classNames(
-										"absolute w-full group-hover:w-2/3 h-px -bottom-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0 transition-all duration-1000",
-										{
-											"lg:bg-gradient-to-r lg:right-8 group-hover:right-4":
-												i % 2 === 0,
-											"lg:bg-gradient-to-l lg:left-8 group-hover:left-4":
-												i % 2 === 1,
-										},
-									)}
-								/>
-
-								<div
-									className={classNames(
-										"p-4 from-zinc-300/10  to-zinc-300/0 text-center",
-										{
-											" lg:bg-gradient-feature-to-r lg:text-left":
-												feature.image && i % 2 === 0,
-											" lg:bg-gradient-feature-to-l lg:text-right":
-												feature.image && i % 2 === 1,
-										},
-									)}
-								>
-									<dt className="text-lg font-semibold duration-1000 text-zinc-100 group-hover:text-white">
-										{b.title}
-									</dt>
-									<dd className="mt-1 text-sm text-zinc-300">
-										{b.description}
-									</dd>
-								</div>
-							</div>
-						);
-					})}
+		<div className="py-24 sm:py-32">
+			<div className="relative z-0 flex items-center justify-center flex-1 w-full scale-y-125 isolate" />
+			<div className="px-6 mx-auto max-w-7xl lg:px-8">
+				<div className="mx-auto max-w-7xl sm:text-center">
+					<h2 className="text-lg font-semibold leading-8 tracking-tight text-indigo-400">
+						{feature.tag}
+					</h2>
+					<p className="py-2 text-4xl font-medium tracking-tight text-center text-transparent font-display bg-gradient-to-tr from-zinc-200/50 to-white bg-clip-text md:text-7xl">
+						{feature.title}
+					</p>
+					<p className="mt-6 text-lg leading-8 text-zinc-300">
+						{feature.description}
+					</p>
 				</div>
+			</div>
+			<div className="relative pt-16 overflow-hidden">
+				<div className="px-6 mx-auto max-w-7xl lg:px-8">
+					{typeof feature.image === "string" ? (
+						<img
+							src={feature.image}
+							alt="App screenshot"
+							className=""
+							width={2432}
+							height={1442}
+						/>
+					) : feature.image ? (
+						feature.image
+					) : null}
+				</div>
+			</div>
+			<div className="px-6 mx-auto mt-16 max-w-7xl sm:mt-20 md:mt-24 lg:px-8">
+				<dl className="grid max-w-2xl grid-cols-1 mx-auto text-base leading-7 text-zinc-300 gap-x-6 gap-y-10 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16">
+					{feature.bullets.map((b) => (
+						<div key={b.title} className="relative pl-9">
+							<dt className="inline font-semibold text-white">
+								{b.icon ? (
+									<b.icon
+										className="absolute w-5 h-5 text-zinc-400 top-1 left-1"
+										aria-hidden="true"
+									/>
+								) : null}
+								{b.title}
+							</dt>{" "}
+							<dd className="inline">{feature.description}</dd>
+						</div>
+					))}
+				</dl>
 			</div>
 		</div>
 	);

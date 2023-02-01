@@ -8,6 +8,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -79,7 +80,7 @@ export const EndpointsTable: React.FC<Props> = ({ endpoints }) => {
 			header: "",
 			cell: (info) => (
 				<Link href={`${path}/${info.getValue()}`}>
-					<Button>Details</Button>
+					<ChevronRight className="duration-150 text-zinc-500 hover:text-zinc-800" />
 				</Link>
 			),
 		}),
