@@ -197,9 +197,7 @@ export class Scheduler {
 					const headers = new Headers({
 						"Content-Type": "application/json",
 					});
-					if (region.platform === "fly") {
-						headers.set("Fly-Prefer-Region", region.region);
-					}
+
 					const res = await fetch(region.url, {
 						method: "POST",
 						headers,
