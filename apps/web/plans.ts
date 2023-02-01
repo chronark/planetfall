@@ -21,7 +21,7 @@ export const DEFAULT_QUOTA: Record<Tier, Quota> = {
 		maxStatusPages: 1,
 		maxEndpoints: 5,
 		minInterval: ms("10s"),
-		maxTimeout: ms("2s"),
+		maxTimeout: ms("1s"),
 	},
 	PRO: {
 		retention: ms("7d"),
@@ -30,10 +30,10 @@ export const DEFAULT_QUOTA: Record<Tier, Quota> = {
 		maxEndpoints: 20,
 		maxStatusPages: 5,
 		minInterval: ms("1s"),
-		maxTimeout: ms("10s"),
+		maxTimeout: ms("5s"),
 	},
 	ENTERPRISE: {
-		retention: ms("90d"),
+		retention: ms("30d"),
 		includedRequests: 1_000_000,
 		maxMonthlyRequests: 100_000_000,
 		maxEndpoints: 1_000,
