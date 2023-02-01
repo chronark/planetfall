@@ -68,7 +68,6 @@ func Ping(ctx context.Context, req Request) ([]Response, error) {
 	}
 	defer t.CloseIdleConnections()
 
-
 	responses := make([]Response, req.Checks)
 	for i := 0; i < req.Checks; i++ {
 		var err error
@@ -140,9 +139,12 @@ func check(ctx context.Context, client *http.Client, input Request) (Response, e
 		headers[key] = res.Header.Get(key)
 	}
 
-	foundTags, err := tags.Parse(string(body), res.Header.Clone())
-	if err != nil {
-		return Response{}, err
+	foundTags := []string{}
+	if res.Header.Get("Content-Type") == "text/html" {
+		foundTags, err = tags.Parse(string(body), res.Header.Clone())
+		if err != nil {
+			return Response{}, err
+		}
 	}
 	if len(body) > 1000 {
 		body = body[:1000]

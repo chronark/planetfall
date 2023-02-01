@@ -224,6 +224,7 @@ func Parse(body string, header http.Header) ([]string, error) {
 	deduplicated := []string{}
 	deduplicationMap := map[string]bool{}
 	for _, tag := range tags {
+		
 		if _, ok := deduplicationMap[tag]; !ok {
 			deduplicationMap[tag] = true
 			deduplicated = append(deduplicated, tag)

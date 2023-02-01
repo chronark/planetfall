@@ -104,7 +104,6 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 							<th
 								key={header.id}
 								className="sticky   z-10 px-3  py-3.5 text-left text-sm font-semibold text-zinc-900"
-
 							>
 								{header.isPlaceholder
 									? null

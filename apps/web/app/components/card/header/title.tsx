@@ -21,7 +21,7 @@ export const CardHeaderTitle: React.FC<CardHeaderTitleProps> = ({
 			</div>
 
 			{typeof subtitle === "string" ? (
-				<Text>{subtitle}</Text>
+				<p className="text-zinc-500">{subtitle}</p>
 			) : (
 				subtitle ?? null
 			)}

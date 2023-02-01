@@ -10,6 +10,13 @@ import { Table } from "./table";
 import { Details } from "./details";
 import { PlayChecks } from "lib/server/routers/play";
 import { DateDisplay } from "./DateDisplay";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardHeaderTitle,
+} from "@/components/card";
+import { Divider } from "@/components/divider";
 const redis = Redis.fromEnv();
 
 export const revalidate = 3600;
@@ -24,14 +31,18 @@ export default async function Share(props: { params: { shareId: string } }) {
 
 	const { url, time } = res;
 	const tags = [
-		...new Set(res.regions.flatMap((r) => r.checks).flatMap((c) => c.tags)),
+		...new Set(
+			res.regions.flatMap((r) => r.checks).flatMap((c) => c.tags ?? []),
+		),
 	];
 	const regions = res.regions
 		.filter((r) => r.checks.length > 0)
 		.sort((a, b) => (b.checks[0].latency ?? 0) - (a.checks[0].latency ?? 0));
+
+	console.log({ tags });
 	return (
-		<>
-			<header className="fixed top-0 z-50 w-full backdrop-blur">
+		<div className="bg-zinc-50">
+			<header className="w-full backdrop-blur">
 				<div className="container mx-auto">
 					<div className="flex items-center justify-between h-16 md:h-20">
 						{/* Site branding */}
@@ -78,38 +89,70 @@ export default async function Share(props: { params: { shareId: string } }) {
 					</div>
 				</div>
 			</header>
+			<PageHeader
+				sticky={true}
+				title={url}
+				description={<DateDisplay time={time} />}
+			/>
 			<div className="container relative min-h-screen pb-20 mx-auto mt-24 -pt-24">
-				<div className="pb-32 mb-32 space-y-4 border-b md:space-y-8 lg:space-y-16">
-					<PageHeader title={url} description={<DateDisplay time={time} />} />
-
+				<div className="space-y-4 md:space-y-8 lg:space-y-16">
 					{regions.length >= 2 ? (
-						<div>
-							<Heading h3={true}>Latency per Region</Heading>
-							<div className="h-80">
-								<Chart regions={regions} />
-							</div>
-						</div>
-					) : null}
-					{tags.length > 0 ? (
-						<div>
-							<Heading h3>Built with</Heading>
-							<ul className="grid w-full grid-cols-2 gap-4 mx-auto mt-4 md:grid-cols-4 xl:grid-cols-6">
-								{tags.map((tag) => (
-									<li
-										className="px-2 py-1 text-center duration-150 rounded whitespace-nowrap ring-1 ring-zinc-900 hover:bg-zinc-50"
-										key={tag}
-									>
-										{tag}
-									</li>
-								))}
-							</ul>
-						</div>
+						<>
+							<Card>
+								<CardHeader>
+									<CardHeaderTitle title="Latency per Region" />
+								</CardHeader>
+								<CardContent>
+									<div className="h-80">
+										<Chart regions={regions} />
+									</div>
+								</CardContent>
+							</Card>
+							<Divider />
+						</>
 					) : null}
 
-					<Table regions={regions} />
+					<Card>
+						<CardHeader>
+							<CardHeaderTitle
+								title="Request Trace"
+								subtitle="Edge functions do not support tracing yet."
+							/>
+						</CardHeader>
+						<CardContent>
+							<Table regions={regions} />
+						</CardContent>
+					</Card>
+
+					<Divider />
 					<Details regions={regions} />
+					{tags.length > 0 ? (
+						<>
+							<Divider />
+							<Card>
+								<CardHeader>
+									<CardHeaderTitle
+										title="Built Width"
+										subtitle="This app is built with these frameworks and platforms."
+									/>
+								</CardHeader>
+								<CardContent>
+									<ul className="grid w-full grid-cols-2 gap-4 mx-auto mt-4 md:grid-cols-4 xl:grid-cols-6">
+										{tags.map((tag) => (
+											<li
+												className="px-2 py-1 text-center duration-150 rounded whitespace-nowrap ring-1 ring-zinc-900 hover:bg-zinc-50"
+												key={tag}
+											>
+												{tag}
+											</li>
+										))}
+									</ul>
+								</CardContent>
+							</Card>
+						</>
+					) : null}
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }

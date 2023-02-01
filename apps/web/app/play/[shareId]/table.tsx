@@ -135,15 +135,12 @@ export const Table: React.FC<Props> = ({ regions }) => {
 								<th
 									key={header.id}
 									className={classNames(
-										"sticky px-4 bg-white z-10  border-t border-b border-zinc-400  py-3.5  text-sm font-semibold text-zinc-900",
+										"px-4 z-10    py-3.5  text-sm font-semibold text-zinc-900",
 										{
 											"text-left":
 												regions[0].checks.length > 1 ? i <= 1 : i === 0,
 											"text-right":
 												regions[0].checks.length > 1 ? i > 1 : i > 0,
-											"rounded-l border-l": i === 0,
-											"rounded-r border-r ":
-												i + 1 === headerGroup.headers.length,
 										},
 									)}
 								>
