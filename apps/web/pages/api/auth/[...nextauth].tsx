@@ -152,10 +152,16 @@ export const authOptions: NextAuthOptions = {
         return false
       }
 
-      const whitelist = await edgeConfig.get<string[]>("whitelist")
-      if (!whitelist) {
-        throw new Error("unable to get email domain whitelist")
-      }
+      const whitelist = [
+        "chronark.com",
+        "upstash.com",
+        "vercel.com",
+        "fly.io",
+        "dub.sh",
+        "markor.dk",
+        "discreet.net"
+      ]
+
 
       const domain = user.email.split("@")[1]
       return whitelist.includes(domain)
