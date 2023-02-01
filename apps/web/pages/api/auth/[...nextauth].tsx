@@ -2,7 +2,6 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import EmailProvider from "next-auth/providers/email";
 import { Email } from "@planetfall/emails";
-import * as edgeConfig from "@vercel/edge-config"
 
 import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
