@@ -6,5 +6,5 @@ export interface CardContentProps {}
 export const CardContent: React.FC<PropsWithChildren<CardContentProps>> = ({
 	children,
 }): JSX.Element => {
-	return <div className="w-full p-4 sm:p-8">{children}</div>;
+	return <div className="w-full p-4 lg:px-6">{children}</div>;
 };

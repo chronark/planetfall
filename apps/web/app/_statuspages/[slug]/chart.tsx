@@ -29,8 +29,8 @@ function format(n: number): string {
 const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
 	return (
 		<div className="flex items-center space-x-1 text-xs text-zinc-700 whitespace-nowrap">
-			<span className="flex-shrink-0 font-semibold">{label}:</span>
-			<span>{format(value)} ms</span>
+			<span className="font-semibold">{label}:</span>
+			<span className="">{format(value)} ms</span>
 		</div>
 	);
 };
@@ -83,13 +83,22 @@ export const Row: React.FC<{
 	return (
 		<Card>
 			<CardHeader>
-				<div className="lg:w-1/2">
-					<Heading h3>{endpoint.name}</Heading>
-				</div>
-				<div>
-					<div className="flex items-center gap-4">
-						<Text size="sm">
-							{" "}
+				<div className="flex items-start justify-between w-full">
+					<div className="lg:w-1/2">
+						<Heading h3>{endpoint.name}</Heading>
+						<div className="flex justify-start mt-4">
+							<div className="grid grid-cols-1 gap-2 sm:grid-cols-5">
+								<Stat label="min" value={endpoint.min} />
+								<Stat label="p50" value={endpoint.p50} />
+								<Stat label="p95" value={endpoint.p95} />
+								<Stat label="p99" value={endpoint.p99} />
+								<Stat label="max" value={endpoint.max} />
+							</div>
+						</div>
+					</div>
+
+					<div className="flex flex-col-reverse items-end gap-4 sm:items-center sm:flex-row">
+						<Text size="sm" lineBreak={false}>
 							{(availability * 100).toFixed(2)} % Availability
 						</Text>
 
@@ -105,23 +114,18 @@ export const Row: React.FC<{
 						</div>
 					</div>
 				</div>
-				{/* <div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
-					<Stat label="min" value={endpoint.min} />
-
-					<Stat label="p50" value={endpoint.p50} />
-					<Stat label="p95" value={endpoint.p95} />
-					<Stat label="p99" value={endpoint.p99} />
-					<Stat label="max" value={endpoint.max} />
-				</div> */}
 			</CardHeader>
 			<CardContent>
-				<Chart
-					metrics={endpoint.metrics}
-					nBuckets={72}
-					degradedAfter={endpoint.degradedAfter}
-					timeout={endpoint.timeout}
-				/>
-				<div className="flex flex-row-reverse mt-2">
+				<div className="flex flex-col space-y-2">
+					<Chart
+						metrics={endpoint.metrics}
+						nBuckets={72}
+						degradedAfter={endpoint.degradedAfter}
+						timeout={endpoint.timeout}
+					/>
+				</div>
+
+				<div className="flex justify-end gap-4 py-2 mt-2 md:gap-8">
 					<button
 						className="flex items-center gap-1 text-sm duration-150 text-zinc-500 hover:text-zinc-800"
 						onClick={() => setExpanded(!expanded)}
