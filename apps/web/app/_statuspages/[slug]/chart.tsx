@@ -181,7 +181,7 @@ const Chart: React.FC<{
 
 	return (
 		<div>
-			<div className={`flex  ${height ?? "h-12"} items-end`}>
+			<div className={`flex bg-white ${height ?? "h-12"} items-end`}>
 				{metrics
 
 				.map((bucket, i) => {
@@ -196,7 +196,7 @@ const Chart: React.FC<{
 					// ? p99 > endpoint.degradedAfter
 					// : 0;
 					const cn = [
-						"flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
+						"flex-1  rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
 					];
 
 					if (bucket.time < 0) {
