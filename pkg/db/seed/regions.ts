@@ -245,11 +245,7 @@ const edgeRegions = [
 	},
 ];
 
-
-const regions = [
-	...edgeRegions,
-	...awsRegions,
-];
+const regions = [...edgeRegions, ...awsRegions];
 
 async function main() {
 	const db = new PrismaClient();

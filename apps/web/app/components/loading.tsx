@@ -4,13 +4,12 @@ export function Loading({
 	width = 24,
 	height = 24,
 	dur = "0.75s",
-	color = "text-zinc-500",
 }: SVGProps<SVGElement>): JSX.Element {
 	return (
 		<svg
+			className="fill-current"
 			width={width}
 			height={height}
-			fill={color}
 			viewBox="0 0 24 24"
 			xmlns="http://www.w3.org/2000/svg"
 		>

@@ -76,15 +76,22 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 		accessor("id", {
 			header: "",
 			cell: (info) => (
-				<Confirm
-					title="Delete page"
-					description="Are you sure you want to delete this page?"
-					onConfirm={async () => {
-						await trpc.page.delete.mutate({ pageId: info.getValue() });
-						router.refresh();
-					}}
-					trigger={<Button variant="danger">Delete</Button>}
-				/>
+				<div className="flex items-center gap-2">
+					<Button variant="outline">
+						<Link href={`/${teamSlug}/pages/${info.getValue()}/settings`}>
+							Edit
+						</Link>
+					</Button>
+					<Confirm
+						title="Delete page"
+						description="Are you sure you want to delete this page?"
+						onConfirm={async () => {
+							await trpc.page.delete.mutate({ pageId: info.getValue() });
+							router.refresh();
+						}}
+						trigger={<Button variant="danger">Delete</Button>}
+					/>
+				</div>
 			),
 		}),
 	];

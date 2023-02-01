@@ -41,7 +41,15 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 					<CardContent>
 						<StatuspagesTable
 							teamSlug={props.params.teamSlug}
-							pages={team.pages}
+							pages={team.pages.map((page) => ({
+								id: page.id,
+								name: page.name,
+								slug: page.slug,
+								endpoints: page.endpoints.map((endpoint) => ({
+									id: endpoint.id,
+									name: endpoint.name,
+								})),
+							}))}
 						/>
 					</CardContent>
 				</Card>
