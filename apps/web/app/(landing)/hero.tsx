@@ -1,22 +1,5 @@
 "use client";
 import React, { useId } from "react";
-import { motion } from "framer-motion";
-
-const textVariants = {
-	visible: {
-		opacity: 1,
-		transition: { duration: 1, staggerChildren: 0.25, ease: "easeOut" },
-	},
-	hidden: { opacity: 0 },
-};
-const slideUp = {
-	visible: {
-		opacity: 1,
-		y: 0,
-		transition: { duration: 1, ease: "easeOut" },
-	},
-	hidden: { opacity: 0, y: "20" },
-};
 
 const Rings: React.FC = (): JSX.Element => {
 	let id = useId();
@@ -97,34 +80,20 @@ export const Hero: React.FC = (): JSX.Element => {
 
 			<div className="relative h-full max-w-6xl px-4 mx-auto sm:px-6">
 				<div className="h-full pt-32 md:pt-40">
-					<motion.div
-						initial="hidden"
-						animate="visible"
-						variants={textVariants}
-						className="flex flex-col items-center justify-center text-center h-2/3"
-					>
-						<motion.h1
-							variants={slideUp}
-							className="container text-center font-extrabold tracking-[-0.02em] py-4  text-6xl lg:text-8xl   text-transparent bg-clip-text bg-gradient-to-t from-zinc-100/80  to-white"
-						>
+					<div className="flex flex-col items-center justify-center text-center h-2/3">
+						<h1 className="container text-center font-extrabold tracking-[-0.02em] py-4  text-6xl lg:text-8xl   text-transparent bg-clip-text bg-gradient-to-t from-zinc-100/80  to-white">
 							Global Latency Monitoring
-						</motion.h1>
-						<motion.p
-							variants={slideUp}
-							className="container mt-6 text-lg font-light text-zinc-300"
-						>
+						</h1>
+						<p className="container mt-6 text-lg font-light text-zinc-300">
 							Understand the true performance of your API by monitoring it from
 							around the world.
-						</motion.p>
-						<motion.div
-							variants={slideUp}
-							className="max-w-xs mx-auto mt-10 space-y-4 sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4"
-						>
+						</p>
+						<div className="max-w-xs mx-auto mt-10 space-y-4 sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4">
 							<div className="px-10 py-2 transition-all duration-1000 border border-white rounded text-zinc-900 bg-gradient-to-tr drop-shadow-launch from-zinc-100 to-white hover:text-zinc-800">
 								Launching soon
 							</div>
-						</motion.div>
-					</motion.div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>

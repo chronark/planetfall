@@ -1,6 +1,5 @@
 import { db } from "@planetfall/db";
 import { asyncComponent } from "lib/api";
-import Image from "next/image";
 import React from "react";
 import { Feature, FeatureProps } from "./feature";
 

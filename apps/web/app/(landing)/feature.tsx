@@ -1,10 +1,6 @@
-"use client";
-
 import classNames from "classnames";
 
-import React, { useEffect } from "react";
-import { useAnimation, motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import React from "react";
 
 export type FeatureProps = {
 	hash: string;
@@ -13,50 +9,12 @@ export type FeatureProps = {
 	description: string;
 	bullets: { title: string; description: string }[];
 };
-
-const featureVariants = {
-	visible: {
-		opacity: 1,
-		scale: 1,
-		y: 0,
-		transition: { duration: 2, staggerChildren: 0.3, delayChildren: 0.25 },
-	},
-	hidden: { opacity: 0, scale: 0.9, y: "10%" },
-};
-
-const slideLeft = {
-	visible: { opacity: 1, x: 0, transition: { duration: 1 } },
-	hidden: { opacity: 0, x: "50%" },
-};
-
-const slideRight = {
-	visible: { opacity: 1, x: 0, transition: { duration: 1 } },
-	hidden: { opacity: 0, x: "-50%" },
-};
-
-const slideUp = {
-	visible: { opacity: 1, y: 0, transition: { duration: 1 } },
-	hidden: { opacity: 0, y: "10%" },
-};
-
 export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 	feature,
 	i,
 }) => {
-	const controls = useAnimation();
-	const [ref, inView] = useInView();
-	useEffect(() => {
-		if (inView) {
-			setTimeout(() => controls.start("visible"), 250);
-		}
-	}, [controls, inView]);
-
 	return (
-		<motion.div
-			ref={ref}
-			animate={controls}
-			variants={featureVariants}
-			initial="hidden"
+		<div
 			className="container px-4 mx-auto text-center lg:px-8"
 			id={feature.hash}
 		>
@@ -91,19 +49,11 @@ export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 				>
 					{feature.bullets.map((b) => {
 						return (
-							<motion.div
-								variants={
-									feature.image
-										? i % 2 === 0
-											? slideRight
-											: slideLeft
-										: slideUp
-								}
+							<div
 								key={b.title}
 								className="group from-zinc-600/50 to-transparent drop-shadow-feature"
 							>
-								<motion.div
-									variants={i % 2 === 0 ? slideRight : slideLeft}
+								<div
 									className={classNames(
 										"absolute w-full group-hover:w-2/3  h-px -top-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0 transition-all duration-1000",
 										{
@@ -114,8 +64,7 @@ export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 										},
 									)}
 								/>
-								<motion.div
-									variants={i % 2 === 0 ? slideLeft : slideRight}
+								<div
 									className={classNames(
 										"absolute w-full group-hover:w-2/3 h-px -bottom-px from-zinc-400/0 via-zinc-400/70 to-zinc-400/0 transition-all duration-1000",
 										{
@@ -145,11 +94,11 @@ export const Feature: React.FC<{ feature: FeatureProps; i: number }> = ({
 										{b.description}
 									</dd>
 								</div>
-							</motion.div>
+							</div>
 						);
 					})}
 				</div>
 			</div>
-		</motion.div>
+		</div>
 	);
 };

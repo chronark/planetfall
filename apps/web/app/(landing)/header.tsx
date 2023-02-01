@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Logo } from "../components/logo";
 import { Session } from "next-auth";
 import classNames from "classnames";
-import { ArrowRightIcon } from "lucide-react";
 
 type Props = {
 	session: Session | null;

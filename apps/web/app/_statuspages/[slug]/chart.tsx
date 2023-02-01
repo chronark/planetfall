@@ -1,26 +1,13 @@
 "use client";
 
-import classNames from "classnames";
 import * as HoverCard from "@radix-ui/react-hover-card";
-import { useEffect, useState } from "react";
-import { AnimatePresence, m, motion } from "framer-motion";
+import { useState } from "react";
 import { Stats } from "@/components/stats";
 import { Heading } from "@/components/heading";
-import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import {
-	AccordionItem,
-	Accordion,
-	AccordionContent,
-	AccordionTrigger,
-} from "@/components/accordion";
-import { ChevronDown, ChevronUp, MenuIcon } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { CardContent, CardHeader, Card } from "@/components/card";
-import { NEXT_BUILTIN_DOCUMENT } from "next/dist/shared/lib/constants";
-import { ErrorsTable } from "app/(app)/[teamSlug]/endpoints/[endpointId]/errors-table";
 import cn from "classnames";
 import { Text } from "@/components/text";
-import { Button } from "@/components/button";
-import exp from "constants";
 function format(n: number): string {
 	return Intl.NumberFormat(undefined).format(Math.round(n));
 }
