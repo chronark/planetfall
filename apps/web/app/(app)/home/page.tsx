@@ -19,7 +19,7 @@ export default async function Home() {
 		},
 	});
 
-	console.log({ team });
+	console.log({ session,team });
 	if (!team) {
 		notFound();
 	}
