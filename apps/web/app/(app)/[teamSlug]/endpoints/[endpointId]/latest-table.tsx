@@ -113,7 +113,8 @@ export const LatestTable: React.FC<Props> = ({
 						{headerGroup.headers.map((header, i) => (
 							<th
 								key={header.id}
-								className="sticky px-4 bg-white z-10   py-3.5 text-left text-sm font-semibold text-zinc-900">
+								className="sticky px-4 bg-white z-10   py-3.5 text-left text-sm font-semibold text-zinc-900"
+							>
 								{header.isPlaceholder
 									? null
 									: flexRender(

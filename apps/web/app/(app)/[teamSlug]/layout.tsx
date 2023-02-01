@@ -12,10 +12,10 @@ export default async function AppLayout(props: {
 	}
 
 	return (
-		<div className="min-h-screen bg-zinc-50">
+		<div className="min-h-screen pb-8 bg-zinc-50 lg:pb-16">
 			<DesktopNavbar teamSlug={props.params.teamSlug} />
 
-			<main>{props.children}</main>
+			<main className="px-4 lg:px-0">{props.children}</main>
 		</div>
 	);
 }

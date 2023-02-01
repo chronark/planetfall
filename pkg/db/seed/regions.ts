@@ -1,30 +1,139 @@
 import { Platform, PrismaClient } from "@prisma/client";
 
-
 const awsRegions = [
-{platform:Platform.aws, url:"https://fwvbnvbb6oz2jzgpovm75hb4540twgye.lambda-url.af-south-1.on.aws", region:"af-south-1",name:"aws:af-south-1"},
-{platform:Platform.aws, url:"https://pzfcpsl6rah7ob2qcirdbdwoxi0mprfy.lambda-url.ap-east-1.on.aws", region:"ap-east-1",name:"aws:ap-east-1"},
-{platform:Platform.aws, url:"https://aedkpukrqw2v2xoxiyxqtw2jye0sxqgj.lambda-url.ap-northeast-1.on.aws", region:"ap-northeast-1",name:"aws:ap-northeast-1"},
-{platform:Platform.aws, url:"https://srbdfu4sloqa36m365l2hxj3zy0sfxgd.lambda-url.ap-northeast-2.on.aws", region:"ap-northeast-2",name:"aws:ap-northeast-2"},
-{platform:Platform.aws, url:"https://otqwy4ztlzxbfsqblo6aippqne0zsosn.lambda-url.ap-northeast-3.on.aws", region:"ap-northeast-3",name:"aws:ap-northeast-3"},
-{platform:Platform.aws, url:"https://z3sxifqdguqafynsgno7oszvlu0vmlvj.lambda-url.ap-south-1.on.aws", region:"ap-south-1",name:"aws:ap-south-1"},
-{platform:Platform.aws, url:"https://x7gipm6xm43azjux7pocbauzde0sktuf.lambda-url.ap-southeast-1.on.aws", region:"ap-southeast-1",name:"aws:ap-southeast-1"},
-{platform:Platform.aws, url:"https://quiz2c6reccroj4nfanpg5ugam0bwkjn.lambda-url.ap-southeast-2.on.aws", region:"ap-southeast-2",name:"aws:ap-southeast-2"},
-{platform:Platform.aws, url:"https://yarzmqqceswzdjiumxjhxb6wp40hfmon.lambda-url.ap-southeast-3.on.aws", region:"ap-southeast-3",name:"aws:ap-southeast-3"},
-{platform:Platform.aws, url:"https://lbmzunimpea2xn6avrxatagc340bhqcz.lambda-url.ca-central-1.on.aws", region:"ca-central-1",name:"aws:ca-central-1"},
-{platform:Platform.aws, url:"https://anurwjl4ys7a4sd5taw2l7yswm0weooh.lambda-url.eu-central-1.on.aws", region:"eu-central-1",name:"aws:eu-central-1"},
-{platform:Platform.aws, url:"https://nm5a2nt7arvrdmkpmghsuw6gbm0jmoud.lambda-url.eu-north-1.on.aws", region:"eu-north-1",name:"aws:eu-north-1"},
-{platform:Platform.aws, url:"https://emmt56urfbjlcsz7g5pthurwra0dpyyb.lambda-url.eu-south-1.on.aws", region:"eu-south-1",name:"aws:eu-south-1"},
-{platform:Platform.aws, url:"https://euyfmjginq73yhz2u2ctkoz2te0vovcl.lambda-url.eu-west-1.on.aws", region:"eu-west-1",name:"aws:eu-west-1"},
-{platform:Platform.aws, url:"https://x223heggtqzliqdnjf7ptr64qq0yggsb.lambda-url.eu-west-2.on.aws", region:"eu-west-2",name:"aws:eu-west-2"},
-{platform:Platform.aws, url:"https://p7jcbz4gj6gy74brseg66gyx3y0mfxqo.lambda-url.eu-west-3.on.aws", region:"eu-west-3",name:"aws:eu-west-3"},
-{platform:Platform.aws, url:"https://ebv5syscefvfqaq27ryuh2bydm0aeuwn.lambda-url.me-south-1.on.aws", region:"me-south-1",name:"aws:me-south-1"},
-{platform:Platform.aws, url:"https://nqx75bedph5vsytqrywnxotufm0xckzy.lambda-url.sa-east-1.on.aws", region:"sa-east-1",name:"aws:sa-east-1"},
-{platform:Platform.aws, url:"https://6dt2klkvdaryvh3pjb4osro4ky0lqtqo.lambda-url.us-east-1.on.aws", region:"us-east-1",name:"aws:us-east-1"},
-{platform:Platform.aws, url:"https://ydlfvu24gdqqgowde72tt5zjee0zifnt.lambda-url.us-east-2.on.aws", region:"us-east-2",name:"aws:us-east-2"},
-{platform:Platform.aws, url:"https://dj7qjsq2vjlzyg75zkqogfmwxu0cwcyp.lambda-url.us-west-1.on.aws", region:"us-west-1",name:"aws:us-west-1"},
-{platform:Platform.aws, url:"https://sqkhjigvvpijz65inuixu6vhum0ppsqp.lambda-url.us-west-2.on.aws", region:"us-west-2",name:"aws:us-west-2"},
-]
+	{
+		platform: Platform.aws,
+		url: "https://fwvbnvbb6oz2jzgpovm75hb4540twgye.lambda-url.af-south-1.on.aws",
+		region: "af-south-1",
+		name: "aws:af-south-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://pzfcpsl6rah7ob2qcirdbdwoxi0mprfy.lambda-url.ap-east-1.on.aws",
+		region: "ap-east-1",
+		name: "aws:ap-east-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://aedkpukrqw2v2xoxiyxqtw2jye0sxqgj.lambda-url.ap-northeast-1.on.aws",
+		region: "ap-northeast-1",
+		name: "aws:ap-northeast-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://srbdfu4sloqa36m365l2hxj3zy0sfxgd.lambda-url.ap-northeast-2.on.aws",
+		region: "ap-northeast-2",
+		name: "aws:ap-northeast-2",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://otqwy4ztlzxbfsqblo6aippqne0zsosn.lambda-url.ap-northeast-3.on.aws",
+		region: "ap-northeast-3",
+		name: "aws:ap-northeast-3",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://z3sxifqdguqafynsgno7oszvlu0vmlvj.lambda-url.ap-south-1.on.aws",
+		region: "ap-south-1",
+		name: "aws:ap-south-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://x7gipm6xm43azjux7pocbauzde0sktuf.lambda-url.ap-southeast-1.on.aws",
+		region: "ap-southeast-1",
+		name: "aws:ap-southeast-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://quiz2c6reccroj4nfanpg5ugam0bwkjn.lambda-url.ap-southeast-2.on.aws",
+		region: "ap-southeast-2",
+		name: "aws:ap-southeast-2",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://yarzmqqceswzdjiumxjhxb6wp40hfmon.lambda-url.ap-southeast-3.on.aws",
+		region: "ap-southeast-3",
+		name: "aws:ap-southeast-3",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://lbmzunimpea2xn6avrxatagc340bhqcz.lambda-url.ca-central-1.on.aws",
+		region: "ca-central-1",
+		name: "aws:ca-central-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://anurwjl4ys7a4sd5taw2l7yswm0weooh.lambda-url.eu-central-1.on.aws",
+		region: "eu-central-1",
+		name: "aws:eu-central-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://nm5a2nt7arvrdmkpmghsuw6gbm0jmoud.lambda-url.eu-north-1.on.aws",
+		region: "eu-north-1",
+		name: "aws:eu-north-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://emmt56urfbjlcsz7g5pthurwra0dpyyb.lambda-url.eu-south-1.on.aws",
+		region: "eu-south-1",
+		name: "aws:eu-south-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://euyfmjginq73yhz2u2ctkoz2te0vovcl.lambda-url.eu-west-1.on.aws",
+		region: "eu-west-1",
+		name: "aws:eu-west-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://x223heggtqzliqdnjf7ptr64qq0yggsb.lambda-url.eu-west-2.on.aws",
+		region: "eu-west-2",
+		name: "aws:eu-west-2",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://p7jcbz4gj6gy74brseg66gyx3y0mfxqo.lambda-url.eu-west-3.on.aws",
+		region: "eu-west-3",
+		name: "aws:eu-west-3",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://ebv5syscefvfqaq27ryuh2bydm0aeuwn.lambda-url.me-south-1.on.aws",
+		region: "me-south-1",
+		name: "aws:me-south-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://nqx75bedph5vsytqrywnxotufm0xckzy.lambda-url.sa-east-1.on.aws",
+		region: "sa-east-1",
+		name: "aws:sa-east-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://6dt2klkvdaryvh3pjb4osro4ky0lqtqo.lambda-url.us-east-1.on.aws",
+		region: "us-east-1",
+		name: "aws:us-east-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://ydlfvu24gdqqgowde72tt5zjee0zifnt.lambda-url.us-east-2.on.aws",
+		region: "us-east-2",
+		name: "aws:us-east-2",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://dj7qjsq2vjlzyg75zkqogfmwxu0cwcyp.lambda-url.us-west-1.on.aws",
+		region: "us-west-1",
+		name: "aws:us-west-1",
+	},
+	{
+		platform: Platform.aws,
+		url: "https://sqkhjigvvpijz65inuixu6vhum0ppsqp.lambda-url.us-west-2.on.aws",
+		region: "us-west-2",
+		name: "aws:us-west-2",
+	},
+];
 const edgeRegions = [
 	{
 		platform: Platform.vercelEdge,
@@ -404,12 +513,17 @@ const flyRegions = [
 	},
 ];
 
-const regions = [...vercelRegions, ...flyRegions, ...edgeRegions, ...awsRegions];
+const regions = [
+	...vercelRegions,
+	...flyRegions,
+	...edgeRegions,
+	...awsRegions,
+];
 
 async function main() {
 	const db = new PrismaClient();
 	for (const r of regions) {
-		console.log("Upserting", r.platform, r.region)
+		console.log("Upserting", r.platform, r.region);
 		await db.region.upsert({
 			where: {
 				platform_region: {

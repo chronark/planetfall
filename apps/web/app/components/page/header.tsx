@@ -24,13 +24,16 @@ export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
 	}, []);
 	return (
 		<div
-			className={classNames(" transition-all duration-500   ", {
-				"sticky z-20 top-0 py-2 lg:py-4 my-2 lg:my-4": props.sticky,
-				"bg-white border-b border-zinc-300": scrolled,
-				"bg-zinc-50": !scrolled,
-			})}
+			className={classNames(
+				" transition-all duration-500 -mx-4 lg:mx-0 px-4 lg:px-0 ",
+				{
+					"sticky z-20 top-0 py-2 lg:py-4 my-2 lg:my-4": props.sticky,
+					"bg-white border-b border-zinc-300": scrolled,
+					"bg-zinc-50": !scrolled,
+				},
+			)}
 		>
-			<div className="container w-full mx-auto sm:flex sm:items-center sm:justify-between">
+			<div className="container justify-between w-full mx-auto sm:flex sm:items-center">
 				<div>
 					<h1 className="text-4xl font-semibold text-zinc-900">
 						{props.title}

@@ -3,14 +3,14 @@ NODE aggregate_by_region
 SQL >
     %
     SELECT        
-    COUNT(*) as count,
-
+        COUNT(*) as count,
         min(latency) as min,
         max(latency) as max,
         quantile(0.5)(latency) as p50,
         quantile(0.95)(latency) as p95,
         quantile(0.99)(latency) as p99,
-        regionId
+        regionId,
+        COUNT(error) as errors
     FROM checks__v1
     WHERE  endpointId={{ String(endpointId, required=True)}} AND fromUnixTimestamp64Milli(time) >= now() - INTERVAL {{ Int32(days,7)}} DAY 
     GROUP BY regionId

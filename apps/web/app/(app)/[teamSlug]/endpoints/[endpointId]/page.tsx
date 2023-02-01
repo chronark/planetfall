@@ -81,10 +81,10 @@ export default async function Page(props: {
 	const degraded =
 		checks && checks.length > 0
 			? (endpoint.degradedAfter
-				? checks.filter(
-					(d) => d.latency && d.latency >= endpoint.degradedAfter!,
-				).length
-				: 0) / checks.length
+					? checks.filter(
+							(d) => d.latency && d.latency >= endpoint.degradedAfter!,
+					  ).length
+					: 0) / checks.length
 			: 1;
 
 	return (
@@ -111,7 +111,7 @@ export default async function Page(props: {
 			<main className="container mx-auto">
 				<div className="pt-2 mb-4 md:pt-4 lg:pt-8 md:mb-8 lg:mb-16">
 					<div>
-						<div className="flex items-center justify-between w-full gap-2 md:gap-4 lg:gap-8">
+						<div className="grid w-full grid-cols-3 gap-2 lg:grid-cols-6 md:gap-4 lg:gap-8">
 							<Stats
 								label="Availability"
 								value={(availability * 100).toLocaleString(undefined, {
@@ -134,21 +134,40 @@ export default async function Page(props: {
 								label="P50"
 								value={stats.p50.toLocaleString()}
 								suffix="ms"
-								status={endpoint.timeout && stats.p50 > endpoint.timeout ? "error" : endpoint.degradedAfter && stats.p50 > endpoint.degradedAfter ? "warn" : undefined}
+								status={
+									endpoint.timeout && stats.p50 > endpoint.timeout
+										? "error"
+										: endpoint.degradedAfter &&
+										  stats.p50 > endpoint.degradedAfter
+										? "warn"
+										: undefined
+								}
 							/>
 							<Stats
 								label="P95"
 								value={stats.p95.toLocaleString()}
 								suffix="ms"
-								status={endpoint.timeout && stats.p95 > endpoint.timeout ? "error" : endpoint.degradedAfter && stats.p95 > endpoint.degradedAfter ? "warn" : undefined}
-
+								status={
+									endpoint.timeout && stats.p95 > endpoint.timeout
+										? "error"
+										: endpoint.degradedAfter &&
+										  stats.p95 > endpoint.degradedAfter
+										? "warn"
+										: undefined
+								}
 							/>
 							<Stats
 								label="P99"
 								value={stats.p99.toLocaleString()}
 								suffix="ms"
-								status={endpoint.timeout && stats.p99 > endpoint.timeout ? "error" : endpoint.degradedAfter && stats.p99 > endpoint.degradedAfter ? "warn" : undefined}
-
+								status={
+									endpoint.timeout && stats.p99 > endpoint.timeout
+										? "error"
+										: endpoint.degradedAfter &&
+										  stats.p99 > endpoint.degradedAfter
+										? "warn"
+										: undefined
+								}
 							/>
 						</div>
 					</div>

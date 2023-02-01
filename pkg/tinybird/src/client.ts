@@ -69,6 +69,7 @@ export class Client {
 				p50: 0,
 				p95: 0,
 				p99: 0,
+				errors: 0,
 			};
 		}
 
@@ -175,6 +176,7 @@ export type EndpointStats = {
 	p50: number;
 	p95: number;
 	p99: number;
+	errors: number;
 };
 export type Check = {
 	id: string;
@@ -200,4 +202,5 @@ export type Metric = {
 	p50: number;
 	p95: number;
 	p99: number;
+	errors: number;
 };

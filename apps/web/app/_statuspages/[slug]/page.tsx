@@ -21,6 +21,7 @@ function fillSeries(series: Metric[], buckets: number): Metric[] {
 			p50: 0,
 			p95: 0,
 			p99: 0,
+			errors: 0,
 		});
 	}
 	return series;
@@ -34,6 +35,7 @@ export default async function Page(props: { params: { slug: string } }) {
 			endpoints: {
 				include: { regions: true },
 			},
+			team: true,
 		},
 	});
 	if (!statusPage) {
@@ -73,7 +75,7 @@ export default async function Page(props: { params: { slug: string } }) {
 				name: endpoint.name,
 				url: endpoint.url,
 				degradedAfter: endpoint.degradedAfter ?? undefined,
-				timeout: endpoint.timeout ?? undefined,
+				timeout: endpoint.timeout ?? statusPage.team.maxTimeout,
 				...endpointStats,
 				metrics: fillSeries(endpointSeries, 72),
 				regions,
@@ -82,7 +84,7 @@ export default async function Page(props: { params: { slug: string } }) {
 	);
 
 	return (
-		<div className="flex flex-col min-h-screen overflow-hidden">
+		<div className="flex flex-col min-h-screen px-4 overflow-hidden md:px-0 ">
 			<header className="container flex items-center justify-between w-full mx-auto mt-4 lg:mt-8 ">
 				<h2 className="mb-4 text-5xl font-bold text-zinc-900">
 					{statusPage.name}
@@ -95,7 +97,7 @@ export default async function Page(props: { params: { slug: string } }) {
 			</header>
 			<main className="container min-h-screen mx-auto md:py-16 ">
 				<ul
-					className="gap-4" // initial="hidden"
+					className="flex flex-col gap-4 lg:gap-8" // initial="hidden"
 					// animate="show"
 					// variants={{
 					//   hidden: {},
@@ -114,7 +116,6 @@ export default async function Page(props: { params: { slug: string } }) {
 							//   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
 							// }}
 						>
-							{i > 0 ? <Divider /> : null}
 							<Row key={endpoint.url} endpoint={endpoint} />
 						</li>
 					))}
@@ -124,7 +125,7 @@ export default async function Page(props: { params: { slug: string } }) {
 				<p className="text-center text-zinc-400">
 					Powered by{" "}
 					<Link
-						className="font-medium text-primary-400 hover:text-zinc-600"
+						className="font-medium duration-150 text-zinc-500 hover:text-zinc-600"
 						href="https://planetfall.io"
 					>
 						planetfall.io

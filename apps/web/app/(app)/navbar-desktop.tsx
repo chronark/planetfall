@@ -43,7 +43,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 
 	return (
 		<nav className="bg-white border-b border-zinc-300">
-			<div className="container pt-2 mx-auto">
+			<div className="container px-4 pt-2 mx-auto sm:px-0">
 				<div className="flex items-center justify-between">
 					<Breadcrumbs
 						teamSlug={props.teamSlug}
