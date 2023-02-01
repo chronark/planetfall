@@ -15,7 +15,7 @@ export default async function LandingPage() {
 		<div>
 			<Hero />
 			{/* <Companies /> */}
-			<Stats />
+			{/* <Stats /> */}
 			<Features />
 			<Cta />
 			<Pricing />
