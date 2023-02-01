@@ -20,7 +20,7 @@ provider "aws" {
   alias  = "us_east_1"
 }
 
-module "pinger_us_east_1" {
+module "check_runner_us_east_1" {
   source = "./pinger"
   zip = {
     path = data.archive_file.function_archive.output_path
@@ -45,7 +45,7 @@ provider "aws" {
   alias  = "us_east_2"
 }
 
-module "pinger_us_east_2" {
+module "check_runner_us_east_2" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -70,7 +70,7 @@ provider "aws" {
   alias  = "us_west_1"
 }
 
-module "pinger_us_west_1" {
+module "check_runner_us_west_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -97,7 +97,7 @@ provider "aws" {
   alias  = "us_west_2"
 }
 
-module "pinger_us_west_2" {
+module "check_runner_us_west_2" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -124,7 +124,7 @@ provider "aws" {
   alias  = "ap_south_1"
 }
 
-module "pinger_ap_south_1" {
+module "check_runner_ap_south_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -149,7 +149,7 @@ provider "aws" {
   alias  = "ap_northeast_1"
 }
 
-module "pinger_ap_northeast_1" {
+module "check_runner_ap_northeast_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -173,7 +173,7 @@ provider "aws" {
   alias  = "ap_northeast_2"
 }
 
-module "pinger_ap_northeast_2" {
+module "check_runner_ap_northeast_2" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -197,7 +197,7 @@ provider "aws" {
   alias  = "ap_northeast_3"
 }
 
-module "pinger_ap_northeast_3" {
+module "check_runner_ap_northeast_3" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -223,7 +223,7 @@ provider "aws" {
   alias  = "ap_southeast_1"
 }
 
-module "pinger_ap_southeast_1" {
+module "check_runner_ap_southeast_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -247,7 +247,7 @@ provider "aws" {
   alias  = "ap_southeast_2"
 }
 
-module "pinger_ap_southeast_2" {
+module "check_runner_ap_southeast_2" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -274,7 +274,7 @@ provider "aws" {
   alias  = "ca_central_1"
 }
 
-module "pinger_ca_central_1" {
+module "check_runner_ca_central_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -299,7 +299,7 @@ provider "aws" {
   alias  = "eu_central_1"
 }
 
-module "pinger_eu_central_1" {
+module "check_runner_eu_central_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -324,7 +324,7 @@ provider "aws" {
   alias  = "eu_west_1"
 }
 
-module "pinger_eu_west_1" {
+module "check_runner_eu_west_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -349,7 +349,7 @@ provider "aws" {
   alias  = "eu_west_2"
 }
 
-module "pinger_eu_west_2" {
+module "check_runner_eu_west_2" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -374,7 +374,7 @@ provider "aws" {
   alias  = "eu_west_3"
 }
 
-module "pinger_eu_west_3" {
+module "check_runner_eu_west_3" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -398,7 +398,7 @@ provider "aws" {
   alias  = "eu_north_1"
 }
 
-module "pinger_eu_north_1" {
+module "check_runner_eu_north_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -424,7 +424,7 @@ provider "aws" {
   alias  = "sa_east_1"
 }
 
-module "pinger_sa_east_1" {
+module "check_runner_sa_east_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -450,7 +450,7 @@ provider "aws" {
   alias  = "me_south_1"
 }
 
-module "pinger_me_south_1" {
+module "check_runner_me_south_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -475,7 +475,7 @@ provider "aws" {
   alias  = "ap_southeast_3"
 }
 
-module "pinger_ap_southeast_3" {
+module "check_runner_ap_southeast_3" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -500,7 +500,7 @@ provider "aws" {
   alias  = "af_south_1"
 }
 
-module "pinger_af_south_1" {
+module "check_runner_af_south_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -525,7 +525,7 @@ provider "aws" {
   alias  = "ap_east_1"
 }
 
-module "pinger_ap_east_1" {
+module "check_runner_ap_east_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -549,7 +549,7 @@ provider "aws" {
   alias  = "eu_south_1"
 }
 
-module "pinger_eu_south_1" {
+module "check_runner_eu_south_1" {
   source = "./pinger"
   zip = {
     # path = "../apps/proxy-aws/dist/function.v2.zip"
@@ -566,79 +566,106 @@ module "pinger_eu_south_1" {
 
 
 
-#############################
-# ap-south-2
-#############################
+# #############################
+# # ap-south-2
+# #############################
 
-provider "aws" {
-  region = "ap-south-2"
-  alias  = "ap_south_2"
+# provider "aws" {
+#   region = "ap-south-2"
+#   alias  = "ap_south_2"
+# }
+
+# module "check_runner_ap_south_2" {
+#   source = "./pinger"
+#   zip = {
+#     path = data.archive_file.function_archive.output_path
+#     hash = data.archive_file.function_archive.output_base64sha256
+#   }
+#   region      = "ap-south-2"
+#   environment = "production"
+#   providers = {
+#     aws = aws.ap_south_2
+#   }
+# }
+
+
+
+
+
+# #############################
+# # eu-south-2
+# #############################
+
+# provider "aws" {
+#   region = "eu-south-2"
+#   alias  = "eu_south_2"
+# }
+
+# module "check_runner_eu_south_2" {
+#   source = "./pinger"
+#   zip = {
+#     path = data.archive_file.function_archive.output_path
+#     hash = data.archive_file.function_archive.output_base64sha256
+#   }
+#   region      = "eu-south-2"
+#   environment = "production"
+#   providers = {
+#     aws = aws.eu_south_2
+#   }
+# }
+
+
+
+
+# #############################
+# # eu-central-2
+# #############################
+
+# provider "aws" {
+#   region = "eu-central-2"
+#   alias  = "eu_central_2"
+# }
+
+# module "check_runner_eu_central_2" {
+#   source = "./pinger"
+#   zip = {
+#     path = data.archive_file.function_archive.output_path
+#     hash = data.archive_file.function_archive.output_base64sha256
+#   }
+#   region      = "eu-central-2"
+#   environment = "production"
+#   providers = {
+#     aws = aws.eu_central_2
+#   }
+# }
+
+
+
+
+
+output "urls" {
+  value =[
+module.check_runner_af_south_1.url,
+module.check_runner_ap_east_1.url,
+module.check_runner_ap_northeast_1.url,
+module.check_runner_ap_northeast_2.url,
+module.check_runner_ap_northeast_3.url,
+module.check_runner_ap_south_1.url,
+module.check_runner_ap_southeast_1.url,
+module.check_runner_ap_southeast_2.url,
+module.check_runner_ap_southeast_3.url,
+module.check_runner_ca_central_1.url,
+module.check_runner_eu_central_1.url,
+module.check_runner_eu_north_1.url,
+module.check_runner_eu_south_1.url,
+module.check_runner_eu_west_1.url,
+module.check_runner_eu_west_2.url,
+module.check_runner_eu_west_3.url,
+module.check_runner_me_south_1.url,
+module.check_runner_sa_east_1.url,
+module.check_runner_us_east_1.url,
+module.check_runner_us_east_2.url,
+module.check_runner_us_west_1.url,
+module.check_runner_us_west_2.url,
+  ]
 }
-
-module "pinger_ap_south_2" {
-  source = "./pinger"
-  zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
-  }
-  region      = "ap-south-2"
-  environment = "production"
-  providers = {
-    aws = aws.ap_south_2
-  }
-}
-
-
-
-
-
-#############################
-# eu-south-2
-#############################
-
-provider "aws" {
-  region = "eu-south-2"
-  alias  = "eu_south_2"
-}
-
-module "pinger_eu_south_2" {
-  source = "./pinger"
-  zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
-  }
-  region      = "eu-south-2"
-  environment = "production"
-  providers = {
-    aws = aws.eu_south_2
-  }
-}
-
-
-
-
-#############################
-# eu-central-2
-#############################
-
-provider "aws" {
-  region = "eu-central-2"
-  alias  = "eu_central"
-}
-
-module "pinger_eu_central" {
-  source = "./pinger"
-  zip = {
-    path = data.archive_file.function_archive.output_path
-    hash = data.archive_file.function_archive.output_base64sha256
-  }
-  region      = "eu-central-2"
-  environment = "production"
-  providers = {
-    aws = aws.eu_central
-  }
-}
-
-
-
-

@@ -44,7 +44,3 @@ provider "fly" {
   internaltunnelregion = "fra"
 }
 
-# provider "aws" {
-#   region = "eu-central-1"
-
-# }

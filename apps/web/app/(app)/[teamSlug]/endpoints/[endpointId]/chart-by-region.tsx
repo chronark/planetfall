@@ -43,7 +43,7 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks }) => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardHeaderTitle title="Checks by region" />
+				<CardHeaderTitle title="Latency" />
 				<div>
 					<Select onValueChange={(v) => setSelectedRegion(v)}>
 						<SelectTrigger>

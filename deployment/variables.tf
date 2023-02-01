@@ -141,8 +141,3 @@ variable "fly_org" {
 }
 
 
-
-variable "planetfall_version" {
-  type    = string
-  
-}
