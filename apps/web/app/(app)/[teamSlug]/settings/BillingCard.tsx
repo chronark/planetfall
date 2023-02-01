@@ -36,7 +36,7 @@ export const BillingCard: React.FC<Props> = ({
 }): JSX.Element => {
 	return (
 		<Card>
-			<CardHeader border={true}>
+			<CardHeader>
 				<CardHeaderTitle
 					title="Billing"
 					subtitle={
@@ -65,7 +65,7 @@ export const BillingCard: React.FC<Props> = ({
                   </Button>,
                 ]} */}
 			<CardContent>
-				<div className="flex justify-around divide-x divide-zinc-200">
+				<div className="flex justify-around py-4 divide-x divide-zinc-200">
 					<div className="flex flex-col w-1/3 gap-2 px-8">
 						<Text size="xl">Current Usage</Text>
 						<Text>
