@@ -7,7 +7,6 @@ import { Button } from "@/components/button";
 import { trpc } from "lib/utils/trpc";
 import { ToastProvider, useToaster } from "@/components/toast";
 import { useRouter } from "next/navigation";
-import { MinusSmallIcon, PlusIcon } from "@heroicons/react/24/outline";
 import * as Slider from "@radix-ui/react-slider";
 import {
 	assertion,
@@ -19,6 +18,7 @@ import {
 import { z } from "zod";
 import classNames from "classnames";
 import Link from "next/link";
+import { MinusIcon, PlusIcon } from "lucide-react";
 type Props = {
 	teamSlug: string;
 	endpoint: Omit<Endpoint, "createdAt" | "updatedAt"> & { regions: Region[] };
@@ -580,7 +580,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 														onClick={() => statusAssertions.remove(i)}
 														size="lg"
 													>
-														<MinusSmallIcon className="w-6 h-6" />
+														<MinusIcon className="w-6 h-6" />
 													</Button>
 												</div>
 											</div>
@@ -685,7 +685,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 														onClick={() => headerAssertions.remove(i)}
 														size="lg"
 													>
-														<MinusSmallIcon className="w-6 h-6" />
+														<MinusIcon className="w-6 h-6" />
 													</Button>
 												</div>
 											</div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { signIn } from "next-auth/react";
 import React, { useState } from "react";
 import { Button } from "@/components/button";

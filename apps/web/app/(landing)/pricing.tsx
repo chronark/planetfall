@@ -1,9 +1,9 @@
 import React, { Fragment, PropsWithChildren } from "react";
 import Link from "next/link";
-import { CheckIcon, MinusIcon } from "@heroicons/react/24/solid";
 import { DEFAULT_QUOTA } from "../../plans";
 import ms from "ms";
 import classNames from "classnames";
+import { Check, Minus } from "lucide-react";
 
 type Tier = "Free" | "Pro" | "Enterprise";
 
@@ -295,12 +295,12 @@ export const Pricing: React.FC = (): JSX.Element => {
 															) : (
 																<>
 																	{feature.tiers[tier.name] === true ? (
-																		<CheckIcon
+																		<Check
 																			className="w-5 h-5 ml-auto text-zinc-300"
 																			aria-hidden="true"
 																		/>
 																	) : (
-																		<MinusIcon
+																		<Minus
 																			className="w-5 h-5 ml-auto text-zinc-400"
 																			aria-hidden="true"
 																		/>
@@ -445,12 +445,12 @@ export const Pricing: React.FC = (): JSX.Element => {
 															) : (
 																<div className="flex justify-center">
 																	{feature.tiers[tier.name] === true ? (
-																		<CheckIcon
+																		<Check
 																			className="w-5 h-5 text-zinc-300"
 																			aria-hidden="true"
 																		/>
 																	) : (
-																		<MinusIcon
+																		<Minus
 																			className="w-5 h-5 text-zinc-400"
 																			aria-hidden="true"
 																		/>

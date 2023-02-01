@@ -6,7 +6,6 @@ import {
 	getCoreRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import { Legend } from "@tremor/react";
 import classNames from "classnames";
 import { PlayChecks } from "lib/server/routers/play";
 
@@ -107,8 +106,12 @@ export const Table: React.FC<Props> = ({ regions }) => {
 				header: "Check",
 				cell: (info) => (
 					<div className="flex flex-col items-start gap-1 text-sm font-semibold text-left ">
-						<Legend categories={["Cold"]} colors={["blue"]} />
-						<Legend categories={["Hot"]} colors={["red"]} />
+						<div className="flex items-center">
+							<span className="w-3 h-3 bg-blue-500" /> Cold
+						</div>
+						<div className="flex items-center">
+							<span className="w-3 h-3 bg-red-500" /> Hot
+						</div>
 					</div>
 				),
 			}),

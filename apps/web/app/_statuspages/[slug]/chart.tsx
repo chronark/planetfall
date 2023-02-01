@@ -3,7 +3,6 @@
 import classNames from "classnames";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import { useEffect, useState } from "react";
-import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, m, motion } from "framer-motion";
 import { Stats } from "@/components/stats";
 import { Heading } from "@/components/heading";

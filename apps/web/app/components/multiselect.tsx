@@ -1,10 +1,6 @@
 "use client";
-import {
-	CheckIcon,
-	ChevronDownIcon,
-	ChevronUpIcon,
-} from "@heroicons/react/24/outline";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
 
 type Props<TOptions extends unknown[]> = {
 	options: TOptions;

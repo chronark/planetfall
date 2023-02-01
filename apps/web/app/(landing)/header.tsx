@@ -2,11 +2,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Logo } from "../components/logo";
-import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
-import { asyncComponent } from "lib/api/component";
 import { Session } from "next-auth";
-import { useScroll } from "framer-motion";
 import classNames from "classnames";
+import { ArrowRightIcon } from "lucide-react";
 
 type Props = {
 	session: Session | null;
@@ -71,11 +69,11 @@ export const Header: React.FC<Props> = (props: Props) => {
 							</li>
 
 							<li>
-								<Link href={isSignedIn ? "/home" : "/auth/sign-in"}>
-									<div className="inline-flex items-center justify-center gap-1 font-medium leading-snug transition-none duration-500 ease-in-out shadow-sm text-zinc-200 hover:text-zinc-100 hover:cursor-pointer whitespace-nowrap">
-										{isSignedIn ? "Dashboard" : "Sign in"}
-										<ArrowLongRightIcon className="hidden w-6 h-6 md:block " />
-									</div>
+								<Link
+									href={isSignedIn ? "/home" : "/auth/sign-in"}
+									className="font-medium leading-snug transition-none duration-500 ease-in-out shadow-sm text-zinc-200 hover:text-zinc-100 hover:cursor-pointer whitespace-nowrap"
+								>
+									{isSignedIn ? "Dashboard" : "Sign in"}
 								</Link>
 							</li>
 						</ul>

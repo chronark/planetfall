@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Bar, Column } from "@ant-design/plots";
-import { PlayChecks } from "lib/server/routers/play";
+import React, { useState } from "react";
+import { Bar } from "@ant-design/plots";
 import { EndpointStats } from "@planetfall/tinybird";
 import {
 	Select,
@@ -11,9 +10,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/select";
-import { Heading } from "@/components/heading";
-import { BarList } from "@tremor/react";
-import { Text } from "@/components/text";
 import {
 	Card,
 	CardContent,

@@ -9,12 +9,8 @@ import {
 	SelectTrigger,
 	SelectItem,
 	SelectContent,
+	SelectValue,
 } from "@/components/select";
-import {
-	CheckIcon,
-	ChevronDownIcon,
-	ChevronUpIcon,
-} from "@heroicons/react/24/outline";
 import { PageHeader } from "@/components/page";
 import { PlayChecks } from "lib/server/routers/play";
 import {
@@ -23,7 +19,6 @@ import {
 	CardHeader,
 	CardHeaderTitle,
 } from "@/components/card";
-import { SelectValue } from "@radix-ui/react-select";
 
 type Props = {
 	regions: PlayChecks["regions"];

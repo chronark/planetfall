@@ -1,5 +1,4 @@
 import "./globals.css";
-import "@tremor/react/dist/esm/tremor.css";
 import { Analytics } from "app/components/analytics";
 import { Inter } from "@next/font/google";
 

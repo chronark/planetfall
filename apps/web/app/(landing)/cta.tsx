@@ -1,4 +1,4 @@
-import { ArrowLongRightIcon } from "@heroicons/react/24/solid";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -25,7 +25,7 @@ export const Cta: React.FC = (): JSX.Element => {
 								className="inline-flex items-center justify-center px-8 py-4 font-medium leading-snug transition-all duration-300 ease-in-out rounded hover:shadow-xl bg-zinc-900 hover:cursor-pointer whitespace-nowrap text-zinc-100 hover:bg-zinc-800 group"
 							>
 								<span>Sign In</span>
-								<ArrowLongRightIcon className="hidden w-6 h-6 ml-1 transition-transform duration-150 ease-out md:block" />
+								<ArrowRight className="hidden w-6 h-6 ml-1 transition-transform duration-150 ease-out md:block" />
 							</Link>
 						</div>
 					</div>

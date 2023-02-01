@@ -12,9 +12,9 @@ import {
 import classNames from "classnames";
 import ms from "ms";
 import Link from "next/link";
-import { MinusIcon } from "@heroicons/react/24/outline";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Time } from "@/components/time";
+import { MinusIcon } from "lucide-react";
 export type Props = {
 	endpointId: string;
 	checks: Check[];

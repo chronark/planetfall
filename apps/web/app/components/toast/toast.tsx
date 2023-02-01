@@ -1,7 +1,7 @@
 "use client";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
+import { X } from "lucide-react";
 import { describe } from "node:test";
 import React, { useEffect, useState } from "react";
 import { Text } from "../text";
@@ -74,7 +74,7 @@ export const Toast: React.FC<ToastProps> = ({
 							className="absolute top-0 right-0 p-2 text-2xl font-semibold leading-none bg-transparent outline-none focus:outline-none"
 							onClick={() => remove()}
 						>
-							<XMarkIcon />
+							<X />
 						</button>
 					</>
 				</motion.div>

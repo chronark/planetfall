@@ -7,11 +7,11 @@ import { db } from "@planetfall/db";
 import { Stats } from "@/components/stats";
 import { Heading } from "@/components/heading";
 import ms from "ms";
-import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { Text } from "@/components/text";
 import { HeaderTable } from "./header-table";
 import { getSession } from "lib/auth";
 import Link from "next/link";
+import { AlertCircleIcon, CheckIcon } from "lucide-react";
 
 type Timings = {
 	dnsStart: number;
@@ -236,7 +236,7 @@ export default async function Page(props: {
 						label={check.error ? "Error" : "Success"}
 						value={
 							check.error ? (
-								<ExclamationCircleIcon className="w-8 h-8 m-1" />
+								<AlertCircleIcon className="w-8 h-8 m-1" />
 							) : (
 								<CheckIcon className="w-8 h-8 m-1" />
 							)

@@ -5,7 +5,6 @@ import { useFieldArray, useForm } from "react-hook-form";
 
 import Link from "next/link";
 import { z } from "zod";
-import { MinusSmallIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/button";
 import { Loading } from "@/components/loading";
 import { useRouter } from "next/navigation";
@@ -14,6 +13,7 @@ import { mutate } from "lib/api/call";
 import * as assertions from "@planetfall/assertions";
 import { trpc } from "lib/utils/trpc";
 import { TRPCError } from "@trpc/server";
+import { MinusIcon } from "lucide-react";
 type Props = {
 	teamId: string;
 	teamSlug: string;
@@ -427,7 +427,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 												onClick={() => statusAssertions.remove(i)}
 												size="lg"
 											>
-												<MinusSmallIcon className="w-6 h-6" />
+												<MinusIcon className="w-6 h-6" />
 											</Button>
 										</div>
 									</div>
@@ -502,7 +502,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 												onClick={() => headerAssertions.remove(i)}
 												size="lg"
 											>
-												<MinusSmallIcon className="w-6 h-6" />
+												<MinusIcon className="w-6 h-6" />
 											</Button>
 										</div>
 									</div>
