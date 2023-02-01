@@ -18,6 +18,8 @@ export default async function Home() {
 			},
 		},
 	});
+
+	console.log({ team });
 	if (!team) {
 		notFound();
 	}
