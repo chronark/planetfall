@@ -47,10 +47,6 @@ func RedisPing(ctx context.Context, req Request) ([]Response, error) {
 func redisCheck(ctx context.Context, db *redis.Client, input Request) (Response, error) {
 	log.Printf("Checking redis")
 	key := "planetfall:testkey"
-	err := db.Set(ctx, key, "testvalue", 0).Err()
-	if err != nil {
-		return Response{}, fmt.Errorf("unable to set testkey: %w", err)
-	}
 	now := time.Now()
 	res, err := db.Get(ctx, key).Result()
 	latency := time.Since(now).Milliseconds()
