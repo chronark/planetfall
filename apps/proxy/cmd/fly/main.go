@@ -122,6 +122,7 @@ func main() {
 
 		res, err := ping.RedisPing(c.UserContext(), req)
 		if err != nil {
+			log.Printf("Error pinging: %s", err.Error())
 			return handleError(c, 500, "INTERNAL_SERVER_ERROR", err.Error())
 		}
 
