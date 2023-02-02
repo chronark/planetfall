@@ -37,7 +37,6 @@ export default async function Page(props: {
 		return redirect("/auth/sign-in");
 	}
 
-	const regions = await db.region.findMany({where:{visible:true}});
 	const endpoint = await db.endpoint.findUnique({
 		where: {
 			id: props.params.endpointId,
@@ -185,7 +184,7 @@ export default async function Page(props: {
 							regions={statsByRegion.map((region) => ({
 								...region,
 								region:
-									regions.find((r) => r.id === region.regionId)?.name ??
+									endpoint.regions.find((r) => r.id === region.regionId)?.name ??
 									region.regionId,
 							}))}
 							endpoint={{
@@ -223,7 +222,7 @@ export default async function Page(props: {
 									checks={checks.slice(0, 10)}
 									degradedAfter={endpoint.degradedAfter}
 									timeout={endpoint.timeout}
-									regions={regions}
+									regions={endpoint.regions}
 								/>
 							</CardContent>
 						</Card>

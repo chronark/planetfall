@@ -149,7 +149,7 @@ func main() {
 			return handleError(c, 400, "BAD_REQUEST", err.Error())
 		}
 
-		res, err := ping.Ping(c.UserContext(), req)
+		res, err := ping.RedisPing(c.UserContext(), req)
 		if err != nil {
 			return handleError(c, 500, "INTERNAL_SERVER_ERROR", err.Error())
 		}
@@ -168,7 +168,6 @@ func main() {
 					log.Printf("Error shutting down: %s\n", err.Error())
 					os.Exit(1)
 				}
-				log.Println("Server shut down")
 				os.Exit(0)
 			}
 		}
