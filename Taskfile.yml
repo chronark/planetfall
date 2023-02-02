@@ -3,8 +3,8 @@ version: '3'
 
 vars: 
   VERSION: 
+    sh: git describe --tags --always
   CHECK_RUNNER_IMAGE: chronark/planetfall-check-runner
-  SCHEDULER_IMAGE: chronark/planetfall-scheduler
 
 tasks:
   clear:
@@ -29,9 +29,7 @@ tasks:
       - clear
     env:
           TF_VAR_check_runner_image: "{{.CHECK_RUNNER_IMAGE}}:{{.VERSION}}"
-          TF_VAR_scheduler_image: "{{.SCHEDULER_IMAGE}}:{{.VERSION}}"
     cmds:
-      - task: build-scheduler
       - task: build-pinger
        
       - terraform -chdir=deployment init -upgrade
@@ -39,24 +37,8 @@ tasks:
        
   
   build-pinger:
-    - task: build-docker
-      vars:
-        DOCKERFILE: apps/proxy/Dockerfile
-        IMAGE: chronark/planetfall-pinger
-
-  build-scheduler:
-    - task: build-docker
-      vars:
-        DOCKERFILE: apps/scheduler/Dockerfile
-        IMAGE: chronark/planetfall-scheduler
-    
-  build-docker:
-    internal: true
-    run: when_changed
-    env:
-      DOCKER_BUILDKIT: 1
     cmds:
-      - docker build --platform=linux/amd64 -t {{.IMAGE}}:{{.VERSION}} -t {{.IMAGE}}:latest -f {{.DOCKERFILE}} .
-      - docker push {{.IMAGE}}:{{.VERSION}}
-      - docker push {{.IMAGE}}:latest
+      - docker build --platform=linux/amd64 -t {{.CHECK_RUNNER_IMAGE}}:{{.VERSION}} -t {{.CHECK_RUNNER_IMAGE}}:latest -f ./apps/proxy/Dockerfile .
+      - docker push {{.CHECK_RUNNER_IMAGE}}:{{.VERSION}}
+      - docker push {{.CHECK_RUNNER_IMAGE}}:latest
     

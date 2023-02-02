@@ -210,7 +210,7 @@ export default async function Page(props: {
 		? await db.endpoint.findUnique({ where: { id: check.endpointId } })
 		: null;
 
-	const regions = await db.region.findMany();
+	const regions = await db.region.findMany({where:{visible:true}});
 
 	const playParams = new URLSearchParams([
 		["url", endpoint!.url],

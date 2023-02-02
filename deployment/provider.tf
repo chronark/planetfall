@@ -13,6 +13,10 @@ terraform {
       source  = "hashicorp/aws"
       version = ">=4.52.0"
     }
+   fly = {
+      source  = "fly-apps/fly"
+      version = ">=0.0.20"
+    }
   }
 }
 
@@ -30,3 +34,11 @@ provider "vercel" {
   api_token = var.vercel_token
 }
 
+
+
+provider "fly" {
+  fly_api_token        = var.fly_token
+  useinternaltunnel    = true
+  internaltunnelorg    = var.fly_org
+  internaltunnelregion = "fra"
+}

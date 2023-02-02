@@ -144,6 +144,7 @@ enum Platform {
   vercel
   vercelEdge
   aws
+  flyRedis
 }
 
 model Region {
@@ -155,6 +156,7 @@ model Region {
   // Url where the lambda function for this region is reachable
   url       String
   endpoints Endpoint[]
+  visible   Boolean
 
   @@unique([platform, region])
 }

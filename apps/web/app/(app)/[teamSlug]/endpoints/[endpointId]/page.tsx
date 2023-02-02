@@ -37,7 +37,7 @@ export default async function Page(props: {
 		return redirect("/auth/sign-in");
 	}
 
-	const regions = await db.region.findMany();
+	const regions = await db.region.findMany({where:{visible:true}});
 	const endpoint = await db.endpoint.findUnique({
 		where: {
 			id: props.params.endpointId,

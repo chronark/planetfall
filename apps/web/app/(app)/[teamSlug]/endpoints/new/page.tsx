@@ -20,7 +20,7 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 		notFound();
 	}
 
-	const regions = await db.region.findMany();
+	const regions = await db.region.findMany({where:{visible:true}});
 
 	return (
 		<div>

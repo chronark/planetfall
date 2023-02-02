@@ -11,7 +11,7 @@ export default async function PlayPage(props: {
 		repeat?: string;
 	};
 }) {
-	const regions = await db.region.findMany();
+	const regions = await db.region.findMany({where:{visible:true}});
 	return (
 		<Form
 			regions={regions}

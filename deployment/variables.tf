@@ -128,3 +128,14 @@ variable "git_credentials" {
   sensitive = true
 
 }
+
+variable "fly_token" {
+  type      = string
+  sensitive = true
+
+}
+
+variable "fly_org" {
+  type    = string
+  default = "planetfall"
+}
