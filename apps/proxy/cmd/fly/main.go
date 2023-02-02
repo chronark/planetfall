@@ -91,15 +91,6 @@ func main() {
 		return c.Next()
 	})
 
-	app.Use(func(c *fiber.Ctx) error {
-		err := c.Next()
-		if err != nil {
-			log.Printf("ERR: %s\n",err.Error())
-		}
-
-		return err
-
-	})
 
 	app.Get("/health", func(c *fiber.Ctx) error {
 		log.Println("received health check")
