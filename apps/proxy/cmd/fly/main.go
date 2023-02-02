@@ -80,7 +80,7 @@ func main() {
 	close := make(chan os.Signal, 1)
 	signal.Notify(close, os.Interrupt, syscall.SIGTERM)
 	app := fiber.New(fiber.Config{
-		DisableStartupMessage: false,
+		DisableStartupMessage: true,
 	})
 
 	idle := NewIdleChecker()

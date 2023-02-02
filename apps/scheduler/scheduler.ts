@@ -6,6 +6,7 @@ import * as assertions from "@planetfall/assertions";
 import { z } from "zod";
 import ms from "ms";
 import { Notifications } from "./notifications";
+import { takeCoverage } from "v8";
 
 export class Scheduler {
 	// Map of endpoint id -> clearInterval function
@@ -167,10 +168,10 @@ export class Scheduler {
 				endpoint.distribution === "ALL"
 					? endpoint.regions
 					: [
-							endpoint.regions[
-								Math.floor(Math.random() * endpoint.regions.length)
-							],
-					  ];
+						endpoint.regions[
+						Math.floor(Math.random() * endpoint.regions.length)
+						],
+					];
 			this.logger.info("testing endpoint", {
 				endpointId: endpoint.id,
 				regions: regions.map((r) => r.id),
@@ -197,7 +198,7 @@ export class Scheduler {
 					const headers = new Headers({
 						"Content-Type": "application/json",
 					});
-					if (region.platform==="flyRedis") {
+					if (region.platform === "flyRedis") {
 						headers.set("Fly-Prefer-Region", region.region);
 					}
 
@@ -246,10 +247,10 @@ export class Scheduler {
 					const data = parsed.map((c) => {
 						if (!c.error) {
 							if (!c.body) {
-								throw new Error("no body");
+								c.body = "";
 							}
 							if (!c.headers) {
-								throw new Error("no headers");
+								c.headers = {}
 							}
 
 							if (endpoint.assertions) {
