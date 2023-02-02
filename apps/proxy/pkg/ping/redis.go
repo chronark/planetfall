@@ -16,7 +16,7 @@ func RedisPing(ctx context.Context, req Request) ([]Response, error) {
 		req.Checks = 1
 	}
 
-	opts, err := redis.ParseURL("redis://default:d9b70522f05d461cb972e66a5fe8bc1c@fly-latency.upstash.io")
+	opts, err := redis.ParseURL(req.Url)
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse testRedisUrl: %w", err)
 	}
