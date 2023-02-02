@@ -75,11 +75,9 @@ export const Row: React.FC<{
 						<Heading h3>{endpoint.name}</Heading>
 						<div className="flex justify-start mt-4">
 							<div className="grid grid-cols-1 gap-2 sm:grid-cols-5">
-								<Stat label="min" value={endpoint.min} />
 								<Stat label="p50" value={endpoint.p50} />
 								<Stat label="p95" value={endpoint.p95} />
 								<Stat label="p99" value={endpoint.p99} />
-								<Stat label="max" value={endpoint.max} />
 							</div>
 						</div>
 					</div>
@@ -140,11 +138,9 @@ export const Row: React.FC<{
 										{regions.find((r) => r.id === regionId)?.name || regionId}
 									</h4>
 									<div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
-										<Stat label="min" value={metrics.min} />
 										<Stat label="p50" value={metrics.p50} />
 										<Stat label="p95" value={metrics.p95} />
 										<Stat label="p99" value={metrics.p99} />
-										<Stat label="max" value={metrics.max} />
 									</div>
 								</div>
 								<Chart
