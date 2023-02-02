@@ -215,6 +215,7 @@ export class Scheduler {
 					});
 					if (res.status !== 200) {
 						this.logger.error("endpoint test failed", {
+							status: res.status,
 							endpointId: endpoint.id,
 							regionId: region.id,
 							error: await res.text(),

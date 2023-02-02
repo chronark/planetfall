@@ -93,8 +93,9 @@ func main() {
 
 	app.Use(func(c *fiber.Ctx) error {
 		err := c.Next()
-
-		log.Printf("ERR: %s\n",err.Error())
+		if err != nil {
+			log.Printf("ERR: %s\n",err.Error())
+		}
 
 		return err
 

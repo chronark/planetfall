@@ -49,14 +49,14 @@ func redisCheck(ctx context.Context, db *redis.Client, input Request) (Response,
 	key := "planetfall:testkey"
 	err := db.Set(ctx, key, "testvalue", 0).Err()
 	if err != nil {
-		return Response{}, err
+		return Response{}, fmt.Errorf("unable to set testkey: %w", err)
 	}
 	now := time.Now()
 	res, err := db.Get(ctx, key).Result()
 	latency := time.Since(now).Milliseconds()
 
 	if err != nil {
-		return Response{}, err
+		return Response{}, fmt.Errorf("unable to get testkey: %w", err)
 	}
 
 
