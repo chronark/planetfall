@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
@@ -10,8 +9,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/axiomhq/axiom-go/axiom"
-	"github.com/axiomhq/axiom-go/axiom/ingest"
 	"github.com/chronark/planetfall/apps/proxy/pkg/ping"
 	"github.com/gofiber/fiber/v2"
 )
@@ -85,18 +82,6 @@ func main() {
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: false,
 	})
-	ax, err := axiom.NewClient(
-		axiom.SetPersonalTokenConfig(os.Getenv("AXIOM_TOKEN"), os.Getenv("AXIOM_ORG")),
-	)
-	if err != nil {
-		log.Printf("Error creating axiom: %s\n", err.Error())
-		os.Exit(1)
-	}
-	err = ax.ValidateCredentials(context.Background())
-	if err != nil {
-		log.Printf("Error validating axiom credentials: %s\n", err.Error())
-		os.Exit(1)
-	}
 
 	idle := NewIdleChecker()
 
@@ -109,22 +94,8 @@ func main() {
 	app.Use(func(c *fiber.Ctx) error {
 		err := c.Next()
 
-		errMessage := ""
-		if err != nil {
-			errMessage = err.Error()
-		}
-		_, axiomErr := ax.Datasets.IngestEvents(c.UserContext(), "ping-fly", []axiom.Event{
-			{
-				ingest.TimestampField: time.Now(),
-				"method":              c.Method(),
-				"path":                c.Path(),
-				"status":              c.Response().StatusCode(),
-				"error":               errMessage,
-			},
-		})
-		if axiomErr != nil {
-			log.Printf("Error sending event to axiom: %s\n", axiomErr.Error())
-		}
+		log.Printf("ERR: %s\n",err.Error())
+
 		return err
 
 	})
@@ -173,7 +144,7 @@ func main() {
 		}
 	}()
 
-	err = app.Listen(fmt.Sprintf(":%s", port))
+	err := app.Listen(fmt.Sprintf(":%s", port))
 	if err != nil {
 		log.Fatalf("Error listening: %s", err.Error())
 	}
