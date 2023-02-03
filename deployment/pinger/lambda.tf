@@ -125,3 +125,5 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
 output "url" {
   value = aws_lambda_function_url.url
 }
+
+
