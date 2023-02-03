@@ -57,7 +57,7 @@ importers:
       tslib: 2.5.0
       typescript: 4.9.5
 
-  apps/nextjs13-app:
+  apps/nextjs13-appdir:
     specifiers:
       '@next/font': 13.1.6
       '@types/node': 18.11.18

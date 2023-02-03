@@ -256,14 +256,14 @@ resource "vercel_project_domain" "wildcard" {
 
 
 
-resource "vercel_project" "nextjs_13_app" {
-  name      = "planetfall-nextjs-13-app"
+resource "vercel_project" "nextjs_13_appdir" {
+  name      = "planetfall-nextjs-13-appdir"
   team_id   = var.vercel_team_id
   framework = "nextjs"
 
 
-  build_command              = "cd ../.. && pnpm turbo run build --filter=@planetfall/nextjs13-app"
-  root_directory             = "apps/nextjs13-app"
+  build_command              = "cd ../.. && pnpm turbo run build --filter=@planetfall/nextjs13-appdir"
+  root_directory             = "apps/nextjs13-appdir"
   serverless_function_region = "fra1"
 
   git_repository = {
