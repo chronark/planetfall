@@ -11,9 +11,14 @@ import { Text } from "@/components/text";
 import { HeaderTable } from "./header-table";
 import { getSession } from "lib/auth";
 import Link from "next/link";
-import {Tag} from "@/components/tag";
+import { Tag } from "@/components/tag";
 import { AlertCircle, Check } from "lucide-react";
-import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardHeaderTitle,
+} from "@/components/card";
 import { Divider } from "@/components/divider";
 
 type Timings = {
@@ -46,10 +51,11 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 					<div className="flex w-4/5">
 						<div
 							style={{
-								width: `${(Math.max(1, timings.dnsDone - timings.dnsStart) /
-									(end - start)) *
+								width: `${
+									(Math.max(1, timings.dnsDone - timings.dnsStart) /
+										(end - start)) *
 									100
-									}%`,
+								}%`,
 							}}
 						>
 							<div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -69,16 +75,18 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 					<div className="flex w-4/5">
 						<div
 							style={{
-								width: `${((timings.connectStart - start) / (end - start)) * 100
-									}%`,
+								width: `${
+									((timings.connectStart - start) / (end - start)) * 100
+								}%`,
 							}}
 						/>
 						<div
 							style={{
-								width: `${(Math.max(1, timings.connectDone - timings.connectStart) /
-									(end - start)) *
+								width: `${
+									(Math.max(1, timings.connectDone - timings.connectStart) /
+										(end - start)) *
 									100
-									}%`,
+								}%`,
 							}}
 						>
 							<div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -100,19 +108,21 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 					<div className="flex w-4/5">
 						<div
 							style={{
-								width: `${((timings.tlsHandshakeStart - start) / (end - start)) * 100
-									}%`,
+								width: `${
+									((timings.tlsHandshakeStart - start) / (end - start)) * 100
+								}%`,
 							}}
 						/>
 						<div
 							style={{
-								width: `${(Math.max(
-									1,
-									timings.tlsHandshakeDone - timings.tlsHandshakeStart,
-								) /
-									(end - start)) *
+								width: `${
+									(Math.max(
+										1,
+										timings.tlsHandshakeDone - timings.tlsHandshakeStart,
+									) /
+										(end - start)) *
 									100
-									}%`,
+								}%`,
 							}}
 						>
 							<div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -134,16 +144,18 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 					<div className="flex w-4/5">
 						<div
 							style={{
-								width: `${((timings.firstByteStart - start) / (end - start)) * 100
-									}%`,
+								width: `${
+									((timings.firstByteStart - start) / (end - start)) * 100
+								}%`,
 							}}
 						/>
 						<div
 							style={{
-								width: `${(Math.max(1, timings.firstByteDone - timings.firstByteStart) /
-									(end - start)) *
+								width: `${
+									(Math.max(1, timings.firstByteDone - timings.firstByteStart) /
+										(end - start)) *
 									100
-									}%`,
+								}%`,
 							}}
 						>
 							<div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -163,16 +175,18 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 					<div className="flex w-4/5">
 						<div
 							style={{
-								width: `${((timings.transferStart - start) / (end - start)) * 100
-									}%`,
+								width: `${
+									((timings.transferStart - start) / (end - start)) * 100
+								}%`,
 							}}
 						/>
 						<div
 							style={{
-								width: `${(Math.max(1, timings.transferDone - timings.transferStart) /
-									(end - start)) *
+								width: `${
+									(Math.max(1, timings.transferDone - timings.transferStart) /
+										(end - start)) *
 									100
-									}%`,
+								}%`,
 							}}
 						>
 							<div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -204,7 +218,6 @@ export default async function Page(props: {
 		? await db.endpoint.findUnique({ where: { id: check.endpointId } })
 		: null;
 
-
 	const regions = await db.region.findMany({ where: { visible: true } });
 
 	return (
@@ -216,10 +229,8 @@ export default async function Page(props: {
 				actions={[
 					<Tag variant="outline" size="sm">
 						{check.id}
-						
-					</Tag>
+					</Tag>,
 				]}
-
 			/>
 			<main className="container mx-auto">
 				<div className="pt-2 mb-4 md:pt-4 lg:pt-8 md:mb-8 lg:mb-16">
@@ -249,7 +260,8 @@ export default async function Page(props: {
 							label="Region"
 							value={regions.find((r) => r.id === check.regionId)?.name ?? "X"}
 						/>
-					</div></div>
+					</div>
+				</div>
 
 				{check.timing ? (
 					<>
@@ -258,12 +270,10 @@ export default async function Page(props: {
 								<CardHeaderTitle title="Trace" />
 							</CardHeader>
 							<CardContent>
-
 								<DNS timings={JSON.parse(check.timing) as Timings} />
 							</CardContent>
 						</Card>
 					</>
-
 				) : null}
 				{check.error ? (
 					<>
@@ -273,9 +283,9 @@ export default async function Page(props: {
 								<CardHeaderTitle title="Error" />
 							</CardHeader>
 							<CardContent>
-
 								<Text>{check.error}</Text>
-							</CardContent></Card>
+							</CardContent>
+						</Card>
 					</>
 				) : null}
 
@@ -287,30 +297,29 @@ export default async function Page(props: {
 								<CardHeaderTitle title="Response Headers" />
 							</CardHeader>
 							<CardContent>
-
-
 								<HeaderTable
 									header={Object.entries(
 										JSON.parse(check.header) as Record<string, string>,
 									).map(([key, value]) => ({ key, value }))}
 								/>
-							</CardContent></Card>
+							</CardContent>
+						</Card>
 					</>
 				) : null}
-				{check.body ? (<>
-					<Divider />
-					<Card>
-						<CardHeader>
-							<CardHeaderTitle title="Response Body" />
-						</CardHeader>
-						<CardContent>
-
-							<code>
-								{atob(check.body)}
-							</code>
-						</CardContent></Card></>
+				{check.body ? (
+					<>
+						<Divider />
+						<Card>
+							<CardHeader>
+								<CardHeaderTitle title="Response Body" />
+							</CardHeader>
+							<CardContent>
+								<code>{atob(check.body)}</code>
+							</CardContent>
+						</Card>
+					</>
 				) : null}
 			</main>
-		</div >
+		</div>
 	);
 }

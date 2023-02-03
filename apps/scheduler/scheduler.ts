@@ -168,10 +168,10 @@ export class Scheduler {
 				endpoint.distribution === "ALL"
 					? endpoint.regions
 					: [
-						endpoint.regions[
-						Math.floor(Math.random() * endpoint.regions.length)
-						],
-					];
+							endpoint.regions[
+								Math.floor(Math.random() * endpoint.regions.length)
+							],
+					  ];
 			this.logger.info("testing endpoint", {
 				endpointId: endpoint.id,
 				regions: regions.map((r) => r.id),
@@ -250,7 +250,7 @@ export class Scheduler {
 								c.body = "";
 							}
 							if (!c.headers) {
-								c.headers = {}
+								c.headers = {};
 							}
 
 							if (endpoint.assertions) {
@@ -280,7 +280,7 @@ export class Scheduler {
 							regionId,
 							error: c.error,
 							body: c.body,
-							tags: c.tags??[],
+							tags: c.tags ?? [],
 							header: JSON.stringify(c.headers),
 							timing: JSON.stringify(c.timing),
 						};

@@ -13,7 +13,7 @@ export default async function Page(props: {
 		return notFound();
 	}
 
-	const regions = await db.region.findMany({where:{visible:true}});
+	const regions = await db.region.findMany({ where: { visible: true } });
 
 	/**
 	 * Date is not serializable between server and client

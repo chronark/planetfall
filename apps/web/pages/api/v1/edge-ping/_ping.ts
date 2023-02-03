@@ -24,14 +24,16 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
 	const responses: PingResponse[] = [];
 
 	for (let i = 0; i < req.checks; i++) {
-		let timedout = false
 		try {
 			const now = Date.now();
 			const controller = new AbortController();
-			const timeout = setTimeout(() => {
-				controller.abort(new Error(`Request timed reached after ${req.timeout} ms`))
-				timedout = true
-			}, req.timeout);
+			const timeout = setTimeout(
+				() =>
+					controller.abort(
+						new Error(`Request timeout reached after ${req.timeout} ms`),
+					),
+				req.timeout,
+			);
 			const res = await fetch(req.url, {
 				method: req.method,
 				body: req.body,

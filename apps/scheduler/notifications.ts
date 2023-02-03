@@ -19,12 +19,20 @@ class Cache {
 	constructor() {
 		this.state = new Map();
 		this.ttl = 5 * 60 * 1000;
+
+		setInterval(() => {
+			for (const [key, value] of this.state) {
+				if (value < Date.now() - this.ttl) {
+					this.state.delete(key);
+				}
+			}
+		}, 10 * 60 * 1000);
 	}
 
 	public async debounce(key: string): Promise<boolean> {
 		const now = Date.now();
-		const existing = this.state.get(key);
-		if (existing && existing < now) {
+		const expire = this.state.get(key);
+		if (typeof expire === "number" && expire < now) {
 			return false;
 		}
 		this.state.set(key, now + this.ttl);
