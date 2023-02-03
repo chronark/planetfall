@@ -26,7 +26,12 @@ export const Features = asyncComponent(async () => {
 	const regions = await db.region.count();
 
 	const endpoint = await db.endpoint.findUnique({
-		where: { id: "ept_Mf5j3QP7me7DRByaDzbS4y" },
+		where: {
+			id:
+				process.env.NODE_ENV === "production"
+					? "ept_Mf5j3QP7me7DRByaDzbS4y"
+					: "ept_Jk9p1kGTRdvb54PUfZSmZu",
+		},
 	});
 
 	const stats = endpoint ? await getStats(endpoint, endpoint.timeout!) : null;

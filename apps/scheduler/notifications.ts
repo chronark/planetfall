@@ -21,20 +21,22 @@ class Cache {
 		this.ttl = 5 * 60 * 1000;
 
 		setInterval(() => {
-			for (const [key, value] of this.state) {
-				if (value < Date.now() - this.ttl) {
+			const now = Date.now();
+			for (const [key, expire] of this.state) {
+				if (expire < now) {
+					console.log("Evicting", key);
 					this.state.delete(key);
 				}
 			}
-		}, 10 * 60 * 1000);
+		}, 10 * 1000);
 	}
 
 	public async debounce(key: string): Promise<boolean> {
 		const now = Date.now();
-		const expire = this.state.get(key);
-		if (typeof expire === "number" && expire < now) {
+		if (this.state.has(key)) {
 			return false;
 		}
+
 		this.state.set(key, now + this.ttl);
 		return true;
 	}
@@ -60,7 +62,6 @@ export class Notifications {
 	public async notify(event: NotificationEvent): Promise<void> {
 		const debounceKey = [
 			"notifications",
-			"debounce",
 			event.check.teamId,
 			event.check.endpointId,
 		].join(":");
