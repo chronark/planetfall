@@ -11,7 +11,7 @@ SQL >
         toYear(fromUnixTimestamp64Milli(time)) AS year,
         toMonth(fromUnixTimestamp64Milli(time)) AS month,
         toDayOfMonth(fromUnixTimestamp64Milli(time)) AS day
-    FROM checks
+    FROM checks__v1
     GROUP BY
         teamId,
         year,

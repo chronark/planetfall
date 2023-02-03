@@ -6,5 +6,5 @@ SQL >
 
     %
     SELECT COUNT(*) / {{Int32(days, 30, description="Average over this many days", required=False)}}  as average
-    FROM checks
+    FROM checks__v1
     WHERE fromUnixTimestamp64Milli(time) >= now() - INTERVAL {{Int32(days, 30, description="Average over this many days", required=False)}}  DAY
