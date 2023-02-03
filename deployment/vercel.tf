@@ -262,7 +262,7 @@ resource "vercel_project" "nextjs_13_test" {
   framework = "nextjs"
 
 
-  build_command              = "cd ../.. && pnpm turbo run build --filter=nextjs13-test"
+  build_command              = "cd ../.. && pnpm turbo run build --filter=@planetfall/nextjs13-test"
   root_directory             = "apps/nextjs13-test"
   serverless_function_region = "fra1"
 
@@ -270,6 +270,4 @@ resource "vercel_project" "nextjs_13_test" {
     repo = "chronark/planetfall"
     type = "github"
   }
-
-
 }
