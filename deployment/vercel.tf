@@ -272,18 +272,3 @@ resource "vercel_project" "nextjs_13_appdir" {
   }
 }
 
-resource "vercel_project" "nextjs_13_pages" {
-  name      = "planetfall-nextjs-13-pages"
-  team_id   = var.vercel_team_id
-  framework = "nextjs"
-
-
-  build_command              = "cd ../.. && pnpm turbo run build --filter=nextjs13-pages"
-  root_directory             = "apps/nextjs13-pages"
-  serverless_function_region = "fra1"
-
-  git_repository = {
-    repo = "chronark/planetfall"
-    type = "github"
-  }
-}
