@@ -19,7 +19,7 @@ importers:
 
   apps/cli:
     specifiers:
-      '@oclif/core': ^2.0.8
+      '@oclif/core': ^1.26.1
       '@oclif/plugin-help': ^5.2.0
       '@oclif/plugin-plugins': ^2.2.2
       '@oclif/test': ^2.3.2
@@ -39,7 +39,7 @@ importers:
       tslib: ^2.4.1
       typescript: ^4.9.5
     dependencies:
-      '@oclif/core': 2.0.8
+      '@oclif/core': 1.26.1
       '@oclif/plugin-help': 5.2.2
       '@oclif/plugin-plugins': 2.3.0
       isomorphic-fetch: 3.0.0
@@ -1764,6 +1764,40 @@ packages:
       supports-color: 8.1.1
       tslib: 2.5.0
 
+  /@oclif/core/1.26.1:
+    resolution: {integrity: sha512-g+OWJcM7JOVI53caTEtq0BB1nPotWctRLUyFODPgvDqXhVR7QED+Qz3LwFAMD8dt7/Ar2ZNq15U3bnpnOv453A==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@oclif/linewrap': 1.0.0
+      '@oclif/screen': 3.0.4
+      ansi-escapes: 4.3.2
+      ansi-styles: 4.3.0
+      cardinal: 2.1.1
+      chalk: 4.1.2
+      clean-stack: 3.0.1
+      cli-progress: 3.11.2
+      debug: 4.3.4_supports-color@8.1.1
+      ejs: 3.1.8
+      fs-extra: 9.1.0
+      get-package-type: 0.1.0
+      globby: 11.1.0
+      hyperlinker: 1.0.0
+      indent-string: 4.0.0
+      is-wsl: 2.2.0
+      js-yaml: 3.14.1
+      natural-orderby: 2.0.3
+      object-treeify: 1.1.33
+      password-prompt: 1.1.2
+      semver: 7.3.8
+      string-width: 4.2.3
+      strip-ansi: 6.0.1
+      supports-color: 8.1.1
+      supports-hyperlinks: 2.3.0
+      tslib: 2.5.0
+      widest-line: 3.1.0
+      wrap-ansi: 7.0.0
+    dev: false
+
   /@oclif/core/2.0.8:
     resolution: {integrity: sha512-jt06vEZfpazkR0C8vYuVMKmsxjky52y1B1oFGPnCa6/17qH+PByd5knQP6/QbRoE5OT9RAf4zzpxx2wcihVslw==}
     engines: {node: '>=14.0.0'}
@@ -1796,6 +1830,10 @@ packages:
       widest-line: 3.1.0
       wordwrap: 1.0.0
       wrap-ansi: 7.0.0
+
+  /@oclif/linewrap/1.0.0:
+    resolution: {integrity: sha512-Ups2dShK52xXa8w6iBWLgcjPJWjais6KPJQq3gQ/88AY6BXoTX+MIGFPrWQO1KLMiQfoTpcLnUwloN4brrVUHw==}
+    dev: false
 
   /@oclif/plugin-help/5.2.2:
     resolution: {integrity: sha512-ok8gS2phqA4MiGkjCrZPFvhNIHIp35WsvNNVUn4GL8WZYQ5mk1cZuu+IIqTZxBFZ4QDUZLVkumrhsqx3oNId9A==}
@@ -1846,6 +1884,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@oclif/screen/3.0.4:
+    resolution: {integrity: sha512-IMsTN1dXEXaOSre27j/ywGbBjrzx0FNd1XmuhCWCB9NTPrhWI1Ifbz+YLSEcstfQfocYsrbrIessxXb2oon4lA==}
+    engines: {node: '>=12.0.0'}
+    dev: false
 
   /@oclif/test/2.3.4:
     resolution: {integrity: sha512-sIuDKKw108NQxPbo+j/TY6HBe1j2tbtjEOJ9aHpU7U+hwsTL3/zyU1YZgiGekdQ/OA0PULz3VLafSs+IioWHmw==}
