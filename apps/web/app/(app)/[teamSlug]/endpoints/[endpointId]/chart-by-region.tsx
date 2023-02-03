@@ -37,7 +37,9 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks }) => {
 	const [selectedRegion, setSelectedRegion] = useState(checks[0].regionId);
 
 	const checksByRegion = useMemo(() => {
-		return checks.filter((check) => check.regionId === selectedRegion);
+		return checks
+			.filter((check) => check.regionId === selectedRegion)
+			.sort((a, b) => a.time - b.time);
 	}, [checks, selectedRegion]);
 
 	return (

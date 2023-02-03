@@ -10,14 +10,7 @@ SQL >
     %
     SELECT * 
     FROM checks__v2
-    WHERE 
-      endpointId = {{String(endpointId, required=True)}}
-     AND
-      time > now() - interval 1 day
-    {% if defined(errorsOnly) %}
-    AND
-     error is not null
-    {% end %}
+    WHERE endpointId = {{String(endpointId, required=True)}}
     ORDER BY time DESC
     LIMIT {{Int(limit, default=10)}}
     

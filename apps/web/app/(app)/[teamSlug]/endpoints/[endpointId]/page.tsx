@@ -94,7 +94,7 @@ export default async function Page(props: {
 					  ).length
 					: 0) / checks.length
 			: 1;
-	checks.sort((a, b) => a.time - b.time);
+
 	return (
 		<div>
 			<PageHeader

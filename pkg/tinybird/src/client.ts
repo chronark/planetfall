@@ -160,15 +160,11 @@ export class Client {
 	public async getLatestChecksByEndpoint(
 		endpointId: string,
 		opts?: {
-			errorsOnly?: boolean;
 			limit?: number;
 		},
 	): Promise<Check[]> {
 		const params: Record<string, string> = { endpointId };
 
-		if (opts?.errorsOnly) {
-			params.errorsOnly = "true";
-		}
 		if (opts?.limit) {
 			params.limit = opts.limit.toString();
 		}
