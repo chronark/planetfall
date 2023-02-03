@@ -295,16 +295,22 @@ export class Scheduler {
 					});
 					for (const d of data) {
 						if (d.error) {
-							this.notifications.notify({
-								type: "check",
-								check: {
-									id: d.id,
-									endpointId: d.endpointId,
-									teamId: d.teamId,
-									time: d.time,
-									error: d.error,
-								},
-							});
+							this.notifications
+								.notify({
+									type: "check",
+									check: {
+										id: d.id,
+										endpointId: d.endpointId,
+										teamId: d.teamId,
+										time: d.time,
+										error: d.error,
+									},
+								})
+								.catch((err) => {
+									console.error(
+										`Unable to send notification to ${d.teamId}: ${err.message}`,
+									);
+								});
 						}
 					}
 				}),
