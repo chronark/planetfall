@@ -262,7 +262,7 @@ resource "vercel_project" "nextjs_13_appdir" {
   framework = "nextjs"
 
 
-  build_command              = "cd ../.. && pnpm turbo run build --filter=@planetfall/nextjs13-appdir"
+  build_command              = "cd ../.. && pnpm turbo run build --filter=nextjs13-appdir"
   root_directory             = "apps/nextjs13-appdir"
   serverless_function_region = "fra1"
 
@@ -278,7 +278,7 @@ resource "vercel_project" "nextjs_13_pages" {
   framework = "nextjs"
 
 
-  build_command              = "cd ../.. && pnpm turbo run build --filter=@planetfall/nextjs13-pages"
+  build_command              = "cd ../.. && pnpm turbo run build --filter=nextjs13-pages"
   root_directory             = "apps/nextjs13-pages"
   serverless_function_region = "fra1"
 
