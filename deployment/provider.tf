@@ -8,12 +8,12 @@ terraform {
       source  = "upstash/upstash"
       version = ">=1.2.1"
     }
-   
+
     aws = {
       source  = "hashicorp/aws"
       version = ">=4.52.0"
     }
-   fly = {
+    fly = {
       source  = "fly-apps/fly"
       version = ">=0.0.20"
     }
