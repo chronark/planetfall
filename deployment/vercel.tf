@@ -254,3 +254,22 @@ resource "vercel_project_domain" "wildcard" {
 
 
 
+
+
+resource "vercel_project" "nextjs_13_test" {
+  name      = "planetfall-nextjs-13-test"
+  team_id   = var.vercel_team_id
+  framework = "nextjs"
+
+
+  build_command              = "cd ../.. && pnpm turbo run build --filter=nextjs13-test"
+  root_directory             = "apps/nextjs13-test"
+  serverless_function_region = "fra1"
+
+  git_repository = {
+    repo = "chronark/planetfall"
+    type = "github"
+  }
+
+
+}
