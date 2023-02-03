@@ -53,7 +53,6 @@ export class Client {
 
 	public async publishChecks(checks: Check[]): Promise<void> {
 		await Promise.all([
-			this.publish("checks__v1", checks),
 			this.publish("checks__v2", checks)
 		])
 	}

@@ -8,7 +8,7 @@ SCHEMA >
     `latency` Nullable(Int16) `json:$.latency`,
     `regionId` String `json:$.regionId`,
     `source` String `json:$.source`,
-    `status` Int16 `json:$.status`,
+    `status` Nullable(Int16) `json:$.status`,
     `teamId` String `json:$.teamId`,
     `time` Int64 `json:$.time`,
     `timing` Nullable(String) `json:$.timing`,
