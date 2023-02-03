@@ -28,7 +28,7 @@ type Props = {
 };
 
 export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
-	const protocol = process.env.NEXT_PUBLIC_VERCEL ? "https" : "http";
+	const protocol = process.env.NEXT_PUBLIC_VERCEL_URL ? "https" : "http";
 	const host = process.env.NEXT_PUBLIC_VERCEL_URL
 		? "planetfall.io"
 		: "localhost:3000";
@@ -69,7 +69,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 					className="duration-500 text-zinc-500 hover:text-primary-600 hover:underline"
 					href={`${protocol}://${info.getValue()}.${host}`}
 				>
-					{`${protocol}://${info.getValue()}.${host}`}
+					{`${info.getValue()}.${host}`}
 				</Link>
 			),
 		}),
