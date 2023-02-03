@@ -280,7 +280,7 @@ export class Scheduler {
 							regionId,
 							error: c.error,
 							body: c.body,
-							tags: c.tags,
+							tags: c.tags??[],
 							header: JSON.stringify(c.headers),
 							timing: JSON.stringify(c.timing),
 						};
