@@ -80,12 +80,12 @@ export default async function Page(props: {
 	const degraded =
 		checks && checks.length > 0
 			? (endpoint.degradedAfter
-					? checks.filter(
-							(d) => d.latency && d.latency >= endpoint.degradedAfter!,
-					  ).length
-					: 0) / checks.length
+				? checks.filter(
+					(d) => d.latency && d.latency >= endpoint.degradedAfter!,
+				).length
+				: 0) / checks.length
 			: 1;
-
+	checks.sort((a, b) => (a.time - b.time));
 	return (
 		<div>
 			<PageHeader
@@ -137,9 +137,9 @@ export default async function Page(props: {
 									endpoint.timeout && stats.p50 > endpoint.timeout
 										? "error"
 										: endpoint.degradedAfter &&
-										  stats.p50 > endpoint.degradedAfter
-										? "warn"
-										: undefined
+											stats.p50 > endpoint.degradedAfter
+											? "warn"
+											: undefined
 								}
 							/>
 							<Stats
@@ -150,9 +150,9 @@ export default async function Page(props: {
 									endpoint.timeout && stats.p95 > endpoint.timeout
 										? "error"
 										: endpoint.degradedAfter &&
-										  stats.p95 > endpoint.degradedAfter
-										? "warn"
-										: undefined
+											stats.p95 > endpoint.degradedAfter
+											? "warn"
+											: undefined
 								}
 							/>
 							<Stats
@@ -163,9 +163,9 @@ export default async function Page(props: {
 									endpoint.timeout && stats.p99 > endpoint.timeout
 										? "error"
 										: endpoint.degradedAfter &&
-										  stats.p99 > endpoint.degradedAfter
-										? "warn"
-										: undefined
+											stats.p99 > endpoint.degradedAfter
+											? "warn"
+											: undefined
 								}
 							/>
 						</div>
