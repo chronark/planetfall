@@ -30,13 +30,20 @@ tasks:
     env:
           TF_VAR_check_runner_image: "{{.CHECK_RUNNER_IMAGE}}:{{.VERSION}}"
     cmds:
-      - task: build-pinger
+      - task: build-fly-check-runner
+      - task: build-aws-check-runner
        
       - terraform -chdir=deployment init -upgrade
       - terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
        
+  build-aws-check-runner:
+    env:
+      GOARCH: amd64
+      GOOS: linux 
+    cmds:
+      - go build -o apps/proxy/dist/cmd/aws/main apps/proxy/cmd/aws/main.go
   
-  build-pinger:
+  build-fly-check-runner:
     cmds:
       - docker build --platform=linux/amd64 -t {{.CHECK_RUNNER_IMAGE}}:{{.VERSION}} -t {{.CHECK_RUNNER_IMAGE}}:latest -f ./apps/proxy/Dockerfile .
       - docker push {{.CHECK_RUNNER_IMAGE}}:{{.VERSION}}

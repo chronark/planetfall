@@ -52,7 +52,10 @@ export class Client {
 	}
 
 	public async publishChecks(checks: Check[]): Promise<void> {
-		await this.publish("checks__v1", checks);
+		await Promise.all([
+			this.publish("checks__v1", checks),
+			this.publish("checks__v2", checks)
+		])
 	}
 
 	public async getEndpointStats(endpointId: string): Promise<EndpointStats> {
