@@ -11,7 +11,10 @@ import { Text } from "@/components/text";
 import { HeaderTable } from "./header-table";
 import { getSession } from "lib/auth";
 import Link from "next/link";
+import {Tag} from "@/components/tag";
 import { AlertCircle, Check } from "lucide-react";
+import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { Divider } from "@/components/divider";
 
 type Timings = {
 	dnsStart: number;
@@ -43,11 +46,10 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 					<div className="flex w-4/5">
 						<div
 							style={{
-								width: `${
-									(Math.max(1, timings.dnsDone - timings.dnsStart) /
-										(end - start)) *
+								width: `${(Math.max(1, timings.dnsDone - timings.dnsStart) /
+									(end - start)) *
 									100
-								}%`,
+									}%`,
 							}}
 						>
 							<div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -67,18 +69,16 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 					<div className="flex w-4/5">
 						<div
 							style={{
-								width: `${
-									((timings.connectStart - start) / (end - start)) * 100
-								}%`,
+								width: `${((timings.connectStart - start) / (end - start)) * 100
+									}%`,
 							}}
 						/>
 						<div
 							style={{
-								width: `${
-									(Math.max(1, timings.connectDone - timings.connectStart) /
-										(end - start)) *
+								width: `${(Math.max(1, timings.connectDone - timings.connectStart) /
+									(end - start)) *
 									100
-								}%`,
+									}%`,
 							}}
 						>
 							<div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -100,21 +100,19 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 					<div className="flex w-4/5">
 						<div
 							style={{
-								width: `${
-									((timings.tlsHandshakeStart - start) / (end - start)) * 100
-								}%`,
+								width: `${((timings.tlsHandshakeStart - start) / (end - start)) * 100
+									}%`,
 							}}
 						/>
 						<div
 							style={{
-								width: `${
-									(Math.max(
-										1,
-										timings.tlsHandshakeDone - timings.tlsHandshakeStart,
-									) /
-										(end - start)) *
+								width: `${(Math.max(
+									1,
+									timings.tlsHandshakeDone - timings.tlsHandshakeStart,
+								) /
+									(end - start)) *
 									100
-								}%`,
+									}%`,
 							}}
 						>
 							<div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -136,18 +134,16 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 					<div className="flex w-4/5">
 						<div
 							style={{
-								width: `${
-									((timings.firstByteStart - start) / (end - start)) * 100
-								}%`,
+								width: `${((timings.firstByteStart - start) / (end - start)) * 100
+									}%`,
 							}}
 						/>
 						<div
 							style={{
-								width: `${
-									(Math.max(1, timings.firstByteDone - timings.firstByteStart) /
-										(end - start)) *
+								width: `${(Math.max(1, timings.firstByteDone - timings.firstByteStart) /
+									(end - start)) *
 									100
-								}%`,
+									}%`,
 							}}
 						>
 							<div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -167,18 +163,16 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 					<div className="flex w-4/5">
 						<div
 							style={{
-								width: `${
-									((timings.transferStart - start) / (end - start)) * 100
-								}%`,
+								width: `${((timings.transferStart - start) / (end - start)) * 100
+									}%`,
 							}}
 						/>
 						<div
 							style={{
-								width: `${
-									(Math.max(1, timings.transferDone - timings.transferStart) /
-										(end - start)) *
+								width: `${(Math.max(1, timings.transferDone - timings.transferStart) /
+									(end - start)) *
 									100
-								}%`,
+									}%`,
 							}}
 						>
 							<div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -210,93 +204,113 @@ export default async function Page(props: {
 		? await db.endpoint.findUnique({ where: { id: check.endpointId } })
 		: null;
 
-	const regions = await db.region.findMany({where:{visible:true}});
 
-	const playParams = new URLSearchParams([
-		["url", endpoint!.url],
-		["regions", check.regionId],
-		["method", endpoint!.method],
-	]);
+	const regions = await db.region.findMany({ where: { visible: true } });
 
 	return (
 		<div>
 			<PageHeader
 				sticky={true}
-				title={check.id}
-				description={endpoint?.url}
+				title={endpoint?.name ?? endpoint?.url ?? check.id}
+				description={new Date(check.time).toUTCString()}
 				actions={[
-					<Link href={`/play?${playParams.toString()}`} target="_blank">
-						<Button key="play">Open in playground</Button>,
-					</Link>,
+					<Tag variant="outline" size="sm">
+						{check.id}
+						
+					</Tag>
 				]}
+
 			/>
-			<main className="container mx-auto divide-y">
-				<div className="flex items-center justify-between w-full gap-2 md:gap-4 lg:gap-8">
-					<Stats
-						label={check.error ? "Error" : "Success"}
-						value={
-							check.error ? (
-								<AlertCircle className="w-8 h-8 m-1" />
-							) : (
-								<Check className="w-8 h-8 m-1" />
-							)
-						}
-					/>
-					<Stats
-						label={new Date(check.time).toLocaleString() ?? ""}
-						value={`${
-							check.time ? ms(Date.now() - new Date(check.time).getTime()) : ""
-						}`}
-						suffix="ago"
-					/>
-					<Stats label="Status" value={check.status?.toString() ?? "None"} />
-					<Stats
-						label="Latency"
-						value={check.latency?.toLocaleString() ?? "None"}
-						suffix="ms"
-					/>
-					<Stats
-						label="Region"
-						value={regions.find((r) => r.id === check.regionId)?.name ?? "X"}
-					/>
-				</div>
+			<main className="container mx-auto">
+				<div className="pt-2 mb-4 md:pt-4 lg:pt-8 md:mb-8 lg:mb-16">
+					<div className="flex items-center justify-between w-full gap-2 md:gap-4 lg:gap-8">
+						<Stats
+							label={check.error ? "Error" : "Success"}
+							value={
+								check.error ? (
+									<AlertCircle className="w-8 h-8 m-1" />
+								) : (
+									<Check className="w-8 h-8 m-1" />
+								)
+							}
+						/>
+						<Stats
+							label="Time"
+							value={ms(Date.now() - new Date(check.time).getTime())}
+							suffix="ago"
+						/>
+						<Stats label="Status" value={check.status?.toString() ?? "None"} />
+						<Stats
+							label="Latency"
+							value={check.latency?.toLocaleString() ?? "None"}
+							suffix="ms"
+						/>
+						<Stats
+							label="Region"
+							value={regions.find((r) => r.id === check.regionId)?.name ?? "X"}
+						/>
+					</div></div>
 
 				{check.timing ? (
-					<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
-						<Heading h2={true}>Trace</Heading>
+					<>
+						<Card>
+							<CardHeader>
+								<CardHeaderTitle title="Trace" />
+							</CardHeader>
+							<CardContent>
 
-						<DNS timings={JSON.parse(check.timing) as Timings} />
-					</div>
+								<DNS timings={JSON.parse(check.timing) as Timings} />
+							</CardContent>
+						</Card>
+					</>
+
 				) : null}
 				{check.error ? (
-					<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
-						<Heading h2={true}>Error</Heading>
+					<>
+						<Divider />
+						<Card>
+							<CardHeader>
+								<CardHeaderTitle title="Error" />
+							</CardHeader>
+							<CardContent>
 
-						<Text>{check.error}</Text>
-					</div>
+								<Text>{check.error}</Text>
+							</CardContent></Card>
+					</>
 				) : null}
 
 				{check.header ? (
-					<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
-						<Heading h2={true}>Response Header</Heading>
+					<>
+						<Divider />
+						<Card>
+							<CardHeader>
+								<CardHeaderTitle title="Response Headers" />
+							</CardHeader>
+							<CardContent>
 
-						<HeaderTable
-							header={Object.entries(
-								JSON.parse(check.header) as Record<string, string>,
-							).map(([key, value]) => ({ key, value }))}
-						/>
-					</div>
+
+								<HeaderTable
+									header={Object.entries(
+										JSON.parse(check.header) as Record<string, string>,
+									).map(([key, value]) => ({ key, value }))}
+								/>
+							</CardContent></Card>
+					</>
 				) : null}
-				{check.body ? (
-					<div className="flex flex-col py-4 space-y-4 md:py-8 lg:py-16">
-						<Heading h2={true}>Response Body</Heading>
+				{check.body ? (<>
+					<Divider />
+					<Card>
+						<CardHeader>
+							<CardHeaderTitle title="Response Body" />
+						</CardHeader>
+						<CardContent>
 
-						<code className="flex flex-grow w-full px-2 py-1 border rounded md:px-4 md:py-3 ">
-							{atob(check.body)}
-						</code>
-					</div>
+							<code>
+								{atob(check.body)}
+							</code>
+						</CardContent></Card></>
 				) : null}
 			</main>
-		</div>
+		</div >
 	);
 }

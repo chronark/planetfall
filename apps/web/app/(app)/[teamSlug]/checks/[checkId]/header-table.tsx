@@ -46,14 +46,7 @@ export const HeaderTable: React.FC<Props> = ({ header }): JSX.Element => {
 						{headerGroup.headers.map((header, i) => (
 							<th
 								key={header.id}
-								className={classNames(
-									"sticky px-4 bg-white z-10  border-t border-b border-zinc-400  py-3.5 text-left text-sm font-semibold text-zinc-900",
-									{
-										"rounded-l border-l": i === 0,
-										"rounded-r border-r ": i + 1 === headerGroup.headers.length,
-									},
-								)}
-							>
+								className="sticky px-3 bg-white z-10   py-3.5 text-left text-sm font-semibold text-zinc-900"							>
 								{header.isPlaceholder
 									? null
 									: flexRender(
