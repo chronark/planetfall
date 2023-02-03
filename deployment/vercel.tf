@@ -33,7 +33,6 @@ resource "vercel_project" "web" {
       key    = "PINGER_AUTH_TOKEN"
       value  = var.auth_token
       target = ["production", "preview"]
-
     },
     {
       key    = "NEXT_PUBLIC_AXIOM_INGEST_ENDPOINT"
