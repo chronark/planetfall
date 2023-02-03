@@ -307,15 +307,12 @@ export class Scheduler {
 									},
 								})
 								.catch((err) => {
-									this.logger.error(
-										"Unable to send notification",{
-											endpointId: d.endpointId,
-											teamId: d.teamId,
-											error: (err as Error).message,
-											checkId: d.id,
-
-										}
-									);
+									this.logger.error("Unable to send notification", {
+										endpointId: d.endpointId,
+										teamId: d.teamId,
+										error: (err as Error).message,
+										checkId: d.id,
+									});
 								});
 						}
 					}

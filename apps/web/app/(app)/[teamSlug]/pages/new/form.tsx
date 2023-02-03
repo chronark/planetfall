@@ -42,14 +42,15 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 		}
 		setLoading(true);
 		try {
-			const res = await trpc.page.create.mutate({
+			const slug = data.slug.toLowerCase();
+			await trpc.page.create.mutate({
 				name: data.name,
-				slug: data.slug.toLowerCase(),
+				slug,
 				endpointIds: selectedEndpoints,
 				teamId: teamId,
 			});
 
-			const url = `https://${res.slug}.planetfall.io`;
+			const url = `https://${slug}.planetfall.io`;
 			router.push(url);
 		} catch (err) {
 			console.error(err);

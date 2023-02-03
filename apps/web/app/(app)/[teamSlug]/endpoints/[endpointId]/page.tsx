@@ -26,6 +26,7 @@ import {
 	CardHeaderTitle,
 } from "@/components/card";
 import { Divider } from "@/components/divider";
+import { AlertCircle } from "lucide-react";
 
 export const revalidate = 10;
 
@@ -74,7 +75,15 @@ export default async function Page(props: {
 
 		return notFound();
 	}
-	const errors = checks.filter((c) => Boolean(c.error));
+	const errors = checks
+		.filter((c) => Boolean(c.error))
+		.map((e) => ({
+			id: e.id,
+			time: e.time,
+			error: e.error!,
+			latency: e.latency,
+			region: endpoint.regions.find((r) => r.id === e.regionId)!.name,
+		}));
 
 	const availability = stats.count > 0 ? 1 - errors.length / stats.count : 1;
 	const degraded =
@@ -172,12 +181,19 @@ export default async function Page(props: {
 					</div>
 				</div>
 
-				{/* {errors.length > 0 ? (
-					<div className="py-4 md:py-8 lg:py-16">
-						<Heading h3={true}>Errors</Heading>
-						<ErrorsTable errors={errors} />
-					</div>
-				) : null} */}
+				{errors.length > 0 ? (
+					<>
+						<Card>
+							<CardHeader>
+								<CardHeaderTitle title="Errors" />
+							</CardHeader>
+							<CardContent>
+								<ErrorsTable errors={errors} />
+							</CardContent>
+						</Card>
+						<Divider />
+					</>
+				) : null}
 				{checks.length > 0 ? (
 					<>
 						<Chart

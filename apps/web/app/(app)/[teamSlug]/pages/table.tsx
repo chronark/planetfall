@@ -46,7 +46,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 		accessor("endpoints", {
 			header: "Endpoints",
 			cell: (info) => (
-				<ul className="flex items-center gap-2">
+				<ul className="grid grid-flow-col gap-2 auto-cols-max">
 					{info.getValue().map((endpoint) => (
 						<li key={endpoint.id}>
 							<Link

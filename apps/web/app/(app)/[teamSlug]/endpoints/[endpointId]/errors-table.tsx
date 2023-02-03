@@ -9,18 +9,26 @@ import {
 	getCoreRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import classNames from "classnames";
+
+type ErrorCheck = {
+	time: number;
+	region: string;
+	error: string;
+	latency?: number;
+	status?: number;
+};
+
 export type Props = {
-	errors: Check[];
+	errors: ErrorCheck[];
 };
 
 export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
-	const { accessor } = createColumnHelper<Check>();
+	const { accessor } = createColumnHelper<ErrorCheck>();
 
 	const columns = [
 		accessor("time", {
 			header: "Time",
-			cell: (info) => new Date(info.getValue()).toLocaleString("en"),
+			cell: (info) => new Date(info.getValue()).toLocaleString(),
 		}),
 
 		accessor("status", {
@@ -39,7 +47,7 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 			cell: (info) => `${info.getValue()?.toLocaleString("en")} ms`,
 		}),
 
-		accessor("regionId", {
+		accessor("region", {
 			header: "Region",
 			cell: (info) =>
 				// regions.data?.find((r) => r.id === info.getValue())?.name ??
@@ -62,13 +70,7 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 						{headerGroup.headers.map((header, i) => (
 							<th
 								key={header.id}
-								className={classNames(
-									"sticky px-4 bg-white z-10  border-t border-b border-zinc-400  py-3.5 text-left text-sm font-semibold text-zinc-900",
-									{
-										"rounded-l border-l": i === 0,
-										"rounded-r border-r ": i + 1 === headerGroup.headers.length,
-									},
-								)}
+								className="sticky px-3 bg-white z-10  py-3.5 text-left text-sm font-semibold text-zinc-900"
 							>
 								{header.isPlaceholder
 									? null
