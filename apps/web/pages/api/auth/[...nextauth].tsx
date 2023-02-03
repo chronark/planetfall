@@ -146,25 +146,6 @@ export const authOptions: NextAuthOptions = {
     },
   },
   callbacks: {
-    signIn: async ({ user }) => {
-      if (!user.email) {
-        return false
-      }
-
-      const whitelist = [
-        "chronark.com",
-        "upstash.com",
-        "vercel.com",
-        "fly.io",
-        "dub.sh",
-        "markor.dk",
-        "discreet.net"
-      ]
-
-
-      const domain = user.email.split("@")[1]
-      return whitelist.includes(domain)
-    },
     session: async ({ session, token }) => {
       if (!token.sub) {
         throw new Error("unable to enrich user session, sub is undefined");
