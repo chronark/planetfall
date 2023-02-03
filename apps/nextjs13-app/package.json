@@ -1,5 +1,5 @@
 {
-  "name": "@planetfall/nextjs13-test",
+  "name": "@planetfall/nextjs13-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
