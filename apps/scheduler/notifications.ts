@@ -1,7 +1,6 @@
 import { Email } from "@planetfall/emails";
 import { PrismaClient } from "@planetfall/db";
 import { Logger } from "./logger";
-import { string } from "zod";
 
 type NotificationEvent = {
 	type: "check";
@@ -87,7 +86,6 @@ export class Notifications {
 	private readonly email: Email;
 	private readonly db: PrismaClient;
 	private readonly logger: Logger;
-	private readonly cache: Cache;
 
 	private readonly queue: Queue;
 
@@ -96,7 +94,6 @@ export class Notifications {
 		db: PrismaClient;
 		logger: Logger;
 	}) {
-		this.cache = new Cache();
 		this.email = opts.email;
 		this.db = opts.db;
 		this.logger = opts.logger;
