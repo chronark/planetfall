@@ -118,8 +118,8 @@ export const Inner: React.FC<Props> = ({
 								"fixed z-50",
 								"w-[95vw] max-w-md rounded p-4 md:w-full",
 								"top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]",
-								"bg-white dark:bg-gray-800",
-								"focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75",
+								"bg-white dark:bg-zinc-800",
+								"focus:outline-none focus-visible:ring focus-visible:ring-zinc-500 focus-visible:ring-opacity-75",
 							)}
 						>
 							<Dialog.Title>

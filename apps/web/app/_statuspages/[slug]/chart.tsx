@@ -60,10 +60,10 @@ export const Row: React.FC<{
 		endpoint.metrics.length > 0 ? 1 - errors / endpoint.metrics.length : 1;
 
 	const current =
-		endpoint.metrics.at(-1)!.max > endpoint.timeout
+		endpoint.metrics.at(-1)!.p99 > endpoint.timeout
 			? "Error"
 			: endpoint.degradedAfter &&
-			  endpoint.metrics.at(-1)!.max > endpoint.degradedAfter
+			  endpoint.metrics.at(-1)!.p99 > endpoint.degradedAfter
 			? "Degraded"
 			: "Operational";
 
@@ -188,7 +188,7 @@ const Chart: React.FC<{
 						bucket.time >= 0 ? Math.max(5, (bucket.p99 / p99) * 100) : 100;
 
 					const bucketTimeout = timeout && bucket.max > timeout;
-					const bucketDegraded = degradedAfter && bucket.max > degradedAfter;
+					const bucketDegraded = degradedAfter && bucket.p99 > degradedAfter;
 					// ? p99 > endpoint.degradedAfter
 					// : 0;
 					const cn = [

@@ -78,7 +78,7 @@ export const BillingCard: React.FC<Props> = ({
 								: null}
 						</Text>
 						{usagePercentage !== null ? (
-							<div className="overflow-hidden bg-gray-200 rounded-full">
+							<div className="overflow-hidden bg-zinc-200 rounded-full">
 								<div
 									className="h-2 rounded bg-primary-600"
 									style={{ width: `${usagePercentage}%` }}
