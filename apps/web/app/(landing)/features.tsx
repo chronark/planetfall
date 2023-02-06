@@ -42,13 +42,14 @@ export const Features = asyncComponent(async () => {
 			title: "Gain Insights into the Performance of your API",
 			description:
 				"Synthetic monitoring for your APIs. Check the latency of your APIs from around the planet.",
+			image: "/img/landing/endpoint.png",
 
 			bullets: [
 				{
 					icon: Globe,
 					title: `${regions} Regions`,
 					description:
-						"Monitor your API from anywhere in the world. From all AWS regions and Vercel edge locations.",
+						"Monitor your API from anywhere in the world. From all AWS regions and Vercel edge locations. ",
 				},
 				{
 					icon: Timer,
@@ -68,9 +69,9 @@ export const Features = asyncComponent(async () => {
 		{
 			tag: "Stay in control",
 			hash: "alerts",
-			title: "Alerts",
+			title: "Realtime Alerts",
 			description:
-				"Receive realtime alerts when your API goes down or experiences degraded performance",
+				"Receive realtime alerts when your API goes down or your users experience degraded performance",
 
 			bullets: [
 				{

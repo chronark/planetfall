@@ -10,22 +10,15 @@ export const Cta: React.FC = (): JSX.Element => {
 					Get started with Planetfall
 				</h2>
 				<p className="max-w-xl mx-auto mt-6 text-lg leading-8 text-zinc-600">
-					Create your first API check in seconds! No credit card required.
+					The first 100k checks per month are free! No credit card required.
 				</p>
-				<div className="flex items-center justify-center mt-10 gap-x-6">
-					<a
-						href="#"
-						className="rounded-md bg-zinc-900 px-3.5 py-1.5 text-base font-semibold leading-7 text-zinc-100 shadow-sm hover:bg-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-					>
-						Get started
-					</a>
-					<a
-						href="#"
-						className="text-base font-semibold leading-7 text-zinc-900"
-					>
-						Learn more <span aria-hidden="true">→</span>
-					</a>
-				</div>
+
+				<Link
+					href="/auth/sign-in"
+					className=" mt-4 md:mt-8 text-center max-w-xs   w-full inline-block transition-all rounded px-4 py-1.5 md:py-2 text-base font-semibold leading-7 text-zinc-100   bg-zinc-900 ring-1 ring-zinc-900 hover:text-zinc-900   hover:bg-zinc-100 duration-150"
+				>
+					Create your first API check
+				</Link>
 			</div>
 		</section>
 	);

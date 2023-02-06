@@ -27,6 +27,8 @@ module.exports = {
 		},
 		extend: {
 			backgroundImage: {
+				"gradient-radial":
+					"radial-gradient(50% 50% at 50% 50%, var(--tw-gradient-stops))",
 				"gradient-divider":
 					"radial-gradient(50% 30% at 50% 0%, var(--tw-gradient-stops))",
 				"gradient-feature":
@@ -38,8 +40,8 @@ module.exports = {
 			},
 			dropShadow: {
 				launch: [
-					"0 10px 80px rgba(219, 227, 248, 0.9)",
-					"0 10px 10px rgba(219, 227, 248, 0.6)",
+					"0 10px 80px rgba(19, 77, 248, 0.9)",
+					"0 10px 10px rgba(19, 77, 248, 0.6)",
 				],
 				cta: ["0 10px 50px rgba(219, 227, 248, 0.4)"],
 				feature: ["0 10px 40px rgba(212, 212, 216, 0.3)"],

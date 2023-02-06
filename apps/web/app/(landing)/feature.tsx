@@ -1,7 +1,8 @@
 import classNames from "classnames";
 import type { LucideIcon } from "lucide-react";
-
+import Image from "next/image";
 import React from "react";
+import { Section } from "./section";
 
 export type Props = {
 	feature: {
@@ -19,30 +20,22 @@ export type Props = {
 };
 export const Feature: React.FC<Props> = ({ feature }) => {
 	return (
-		<div className="py-24 sm:py-32">
-			<div className="px-6 mx-auto max-w-7xl lg:px-8">
-				<div className="mx-auto max-w-7xl sm:text-center">
-					<h2 className="text-lg font-semibold leading-8 tracking-tight text-emerald-500">
-						{feature.tag}
-					</h2>
-					<p className="py-2 text-4xl font-bold tracking-tight text-center text-zinc-900">
-						{feature.title}
-					</p>
-					<p className="mt-6 text-lg leading-8 text-zinc-700">
-						{feature.description}
-					</p>
-				</div>
-			</div>
-			<div className="relative pt-16 overflow-hidden">
+		<Section
+			id={feature.hash}
+			tag={feature.tag}
+			title={feature.title}
+			description={feature.description}
+		>
+			<div className="relative overflow-hidden">
 				<div className="px-6 mx-auto max-w-7xl lg:px-8">
 					{typeof feature.image === "string" ? (
 						<>
-							<img
+							<Image
 								src={feature.image}
 								alt="App screenshot"
-								className="mb-[-12%] rounded-xl shadow-2xl ring-1 ring-gray-900/10"
-								width={2432}
-								height={1442}
+								className="mb-[-12%] rounded-lg shadow-2xl border border-zinc-500/30"
+								width={1920}
+								height={1080}
 							/>
 							<div className="relative" aria-hidden="true">
 								<div className="absolute -inset-x-20 bottom-0 bg-gradient-to-t from-white pt-[7%]" />
@@ -71,6 +64,6 @@ export const Feature: React.FC<Props> = ({ feature }) => {
 					))}
 				</dl>
 			</div>
-		</div>
+		</Section>
 	);
 };

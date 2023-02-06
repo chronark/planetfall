@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useId } from "react";
 
 const Rings: React.FC = (): JSX.Element => {
@@ -33,7 +34,7 @@ const Rings: React.FC = (): JSX.Element => {
 						y2="1025"
 						gradientUnits="userSpaceOnUse"
 					>
-						<stop stopColor="#000" />
+						<stop stopColor="#0000aa" />
 						<stop offset={1} stopColor="#121212" stopOpacity={0} />
 					</linearGradient>
 				</defs>
@@ -64,7 +65,7 @@ const Rings: React.FC = (): JSX.Element => {
 						y2="913"
 						gradientUnits="userSpaceOnUse"
 					>
-						<stop stopColor="#000" />
+						<stop stopColor="#0000aa" />
 						<stop offset={1} stopColor="#121212" stopOpacity={0} />
 					</linearGradient>
 				</defs>
@@ -76,25 +77,34 @@ const Rings: React.FC = (): JSX.Element => {
 export const Hero: React.FC = (): JSX.Element => {
 	return (
 		<section
-			className="w-screen bg-white lg:h-screen bg-gradient-to-t from-white via-zinc-300/50 to-zinc-100/20"
+			className="relative w-screen bg-white lg:h-screen bg-gradient-radial from-zinc-100 to-transparent"
 			style={{ minHeight: "50vh" }}
 		>
 			<Rings />
 
-			<div className="relative h-full max-w-6xl px-4 mx-auto sm:px-6">
+			<div className="relative h-full max-w-6xl px-4 mx-auto sm:px-6 ">
 				<div className="h-full pt-32 md:pt-40">
 					<div className="flex flex-col items-center justify-center text-center h-2/3">
-						<h1 className="container text-center font-extrabold tracking-[-0.02em] py-4  text-6xl lg:text-8xl   text-transparent bg-clip-text bg-gradient-to-t from-zinc-900 to-zinc-900/80">
+						<h1 className="container text-center font-extrabold tracking-[-0.02em] py-4  text-6xl lg:text-8xl   text-transparent bg-clip-text bg-gradient-to-tr from-zinc-900 to-zinc-900/90">
 							Global Latency Monitoring
 						</h1>
 						<p className="container mt-6 text-lg font-light text-zinc-700">
 							Understand the true performance of your API by monitoring it from
 							around the world.
 						</p>
-						<div className="max-w-xs mx-auto mt-10 space-y-4 sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4">
-							<div className="px-10 py-2 transition-all duration-1000 border border-black rounded text-zinc-100 bg-gradient-to-tr drop-shadow-launch from-zinc-900 to-black hover:text-zinc-200">
-								Launching soon
-							</div>
+						<div className="flex flex-col justify-center w-full gap-4 mx-auto mt-8 sm:flex-row sm:max-w-lg ">
+							<Link
+								href="/play"
+								className="sm:w-1/2 sm:text-center inline-block space-x-2 rounded px-4 py-1.5 md:py-2 text-base font-semibold leading-7 text-zinc-900  ring-1 ring-zinc-600 backdrop-blur hover:bg-white hover:text-zinc-900 duration-150 "
+							>
+								Playground
+							</Link>
+							<Link
+								href="/auth/sign-in"
+								className="sm:w-1/2 sm:text-center inline-block transition-all space-x-2  rounded px-4 py-1.5 md:py-2 text-base font-semibold leading-7 text-zinc-100   bg-zinc-900 ring-1 ring-zinc-900 hover:text-zinc-900   hover:bg-zinc-100 duration-150"
+							>
+								Sign In
+							</Link>
 						</div>
 					</div>
 				</div>
