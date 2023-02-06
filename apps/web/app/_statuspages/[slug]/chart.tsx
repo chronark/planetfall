@@ -53,9 +53,9 @@ export const Row: React.FC<{
 }> = ({ endpoint, regions }): JSX.Element => {
 	const [expanded, setExpanded] = useState(false);
 
-	const n = endpoint.metrics.reduce((total, m) => total + m.count, 0);
+	const totalChecks = endpoint.metrics.reduce((total, m) => total + m.count, 0);
 	const errors = endpoint.metrics.reduce((total, m) => total + m.errors, 0);
-	const availability = n === 0 ? 0 : errors / n
+	const availability = totalChecks === 0 ? 0 : errors / totalChecks
 
 
 	const current =
