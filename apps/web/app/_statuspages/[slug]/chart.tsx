@@ -53,9 +53,10 @@ export const Row: React.FC<{
 }> = ({ endpoint, regions }): JSX.Element => {
 	const [expanded, setExpanded] = useState(false);
 
-	const errors = endpoint.metrics.filter((m) => m.errors > 0).length;
-	const availability =
-		endpoint.metrics.length > 0 ? 1 - errors / endpoint.metrics.length : 1;
+	const n = endpoint.metrics.reduce((total, m) => total + m.count, 0);
+	const errors = endpoint.metrics.reduce((total, m) => total + m.errors, 0);
+	const availability = n === 0 ? 0 : errors / n
+
 
 	const current =
 		endpoint.metrics.at(-1)!.p99 > endpoint.timeout
