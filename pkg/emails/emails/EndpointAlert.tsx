@@ -1,13 +1,17 @@
 import { Container } from "@react-email/container";
+import { Button } from "@react-email/button";
 import { Head } from "@react-email/head";
 import { Hr } from "@react-email/hr";
 import { Html } from "@react-email/html";
 import { Img } from "@react-email/img";
 import { Link } from "@react-email/link";
 import { Preview } from "@react-email/preview";
+import { Heading } from "@react-email/heading";
 import { Section } from "@react-email/section";
 import { Text } from "@react-email/text";
 import React from "react";
+import { Tailwind } from "@react-email/tailwind";
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 export type Props = {
 	time: number;
@@ -22,136 +26,74 @@ export type Props = {
 };
 
 export function EndpointAlert({
-	time,
-	error,
-	teamSlug,
-	endpointId,
-	endpointName,
-	checkLink,
+	time = Date.now(),
+	error = "error",
+	teamSlug = "teamSlug",
+	endpointId = "endpointId",
+	endpointName = "endpointName",
+	checkLink = "checkLink",
 }: Props) {
 	return (
-		<Html>
-			<Head />
-			<Preview>Your Endpoint has failed</Preview>
-			<Section style={main}>
-				<Container style={container}>
-					<Text style={h1}>Your Endpoint has failed</Text>
+		<Tailwind>
+			<Html className="font-sans text-zinc-800">
+				<Head />
+				<Preview>Your Endpoint has failed</Preview>
+				<Section className="bg-white">
+					<Container className="container mx-auto">
+						<Heading className="font-sans text-2xl text-semibold">
+							Your Endpoint has failed
+						</Heading>
 
-					<Text style={{ ...text, marginBottom: "14px" }}>
-						Your Endpoint <strong>{endpointName}</strong> has failed at{" "}
-						<strong>{new Date(time).toISOString()}</strong> with the following
-						error:
-					</Text>
-					<code style={code}>{error}</code>
+						<Text>
+							Your Endpoint <strong>{endpointName}</strong> has failed at{" "}
+							<strong>{new Date(time).toISOString()}</strong> with the following
+							error:
+						</Text>
+						<code className="inline-block w-full p-4 my-4 font-mono border rounded border-zinc-300 bg-zinc-100">
+							{error}
+						</code>
 
-					<Text style={text}>
-						If you want to see the full error, you can visit the following link:
-						<Link
+						<Button
 							href={checkLink}
-							target="_blank"
-							style={{
-								...link,
-								display: "block",
-								marginBottom: "16px",
-							}}
+							className="px-8 py-4 mx-auto font-medium rounded bg-zinc-900 text-zinc-50 "
 						>
-							{checkLink}
-						</Link>
-					</Text>
+							See More Details
+						</Button>
 
-					<Text
-						style={{
-							...text,
-							color: "#ababab",
-							marginTop: "12px",
-						}}
-					>
-						Hint: You can manage your endpoint configuration in the app:{" "}
-						<Link
-							href={`https://planetfall.io/${teamSlug}/endpoints/${endpointId}`}
-							target="_blank"
-							style={{ ...link, color: "#898989" }}
-						>
-							https://planetfall.io
-						</Link>
-					</Text>
-					<Hr />
+						<Text className="text-zinc-600">
+							You can manage your endpoint configuration in the app:{" "}
+							<Link
+								href={`https://planetfall.io/${teamSlug}/endpoints/${endpointId}`}
+								target="_blank"
+								className="underline text-zinc-800"
+							>
+								https://planetfall.io
+							</Link>
+						</Text>
+						<Hr />
 
-					<Img
-						src="https://planetfall.io/logo.png"
-						width="32"
-						height="32"
-						alt="Planetfall's Logo"
-					/>
-					<Text style={footer}>
-						<Link
-							href="https://planetfall.io"
-							target="_blank"
-							style={{ ...link, color: "#898989" }}
-						>
-							Planetfall
-						</Link>
-						, Global Latency Monitoring
-						<br />
-					</Text>
-				</Container>
-			</Section>
-		</Html>
+						<Img
+							src="https://planetfall.io/logo.png"
+							width="32"
+							height="32"
+							alt="Planetfall's Logo"
+						/>
+						<Text>
+							<Link
+								href="https://planetfall.io"
+								target="_blank"
+								className="underline text-zinc-800"
+							>
+								Planetfall
+							</Link>
+							, Global Latency Monitoring
+							<br />
+						</Text>
+					</Container>
+				</Section>
+			</Html>
+		</Tailwind>
 	);
 }
 
-const main = {
-	backgroundColor: "#ffffff",
-};
-
-const container = {
-	paddingLeft: "12px",
-	paddingRight: "12px",
-	margin: "0 auto",
-};
-
-const h1 = {
-	color: "#333",
-	fontFamily:
-		"-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-	fontSize: "24px",
-	fontWeight: "bold",
-	margin: "40px 0",
-	padding: "0",
-};
-
-const link = {
-	color: "#2754C5",
-	fontFamily:
-		"-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-	fontSize: "14px",
-	textDecoration: "underline",
-};
-
-const text = {
-	color: "#333",
-	fontFamily:
-		"-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-	fontSize: "14px",
-	margin: "24px 0",
-};
-
-const footer = {
-	color: "#898989",
-	fontFamily:
-		"-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-	fontSize: "12px",
-	lineHeight: "22px",
-	marginTop: "12px",
-	marginBottom: "24px",
-};
-
-const code = {
-	display: "inline-block",
-	padding: "16px 4.5%",
-	width: "90.5%",
-	backgroundColor: "#f4f4f4",
-	borderRadius: "5px",
-	border: "1px solid #eee",
-	color: "#333",
-};
+export default EndpointAlert;

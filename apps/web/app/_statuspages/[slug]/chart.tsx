@@ -53,19 +53,18 @@ export const Row: React.FC<{
 }> = ({ endpoint, regions }): JSX.Element => {
 	const [expanded, setExpanded] = useState(false);
 
-	const errors =
-		endpoint.metrics.filter((m) => m.max >= endpoint.timeout).length +
-		endpoint.metrics.filter((m) => m.errors > 0).length;
-	const availability =
-		endpoint.metrics.length > 0 ? 1 - errors / endpoint.metrics.length : 1;
+	const n = endpoint.metrics.reduce((total, m) => total + m.count, 0);
+	const errors = endpoint.metrics.reduce((total, m) => total + m.errors, 0);
+	const availability = n === 0 ? 0 : errors / n
+
 
 	const current =
 		endpoint.metrics.at(-1)!.p99 > endpoint.timeout
 			? "Error"
 			: endpoint.degradedAfter &&
-			  endpoint.metrics.at(-1)!.p99 > endpoint.degradedAfter
-			? "Degraded"
-			: "Operational";
+				endpoint.metrics.at(-1)!.p99 > endpoint.degradedAfter
+				? "Degraded"
+				: "Operational";
 
 	return (
 		<Card>
@@ -128,29 +127,29 @@ export const Row: React.FC<{
 					<ul className="grid grid-cols-1 gap-4 py-8 lg:grid-cols-2">
 						{Object.entries(endpoint.regions)
 
-						.map(([regionId, metrics]) => (
-							<li
-								key={regionId}
-								className="flex flex-col p-4 space-y-2 border rounded border-zinc-200"
-							>
-								<div className="flex flex-col items-start justify-between ">
-									<h4 className="text-lg text-bold text-zinc-600 whitespace-nowrap">
-										{regions.find((r) => r.id === regionId)?.name || regionId}
-									</h4>
-									<div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
-										<Stat label="p50" value={metrics.p50} />
-										<Stat label="p95" value={metrics.p95} />
-										<Stat label="p99" value={metrics.p99} />
+							.map(([regionId, metrics]) => (
+								<li
+									key={regionId}
+									className="flex flex-col p-4 space-y-2 border rounded border-zinc-200"
+								>
+									<div className="flex flex-col items-start justify-between ">
+										<h4 className="text-lg text-bold text-zinc-600 whitespace-nowrap">
+											{regions.find((r) => r.id === regionId)?.name || regionId}
+										</h4>
+										<div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
+											<Stat label="p50" value={metrics.p50} />
+											<Stat label="p95" value={metrics.p95} />
+											<Stat label="p99" value={metrics.p99} />
+										</div>
 									</div>
-								</div>
-								<Chart
-									metrics={metrics.series}
-									nBuckets={72}
-									degradedAfter={endpoint.degradedAfter}
-									timeout={endpoint.timeout}
-								/>
-							</li>
-						))}
+									<Chart
+										metrics={metrics.series}
+										nBuckets={72}
+										degradedAfter={endpoint.degradedAfter}
+										timeout={endpoint.timeout}
+									/>
+								</li>
+							))}
 					</ul>
 				) : null}
 			</CardContent>
@@ -180,93 +179,93 @@ const Chart: React.FC<{
 			<div className={`flex bg-white ${height ?? "h-12"} items-end`}>
 				{metrics
 
-				.map((bucket, i) => {
-					const start = new Date(bucket.time);
-					const end = new Date(start.getTime() + 60 * 60 * 1000);
+					.map((bucket, i) => {
+						const start = new Date(bucket.time);
+						const end = new Date(start.getTime() + 60 * 60 * 1000);
 
-					const percentageHeight =
-						bucket.time >= 0 ? Math.max(5, (bucket.p99 / p99) * 100) : 100;
+						const percentageHeight =
+							bucket.time >= 0 ? Math.max(5, (bucket.p99 / p99) * 100) : 100;
 
-					const bucketTimeout = timeout && bucket.max > timeout;
-					const bucketDegraded = degradedAfter && bucket.p99 > degradedAfter;
-					// ? p99 > endpoint.degradedAfter
-					// : 0;
-					const cn = [
-						"flex-1 bg-white rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
-					];
+						const bucketTimeout = timeout && bucket.max > timeout;
+						const bucketDegraded = degradedAfter && bucket.p99 > degradedAfter;
+						// ? p99 > endpoint.degradedAfter
+						// : 0;
+						const cn = [
+							"flex-1 bg-white rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
+						];
 
-					if (bucket.time < 0) {
-						cn.push("  bg-zinc-400/20 hover:bg-zinc-400/50 ");
-					} else if (bucketTimeout) {
-						cn.push(" bg-red-500  ");
-					} else if (bucketDegraded) {
-						cn.push(" bg-yellow-400  ");
-					} else {
-						cn.push(" bg-emerald-400");
-					}
+						if (bucket.time < 0) {
+							cn.push("  bg-zinc-400/20 hover:bg-zinc-400/50 ");
+						} else if (bucketTimeout) {
+							cn.push(" bg-red-500  ");
+						} else if (bucketDegraded) {
+							cn.push(" bg-yellow-400  ");
+						} else {
+							cn.push(" bg-emerald-400");
+						}
 
-					return (
-						<HoverCard.Root openDelay={50} closeDelay={40} key={bucket.time}>
-							<HoverCard.Trigger
-								className={cn.join(" ")}
-								style={{
-									height: `${percentageHeight}%`,
-								}}
-							/>
-							<HoverCard.Portal>
-								<HoverCard.Content>
-									<>
-										{bucket.time >= 0 ? (
-											<>
-												<div className="px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
-													<dt className="text-sm font-medium truncate text-zinc-500">
-														{start.toLocaleDateString()}
-													</dt>
-													<dt className="text-sm font-medium truncate text-zinc-500" />
-													<dt className="text-sm font-medium truncate text-zinc-500">
-														{/* {bucket.region} */}
-													</dt>
-													<div>
-														<h3 className="text-lg font-medium leading-6 text-zinc-900">
-															{start.toLocaleTimeString()} -{" "}
-															{end.toLocaleTimeString()}
-														</h3>
-														<dl className="grid grid-cols-1 gap-2 mt-5 md:grid-cols-5 ">
-															<Stats
-																label="Checks"
-																value={format(bucket.count)}
-															/>
-															<Stats
-																label="P50"
-																value={format(bucket.p50)}
-																suffix="ms"
-															/>
-															<Stats
-																label="P95"
-																value={format(bucket.p95)}
-																suffix="ms"
-															/>
-															<Stats
-																label="P99"
-																value={format(bucket.p99)}
-																suffix="ms"
-															/>
-															<Stats
-																label="Errors"
-																value={format(bucket.errors)}
-															/>
-														</dl>
+						return (
+							<HoverCard.Root openDelay={50} closeDelay={40} key={bucket.time}>
+								<HoverCard.Trigger
+									className={cn.join(" ")}
+									style={{
+										height: `${percentageHeight}%`,
+									}}
+								/>
+								<HoverCard.Portal>
+									<HoverCard.Content>
+										<>
+											{bucket.time >= 0 ? (
+												<>
+													<div className="px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
+														<dt className="text-sm font-medium truncate text-zinc-500">
+															{start.toLocaleDateString()}
+														</dt>
+														<dt className="text-sm font-medium truncate text-zinc-500" />
+														<dt className="text-sm font-medium truncate text-zinc-500">
+															{/* {bucket.region} */}
+														</dt>
+														<div>
+															<h3 className="text-lg font-medium leading-6 text-zinc-900">
+																{start.toLocaleTimeString()} -{" "}
+																{end.toLocaleTimeString()}
+															</h3>
+															<dl className="grid grid-cols-1 gap-2 mt-5 md:grid-cols-5 ">
+																<Stats
+																	label="Checks"
+																	value={format(bucket.count)}
+																/>
+																<Stats
+																	label="P50"
+																	value={format(bucket.p50)}
+																	suffix="ms"
+																/>
+																<Stats
+																	label="P95"
+																	value={format(bucket.p95)}
+																	suffix="ms"
+																/>
+																<Stats
+																	label="P99"
+																	value={format(bucket.p99)}
+																	suffix="ms"
+																/>
+																<Stats
+																	label="Errors"
+																	value={format(bucket.errors)}
+																/>
+															</dl>
+														</div>
 													</div>
-												</div>
-												<HoverCard.Arrow />
-											</>
-										) : null}
-									</>
-								</HoverCard.Content>
-							</HoverCard.Portal>
-						</HoverCard.Root>
-					);
-				})}
+													<HoverCard.Arrow />
+												</>
+											) : null}
+										</>
+									</HoverCard.Content>
+								</HoverCard.Portal>
+							</HoverCard.Root>
+						);
+					})}
 			</div>
 		</div>
 	);
