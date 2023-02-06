@@ -2,21 +2,41 @@ import React from "react";
 import { Client as Tinybird } from "@planetfall/tinybird";
 import Link from "next/link";
 import { db } from "@planetfall/db";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { PageHeader } from "@/components/page/header";
 import { UpgradeButton } from "./UpgradeButton";
-import { address } from "lib/env/address";
+import { address } from "@/lib/env";
 import { BillingCard } from "./BillingCard";
+import { TeamCard } from "./TeamCard";
+import { Divider } from "@/components/divider";
+import { getSession } from "@/lib/auth";
+import { DeleteCard } from "./DeleteCard";
 
 export const revalidate = 60; // 1 minute
 
 export default async function SettingsPage(props: {
 	params: { teamSlug: string };
 }) {
+	const { session } = await getSession();
+	if (!session) {
+		return redirect("/auth/sign-in");
+	}
+
 	const team = await db.team.findUnique({
 		where: { slug: props.params.teamSlug },
+		include: {
+			members: {
+				include: {
+					user: true,
+				},
+			},
+		},
 	});
 	if (!team) {
+		return notFound();
+	}
+	const user = team.members.find((m) => m.userId === session.user.id);
+	if (!user) {
 		return notFound();
 	}
 
@@ -66,6 +86,21 @@ export default async function SettingsPage(props: {
 					year={year}
 					month={month}
 				/>
+				<Divider />
+				<TeamCard
+					currentUser={{ userId: user.userId, role: user.role }}
+					members={team.members.map((m) => ({
+						user: { id: m.userId, name: m.user.name, image: m.user.image },
+						role: m.role,
+					}))}
+				/>
+
+				{user.role === "OWNER" ? (
+					<>
+						<Divider />
+						<DeleteCard teamId={team.id} teamSlug={team.slug} />
+					</>
+				) : null}
 			</main>
 		</div>
 	);

@@ -2,12 +2,15 @@ import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 import { Client as Tinybird } from "@planetfall/tinybird";
 
+import { Text } from "@/components/text";
 import { Button } from "@/components/button";
 import { EndpointsTable } from "./table";
 import { db } from "@planetfall/db";
 import { getSession } from "lib/auth";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/card";
+import { Plus, PlusCircle, Settings } from "lucide-react";
+
 export default async function Page(props: { params: { teamSlug: string } }) {
 	const session = await getSession();
 	if (!session) {
@@ -50,11 +53,23 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				]}
 			/>
 			<main className="container mx-auto">
-				<Card>
-					<CardContent>
-						<EndpointsTable endpoints={endpointStats} />
-					</CardContent>
-				</Card>
+				{team.endpoints.length === 0 ? (
+					<div className="flex flex-col items-center justify-center max-w-sm p-4 mx-auto md:p-8">
+						<Text>You don't have any endpoints yet.</Text>
+						<Button size="lg" className="flex items-center gap-2 mt-2 ">
+							<Plus className="w-5 h-5" />
+							<Link href={`/${team.slug}/endpoints/new`}>
+								Create your first Endpoint
+							</Link>
+						</Button>
+					</div>
+				) : (
+					<Card>
+						<CardContent>
+							<EndpointsTable endpoints={endpointStats} />
+						</CardContent>
+					</Card>
+				)}
 			</main>
 		</div>
 	);

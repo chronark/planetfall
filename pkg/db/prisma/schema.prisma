@@ -21,6 +21,8 @@ model User {
   teams          Membership[]
   createdAt      DateTime     @default(now())
   usageUpdatedAt DateTime     @default(now())
+
+  teamInvitations TeamInvitation[]
 }
 
 model Account {
@@ -116,11 +118,16 @@ model Team {
 
   plan Plan
 
-  stripeCustomerId                String?    @unique
+  stripeCustomerId                String?   @unique
   stripeSubscriptionId            String?   @unique
   stripeCurrentBillingPeriodStart DateTime?
   stripeCurrentBillingPeriodEnd   DateTime?
   stripeTrialExpires              DateTime?
+
+  invitations TeamInvitation[]
+
+  // When the user deletes a team it is marked as deactivated until all billing is done
+  deactivatedAt DateTime?
 
   // QUOTA DEFINITIONS 
   // How long checks are displayed
@@ -159,6 +166,20 @@ model Region {
   visible   Boolean
 
   @@unique([platform, region])
+}
+
+model TeamInvitation {
+  id        String   @id
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  email     String
+  createdAt DateTime @default(now())
+  expires   DateTime
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+
+  @@unique([teamId, email])
 }
 
 // model Deployment {
