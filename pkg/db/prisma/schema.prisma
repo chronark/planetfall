@@ -172,14 +172,13 @@ model TeamInvitation {
   id        String   @id
   teamId    String
   team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  email     String
   createdAt DateTime @default(now())
   expires   DateTime
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
-  @@unique([teamId, email])
+  @@unique([teamId, userId])
 }
 
 // model Deployment {

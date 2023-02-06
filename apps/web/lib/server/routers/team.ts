@@ -90,8 +90,7 @@ export const teamRouter = t.router({
 		.input(
 			z.object({
 				teamId: z.string(),
-				userId: z.string(),
-				role: z.enum(["ADMIN", "MEMBER"]),
+				email: z.string(),
 			}),
 		)
 		.mutation(async ({ input, ctx }) => {
@@ -119,20 +118,39 @@ export const teamRouter = t.router({
 				throw new TRPCError({ code: "UNAUTHORIZED" });
 			}
 
-			await db.membership.upsert({
+			const invitedUser = await db.user.findUnique({
 				where: {
-					userId_teamId: {
-						userId: input.userId,
+					email: input.email,
+				},
+			});
+			if (!invitedUser) {
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: `No user found: ${input.email}`,
+				});
+			}
+
+			await db.teamInvitation.upsert({
+				where: {
+					teamId_userId: {
 						teamId: input.teamId,
+						userId: invitedUser.id,
 					},
 				},
-				update: {
-					role: input.role,
-				},
+				update: {},
 				create: {
-					teamId: input.teamId,
-					userId: input.userId,
-					role: input.role,
+					id: newId("invitation"),
+					team: {
+						connect: {
+							id: input.teamId,
+						},
+					},
+					user: {
+						connect: {
+							id: invitedUser.id,
+						},
+					},
+					expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
 				},
 			});
 		}),
