@@ -55,7 +55,7 @@ export const Row: React.FC<{
 
 	const totalChecks = endpoint.metrics.reduce((total, m) => total + m.count, 0);
 	const errors = endpoint.metrics.reduce((total, m) => total + m.errors, 0);
-	const availability = totalChecks === 0 ? 0 : errors / totalChecks
+	const availability = totalChecks === 0 ? 1 : 1-errors / totalChecks
 
 
 	const current =
