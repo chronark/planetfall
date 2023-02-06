@@ -14,8 +14,8 @@ export const CardHeaderTitle: React.FC<CardHeaderTitleProps> = ({
 	actions,
 }): JSX.Element => {
 	return (
-		<div className="w-full">
-			<div className="flex items-center justify-between w-full">
+		<div>
+			<div className="flex items-center justify-between">
 				<Heading h3>{title}</Heading>
 				<div className="flex items-center gap-2">{actions}</div>
 			</div>
