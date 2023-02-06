@@ -19,7 +19,6 @@ const schema = z.object({
 	STRIPE_SECRET_KEY: z.string(),
 	STRIPE_WEBHOOK_SECRET: z.string(),
 	STRIPE_PRICE_ID_PRO: z.string(),
-	STRIPE_PRICE_ID_PERSONAL: z.string(),
 	TINYBIRD_TOKEN: z.string(),
 	GITHUB_OAUTH_ID: z.string(),
 	GITHUB_OAUTH_SECRET: z.string(),
