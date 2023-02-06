@@ -66,6 +66,7 @@ importers:
       '@types/node': 18.11.18
       '@types/react': 18.0.27
       '@types/react-dom': 18.0.10
+      '@upstash/redis': ^1.19.3
       next: 13.1.6
       react: 18.2.0
       react-dom: 18.2.0
@@ -75,6 +76,7 @@ importers:
       '@types/node': 18.11.18
       '@types/react': 18.0.27
       '@types/react-dom': 18.0.10
+      '@upstash/redis': 1.19.3
       next: 13.1.6_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
