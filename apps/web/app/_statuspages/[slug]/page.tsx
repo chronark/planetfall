@@ -5,6 +5,7 @@ import React from "react";
 import Link from "next/link";
 import { Text } from "@/components/text";
 import { getStats } from "./get-stats";
+import { RelativeTime } from "./RelativeTime";
 
 export const revalidate = 60;
 
@@ -38,8 +39,7 @@ export default async function Page(props: { params: { slug: string } }) {
 				</h2>
 
 				<Text>
-					{/* This will cause a hydration error since date will differ between server and client */}
-					{/* Last updated <RelativeTime time={now} /> */}
+					Last updated <RelativeTime time={now} />
 				</Text>
 			</header>
 			<main className="container min-h-screen mx-auto md:py-16 ">
