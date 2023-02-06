@@ -18,7 +18,7 @@ export const Stats: React.FC<StatsProps> = ({
 				<span
 					className={`text-2xl font-medium md:text-4xl ${
 						status === "warn"
-							? "text-orange-500"
+							? "text-amber-500"
 							: status === "error"
 							? "text-rose-500"
 							: "text-zinc-800"
