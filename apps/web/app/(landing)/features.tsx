@@ -16,14 +16,14 @@ import {
 	Zap,
 } from "lucide-react";
 import React from "react";
-import { Feature, FeatureProps } from "./feature";
+import { Feature, Props } from "./feature";
 
 import { ApiSnippet } from "./features/api-snippet";
 
 export const revalidate = 86400; // revalidate every day
 
 export const Features = asyncComponent(async () => {
-	const regions = await db.region.count();
+	const regions = await db.region.count({ where: { visible: true } });
 
 	const endpoint = await db.endpoint.findUnique({
 		where: {
@@ -35,9 +35,10 @@ export const Features = asyncComponent(async () => {
 	});
 
 	const stats = endpoint ? await getStats(endpoint, endpoint.timeout!) : null;
-	const features: FeatureProps[] = [
+	const features: Props["feature"][] = [
 		{
 			hash: "insights",
+			tag: "Understand",
 			title: "Gain Insights into the Performance of your API",
 			description:
 				"Synthetic monitoring for your APIs. Check the latency of your APIs from around the planet.",
@@ -65,6 +66,7 @@ export const Features = asyncComponent(async () => {
 		},
 
 		{
+			tag: "Stay in control",
 			hash: "alerts",
 			title: "Alerts",
 			description:
@@ -91,6 +93,7 @@ export const Features = asyncComponent(async () => {
 			],
 		},
 		{
+			tag: "Share with your customers",
 			hash: "statuspage",
 			title: "Statuspage",
 			description:
@@ -143,7 +146,7 @@ export const Features = asyncComponent(async () => {
 		<section id="features">
 			<ul className="relative py-16 space-y-8 sm:py-24 lg:py-32 md:space-y-16 lg:space-y-32">
 				{features.map((f, i) => (
-					<Feature key={f.title} feature={f} i={i} />
+					<Feature key={f.hash} feature={f} />
 				))}
 			</ul>
 		</section>

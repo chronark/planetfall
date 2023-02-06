@@ -12,12 +12,15 @@ export const revalidate = 360; // revalidate every hour
 
 export default async function LandingPage() {
 	return (
-		<div>
+		<div className="bg-white">
 			<Hero />
+
 			{/* <Companies /> */}
 			{/* <Stats />  */}
 			<Features />
+			{/* <Testimonials /> */}
 			<Cta />
+
 			<Pricing />
 		</div>
 	);

@@ -181,7 +181,7 @@ export default async function Page(props: {
 					</div>
 				</div>
 
-				{errors.length > 0 ? (
+				{/* {errors.length > 0 ? (
 					<>
 						<Card>
 							<CardHeader>
@@ -193,7 +193,7 @@ export default async function Page(props: {
 						</Card>
 						<Divider />
 					</>
-				) : null}
+				) : null} */}
 				{checks.length > 0 ? (
 					<>
 						<Chart

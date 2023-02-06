@@ -10,7 +10,7 @@ export default async function Landing({
 	const { session } = await getSession();
 
 	return (
-		<div className="flex flex-col min-h-screen overflow-hidden bg-black bg-gradient-to-tr from-zinc-900/90 to-zinc-700/20">
+		<div className="flex flex-col min-h-screen overflow-hidden">
 			<Header session={session} />
 
 			<main>{children}</main>
