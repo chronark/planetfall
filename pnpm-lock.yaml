@@ -342,6 +342,7 @@ importers:
       nodemailer: ^6.9.1
       react: ^18.2.0
       react-email: ^1.7.7
+      resend: ^0.10.0
       tailwindcss: ^3.2.1
       typescript: ^4.9.5
     dependencies:
@@ -361,6 +362,7 @@ importers:
       '@sendgrid/mail': 7.7.0
       react: 18.2.0
       react-email: 1.7.10
+      resend: 0.10.0
       tailwindcss: 3.2.4_postcss@8.4.21
     devDependencies:
       '@planetfall/tsconfig': link:../tsconfig
@@ -2763,6 +2765,16 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@react-email/render/0.0.5:
+    resolution: {integrity: sha512-EE9mCvR3lXeZEJaldCEaEc4msCwPQwZfXbhuPVl3SpRsiHiMK0wNm2X39vVpqzCzxrm0wljCoLruT7Klp9DZAw==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      html-to-text: 9.0.3
+      pretty: 2.0.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
   /@react-email/render/0.0.6:
     resolution: {integrity: sha512-6zs7WZbd37TcPT1OmMPH/kcBpv0QSi+k3om7LyDnbdIcrbwOO/OstVwUaa/6zgvDvnq9Y2wOosbru7j5kUrW9A==}
     engines: {node: '>=16.0.0'}
@@ -3847,6 +3859,15 @@ packages:
     resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
     dependencies:
       follow-redirects: 1.15.2
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /axios/0.27.2:
+    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
+    dependencies:
+      follow-redirects: 1.15.2
+      form-data: 4.0.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -9335,6 +9356,15 @@ packages:
   /require-from-string/2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /resend/0.10.0:
+    resolution: {integrity: sha512-1yHPnUFI5egjgrC7YVRSdZLBGH9z+92LpNCnl9fLkIROeKiEOkzpg521+RnHet1JNJ1YOWciLwgDXg6JiBfCFQ==}
+    dependencies:
+      '@react-email/render': 0.0.5
+      axios: 0.27.2
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /resolve-alpn/1.2.1:
