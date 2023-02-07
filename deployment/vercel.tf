@@ -190,51 +190,60 @@ resource "vercel_dns_record" "proton_mailsec" {
 }
 
 
-
-
-resource "vercel_dns_record" "sendgrid_url9477" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "url9477"
-  type    = "CNAME"
-  ttl     = 60
-  value   = "sendgrid.net"
+resource "vercel_dns_record" "resend_spf_mx" {
+  team_id     = var.vercel_team_id
+  domain      = "planetfall.io"
+  name        = "bounces.planetfall.io"
+  type        = "MX"
+  ttl         = 60
+  mx_priority = 10
+  value       = "feedback-smtp.us-east-1.amazonses.com"
 }
 
-resource "vercel_dns_record" "sendgrid_29341690" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "29341690"
-  type    = "CNAME"
-  ttl     = 60
-  value   = "sendgrid.net"
+
+resource "vercel_dns_record" "resend_spf_txt" {
+  team_id     = var.vercel_team_id
+  domain      = "planetfall.io"
+  name        = "bounces.planetfall.io"
+  type        = "TXT"
+  ttl         = 60
+  value       = "v=spf1 include:amazonses.com ~all"
 }
 
-resource "vercel_dns_record" "sendgrid_em4520" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "em4520"
-  type    = "CNAME"
-  ttl     = 60
-  value   = "u29341690.wl191.sendgrid.net"
+
+
+
+resource "vercel_dns_record" "resend_dkim_1" {
+  team_id     = var.vercel_team_id
+  domain      = "planetfall.io"
+  name        = "iorec6tevdstuzig7tc2dfv622slyyuu._domainkey.planetfall.io"
+  type        = "CNAME"
+  ttl         = 60
+  value       = "iorec6tevdstuzig7tc2dfv622slyyuu.dkim.amazonses.com"
 }
 
-resource "vercel_dns_record" "sendgrid_s1_domainkey" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "s1._domainkey"
-  type    = "CNAME"
-  ttl     = 60
-  value   = "s1.domainkey.u29341690.wl191.sendgrid.net"
+resource "vercel_dns_record" "resend_dkim_1" {
+  team_id     = var.vercel_team_id
+  domain      = "planetfall.io"
+  name        = "m4qxxdawi5spoqhbboa3xwa7eobpua3m._domainkey.planetfall.io"
+  type        = "CNAME"
+  ttl         = 60
+  value       = "m4qxxdawi5spoqhbboa3xwa7eobpua3m.dkim.amazonses.com"
 }
-resource "vercel_dns_record" "sendgrid_s2_domainkey" {
-  team_id = var.vercel_team_id
-  domain  = "planetfall.io"
-  name    = "s2._domainkey"
-  type    = "CNAME"
-  ttl     = 60
-  value   = "s2.domainkey.u29341690.wl191.sendgrid.net"
+resource "vercel_dns_record" "resend_dkim_1" {
+  team_id     = var.vercel_team_id
+  domain      = "planetfall.io"
+  name        = "wutpcga6f4p5krwq77swg5q6gg6qcuqo._domainkey.planetfall.io"
+  type        = "CNAME"
+  ttl         = 60
+  value       = "wutpcga6f4p5krwq77swg5q6gg6qcuqo.dkim.amazonses.com"
 }
+
+
+
+
+
+
 
 
 

@@ -1,7 +1,5 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import EmailProvider from "next-auth/providers/email";
-import { Email } from "@planetfall/emails";
 
 import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
@@ -16,18 +14,6 @@ export const authOptions: NextAuthOptions = {
     GithubProvider({
       clientId: process.env.GITHUB_OAUTH_ID!,
       clientSecret: process.env.GITHUB_OAUTH_SECRET!,
-    }),
-    EmailProvider({
-      from: "chronark@planetfall.io",
-      sendVerificationRequest: ({ identifier, url }) => {
-        try {
-          new Email().sendSignInLink({ from: "chronark@planetfall.io", to: identifier.trim(), link: url })
-        } catch (err) {
-          console.error("UNABLE TO SEND EMAIL", err)
-          throw err
-        }
-      }
-
     }),
   ],
 
