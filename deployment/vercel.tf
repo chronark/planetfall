@@ -116,7 +116,7 @@ resource "vercel_project" "web" {
 
 resource "vercel_dns_record" "proton_verification" {
   team_id = var.vercel_team_id
-  domain  = "planetfall.io"
+  domain  = vercel_project_domain.planetfall_io.domain
   name    = "" # Should be "@"
   type    = "TXT"
   ttl     = 60
@@ -126,7 +126,7 @@ resource "vercel_dns_record" "proton_verification" {
 
 resource "vercel_dns_record" "proton_mail" {
   team_id     = var.vercel_team_id
-  domain      = "planetfall.io"
+  domain      = vercel_project_domain.planetfall_io.domain
   name        = "" # Should be "@"
   type        = "MX"
   ttl         = 60
@@ -137,7 +137,7 @@ resource "vercel_dns_record" "proton_mail" {
 
 resource "vercel_dns_record" "proton_spf" {
   team_id = var.vercel_team_id
-  domain  = "planetfall.io"
+  domain  = vercel_project_domain.planetfall_io.domain
   name    = "" # Should be "@"
   type    = "TXT"
   ttl     = 60
@@ -145,7 +145,7 @@ resource "vercel_dns_record" "proton_spf" {
 }
 resource "vercel_dns_record" "proton_domainkey" {
   team_id = var.vercel_team_id
-  domain  = "planetfall.io"
+  domain  = vercel_project_domain.planetfall_io.domain
   name    = "protonmail._domainkey"
   type    = "CNAME"
   ttl     = 60
@@ -154,7 +154,7 @@ resource "vercel_dns_record" "proton_domainkey" {
 
 resource "vercel_dns_record" "proton_domainkey2" {
   team_id = var.vercel_team_id
-  domain  = "planetfall.io"
+  domain  = vercel_project_domain.planetfall_io.domain
   name    = "protonmail2._domainkey"
   type    = "CNAME"
   ttl     = 60
@@ -163,7 +163,7 @@ resource "vercel_dns_record" "proton_domainkey2" {
 
 resource "vercel_dns_record" "proton_domainkey3" {
   team_id = var.vercel_team_id
-  domain  = "planetfall.io"
+  domain  = vercel_project_domain.planetfall_io.domain
   name    = "protonmail3._domainkey"
   type    = "CNAME"
   ttl     = 60
@@ -172,7 +172,7 @@ resource "vercel_dns_record" "proton_domainkey3" {
 
 resource "vercel_dns_record" "proton_dmarc" {
   team_id = var.vercel_team_id
-  domain  = "planetfall.io"
+  domain  = vercel_project_domain.planetfall_io.domain
   name    = "_dmarc"
   type    = "TXT"
   ttl     = 60
@@ -181,7 +181,7 @@ resource "vercel_dns_record" "proton_dmarc" {
 
 resource "vercel_dns_record" "proton_mailsec" {
   team_id     = var.vercel_team_id
-  domain      = "planetfall.io"
+  domain      = vercel_project_domain.planetfall_io.domain
   name        = "" # Should be "@"
   type        = "MX"
   ttl         = 60
@@ -192,8 +192,8 @@ resource "vercel_dns_record" "proton_mailsec" {
 
 resource "vercel_dns_record" "resend_spf_mx" {
   team_id     = var.vercel_team_id
-  domain      = "planetfall.io"
-  name        = "bounces.planetfall.io"
+  domain      = vercel_project_domain.planetfall_io.domain
+  name        = "bounces"
   type        = "MX"
   ttl         = 60
   mx_priority = 10
@@ -202,41 +202,41 @@ resource "vercel_dns_record" "resend_spf_mx" {
 
 
 resource "vercel_dns_record" "resend_spf_txt" {
-  team_id     = var.vercel_team_id
-  domain      = "planetfall.io"
-  name        = "bounces.planetfall.io"
-  type        = "TXT"
-  ttl         = 60
-  value       = "v=spf1 include:amazonses.com ~all"
+  team_id = var.vercel_team_id
+  domain  = vercel_project_domain.planetfall_io.domain
+  name    = "bounces"
+  type    = "TXT"
+  ttl     = 60
+  value   = "v=spf1 include:amazonses.com ~all"
 }
 
 
 
 
-resource "vercel_dns_record" "resend_dkim_1" {
-  team_id     = var.vercel_team_id
-  domain      = "planetfall.io"
-  name        = "iorec6tevdstuzig7tc2dfv622slyyuu._domainkey.planetfall.io"
-  type        = "CNAME"
-  ttl         = 60
-  value       = "iorec6tevdstuzig7tc2dfv622slyyuu.dkim.amazonses.com"
+resource "vercel_dns_record" "resend_dkim_iorec6tevdstuzig7tc2dfv622slyyuu" {
+  team_id = var.vercel_team_id
+  domain  = vercel_project_domain.planetfall_io.domain
+  name    = "iorec6tevdstuzig7tc2dfv622slyyuu._domainkey"
+  type    = "CNAME"
+  ttl     = 60
+  value   = "iorec6tevdstuzig7tc2dfv622slyyuu.dkim.amazonses.com"
 }
 
-resource "vercel_dns_record" "resend_dkim_1" {
-  team_id     = var.vercel_team_id
-  domain      = "planetfall.io"
-  name        = "m4qxxdawi5spoqhbboa3xwa7eobpua3m._domainkey.planetfall.io"
-  type        = "CNAME"
-  ttl         = 60
-  value       = "m4qxxdawi5spoqhbboa3xwa7eobpua3m.dkim.amazonses.com"
+resource "vercel_dns_record" "resend_dkim_m4qxxdawi5spoqhbboa3xwa7eobpua3m" {
+  team_id = var.vercel_team_id
+  domain  = vercel_project_domain.planetfall_io.domain
+  name    = "m4qxxdawi5spoqhbboa3xwa7eobpua3m._domainkey"
+  type    = "CNAME"
+  ttl     = 60
+  value   = "m4qxxdawi5spoqhbboa3xwa7eobpua3m.dkim.amazonses.com"
 }
-resource "vercel_dns_record" "resend_dkim_1" {
-  team_id     = var.vercel_team_id
-  domain      = "planetfall.io"
-  name        = "wutpcga6f4p5krwq77swg5q6gg6qcuqo._domainkey.planetfall.io"
-  type        = "CNAME"
-  ttl         = 60
-  value       = "wutpcga6f4p5krwq77swg5q6gg6qcuqo.dkim.amazonses.com"
+resource "vercel_dns_record" "resend_dkim_wutpcga6f4p5krwq77swg5q6gg6qcuqo" {
+  team_id = var.vercel_team_id
+  domain  = vercel_project_domain.planetfall_io.domain
+  name    = "wutpcga6f4p5krwq77swg5q6gg6qcuqo._domainkey"
+  type    = "CNAME"
+  ttl     = 60
+  value   = "wutpcga6f4p5krwq77swg5q6gg6qcuqo.dkim.amazonses.com"
 }
 
 
@@ -247,7 +247,7 @@ resource "vercel_dns_record" "resend_dkim_1" {
 
 
 
-resource "vercel_project_domain" "web" {
+resource "vercel_project_domain" "planetfall_io" {
   project_id = vercel_project.web.id
   team_id    = var.vercel_team_id
   domain     = "planetfall.io"

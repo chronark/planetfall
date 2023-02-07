@@ -3,10 +3,7 @@ import * as tb from "@planetfall/tinybird";
 import { newId } from "@planetfall/id";
 import { Logger } from "./logger";
 import * as assertions from "@planetfall/assertions";
-import { z } from "zod";
-import ms from "ms";
 import { Notifications } from "./notifications";
-import { takeCoverage } from "v8";
 
 export class Scheduler {
 	// Map of endpoint id -> clearInterval function
