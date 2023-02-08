@@ -24,7 +24,7 @@ export const endpointRouter = t.router({
 				body: z.string().optional(),
 				headers: z.record(z.string()).optional(),
 				degradedAfter: z.number().int().optional(),
-				timeout: z.number().int().optional(),
+				timeout: z.number().int(),
 				interval: z.number().int().positive(),
 				regionIds: z.array(z.string()).min(1),
 				distribution: z.enum(["ALL", "RANDOM"]),

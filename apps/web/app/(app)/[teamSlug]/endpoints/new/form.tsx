@@ -15,6 +15,7 @@ type Props = {
 	teamId: string;
 	teamSlug: string;
 	regions: Region[];
+	defaultTimeout: number;
 };
 
 type FormData = {
@@ -28,11 +29,11 @@ type FormData = {
 	regions: string[];
 	statusAssertions: z.infer<typeof assertions.statusAssertion>[];
 	headerAssertions: z.infer<typeof assertions.headerAssertion>[];
-	timeout?: number;
+	timeout: number;
 	degradedAfter?: number;
 };
 
-export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
+export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeout }) => {
 	const {
 		register,
 		formState: { errors },
@@ -41,7 +42,12 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 		getValues,
 		control,
 		watch,
-	} = useForm<FormData>({ reValidateMode: "onSubmit" });
+	} = useForm<FormData>({
+		reValidateMode: "onSubmit",
+		defaultValues: {
+			timeout: defaultTimeout,
+		},
+	});
 
 	const router = useRouter();
 
@@ -75,8 +81,12 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 				url: data.url,
 				method: data.method,
 				headers: data.headers ? JSON.parse(data.headers) : undefined,
-				degradedAfter: data.degradedAfter ?? undefined,
-				timeout: data.timeout ?? undefined,
+				degradedAfter: data.degradedAfter
+					? Number.isNaN(data.degradedAfter)
+						? undefined
+						: data.degradedAfter
+					: undefined,
+				timeout: data.timeout,
 				interval: data.interval * 1000,
 				regionIds: selectedRegions,
 				distribution: data.distribution,
@@ -301,7 +311,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 							>
 								Timeout
 								<p className="text-xs font-normal">
-									Set to 0 or empty to disable
+									The request will be cancelled after this timeout
 								</p>
 							</label>
 							<div className="mt-1 sm:col-span-4 sm:mt-0">
@@ -311,9 +321,9 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions }) => {
 											type="number"
 											{...register("timeout", {
 												valueAsNumber: true,
-												min: 0,
+												min: 1,
 											})}
-											min={0}
+											min={1}
 											className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
 										/>
 									</div>
