@@ -1,4 +1,4 @@
-import { Email } from "@planetfall/emails";
+import { Email } from "@planetfall/emails/dist/client";
 import { PrismaClient } from "@planetfall/db";
 import { Logger } from "./logger";
 

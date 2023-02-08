@@ -6,7 +6,7 @@ import { Logger } from "./logger";
 import { Notifications } from "./notifications";
 import { Redis } from "@upstash/redis";
 import { db } from "@planetfall/db";
-import { Email } from "@planetfall/emails";
+import { Email } from "@planetfall/emails/dist/client";
 
 const logger = new Logger();
 

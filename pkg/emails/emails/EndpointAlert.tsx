@@ -10,7 +10,6 @@ import { Section } from "@react-email/section";
 import { Text } from "@react-email/text";
 import React from "react";
 import { Tailwind } from "@react-email/tailwind";
-const defaultTheme = require("tailwindcss/defaultTheme");
 
 export type Props = {
 	time: number;

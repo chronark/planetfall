@@ -1,7 +1,5 @@
 import { render } from "@react-email/render";
 import { Resend } from "resend";
-
-const resend = new Resend("re_Acn8wxyP_LRNZqKNH3urk72y5but6snLT");
 import { EndpointAlert } from "./emails/EndpointAlert";
 export class Email {
 	private client: Resend;
