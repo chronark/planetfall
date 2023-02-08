@@ -1,4 +1,4 @@
-VERSION 2
+VERSION 3
 
 SCHEMA >
     `body` Nullable(String) `json:$.body`,
@@ -17,4 +17,5 @@ SCHEMA >
 
 ENGINE "MergeTree"
 ENGINE_TTL "toDate(fromUnixTimestamp64Milli(time)) + INTERVAL 90 DAY"
-ENGINE_SORTING_KEY "teamId,endpointId,time"
+ENGINE_SORTING_KEY "endpointId,regionId,time"
+ENGINE_PRIMARY_KEY "checkId"
