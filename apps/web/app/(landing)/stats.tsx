@@ -14,7 +14,7 @@ export const Stats = asyncComponent(async () => {
 			value: await db.team.count(),
 		},
 		{
-			label: "APIs",
+			label: "Endpoints",
 			value: await db.endpoint.count(),
 		},
 		{
