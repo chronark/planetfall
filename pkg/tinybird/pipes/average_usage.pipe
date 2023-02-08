@@ -1,10 +1,13 @@
 VERSION 1
+TOKEN "live" READ
+
+
 
 NODE average_usage
 
 SQL >
 
     %
-    SELECT COUNT(*) / {{Int32(days, 30, description="Average over this many days", required=False)}}  as average
+    SELECT COUNT() / {{Int32(days, 30, description="Average over this many days", required=False)}}  as average
     FROM checks__v2
     WHERE fromUnixTimestamp64Milli(time) >= now() - INTERVAL {{Int32(days, 7, description="Average over this many days", required=False)}}  DAY

@@ -43,7 +43,7 @@ export const Stats = asyncComponent(async () => {
 		},
 	]);
 	return (
-		<Section id="stats" >
+		<Section id="stats">
 			<div className="container grid grid-cols-1 gap-4 mx-auto sm:grid-cols-3">
 				{stats.map(({ label, value }) => (
 					<div

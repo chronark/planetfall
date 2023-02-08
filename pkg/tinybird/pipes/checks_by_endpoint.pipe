@@ -1,5 +1,7 @@
 VERSION 1
-TOKEN "checks_by_endpoint" READ
+TOKEN "live" READ
+
+
 DESCRIPTION >
   Get the latest checks (within the last day) for an endpoint
   Optionally filter by errors only and limit the number of results
