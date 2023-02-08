@@ -5,6 +5,7 @@ import ms from "ms";
 import classNames from "classnames";
 import { Check, Minus } from "lucide-react";
 import { Section } from "./section";
+import { features } from "node:process";
 
 type Tier = "Free" | "Pro" | "Enterprise";
 
@@ -13,7 +14,7 @@ type Tag = "New" | "Planned" | "Beta" | "In Development";
 const tiers: {
 	name: Tier;
 	href: string;
-	monthlyPrice:
+	price:
 		| {
 				requests: number;
 				price: number;
@@ -25,25 +26,24 @@ const tiers: {
 	{
 		name: "Free",
 		href: "/auth/sign-in",
-		monthlyPrice: "$0",
+		price: "$0",
 		description: "No credit card required",
 		cta: "Start for free",
 	},
 	{
 		name: "Pro",
 		href: "/auth/sign-in",
-		monthlyPrice: {
+		price: {
 			requests: 10000,
 			price: 1,
 		},
 		description: "Pay as you go",
 		cta: "Start for free",
 	},
-
 	{
 		name: "Enterprise",
 		href: "mailto:support@planetfall.io",
-		monthlyPrice: "Contact us",
+		price: "Contact us",
 		description: "For large-scale APIs",
 		cta: "Contact us",
 	},
@@ -91,57 +91,83 @@ const sections: {
 		],
 	},
 	{
-		name: "Endpoints",
+		name: "Features",
 		features: [
 			{
-				name: "Number of endpoints",
+				name: "Included requests",
 				tiers: {
-					Free: DEFAULT_QUOTA.FREE.maxEndpoints.toLocaleString(),
-					Pro: DEFAULT_QUOTA.PRO.maxEndpoints.toLocaleString(),
-					Enterprise: "∞",
-				},
-			},
-			{
-				name: "Minimum Interval",
-				tiers: {
-					Free: ms(DEFAULT_QUOTA.FREE.minInterval),
-					Pro: ms(DEFAULT_QUOTA.PRO.minInterval),
-					Enterprise: ms(DEFAULT_QUOTA.ENTERPRISE.minInterval),
-				},
-			},
-			{
-				name: "Timeout",
-				tiers: {
-					Free: ms(DEFAULT_QUOTA.FREE.maxTimeout),
-					Pro: ms(DEFAULT_QUOTA.PRO.maxTimeout),
+					Free: `${DEFAULT_QUOTA.FREE.includedRequests / 1000}k`,
+					Pro: `${DEFAULT_QUOTA.PRO.includedRequests / 1000}k`,
 					Enterprise: "Custom",
 				},
+			},
+			{
+				name: "Additional requests",
+				tiers: {
+					Free: false,
+					Pro: "$1 / 10,000",
+					Enterprise: "Custom",
+				},
+			},
+			{
+				name: "Teams",
+				tiers: { Free: false, Pro: true, Enterprise: true },
+			},
+			{
+				name: "Status Pages",
+				tiers: {
+					Free: DEFAULT_QUOTA.FREE.maxStatusPages.toString(),
+					Pro: DEFAULT_QUOTA.PRO.maxStatusPages.toString(),
+					Enterprise: "∞",
+				},
+				tag: "New",
 			},
 		],
 	},
 	{
-		name: "Storage",
+		name: "Regions",
 		features: [
 			{
-				name: "Data Retention",
+				name: "All Vercel Edge",
 				tiers: {
-					Free: ms(DEFAULT_QUOTA.FREE.retention, { long: true }),
-					Pro: ms(DEFAULT_QUOTA.PRO.retention, { long: true }),
-					Enterprise: ms(DEFAULT_QUOTA.ENTERPRISE.retention, { long: true }),
+					Free: true,
+					Pro: true,
+					Enterprise: true,
 				},
 			},
 			{
-				name: "Audit Logs",
+				name: "All AWS Lambda",
 				tiers: {
 					Free: false,
-
-					Pro: false,
+					Pro: true,
 					Enterprise: true,
 				},
-				tag: "Planned",
 			},
 		],
 	},
+	// {
+	// 	name: "Storage",
+	// 	features: [
+	// 		{
+	// 			name: "Data Retention",
+	// 			tiers: {
+	// 				Free: ms(DEFAULT_QUOTA.FREE.retention, { long: true }),
+	// 				Pro: ms(DEFAULT_QUOTA.PRO.retention, { long: true }),
+	// 				Enterprise: ms(DEFAULT_QUOTA.ENTERPRISE.retention, { long: true }),
+	// 			},
+	// 		},
+	// 		{
+	// 			name: "Audit Logs",
+	// 			tiers: {
+	// 				Free: false,
+
+	// 				Pro: false,
+	// 				Enterprise: true,
+	// 			},
+	// 			tag: "Planned",
+	// 		},
+	// 	],
+	// },
 	{
 		name: "Alerts",
 		features: [
@@ -205,268 +231,237 @@ export const Pricing: React.FC = (): JSX.Element => {
 		<Section
 			id="pricing"
 			title="Pricing"
-			description="Start for free, upgrade when you need more."
+			description="Start for free, scale as you grow."
 		>
 			{/* xs to lg */}
-			<div className="max-w-2xl px-4 mx-auto space-y-16 lg:hidden">
-				{tiers.map((tier, tierIdx) => (
-					<section key={tier.name}>
-						<div className="px-4 mb-8">
-							<h2 className="text-lg font-medium leading-6 text-zinc-900">
-								{tier.name}
-							</h2>
-							<p className="mt-4">
-								{typeof tier.monthlyPrice === "string" ? (
-									<span className="text-4xl font-bold tracking-tight text-zinc-900">
-										{tier.monthlyPrice}
-									</span>
-								) : (
-									<>
-										<span className="text-4xl font-bold tracking-tight text-zinc-900">
-											${tier.monthlyPrice.price}
-										</span>
-										<span className="text-base font-medium text-zinc-900">
-											/{tier.monthlyPrice.requests.toLocaleString()} Requests
-										</span>
-									</>
-								)}
-							</p>
-							<p className="mt-4 text-sm text-zinc-500">{tier.description}</p>
-							<Button href={tier.href}>{tier.cta}</Button>
-						</div>
-
-						{sections.map((section) => (
-							<table key={section.name} className="w-full">
-								<caption className="px-4 py-3 text-sm font-medium text-left rounded bg-zinc-900 text-zinc-50">
-									{section.name}
-								</caption>
-								<thead>
-									<tr>
-										<th className="sr-only" scope="col">
-											Feature
-										</th>
-										<th className="sr-only" scope="col">
-											Included
-										</th>
-									</tr>
-								</thead>
-								<tbody className="divide-y divide-zinc-500">
-									{section.features.map((feature) => (
-										<tr key={feature.name}>
-											<th
-												className="flex items-center gap-4 px-6 py-5 text-sm font-normal text-left text-zinc-600"
-												scope="row"
-											>
-												<span>{feature.name}</span>
-												{feature.tag ? (
-													<span
-														className={classNames(
-															"px-1 text-xs border rounded ",
-															{
-																"bg-primary-200/50 border-primary-600 text-primary-800":
-																	feature.tag === "New",
-																"border-orange-500 text-orange-500":
-																	feature.tag === "Beta",
-																"border-zinc-400 text-zinc-400":
-																	feature.tag === "In Development",
-																"border-zinc-500 bg-zinc-100/50 text-zinc-500":
-																	feature.tag === "Planned",
-															},
-														)}
-													>
-														{feature.tag}
-													</span>
-												) : null}
-											</th>
-											<td className="py-5 pr-4">
-												{typeof feature.tiers[tier.name] === "string" ? (
-													<span className="block text-sm text-right text-zinc-600">
-														{feature.tiers[tier.name]}
-													</span>
-												) : (
-													<>
-														{feature.tiers[tier.name] === true ? (
-															<Check
-																className="w-5 h-5 ml-auto text-zinc-700"
-																aria-hidden="true"
-															/>
-														) : (
-															<Minus
-																className="w-5 h-5 ml-auto text-zinc-600"
-																aria-hidden="true"
-															/>
-														)}
-
-														<span className="sr-only">
-															{feature.tiers[tier.name] === true ? "Yes" : "No"}
-														</span>
-													</>
-												)}
-											</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-						))}
-
-						<div
-							className={classNames(
-								tierIdx < tiers.length - 1 ? "py-5 border-b" : "pt-5",
-								"border-t border-zinc-300",
-							)}
+			<div className="max-w-md mx-auto space-y-8 lg:hidden">
+				{tiers.map((tier) => (
+					<section key={tier.name} className='p-8'>
+						<h3
+							id={tier.name}
+							className="text-sm font-semibold leading-6 text-zinc-900"
 						>
-							<Button href={tier.href}>{tier.cta}</Button>
-						</div>
+							{tier.name}
+						</h3>
+						<p className="mt-4">
+							{typeof tier.price === "string" ? (
+								<span className="text-4xl font-bold tracking-tight text-zinc-900">
+									{tier.price}
+								</span>
+							) : (
+								<>
+									<span className="text-4xl font-bold tracking-tight text-zinc-900">
+										${tier.price.price}
+									</span>
+									<span className="text-base font-medium text-zinc-900">
+										/{tier.price.requests.toLocaleString()} Requests
+									</span>
+								</>
+							)}
+						</p>
+						<a
+							href={tier.href}
+							aria-describedby={tier.name}
+							className="block px-3 py-2 mt-8 text-sm font-semibold leading-6 text-center duration-150 rounded-md text-zinc-900 ring-1 ring-inset ring-zinc-900 hover:bg-zinc-900 hover:text-white focus:outline-none"
+						>
+							{tier.cta}
+						</a>
+						<ul
+							role="list"
+							className="mt-10 space-y-4 text-sm leading-6 text-zinc-900"
+						>
+							{sections.map((section) => (
+								<li key={section.name}>
+									<ul role="list" className="space-y-4">
+										{section.features.map((feature) =>
+											feature.tiers[tier.name] ? (
+												<li key={feature.name} className="flex w-full gap-x-3">
+													<Check
+														className="flex-none w-5 h-6 text-primary-500"
+														aria-hidden="true"
+													/>
+													<div className="flex items-center justify-between w-full gap-2">
+														<div className="flex items-center gap-2">
+															{feature.name}
+															{feature.tag ? (
+																<span
+																	className={classNames(
+																		"px-1 text-xs border rounded ",
+																		{
+																			"bg-primary-200/50 border-primary-600 text-primary-800":
+																				feature.tag === "New",
+																			"border-orange-500 text-orange-500":
+																				feature.tag === "Beta",
+																			"border-zinc-400 text-zinc-400":
+																				feature.tag === "In Development",
+																			"border-zinc-500 bg-zinc-100/50 text-zinc-500":
+																				feature.tag === "Planned",
+																		},
+																	)}
+																>
+																	{feature.tag}
+																</span>
+															) : null}
+														</div>
+														{typeof feature.tiers[tier.name] === "string" ? (
+															<span className="text-sm leading-6 text-zinc-500">
+																{feature.tiers[tier.name]}
+															</span>
+														) : null}
+													</div>
+												</li>
+											) : null,
+										)}
+									</ul>
+								</li>
+							))}
+						</ul>
 					</section>
 				))}
 			</div>
 
 			{/* lg+ */}
-			<div className="container hidden mx-auto lg:block">
-				<table className="w-full h-px table-fixed">
-					<caption className="sr-only">Pricing plan comparison</caption>
-					<thead>
-						<tr>
-							<th
-								className="w-1/4 px-6 pb-4 text-sm font-medium text-left text-zinc-900"
-								scope="col"
-							>
-								<span className="sr-only">Feature by</span>
-								<span>Plans</span>
-							</th>
-							{tiers.map((tier) => (
-								<th
-									key={tier.name}
-									className="px-6 pb-4 text-lg font-medium leading-6 text-left lg:w-1/4 text-zinc-900"
-									scope="col"
-								>
-									{tier.name}
+			<div className="container hidden mx-auto isolate lg:block">
+				<div className="relative -mx-8">
+					<table className="w-full text-left border-separate table-fixed border-spacing-x-8">
+						<caption className="sr-only">Pricing plan comparison</caption>
+						<colgroup>
+							<col className="w-1/4" />
+							<col className="w-1/4" />
+							<col className="w-1/4" />
+							<col className="w-1/4" />
+						</colgroup>
+						<thead>
+							<tr>
+								<td />
+								{tiers.map((tier) => (
+									<th
+										key={tier.name}
+										scope="col"
+										className="px-6 pt-6 xl:px-8 xl:pt-8"
+									>
+										<div className="text-sm font-semibold leading-7 text-zinc-900">
+											{tier.name}
+										</div>
+									</th>
+								))}
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row">
+									<span className="sr-only">Price</span>
 								</th>
-							))}
-						</tr>
-					</thead>
-					<tbody className="border-t divide-y divide-zinc-200 border-zinc-200">
-						<tr>
-							<th
-								className="px-6 py-8 text-sm font-medium text-left align-top text-zinc-900"
-								scope="row"
-							>
-								Pricing
-							</th>
-							{tiers.map((tier) => (
-								<td key={tier.name} className="h-full px-6 py-8 align-top ">
-									<div className="relative table w-full h-full">
+								{tiers.map((tier) => (
+									<td key={tier.name} className="px-6 pt-2 xl:px-8">
 										<p>
-											{typeof tier.monthlyPrice === "string" ? (
+											{typeof tier.price === "string" ? (
 												<span className="text-4xl font-bold tracking-tight text-zinc-900">
-													{tier.monthlyPrice}
+													{tier.price}
 												</span>
 											) : (
 												<>
 													<span className="text-4xl font-bold tracking-tight text-zinc-900">
-														${tier.monthlyPrice.price}
+														${tier.price.price}
 													</span>
 													<span className="text-base font-medium text-zinc-900">
-														/{tier.monthlyPrice.requests.toLocaleString()}{" "}
-														Requests
+														/{tier.price.requests.toLocaleString()} Requests
 													</span>
 												</>
 											)}
 										</p>
-										<p className="mt-4 mb-16 text-sm text-zinc-600">
-											{tier.description}
-										</p>
-										<Button href={tier.href}>{tier.cta}</Button>
-									</div>
-								</td>
-							))}
-						</tr>
-						{sections.map((section) => (
-							<Fragment key={section.name}>
-								<tr>
-									<th
-										className="py-3 pl-6 text-sm font-medium text-left bg-zinc-100 text-zinc-900"
-										colSpan={5}
-										scope="colgroup"
-									>
-										{section.name}
-									</th>
-								</tr>
-								{section.features.map((feature) => (
-									<tr key={feature.name}>
-										<th
-											className="flex items-center gap-4 px-6 py-5 text-sm font-normal text-left text-zinc-600"
-											scope="row"
-										>
-											<span>{feature.name}</span>
-											{feature.tag ? (
-												<span
-													className={classNames(
-														"px-1 text-xs border rounded ",
-														{
-															"bg-primary-200/50 border-primary-400 text-primary-600":
-																feature.tag === "New",
-															"border-orange-500 text-orange-500":
-																feature.tag === "Beta",
-															"border-zinc-400 text-zinc-400":
-																feature.tag === "In Development",
-															"border-zinc-500 bg-zinc-200/50 text-zinc-500":
-																feature.tag === "Planned",
-														},
-													)}
-												>
-													{feature.tag}
-												</span>
-											) : null}
-										</th>
-										{tiers.map((tier) => (
-											<td key={tier.name} className="px-6 py-5 text-center ">
-												{typeof feature.tiers[tier.name] === "string" ? (
-													<span className="block text-sm text-zinc-700">
-														{feature.tiers[tier.name]}
-													</span>
-												) : (
-													<div className="flex justify-center">
-														{feature.tiers[tier.name] === true ? (
-															<Check
-																className="w-5 h-5 text-zinc-700"
-																aria-hidden="true"
-															/>
-														) : (
-															<Minus
-																className="w-5 h-5 text-zinc-600"
-																aria-hidden="true"
-															/>
-														)}
 
-														<span className="sr-only">
-															{feature.tiers[tier.name] === true
-																? "Included"
-																: "Not included"}{" "}
-															in {tier.name}
-														</span>
-													</div>
-												)}
-											</td>
-										))}
-									</tr>
+										<a
+											href={tier.href}
+											className="block px-3 py-2 mt-8 text-sm font-semibold leading-6 text-center duration-150 rounded-md text-zinc-900 ring-1 ring-inset ring-zinc-900 hover:bg-zinc-900 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+										>
+											{tier.cta}
+										</a>
+									</td>
 								))}
-							</Fragment>
-						))}
-					</tbody>
-					<tfoot>
-						<tr>
-							<th className="sr-only" scope="row">
-								Choose your plan
-							</th>
-							{tiers.map((tier) => (
-								<td key={tier.name} className="px-6 pt-5">
-									<Button href={tier.href}>{tier.cta}</Button>
-								</td>
+							</tr>
+							{sections.map((section, sectionIdx) => (
+								<Fragment key={section.name}>
+									<tr>
+										<th
+											scope="colgroup"
+											colSpan={4}
+											className={classNames(
+												sectionIdx === 0 ? "pt-8" : "pt-16",
+												"pb-4 text-sm font-semibold leading-6 text-zinc-900",
+											)}
+										>
+											{section.name}
+											<div className="absolute h-px mt-4 inset-x-8 bg-zinc-900/10" />
+										</th>
+									</tr>
+									{section.features.map((feature) => (
+										<tr key={feature.name}>
+											<th
+												scope="row"
+												className="py-4 text-sm font-normal leading-6 text-zinc-500 "
+											>
+												<div className="flex items-center gap-2">
+													{feature.name}
+													{feature.tag ? (
+														<span
+															className={classNames(
+																"px-1 text-xs border rounded ",
+																{
+																	"bg-primary-500/10 border-primary-500 text-primary-500":
+																		feature.tag === "New",
+																	"bg-orange-500/10 border-orange-500 text-orange-500":
+																		feature.tag === "Beta",
+																	"bg-zinc-400/10 border-zinc-400 text-zinc-400":
+																		feature.tag === "In Development",
+																	"border-zinc-500 bg-zinc-500/10 text-zinc-500":
+																		feature.tag === "Planned",
+																},
+															)}
+														>
+															{feature.tag}
+														</span>
+													) : null}
+												</div>
+												<div className="absolute h-px mt-4 inset-x-8 bg-zinc-900/5" />
+											</th>
+											{tiers.map((tier) => (
+												<td key={tier.name} className="px-6 py-4 xl:px-8">
+													{typeof feature.tiers[tier.name] === "string" ? (
+														<div className="text-sm leading-6 text-center text-zinc-500">
+															{feature.tiers[tier.name]}
+														</div>
+													) : (
+														<>
+															{feature.tiers[tier.name] === true ? (
+																<Check
+																	className="w-5 h-5 mx-auto text-primary-500"
+																	aria-hidden="true"
+																/>
+															) : (
+																<Minus
+																	className="w-5 h-5 mx-auto text-zinc-400"
+																	aria-hidden="true"
+																/>
+															)}
+
+															<span className="sr-only">
+																{feature.tiers[tier.name] === true
+																	? "Included"
+																	: "Not included"}{" "}
+																in {tier.name}
+															</span>
+														</>
+													)}
+												</td>
+											))}
+										</tr>
+									))}
+								</Fragment>
 							))}
-						</tr>
-					</tfoot>
-				</table>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</Section>
 	);
