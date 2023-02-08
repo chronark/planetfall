@@ -15,8 +15,8 @@ export const Section: React.FC<PropsWithChildren<Props>> = ({
 }) => (
 	<section id={id} className="py-8 sm:py-16 scroll-mt-20">
 		<div className="px-6 mx-auto max-w-7xl lg:px-8">
-			<div className="mx-auto max-w-7xl sm:text-center">
-				<h2 className="text-lg font-semibold leading-8 tracking-tight text-indigo-900">
+			<div className="mx-auto text-center max-w-7xl">
+				<h2 className="text-lg font-semibold leading-8 tracking-tight text-transparent bg-gradient-to-tr bg-clip-text from-primary-600 to-primary-400">
 					{tag}
 				</h2>
 				<p className="py-2 text-4xl font-bold tracking-tight text-center text-zinc-900">
