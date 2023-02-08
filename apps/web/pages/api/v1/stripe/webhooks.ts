@@ -66,10 +66,8 @@ export default async function webhookHandler(
 					data: {
 						plan: "PRO",
 						stripeSubscriptionId: newSubscription.id,
-						retention: DEFAULT_QUOTA.PRO.retention,
 						maxMonthlyRequests: DEFAULT_QUOTA.PRO.maxMonthlyRequests,
 						maxEndpoints: DEFAULT_QUOTA.PRO.maxEndpoints,
-						minInterval: DEFAULT_QUOTA.PRO.minInterval,
 						maxTimeout: DEFAULT_QUOTA.PRO.maxTimeout,
 						stripeCurrentBillingPeriodStart: new Date(
 							newSubscription.current_period_start * 1000,
@@ -129,9 +127,7 @@ export default async function webhookHandler(
 							plan: "FREE",
 							stripeSubscriptionId: null,
 							maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
-							retention: DEFAULT_QUOTA.FREE.retention,
 							maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
-							minInterval: DEFAULT_QUOTA.FREE.minInterval,
 							maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
 							stripeCurrentBillingPeriodStart: null,
 							stripeCurrentBillingPeriodEnd: null,
