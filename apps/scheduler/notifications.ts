@@ -148,7 +148,7 @@ export class Notifications {
 						endpointId: endpoint.id,
 						checkLink: `https://planetfall.io/${team.slug}/checks/${event.check.id}`,
 					})
-					.catch((err) => {
+					.catch((err: Error) => {
 						this.logger.error("Error sending email", {
 							error: err.message,
 							teamId: team.id,

@@ -129,15 +129,9 @@ model Team {
   // When the user deletes a team it is marked as deactivated until all billing is done
   deactivatedAt DateTime?
 
-  // QUOTA DEFINITIONS 
-  // How long checks are displayed
-  // we always store at least 1 month for billing
-  retention Int? // [milliseconds]
-
   // How many checks may be done per month
   maxMonthlyRequests Int
   maxEndpoints       Int
-  minInterval        Int? // [milliseconds]
   maxTimeout         Int // [milliseconds]
   endpoints          Endpoint[]
   pages              StatusPage[]
