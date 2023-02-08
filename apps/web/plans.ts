@@ -15,7 +15,7 @@ export const DEFAULT_QUOTA: Record<Tier, Quota> = {
 		maxMonthlyRequests: 100_000,
 		maxStatusPages: 1,
 		maxEndpoints: 5,
-		maxTimeout: ms("1s"),
+		maxTimeout: ms("5s"),
 	},
 	PRO: {
 		includedRequests: 100_000,
