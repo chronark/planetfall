@@ -11,8 +11,7 @@
   "author": "Andreas Thomas",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^4.10.0",
-    "@xata.io/client": "^0.22.0"
+    "@prisma/client": "^4.10.0"
   },
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",

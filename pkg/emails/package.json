@@ -35,7 +35,6 @@
     "@sendgrid/mail": "^7.2.1",
     "react": "^18.2.0",
     "react-email": "^1.7.11",
-    "resend": "^0.10.0",
-    "tailwindcss": "^3.2.1"
+    "resend": "^0.10.0"
   }
 }
