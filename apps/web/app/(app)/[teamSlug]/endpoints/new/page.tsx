@@ -30,7 +30,12 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				description={undefined}
 			/>
 			<div className="container pb-20 mx-auto">
-				<Form teamId={team.id} teamSlug={team.slug} regions={regions} defaultTimeout={team.maxTimeout}/>
+				<Form
+					teamId={team.id}
+					teamSlug={team.slug}
+					regions={regions}
+					defaultTimeout={team.maxTimeout}
+				/>
 			</div>
 		</div>
 	);

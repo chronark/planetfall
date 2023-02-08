@@ -3,6 +3,7 @@ import { db } from "@planetfall/db";
 import { asyncComponent } from "lib/api/component";
 
 import CountingNumbers from "./counting-numbers";
+import { Section } from "./section";
 
 export const revalidate = 86400; // revalidate every day
 
@@ -42,24 +43,22 @@ export const Stats = asyncComponent(async () => {
 		},
 	]);
 	return (
-		<section id="stats">
-			<div className="relative py-16 sm:py-24 lg:py-32">
-				<div className="container grid grid-cols-1 gap-4 mx-auto mt-8 sm:grid-cols-3 md:mt-16">
-					{stats.map(({ label, value }) => (
-						<div
-							key={label}
-							className="flex items-center justify-between gap-2 px-4 py-3 overflow-hidden rounded m sm:flex-col"
-						>
-							<dt className="text-lg leading-6 text-center text-zinc-500">
-								{label}
-							</dt>
-							<dd className="text-2xl font-bold tracking-tight text-center sm:text-5xl text-zinc-100">
-								<CountingNumbers value={value} />
-							</dd>
-						</div>
-					))}
-				</div>
+		<Section id="stats" title="Trusted by">
+			<div className="container grid grid-cols-1 gap-4 mx-auto mt-8 sm:grid-cols-3 md:mt-16">
+				{stats.map(({ label, value }) => (
+					<div
+						key={label}
+						className="flex items-center justify-between gap-2 px-4 py-3 overflow-hidden rounded m sm:flex-col"
+					>
+						<dt className="text-lg leading-6 text-center text-zinc-500">
+							{label}
+						</dt>
+						<dd className="text-2xl font-bold tracking-tight text-center sm:text-5xl text-zinc-900">
+							<CountingNumbers value={value} />
+						</dd>
+					</div>
+				))}
 			</div>
-		</section>
+		</Section>
 	);
 });

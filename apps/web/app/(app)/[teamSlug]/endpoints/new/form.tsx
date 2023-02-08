@@ -33,7 +33,12 @@ type FormData = {
 	degradedAfter?: number;
 };
 
-export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeout }) => {
+export const Form: React.FC<Props> = ({
+	teamSlug,
+	teamId,
+	regions,
+	defaultTimeout,
+}) => {
 	const {
 		register,
 		formState: { errors },
