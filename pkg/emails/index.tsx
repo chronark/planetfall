@@ -11,7 +11,7 @@ export class Email {
 		if (!resendApiKey) {
 			throw new Error("RESEND_API_KEY not found");
 		}
-		this.client = new Resend();
+		this.client = new Resend(resendApiKey);
 	}
 
 	public async sendEndpointAlert(opts: {
