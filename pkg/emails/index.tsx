@@ -25,7 +25,7 @@ export class Email {
 		 * The url to the failed check
 		 */
 		checkLink: string;
-	}): Promise<void> {
+	}) {
 		const html = render(
 			<EndpointAlert
 				checkLink={opts.checkLink}
@@ -36,7 +36,7 @@ export class Email {
 				endpointName={opts.endpointName}
 			/>,
 		);
-		await this.client.sendEmail({
+		return await this.client.sendEmail({
 			from: "chronark@planetfall.io",
 			to: opts.to,
 			subject: "Planetfall Endpoint Alert",

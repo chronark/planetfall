@@ -2,13 +2,13 @@ import { Scheduler } from "./scheduler";
 import { Events } from "./events";
 import http from "node:http";
 import "isomorphic-fetch";
-import { newLogger } from "./logger";
+import { Logger } from "./logger";
 import { Notifications } from "./notifications";
 import { Redis } from "@upstash/redis";
 import { db } from "@planetfall/db";
 import { Email } from "@planetfall/emails";
 
-const logger = newLogger({ dataset: "scheduler" });
+const logger = new Logger();
 
 const notifications = new Notifications({
 	logger,

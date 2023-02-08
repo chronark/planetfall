@@ -13,7 +13,7 @@
   "license": "ISC",
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.13.0",
     "@types/react": "18.0.27",
     "nodemailer": "^6.9.1",
     "typescript": "^4.9.5"
@@ -34,7 +34,7 @@
     "@react-email/text": "^0.0.4",
     "@sendgrid/mail": "^7.2.1",
     "react": "^18.2.0",
-    "react-email": "^1.7.7",
+    "react-email": "^1.7.11",
     "resend": "^0.10.0",
     "tailwindcss": "^3.2.1"
   }

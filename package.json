@@ -19,9 +19,9 @@
   "author": "Andreas Thomas",
   "license": "ISC",
   "devDependencies": {
-    "prettier": "^2.8.1",
+    "prettier": "^2.8.4",
     "rome": "^11.0.0",
-    "turbo": "^1.5.3",
+    "turbo": "^1.7.4",
     "typescript": "^4.9.5"
   },
   "prisma": {

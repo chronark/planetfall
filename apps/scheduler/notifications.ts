@@ -138,15 +138,19 @@ export class Notifications {
 
 		await Promise.all(
 			team.members.map(async (member) => {
-				await this.email.sendEndpointAlert({
-					to: member.user.email,
-					time: event.check.time,
-					error: event.check.error,
-					teamSlug: team.slug,
-					endpointName: endpoint.name,
-					endpointId: endpoint.id,
-					checkLink: `https://planetfall.io/${team.slug}/checks/${event.check.id}`,
-				});
+				await this.email
+					.sendEndpointAlert({
+						to: member.user.email,
+						time: event.check.time,
+						error: event.check.error,
+						teamSlug: team.slug,
+						endpointName: endpoint.name,
+						endpointId: endpoint.id,
+						checkLink: `https://planetfall.io/${team.slug}/checks/${event.check.id}`,
+					})
+					.catch((err) => {
+						this.logger.error("Error sending email", { error: err.message, teamId: team.id, userId: member.userId, endpointId: endpoint.id });
+					});
 			}),
 		);
 	}
