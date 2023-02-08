@@ -58,7 +58,7 @@ export const Row: React.FC<{
 	const availability = totalChecks === 0 ? 1 : 1 - errors / totalChecks;
 
 	const current =
-		endpoint.metrics.at(-1)!.p99 > endpoint.timeout
+		endpoint.metrics.at(-1)!.count > 0
 			? "Error"
 			: endpoint.degradedAfter &&
 			  endpoint.metrics.at(-1)!.p99 > endpoint.degradedAfter
@@ -185,7 +185,7 @@ const Chart: React.FC<{
 					const percentageHeight =
 						bucket.time >= 0 ? Math.max(5, (bucket.p99 / p99) * 100) : 100;
 
-					const bucketTimeout = timeout && bucket.max > timeout;
+					const bucketError = bucket.errors > 0;
 					const bucketDegraded = degradedAfter && bucket.p99 > degradedAfter;
 					// ? p99 > endpoint.degradedAfter
 					// : 0;
@@ -195,7 +195,7 @@ const Chart: React.FC<{
 
 					if (bucket.time < 0) {
 						cn.push("  bg-zinc-400/20 hover:bg-zinc-400/50 ");
-					} else if (bucketTimeout) {
+					} else if (bucketError) {
 						cn.push(" bg-red-500  ");
 					} else if (bucketDegraded) {
 						cn.push(" bg-yellow-400  ");

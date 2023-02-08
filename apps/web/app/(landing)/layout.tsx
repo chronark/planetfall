@@ -2,6 +2,9 @@ import { Header } from "./header";
 import { Footer } from "./footer";
 import { getSession } from "lib/auth";
 
+export const dynamic = "force-static";
+export const revalidate = 3600;
+
 export default async function Landing({
 	children,
 }: {

@@ -1,4 +1,4 @@
-import { Bar } from "@ant-design/plots";
+import { withCache } from "@/lib/cache";
 import { db } from "@planetfall/db";
 import { Row } from "app/_statuspages/[slug]/chart";
 import { getStats } from "app/_statuspages/[slug]/get-stats";
@@ -16,26 +16,26 @@ import {
 	Webhook,
 	Zap,
 } from "lucide-react";
-import React from "react";
+import React, { cache } from "react";
 import { Feature, Props } from "./feature";
 
-import { ApiSnippet } from "./features/api-snippet";
-
-export const revalidate = 86400; // revalidate every day
-
 export const Features = asyncComponent(async () => {
-	const regions = await db.region.count({ where: { visible: true } });
+	const regions = await cache(() =>
+		db.region.count({ where: { visible: true } }),
+	)();
+	const stats = await cache(async () => {
+		const endpoint = await db.endpoint.findUnique({
+			where: {
+				id:
+					process.env.NODE_ENV === "production"
+						? "ept_Mf5j3QP7me7DRByaDzbS4y"
+						: "ept_Jk9p1kGTRdvb54PUfZSmZu",
+			},
+		});
+		const stats = endpoint ? await getStats(endpoint, endpoint.timeout!) : null;
+		return stats;
+	})();
 
-	const endpoint = await db.endpoint.findUnique({
-		where: {
-			id:
-				process.env.NODE_ENV === "production"
-					? "ept_Mf5j3QP7me7DRByaDzbS4y"
-					: "ept_Jk9p1kGTRdvb54PUfZSmZu",
-		},
-	});
-
-	const stats = endpoint ? await getStats(endpoint, endpoint.timeout!) : null;
 	const features: Props["feature"][] = [
 		{
 			hash: "insights",
