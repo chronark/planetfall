@@ -5,7 +5,6 @@ import { Hr } from "@react-email/hr";
 import { Html } from "@react-email/html";
 import { Img } from "@react-email/img";
 import { Link } from "@react-email/link";
-import { Preview } from "@react-email/preview";
 import { Heading } from "@react-email/heading";
 import { Section } from "@react-email/section";
 import { Text } from "@react-email/text";
@@ -37,7 +36,6 @@ export function EndpointAlert({
 		<Tailwind>
 			<Html className="font-sans text-zinc-800">
 				<Head />
-				<Preview>Your Endpoint has failed</Preview>
 				<Section className="bg-white">
 					<Container className="container mx-auto">
 						<Heading className="font-sans text-2xl text-semibold">
