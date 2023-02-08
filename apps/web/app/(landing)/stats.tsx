@@ -44,7 +44,7 @@ export const Stats = asyncComponent(async () => {
 	]);
 	return (
 		<Section id="stats" title="Trusted by">
-			<div className="container grid grid-cols-1 gap-4 mx-auto mt-8 sm:grid-cols-3 md:mt-16">
+			<div className="container grid grid-cols-1 gap-4 mx-auto sm:grid-cols-3">
 				{stats.map(({ label, value }) => (
 					<div
 						key={label}
