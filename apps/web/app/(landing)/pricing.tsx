@@ -91,40 +91,6 @@ const sections: {
 		],
 	},
 	{
-		name: "Features",
-		features: [
-			{
-				name: "Included requests",
-				tiers: {
-					Free: `${DEFAULT_QUOTA.FREE.includedRequests / 1000}k`,
-					Pro: `${DEFAULT_QUOTA.PRO.includedRequests / 1000}k`,
-					Enterprise: "Custom",
-				},
-			},
-			{
-				name: "Additional requests",
-				tiers: {
-					Free: false,
-					Pro: "$1 / 10,000",
-					Enterprise: "Custom",
-				},
-			},
-			{
-				name: "Teams",
-				tiers: { Free: false, Pro: true, Enterprise: true },
-			},
-			{
-				name: "Status Pages",
-				tiers: {
-					Free: DEFAULT_QUOTA.FREE.maxStatusPages.toString(),
-					Pro: DEFAULT_QUOTA.PRO.maxStatusPages.toString(),
-					Enterprise: "∞",
-				},
-				tag: "New",
-			},
-		],
-	},
-	{
 		name: "Regions",
 		features: [
 			{

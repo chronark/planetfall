@@ -70,7 +70,7 @@ export const Features = asyncComponent(async () => {
 		{
 			tag: "Stay in control",
 			hash: "alerts",
-			title: "Realtime Alerts.",
+			title: "Realtime Alerts",
 			description:
 				"Receive realtime alerts when your API goes down or your users experience degraded performance",
 

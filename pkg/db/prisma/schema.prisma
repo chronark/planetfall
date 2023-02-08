@@ -132,12 +132,12 @@ model Team {
   // QUOTA DEFINITIONS 
   // How long checks are displayed
   // we always store at least 1 month for billing
-  retention Int // [milliseconds]
+  retention Int? // [milliseconds]
 
   // How many checks may be done per month
   maxMonthlyRequests Int
   maxEndpoints       Int
-  minInterval        Int // [milliseconds]
+  minInterval        Int? // [milliseconds]
   maxTimeout         Int // [milliseconds]
   endpoints          Endpoint[]
   pages              StatusPage[]
