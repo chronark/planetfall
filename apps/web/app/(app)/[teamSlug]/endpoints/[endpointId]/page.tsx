@@ -181,19 +181,26 @@ export default async function Page(props: {
 					</div>
 				</div>
 
-				{/* {errors.length > 0 ? (
+				{errors.length > 0 ? (
 					<>
 						<Card>
 							<CardHeader>
-								<CardHeaderTitle title="Errors" />
+								<CardHeaderTitle
+									title="Errors"
+									subtitle={`There have been ${errors.length} errors in the last 24 hours.`}
+								/>
+								<Button>
+									<Link
+										href={`/${props.params.teamSlug}/${props.params.endpointId}/errors`}
+									>
+										Go to Errors
+									</Link>
+								</Button>
 							</CardHeader>
-							<CardContent>
-								<ErrorsTable errors={errors} />
-							</CardContent>
 						</Card>
 						<Divider />
 					</>
-				) : null} */}
+				) : null}
 				{checks.length > 0 ? (
 					<>
 						<Chart
