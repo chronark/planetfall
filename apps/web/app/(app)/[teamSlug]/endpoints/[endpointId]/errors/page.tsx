@@ -4,7 +4,7 @@ import { Client as Tinybird } from "@planetfall/tinybird";
 
 import { db } from "@planetfall/db";
 import { Stats } from "@/components/stats";
-import { ErrorsTable } from "../errors-table";
+import { ErrorsTable } from "./table";
 import { Heading } from "@/components/heading";
 import { LatestTable } from "../latest-table";
 import { DeleteButton } from "../delete";
@@ -33,6 +33,7 @@ export const revalidate = 10;
 export default async function Page(props: {
 	params: { teamSlug: string; endpointId: string };
 }) {
+	console.log("HELLO ALERTS");
 	const { session } = await getSession();
 	if (!session) {
 		return redirect("/auth/sign-in");
@@ -59,7 +60,7 @@ export default async function Page(props: {
 		endpoint.team.slug !== props.params.teamSlug ||
 		!endpoint.team.members.find((m) => m.userId === session.user.id)
 	) {
-		return notFound()
+		return notFound();
 	}
 
 	const tb = new Tinybird();
@@ -76,6 +77,7 @@ export default async function Page(props: {
 			error: e.error!,
 			latency: e.latency,
 			region: endpoint.regions.find((r) => r.id === e.regionId)!.name,
+			detailsUrl: `/${props.params.teamSlug}/checks/${e.id}`,
 		}));
 
 	return (
@@ -93,8 +95,10 @@ export default async function Page(props: {
 							title="Errors"
 							subtitle={`There have been ${errors.length} errors in the last 24 hours.`}
 						/>
-						TODO
 					</CardHeader>
+					<CardContent>
+						<ErrorsTable errors={errors} />
+					</CardContent>
 				</Card>
 				<Divider />
 			</main>

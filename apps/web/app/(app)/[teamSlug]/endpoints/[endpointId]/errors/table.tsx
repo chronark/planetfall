@@ -9,8 +9,11 @@ import {
 	getCoreRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
 type ErrorCheck = {
+	detailsUrl: string;
 	time: number;
 	region: string;
 	error: string;
@@ -33,11 +36,17 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 
 		accessor("status", {
 			header: "Status",
-			cell: (info) => (
-				<span className="px-2 py-0.5 bg-zinc-50 border-zinc-200 rounded border">
-					{info.getValue()}
-				</span>
-			),
+			cell: (info) => {
+				const status = info.getValue();
+				if (!status) {
+					return null;
+				}
+				return (
+					<span className="px-2 py-0.5 bg-zinc-50 border-zinc-200 rounded border">
+						{status}
+					</span>
+				);
+			},
 		}),
 		accessor("error", {
 			header: "Error",
@@ -52,6 +61,14 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 			cell: (info) =>
 				// regions.data?.find((r) => r.id === info.getValue())?.name ??
 				info.getValue(),
+		}),
+		accessor("detailsUrl", {
+			header: "",
+			cell: (info) => (
+				<Link href={info.getValue()}>
+					<ChevronRight className="duration-150 text-zinc-500 hover:text-zinc-800" />
+				</Link>
+			),
 		}),
 	];
 	const table = useReactTable({

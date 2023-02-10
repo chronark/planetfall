@@ -4,7 +4,7 @@ import { Client as Tinybird } from "@planetfall/tinybird";
 
 import { db } from "@planetfall/db";
 import { Stats } from "@/components/stats";
-import { ErrorsTable } from "./errors-table";
+import { ErrorsTable } from "./errors/table";
 import { Heading } from "@/components/heading";
 import { LatestTable } from "./latest-table";
 import { DeleteButton } from "./delete";
@@ -191,7 +191,7 @@ export default async function Page(props: {
 								/>
 								<Button>
 									<Link
-										href={`/${props.params.teamSlug}/${props.params.endpointId}/errors`}
+										href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/errors`}
 									>
 										Go to Errors
 									</Link>
