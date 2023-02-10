@@ -59,7 +59,7 @@ export default async function Page(props: {
 		endpoint.team.slug !== props.params.teamSlug ||
 		!endpoint.team.members.find((m) => m.userId === session.user.id)
 	) {
-		throw new Error("Access denied");
+		return notFound()
 	}
 
 	const tb = new Tinybird();
@@ -93,7 +93,7 @@ export default async function Page(props: {
 							title="Errors"
 							subtitle={`There have been ${errors.length} errors in the last 24 hours.`}
 						/>
-						TODO :)
+						TODO
 					</CardHeader>
 				</Card>
 				<Divider />
