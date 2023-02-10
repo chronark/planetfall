@@ -86,14 +86,22 @@ export default async function Page(props: {
 				sticky={true}
 				title="Errors"
 				description={endpoint.name}
-				actions={[]}
+				actions={[
+					<Button variant="outline">
+						<Link
+							href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}}`}
+						>
+							Endpoint
+						</Link>
+					</Button>,
+				]}
 			/>
 			<main className="container mx-auto">
 				<Card>
 					<CardHeader>
 						<CardHeaderTitle
-							title="Errors"
-							subtitle={`There have been ${errors.length} errors in the last 24 hours.`}
+							title={`${errors.length} Errors`}
+							subtitle="in the last 24 hours"
 						/>
 					</CardHeader>
 					<CardContent>

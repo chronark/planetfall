@@ -10,7 +10,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Minus } from "lucide-react";
 
 type ErrorCheck = {
 	detailsUrl: string;
@@ -39,7 +39,7 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 			cell: (info) => {
 				const status = info.getValue();
 				if (!status) {
-					return null;
+					return <Minus className="w-4 h-4 text-zinc-400" />;
 				}
 				return (
 					<span className="px-2 py-0.5 bg-zinc-50 border-zinc-200 rounded border">
@@ -53,7 +53,13 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 		}),
 		accessor("latency", {
 			header: "Latency",
-			cell: (info) => `${info.getValue()?.toLocaleString("en")} ms`,
+			cell: (info) => {
+				const latency = info.getValue();
+				if (!latency) {
+					return <Minus className="w-4 h-4 text-zinc-400" />;
+				}
+				return `${latency.toLocaleString("en")} ms`;
+			},
 		}),
 
 		accessor("region", {
