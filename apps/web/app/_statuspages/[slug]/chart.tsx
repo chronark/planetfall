@@ -58,7 +58,7 @@ export const Row: React.FC<{
 	const availability = totalChecks === 0 ? 1 : 1 - errors / totalChecks;
 
 	const current =
-		endpoint.metrics.at(-1)!.count > 0
+		endpoint.metrics.at(-1)!.errors > 0
 			? "Error"
 			: endpoint.degradedAfter &&
 			  endpoint.metrics.at(-1)!.p99 > endpoint.degradedAfter
