@@ -125,8 +125,7 @@ export const Features = asyncComponent(async () => {
 				{
 					icon: Layers,
 					title: "Easy Creation.",
-					description:
-						"Create a status page in seconds with a few clicks.",
+					description: "Create a status page in seconds with a few clicks.",
 				},
 				{
 					icon: Share2,
