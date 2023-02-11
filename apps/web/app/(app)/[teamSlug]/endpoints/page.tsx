@@ -35,7 +35,14 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				id: endpoint.id,
 				name: endpoint.name,
 				url: endpoint.url,
-				stats,
+				stats: stats.find((s) => s.regionId === "global") ?? {
+					regionId: "global",
+					count: 0,
+					p50: 0,
+					p95: 0,
+					p99: 0,
+					errors: 0,
+				},
 			};
 		}),
 	);

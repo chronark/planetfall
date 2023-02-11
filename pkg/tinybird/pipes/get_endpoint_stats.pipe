@@ -1,0 +1,15 @@
+VERSION 1
+TOKEN "live" READ
+
+NODE filter
+SQL >
+    %
+SELECT
+    regionId,
+    quantileTimingMerge(0.5)(p50) AS p50,
+    quantileTimingMerge(0.95)(p95) AS p95,
+    quantileTimingMerge(0.99)(p99) AS p99
+FROM endpoint_stats__v1
+WHERE
+    endpointId ={{ String(endpointId, required=True) }}
+GROUP BY regionId

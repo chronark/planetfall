@@ -32,8 +32,6 @@ export default async function Page(props: {
 		return notFound();
 	}
 
-	const endpoints = await db.endpoint.findMany({});
-
 	return (
 		<div>
 			<PageHeader
@@ -50,7 +48,7 @@ export default async function Page(props: {
 						slug: page.slug,
 						endpointIds: page.endpoints.map((endpoint) => endpoint.id),
 					}}
-					endpoints={endpoints.map((endpoint) => ({
+					endpoints={page.endpoints.map((endpoint) => ({
 						id: endpoint.id,
 						name: endpoint.name,
 						url: endpoint.url,

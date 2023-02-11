@@ -25,11 +25,33 @@ export default async function Page(props: { params: { slug: string } }) {
 	}
 	const regions = await db.region.findMany({});
 
-	const endpoints = await Promise.all(
-		statusPage.endpoints.map(async (endpoint) =>
-			getStats(endpoint, statusPage.team.maxTimeout),
-		),
+	let endpoints = await Promise.all(
+		statusPage.endpoints.map(async (endpoint) => ({
+			id: endpoint.id,
+			name: endpoint.name,
+			url: endpoint.url,
+			stats: await getStats(endpoint),
+		})),
 	);
+
+	console.log({ regions });
+	/**
+	 * Translate region ids to names for display
+	 */
+	endpoints.map((endpoint) => ({
+		...endpoint,
+		stats: Object.entries(endpoint.stats).reduce((acc, [regionId, stats]) => {
+			const key =
+				regions.find((region) => region.id === regionId)?.name ?? regionId;
+			acc[key] = {
+				metrics: stats.metrics,
+				series: stats.series.map((s) => ({ ...s, regionId: key })),
+			};
+			return acc;
+		}, {} as any),
+	}));
+
+	console.log(endpoints);
 
 	return (
 		<div className="flex flex-col min-h-screen px-4 overflow-hidden md:px-0 ">
@@ -55,19 +77,15 @@ export default async function Page(props: { params: { slug: string } }) {
 					//   },
 					// }}
 				>
-					{endpoints.map((endpoint, i) => (
+					{Object.entries(endpoints).map(([regionId, endpoint]) => (
 						<li
-							key={endpoint.url}
+							key={regionId}
 							// variants={{
 							//   hidden: { scale: 0.9, opacity: 0 },
 							//   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
 							// }}
 						>
-							<Row
-								key={endpoint.url}
-								endpoint={endpoint}
-								regions={regions.map((r) => ({ id: r.id, name: r.name }))}
-							/>
+							<Row endpoint={endpoint} />
 						</li>
 					))}
 				</ul>

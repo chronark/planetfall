@@ -1,0 +1,14 @@
+VERSION 1
+# TOKEN "live" READWRITE
+
+SCHEMA >
+    `endpointId` String,
+    `count` AggregateFunction(count),
+    `p50` AggregateFunction(quantileTiming(0.5), Nullable(Int16)),
+    `p95` AggregateFunction(quantileTiming(0.95), Nullable(Int16)),
+    `p99` AggregateFunction(quantileTiming(0.99), Nullable(Int16)),
+    `errors` AggregateFunction(count, Nullable(String)),
+    `regionId` String
+
+ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "endpointId,regionId"

@@ -1,57 +1,37 @@
 import { Endpoint } from "@prisma/client";
-import { Metric } from "./chart";
-import { Client as Tinybird } from "@planetfall/tinybird";
+import {
+	Client as Tinybird,
+	Metric,
+	MetricOverTime,
+} from "@planetfall/tinybird";
 
-function fillSeries(series: Metric[], buckets: number): Metric[] {
-	while (series.length < buckets) {
-		series.unshift({
-			time: -1,
-			count: 0,
-			min: 0,
-			max: 0,
-			p50: 0,
-			p95: 0,
-			p99: 0,
-			errors: 0,
-		});
-	}
-	return series;
-}
-
-export async function getStats(endpoint: Endpoint, maxTimeout: number) {
+export async function getStats(endpoint: Endpoint) {
 	const tinybird = new Tinybird();
-	const regions: Record<string, Omit<Metric, "time"> & { series: Metric[] }> =
+	const regions: Record<string, { metrics: Metric; series: MetricOverTime[] }> =
 		{};
 
-	const [endpointStats, regionStats, endpointSeries, regionsSeries] =
-		await Promise.all([
-			tinybird.getEndpointStats(endpoint.id),
-			tinybird.getEndpointStatsPerRegion(endpoint.id),
-			tinybird.getEndpointStatsPerHour(endpoint.id),
-			tinybird.getEndpointStatsPerRegionPerHour(endpoint.id),
-		]);
+	const [endpointStats, endpointSeries] = await Promise.all([
+		tinybird.getEndpointStats(endpoint.id),
+		tinybird.getEndpointStatsPerHour(endpoint.id),
+	]);
 
-	for (const region of regionStats) {
-		regions[region.regionId] = {
-			...region,
+	for (const metrics of endpointStats) {
+		regions[metrics.regionId] = {
+			metrics,
 			series: [],
 		};
 	}
-	for (const metric of regionsSeries) {
-		regions[metric.regionId].series.push(metric);
-	}
-	for (const region of Object.values(regions)) {
-		region.series = fillSeries(region.series, 72);
+	for (const s of endpointSeries) {
+		regions[s.regionId].series.push({
+			regionId: s.regionId,
+			time: s.time,
+			count: s.count ?? 0,
+			p50: s.p50 ?? 0,
+			p95: s.p95 ?? 0,
+			p99: s.p99 ?? 0,
+			errors: s.errors ?? 0,
+		});
 	}
 
-	return {
-		id: endpoint.id,
-		name: endpoint.name,
-		url: endpoint.url,
-		degradedAfter: endpoint.degradedAfter ?? undefined,
-		timeout: endpoint.timeout ?? maxTimeout,
-		...endpointStats,
-		metrics: fillSeries(endpointSeries, 72),
-		regions,
-	};
+	return regions;
 }

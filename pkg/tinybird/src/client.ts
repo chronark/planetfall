@@ -25,7 +25,7 @@ export class Client {
 			headers: { Authorization: `Bearer ${this.token}` },
 		});
 		if (!res.ok) {
-			throw new Error(await res.text());
+			throw new Error(`Error reading pipe ${pipe}: ${await res.text()}`);
 		}
 		const json = await res.json();
 		return json.data as T;
@@ -58,59 +58,25 @@ export class Client {
 		]);
 	}
 
-	public async getEndpointStats(endpointId: string): Promise<EndpointStats> {
-		const data = await this.fetch<EndpointStats[]>(
-			"endpoint_stats_globally__v1",
-			{ endpointId, days: 1 },
-		);
+	public async getEndpointStats(endpointId: string): Promise<Metric[]> {
+		const data = await this.fetch<Metric[]>("get_endpoint_stats__v1", {
+			endpointId,
+		});
 
-		if (data.length === 0) {
-			return {
-				count: 0,
-				min: 0,
-				max: 0,
-				p50: 0,
-				p95: 0,
-				p99: 0,
-				errors: 0,
-			};
-		}
-
-		// These can be null if there are no checks and crash the page
-		const stats = data[0];
-		stats.count ??= 0;
-		stats.min ??= 0;
-		stats.max ??= 0;
-		stats.p50 ??= 0;
-		stats.p95 ??= 0;
-		stats.p99 ??= 0;
-		stats.errors ??= 0;
-		return stats;
+		return data.map((d) => ({
+			regionId: d.regionId,
+			count: d.count ?? 0,
+			p50: d.p50 ?? 0,
+			p95: d.p95 ?? 0,
+			p99: d.p99 ?? 0,
+			errors: d.errors ?? 0,
+		}));
 	}
-	public async getEndpointStatsPerRegion(
+	public async getEndpointStatsPerHour(
 		endpointId: string,
-	): Promise<(EndpointStats & { regionId: string })[]> {
-		const data = await this.fetch<(EndpointStats & { regionId: string })[]>(
-			"endpoint_stats_per_region__v1",
-			{ endpointId, days: 7 },
-		);
-
-		return data;
-	}
-
-	public async getEndpointStatsPerHour(endpointId: string): Promise<Metric[]> {
-		const data = await this.fetch<Metric[]>(
-			"endpoint_stats_globally_per_hour__v1",
-			{ endpointId, days: 7 },
-		);
-
-		return data;
-	}
-	public async getEndpointStatsPerRegionPerHour(
-		endpointId: string,
-	): Promise<({ regionId: string } & Metric)[]> {
-		const data = await this.fetch<({ regionId: string } & Metric)[]>(
-			"endpoint_stats_per_region_per_hour__v1",
+	): Promise<MetricOverTime[]> {
+		const data = await this.fetch<MetricOverTime[]>(
+			"get_endpoint_stats_per_hour__v1",
 			{ endpointId, days: 7 },
 		);
 
@@ -118,7 +84,7 @@ export class Client {
 	}
 
 	public async getCheckById(checkId: string): Promise<Check | null> {
-		const data = await this.fetch<Check[]>("check_by_id__v1", { checkId });
+		const data = await this.fetch<Check[]>("get_check_by_id__v1", { checkId });
 
 		if (data.length === 0) {
 			return null;
@@ -155,7 +121,7 @@ export class Client {
 				month: number;
 				day: number;
 			}[]
-		>("usage__v1", { teamId, year: time.year, month: time.month });
+		>("get_usage__v1", { teamId, year: time.year, month: time.month });
 
 		return data;
 	}
@@ -177,15 +143,6 @@ export class Client {
 	}
 }
 
-export type EndpointStats = {
-	count: number;
-	min: number;
-	max: number;
-	p50: number;
-	p95: number;
-	p99: number;
-	errors: number;
-};
 export type Check = {
 	id: string;
 	endpointId: string;
@@ -203,12 +160,12 @@ export type Check = {
 };
 
 export type Metric = {
-	time: number;
 	count: number;
-	min: number;
-	max: number;
 	p50: number;
 	p95: number;
 	p99: number;
 	errors: number;
+	regionId: string;
 };
+
+export type MetricOverTime = { time: number } & Metric;

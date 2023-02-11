@@ -1,0 +1,25 @@
+VERSION 1
+
+DESCRIPTION >
+    Aggregate endpoint stats globally
+
+TOKEN "live" READ
+
+NODE aggreagate_usage
+SQL >
+    SELECT
+        endpointId,
+        COUNTState() AS count,
+        quantileTimingState(0.5)(latency) AS p50,
+        quantileTimingState(0.95)(latency) AS p95,
+        quantileTimingState(0.99)(latency) AS p99,
+        COUNTState(error) AS errors,
+        regionId
+    FROM checks__v2
+    WHERE time >= now() - INTERVAL 1 DAY 
+    GROUP BY endpointId, regionId
+
+TYPE MATERIALIZED
+DATASOURCE endpoint_stats
+ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "endpointId,regionId"

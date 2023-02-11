@@ -8,6 +8,7 @@ import { ChevronDown } from "lucide-react";
 import { CardContent, CardHeader, Card } from "@/components/card";
 import cn from "classnames";
 import { Text } from "@/components/text";
+import { Metric, MetricOverTime } from "@planetfall/tinybird";
 function format(n: number): string {
 	return Intl.NumberFormat(undefined).format(Math.round(n));
 }
@@ -21,49 +22,70 @@ const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
 	);
 };
 
-export type Metric = {
-	time: number;
-	count: number;
-	min: number;
-	max: number;
-	p50: number;
-	p95: number;
-	p99: number;
-	errors: number;
-};
+/**
+ * Trims the series to the last nBuckets and fills in the gaps with 0s
+ */
+function fillSeries(
+	series: MetricOverTime[],
+	nBuckets: number,
+	regionId: string,
+) {
+	series = series
+		.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
+		.slice(-nBuckets);
+	while (series.length < nBuckets) {
+		series.unshift({
+			regionId,
+			time: -1,
+			count: 0,
+			p50: 0,
+			p95: 0,
+			p99: 0,
+			errors: 0,
+		});
+	}
+
+	return series;
+}
 
 export const Row: React.FC<{
-	regions: { id: string; name: string }[];
+	nBuckets?: number;
 	endpoint: {
 		id: string;
 		name: string;
 		url: string;
 		degradedAfter?: number;
-		timeout: number;
-		count: number;
-		min: number;
-		max: number;
-		p50: number;
-		p95: number;
-		p99: number;
-		metrics: Metric[];
-
-		regions: Record<string, Omit<Metric, "time"> & { series: Metric[] }>;
+		timeout?: number;
+		stats: Record<
+			string,
+			{
+				series: MetricOverTime[];
+				metrics: Metric;
+			}
+		>;
 	};
-}> = ({ endpoint, regions }): JSX.Element => {
+}> = ({ endpoint, nBuckets = 72 }): JSX.Element => {
 	const [expanded, setExpanded] = useState(false);
 
-	const totalChecks = endpoint.metrics.reduce((total, m) => total + m.count, 0);
-	const errors = endpoint.metrics.reduce((total, m) => total + m.errors, 0);
+	const totalChecks = endpoint.stats["global"]?.metrics.count ?? 0;
+	const errors = endpoint.stats["global"]?.metrics.errors ?? 0;
 	const availability = totalChecks === 0 ? 1 : 1 - errors / totalChecks;
 
 	const current =
-		endpoint.metrics.at(-1)!.errors > 0
+		endpoint.stats["global"]?.series.at(-1)!.errors > 0
 			? "Error"
 			: endpoint.degradedAfter &&
-			  endpoint.metrics.at(-1)!.p99 > endpoint.degradedAfter
+			  endpoint.stats["global"]?.series.at(-1)!.p99 > endpoint.degradedAfter
 			? "Degraded"
 			: "Operational";
+
+	for (const regionId of Object.keys(endpoint.stats)) {
+		endpoint.stats[regionId].series = fillSeries(
+			endpoint.stats[regionId].series,
+			nBuckets,
+			regionId,
+		);
+	}
 
 	return (
 		<Card>
@@ -73,9 +95,18 @@ export const Row: React.FC<{
 						<Heading h3>{endpoint.name}</Heading>
 						<div className="flex justify-start mt-4">
 							<div className="grid grid-cols-1 gap-2 sm:grid-cols-5">
-								<Stat label="p50" value={endpoint.p50} />
-								<Stat label="p95" value={endpoint.p95} />
-								<Stat label="p99" value={endpoint.p99} />
+								<Stat
+									label="p50"
+									value={endpoint.stats["global"]?.metrics.p50 ?? 0}
+								/>
+								<Stat
+									label="p95"
+									value={endpoint.stats["global"]?.metrics.p95 ?? 0}
+								/>
+								<Stat
+									label="p99"
+									value={endpoint.stats["global"]?.metrics.p99 ?? 0}
+								/>
 							</div>
 						</div>
 					</div>
@@ -101,8 +132,10 @@ export const Row: React.FC<{
 			<CardContent>
 				<div className="flex flex-col space-y-2">
 					<Chart
-						metrics={endpoint.metrics}
-						nBuckets={72}
+						series={
+							endpoint.stats["global"]?.series ??
+							fillSeries([], nBuckets, "global")
+						}
 						degradedAfter={endpoint.degradedAfter}
 						timeout={endpoint.timeout}
 					/>
@@ -124,31 +157,30 @@ export const Row: React.FC<{
 
 				{expanded ? (
 					<ul className="grid grid-cols-1 gap-4 py-8 lg:grid-cols-2">
-						{Object.entries(endpoint.regions)
-
-						.map(([regionId, metrics]) => (
-							<li
-								key={regionId}
-								className="flex flex-col p-4 space-y-2 border rounded border-zinc-200"
-							>
-								<div className="flex flex-col items-start justify-between ">
-									<h4 className="text-lg text-bold text-zinc-600 whitespace-nowrap">
-										{regions.find((r) => r.id === regionId)?.name || regionId}
-									</h4>
-									<div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
-										<Stat label="p50" value={metrics.p50} />
-										<Stat label="p95" value={metrics.p95} />
-										<Stat label="p99" value={metrics.p99} />
+						{Object.entries(endpoint.stats)
+							.filter(([region]) => region !== "global")
+							.map(([region, { metrics, series }]) => (
+								<li
+									key={region}
+									className="flex flex-col p-4 space-y-2 border rounded border-zinc-200"
+								>
+									<div className="flex flex-col items-start justify-between ">
+										<h4 className="text-lg text-bold text-zinc-600 whitespace-nowrap">
+											{region}
+										</h4>
+										<div className="flex flex-wrap items-center justify-between gap-2 lg:w-1/2 sm:gap-4 xl:gap-6 md:flex-nowrap">
+											<Stat label="p50" value={metrics.p50} />
+											<Stat label="p95" value={metrics.p95} />
+											<Stat label="p99" value={metrics.p99} />
+										</div>
 									</div>
-								</div>
-								<Chart
-									metrics={metrics.series}
-									nBuckets={72}
-									degradedAfter={endpoint.degradedAfter}
-									timeout={endpoint.timeout}
-								/>
-							</li>
-						))}
+									<Chart
+										series={series}
+										degradedAfter={endpoint.degradedAfter}
+										timeout={endpoint.timeout}
+									/>
+								</li>
+							))}
 					</ul>
 				) : null}
 			</CardContent>
@@ -158,25 +190,20 @@ export const Row: React.FC<{
 
 const Chart: React.FC<{
 	height?: string;
-	metrics: Metric[];
-	nBuckets: number;
+	series: MetricOverTime[];
 	degradedAfter?: number;
 	timeout?: number;
-}> = ({ metrics, nBuckets, height, degradedAfter, timeout }): JSX.Element => {
-	metrics = metrics
-		.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
-		.slice(-nBuckets);
-	const p99 = Math.max(...metrics.map((m) => m.p99));
+}> = ({ series, height, degradedAfter }): JSX.Element => {
+	const p99 = Math.max(...series.map((m) => m.p99));
 
 	let t = new Date();
 	t.setMinutes(0);
 	t.setSeconds(0);
 	t.setMilliseconds(0);
-
 	return (
 		<div>
 			<div className={`flex bg-white ${height ?? "h-12"} items-end`}>
-				{metrics
+				{series
 
 				.map((bucket, i) => {
 					const start = new Date(bucket.time);

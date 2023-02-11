@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Bar } from "@ant-design/plots";
-import { EndpointStats } from "@planetfall/tinybird";
+import { Metric } from "@planetfall/tinybird";
 import {
 	Select,
 	SelectContent,
@@ -17,7 +17,7 @@ import {
 	CardHeaderTitle,
 } from "@/components/card";
 type Props = {
-	regions: (EndpointStats & { region: string })[];
+	regions: Metric[];
 	endpoint: {
 		timeout?: number;
 		degradedAfter?: number;

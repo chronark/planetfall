@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/button";
+import { Metric } from "@planetfall/tinybird";
 import {
 	createColumnHelper,
 	flexRender,
@@ -16,14 +17,7 @@ type Endpoint = {
 	id: string;
 	name: string | null;
 	url: string;
-	stats: {
-		count: number;
-		min: number;
-		max: number;
-		p50: number;
-		p95: number;
-		p99: number;
-	} | null;
+	stats: Metric | null;
 };
 type Props = {
 	endpoints: Endpoint[];
@@ -55,14 +49,6 @@ export const EndpointsTable: React.FC<Props> = ({ endpoints }) => {
 		accessor("stats.count", {
 			header: "Count",
 			cell: (info) => countFormat(info.getValue()),
-		}),
-		accessor("stats.min", {
-			header: "Min",
-			cell: (info) => latencyFormat(info.getValue()),
-		}),
-		accessor("stats.max", {
-			header: "Max",
-			cell: (info) => latencyFormat(info.getValue()),
 		}),
 		accessor("stats.p50", {
 			header: "P50",

@@ -13,7 +13,6 @@ import { Button } from "@/components/button";
 import Toggle from "./toggle";
 import { Text } from "@/components/text";
 import { ChartsSection } from "./chart-by-region";
-import { Edu_NSW_ACT_Foundation } from "@next/font/google";
 import Link from "next/link";
 import { Switch } from "@/components/switch";
 import { Chart } from "./chart";
@@ -64,14 +63,19 @@ export default async function Page(props: {
 
 	const tb = new Tinybird();
 
-	const [stats, checks, statsByRegion] = await Promise.all([
+	const [stats, checks] = await Promise.all([
 		tb.getEndpointStats(endpoint.id),
 		tb.getLatestChecksByEndpoint(endpoint.id, { limit: 10000 }),
-		tb.getEndpointStatsPerRegion(endpoint.id),
 	]);
 
 	if (!stats) {
 		console.warn(__filename, "Stats not found");
+
+		return notFound();
+	}
+	const globalStats = stats.find((s) => s.regionId === "global");
+	if (!globalStats) {
+		console.warn(__filename, "Global stats not found");
 
 		return notFound();
 	}
@@ -85,7 +89,8 @@ export default async function Page(props: {
 			region: endpoint.regions.find((r) => r.id === e.regionId)!.name,
 		}));
 
-	const availability = stats.count > 0 ? 1 - errors.length / stats.count : 1;
+	const availability =
+		globalStats.count > 0 ? 1 - errors.length / globalStats.count : 1;
 	const degraded =
 		checks && checks.length > 0
 			? (endpoint.degradedAfter
@@ -140,39 +145,39 @@ export default async function Page(props: {
 							<Stats label="Errors" value={errors.length.toLocaleString()} />
 							<Stats
 								label="P50"
-								value={stats.p50.toLocaleString()}
+								value={globalStats.p50.toLocaleString()}
 								suffix="ms"
 								status={
-									endpoint.timeout && stats.p50 > endpoint.timeout
+									endpoint.timeout && globalStats.p50 > endpoint.timeout
 										? "error"
 										: endpoint.degradedAfter &&
-										  stats.p50 > endpoint.degradedAfter
+										  globalStats.p50 > endpoint.degradedAfter
 										? "warn"
 										: undefined
 								}
 							/>
 							<Stats
 								label="P95"
-								value={stats.p95.toLocaleString()}
+								value={globalStats.p95.toLocaleString()}
 								suffix="ms"
 								status={
-									endpoint.timeout && stats.p95 > endpoint.timeout
+									endpoint.timeout && globalStats.p95 > endpoint.timeout
 										? "error"
 										: endpoint.degradedAfter &&
-										  stats.p95 > endpoint.degradedAfter
+										  globalStats.p95 > endpoint.degradedAfter
 										? "warn"
 										: undefined
 								}
 							/>
 							<Stats
 								label="P99"
-								value={stats.p99.toLocaleString()}
+								value={globalStats.p99.toLocaleString()}
 								suffix="ms"
 								status={
-									endpoint.timeout && stats.p99 > endpoint.timeout
+									endpoint.timeout && globalStats.p99 > endpoint.timeout
 										? "error"
 										: endpoint.degradedAfter &&
-										  stats.p99 > endpoint.degradedAfter
+										  globalStats.p99 > endpoint.degradedAfter
 										? "warn"
 										: undefined
 								}
@@ -204,7 +209,7 @@ export default async function Page(props: {
 				{checks.length > 0 ? (
 					<>
 						<Chart
-							regions={statsByRegion.map((region) => ({
+							regions={stats.map((region) => ({
 								...region,
 								region:
 									endpoint.regions.find((r) => r.id === region.regionId)

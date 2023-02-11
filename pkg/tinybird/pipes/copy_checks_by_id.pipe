@@ -1,0 +1,15 @@
+VERSION 1
+
+DESCRIPTION >
+    Copy checks table to a materialized view
+
+TOKEN "live" READ
+
+NODE copy_checks
+SQL >
+    SELECT * FROM checks__v2
+
+TYPE MATERIALIZED
+DATASOURCE checks_by_id
+ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "id"

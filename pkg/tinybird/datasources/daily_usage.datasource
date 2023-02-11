@@ -1,5 +1,5 @@
 VERSION 1
-TOKEN "live" READWRITE
+# TOKEN "live" READWRITE
 
 SCHEMA >
     `teamId` String,

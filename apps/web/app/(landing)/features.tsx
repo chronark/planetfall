@@ -20,9 +20,7 @@ import React, { cache } from "react";
 import { Feature, Props } from "./feature";
 
 export const Features = asyncComponent(async () => {
-	const regions = await cache(() =>
-		db.region.count({ where: { visible: true } }),
-	)();
+	const regions = await cache(() => db.region.findMany())();
 	const stats = await cache(async () => {
 		const endpoint = await db.endpoint.findUnique({
 			where: {
@@ -32,8 +30,28 @@ export const Features = asyncComponent(async () => {
 						: "ept_Jk9p1kGTRdvb54PUfZSmZu",
 			},
 		});
-		const stats = endpoint ? await getStats(endpoint, endpoint.timeout!) : null;
-		return stats;
+		if (!endpoint) {
+			return null;
+		}
+		const stats = await getStats(endpoint);
+
+		return {
+			id: endpoint.id,
+			name: endpoint.name,
+			url: endpoint.url,
+			degradedAfter: endpoint.degradedAfter ?? undefined,
+			timeout: endpoint.timeout ?? undefined,
+			stats: Object.entries(stats).reduce(
+				(acc, [regionId, value]) => {
+					const regionName =
+						regions.find((r) => r.id === regionId)?.name ?? regionId;
+					acc[regionName] = value;
+					return acc;
+				},
+
+				{} as any,
+			),
+		};
 	})();
 
 	const features: Props["feature"][] = [
@@ -48,7 +66,7 @@ export const Features = asyncComponent(async () => {
 			bullets: [
 				{
 					icon: Globe,
-					title: `${regions} Regions.`,
+					title: `${regions.length} Regions.`,
 					description:
 						"Monitor your API from anywhere in the world. From all AWS regions and Vercel edge locations. ",
 				},
@@ -102,7 +120,7 @@ export const Features = asyncComponent(async () => {
 			description:
 				"Create custom status pages for your APIs to share with your customers.",
 
-			image: stats ? <Row regions={[]} endpoint={stats} /> : undefined,
+			image: stats ? <Row endpoint={stats} /> : undefined,
 			bullets: [
 				{
 					icon: Layers,

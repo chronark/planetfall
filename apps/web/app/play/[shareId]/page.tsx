@@ -39,7 +39,6 @@ export default async function Share(props: { params: { shareId: string } }) {
 		.filter((r) => r.checks.length > 0)
 		.sort((a, b) => (b.checks[0].latency ?? 0) - (a.checks[0].latency ?? 0));
 
-	console.log({ tags });
 	return (
 		<div className="bg-zinc-50">
 			<header className="w-full backdrop-blur">
