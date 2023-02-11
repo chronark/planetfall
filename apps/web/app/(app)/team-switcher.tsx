@@ -67,13 +67,13 @@ export const TeamSwitcher: React.FC<Props> = ({
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger className="flex items-center justify-between gap-4 px-2 py-1 mx-2 rounded hover:bg-zinc-100">
+			<DropdownMenuTrigger className="flex items-center justify-between px-2 py-1 mx-2 rounded gap-4 hover:bg-zinc-100">
 				<span>{currentTeam?.name}</span>
 				<ChevronsUpDown className="w-4 h-4" />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent
 				sideOffset={5}
-				className="z-30 p-4 bg-white border divide-y rounded shadow-lg divide-zinc-200"
+				className="z-30 p-4 bg-white border rounded shadow-lg divide-y divide-zinc-200"
 			>
 				<div className="py-2">
 					<h3 className="px-3 text-xs font-medium text-zinc-500">Personal</h3>
@@ -116,7 +116,7 @@ export const TeamSwitcher: React.FC<Props> = ({
 						))}
 
 						<Dialog>
-							<DialogTrigger className="flex items-center justify-between gap-4 px-3 py-2 text-sm font-medium rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-90">
+							<DialogTrigger className="flex items-center justify-between px-3 py-2 text-sm font-medium gap-4 rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-90">
 								<span className="truncate">Create New Team</span>
 
 								<Plus className="w-4 h-4" />

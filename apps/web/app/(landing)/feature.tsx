@@ -47,7 +47,7 @@ export const Feature: React.FC<Props> = ({ feature }) => {
 				</div>
 			</div>
 			<div className="px-6 mx-auto mt-16 max-w-7xl sm:mt-20 md:mt-24 lg:px-8">
-				<dl className="grid max-w-2xl grid-cols-1 mx-auto text-base leading-7 text-zinc-700 gap-x-6 gap-y-10 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16">
+				<dl className="max-w-2xl mx-auto text-base grid grid-cols-1 leading-7 text-zinc-700 gap-x-6 gap-y-10 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16">
 					{feature.bullets.map((b, i) => (
 						<div key={i} className="relative pl-9">
 							<dt className="inline font-semibold text-zinc-900">

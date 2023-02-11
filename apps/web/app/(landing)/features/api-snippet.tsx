@@ -57,7 +57,7 @@ export const ApiSnippet: React.FC = () => {
 					<circle cx="21" cy="5" r="4.5" />
 					<circle cx="37" cy="5" r="4.5" />
 				</svg>
-				{/* <div className="flex mt-4 space-x-2 text-xs">
+				{/* <div className="flex mt-4 text-xs space-x-2">
                 {tabs.map((tab) => (
                     <div
                         key={tab.name}

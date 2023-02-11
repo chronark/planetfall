@@ -41,7 +41,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 	return (
 		<div className="transition-all duration-500">
 			{timings.dnsDone > 0 ? (
-				<div className="flex items-center w-full gap-4 py-1 duration-500 rounded hover:bg-zinc-100">
+				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-zinc-100">
 					<div className="flex justify-between w-1/5 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>DNS</span>
 						<span>
@@ -65,7 +65,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 			) : null}
 
 			{timings.connectDone > 0 ? (
-				<div className="flex items-center w-full gap-4 py-1 duration-500 rounded hover:bg-zinc-100">
+				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-zinc-100">
 					<div className="flex justify-between w-1/5 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>Connection</span>
 						<span>
@@ -95,7 +95,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 				</div>
 			) : null}
 			{timings.tlsHandshakeDone > 0 ? (
-				<div className="flex items-center w-full gap-4 py-1 duration-500 rounded hover:bg-zinc-100">
+				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-zinc-100">
 					<div className="flex justify-between w-1/5 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>TLS</span>
 						<span>
@@ -131,7 +131,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 				</div>
 			) : null}
 			{timings.firstByteDone > 0 ? (
-				<div className="flex items-center w-full gap-4 py-1 duration-500 rounded hover:bg-zinc-100">
+				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-zinc-100">
 					<div className="flex justify-between w-1/5 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>Waiting for response</span>
 						<span>
@@ -164,7 +164,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 				</div>
 			) : null}
 			{timings.transferDone > 0 ? (
-				<div className="flex items-center w-full gap-4 py-1 duration-500 rounded hover:bg-zinc-100">
+				<div className="flex items-center w-full py-1 rounded gap-4 duration-500 hover:bg-zinc-100">
 					<div className="flex justify-between w-1/5 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>Transfer</span>
 						<span>

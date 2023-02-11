@@ -164,7 +164,7 @@ export const Form: React.FC<Props> = ({ page, teamSlug, endpoints }) => {
 							<div role="group" aria-labelledby="label-email">
 								<div className="sm:grid sm:items-baseline sm:gap-4">
 									<div className="mt-4 sm:col-span-3 sm:mt-0">
-										<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+										<fieldset className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2">
 											{endpoints.map((e) => (
 												<button
 													type="button"
@@ -211,14 +211,14 @@ export const Form: React.FC<Props> = ({ page, teamSlug, endpoints }) => {
 					<div className="flex justify-end gap-8">
 						<Link
 							href={`/${teamSlug}/pages`}
-							className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 text-zinc-900 md:hover:bg-zinc-50 hover:text-zinc-900 group"
+							className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all duration-300 ease-in-out shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 text-zinc-900 md:hover:bg-zinc-50 hover:text-zinc-900 group"
 						>
 							Cancel
 						</Link>
 						<button
 							type="button"
 							onClick={handleSubmit(submit)}
-							className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
+							className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all duration-300 ease-in-out shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
 						>
 							{loading ? <Loading /> : "Update"}
 						</button>

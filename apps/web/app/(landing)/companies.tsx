@@ -83,7 +83,7 @@ export const Companies: React.FC = (): JSX.Element => {
 				<h3 className="py-2 mt-2 text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-t from-zinc-100/80 to-white md:text-6xl">
 					Trusted By
 				</h3>
-				<ul className="flex flex-col items-center justify-center gap-4 mt-8 lg:mt-16 sm:gap-8 md:gap-16 lg:gap-42 sm:flex-row">
+				<ul className="flex flex-col items-center justify-center mt-8 gap-4 lg:mt-16 sm:gap-8 md:gap-16 lg:gap-42 sm:flex-row">
 					{companies.map(({ logo, href }) => (
 						<li key={href} className="w-40">
 							<div className="">

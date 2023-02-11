@@ -15,7 +15,7 @@ function format(n: number): string {
 
 const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
 	return (
-		<div className="flex items-center space-x-1 text-xs text-zinc-700 whitespace-nowrap">
+		<div className="flex items-center text-xs space-x-1 text-zinc-700 whitespace-nowrap">
 			<span className="font-semibold">{label}:</span>
 			<span className="">{format(value)} ms</span>
 		</div>
@@ -116,7 +116,7 @@ export const Row: React.FC<{
 							{(availability * 100).toFixed(2)} % Availability
 						</Text>
 
-						<div className="flex items-center gap-2 px-3 py-1 border rounded-full border-zinc-300">
+						<div className="flex items-center px-3 py-1 border rounded-full gap-2 border-zinc-300">
 							<div
 								className={cn("w-2.5 h-2.5 rounded-full", {
 									"bg-green-500": current === "Operational",
@@ -141,9 +141,9 @@ export const Row: React.FC<{
 					/>
 				</div>
 
-				<div className="flex justify-end gap-4 py-2 mt-2 md:gap-8">
+				<div className="flex justify-end py-2 mt-2 gap-4 md:gap-8">
 					<button
-						className="flex items-center gap-1 text-sm duration-150 text-zinc-500 hover:text-zinc-800"
+						className="flex items-center text-sm gap-1 duration-150 text-zinc-500 hover:text-zinc-800"
 						onClick={() => setExpanded(!expanded)}
 					>
 						<span>Show details</span>{" "}
@@ -156,13 +156,13 @@ export const Row: React.FC<{
 				</div>
 
 				{expanded ? (
-					<ul className="grid grid-cols-1 gap-4 py-8 lg:grid-cols-2">
+					<ul className="py-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
 						{Object.entries(endpoint.stats)
 							.filter(([region]) => region !== "global")
 							.map(([region, { metrics, series }]) => (
 								<li
 									key={region}
-									className="flex flex-col p-4 space-y-2 border rounded border-zinc-200"
+									className="flex flex-col p-4 border rounded space-y-2 border-zinc-200"
 								>
 									<div className="flex flex-col items-start justify-between ">
 										<h4 className="text-lg text-bold text-zinc-600 whitespace-nowrap">
@@ -256,7 +256,7 @@ const Chart: React.FC<{
 															{start.toLocaleTimeString()} -{" "}
 															{end.toLocaleTimeString()}
 														</h3>
-														<dl className="grid grid-cols-1 gap-2 mt-5 md:grid-cols-5 ">
+														<dl className="mt-5 grid grid-cols-1 gap-2 md:grid-cols-5 ">
 															<Stats
 																label="Checks"
 																value={format(bucket.count)}

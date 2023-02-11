@@ -185,7 +185,7 @@ const Button: React.FC<PropsWithChildren<{ href: string }>> = ({
 	return (
 		<Link
 			href={href}
-			className="block w-full py-2 text-sm font-semibold text-center duration-150 border rounded border-zinc-900 bg-zinc-900 text-zinc-50 hover:bg-white hover:text-zinc-900 hover:drop-shadow-cta focus:bg-zinc-900 focus:text-zinc-50 focus:drop-shadow-none "
+			className="block w-full py-2 text-sm font-semibold text-center border rounded duration-150 border-zinc-900 bg-zinc-900 text-zinc-50 hover:bg-white hover:text-zinc-900 hover:drop-shadow-cta focus:bg-zinc-900 focus:text-zinc-50 focus:drop-shadow-none "
 		>
 			{children}
 		</Link>
@@ -228,13 +228,13 @@ export const Pricing: React.FC = (): JSX.Element => {
 						<a
 							href={tier.href}
 							aria-describedby={tier.name}
-							className="block px-3 py-2 mt-8 text-sm font-semibold leading-6 text-center duration-150 rounded-md text-zinc-900 ring-1 ring-inset ring-zinc-900 hover:bg-zinc-900 hover:text-white focus:outline-none"
+							className="block px-3 py-2 mt-8 text-sm font-semibold text-center leading-6 duration-150 rounded-md text-zinc-900 ring-1 ring-inset ring-zinc-900 hover:bg-zinc-900 hover:text-white focus:outline-none"
 						>
 							{tier.cta}
 						</a>
 						<ul
 							role="list"
-							className="mt-10 space-y-4 text-sm leading-6 text-zinc-900"
+							className="mt-10 text-sm space-y-4 leading-6 text-zinc-900"
 						>
 							{sections.map((section) => (
 								<li key={section.name}>
@@ -339,7 +339,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 
 										<a
 											href={tier.href}
-											className="block px-3 py-2 mt-8 text-sm font-semibold leading-6 text-center duration-150 rounded-md text-zinc-900 ring-1 ring-inset ring-zinc-900 hover:bg-zinc-900 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+											className="block px-3 py-2 mt-8 text-sm font-semibold text-center leading-6 duration-150 rounded-md text-zinc-900 ring-1 ring-inset ring-zinc-900 hover:bg-zinc-900 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 										>
 											{tier.cta}
 										</a>
@@ -394,7 +394,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 											{tiers.map((tier) => (
 												<td key={tier.name} className="px-6 py-4 xl:px-8">
 													{typeof feature.tiers[tier.name] === "string" ? (
-														<div className="text-sm leading-6 text-center text-zinc-500">
+														<div className="text-sm text-center leading-6 text-zinc-500">
 															{feature.tiers[tier.name]}
 														</div>
 													) : (

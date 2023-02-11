@@ -16,7 +16,7 @@ export function MultiSelect<TOptions extends { id: string; name: string }[]>({
 	return (
 		<Dropdown.Root>
 			<Dropdown.Trigger asChild={true}>
-				<button className="flex items-center gap-2 px-3 py-1 font-medium text-center transition-all duration-300 border rounded whitespace-nowrap focus:outline-none bg-zinc-800 text-zinc-50 hover:bg-zinc-50 hover:text-zinc-900 border-zinc-700 ">
+				<button className="flex items-center px-3 py-1 font-medium text-center border rounded gap-2 transition-all duration-300 whitespace-nowrap focus:outline-none bg-zinc-800 text-zinc-50 hover:bg-zinc-50 hover:text-zinc-900 border-zinc-700 ">
 					Status
 					<ChevronDownIcon className="w-4 h-4" />
 				</button>

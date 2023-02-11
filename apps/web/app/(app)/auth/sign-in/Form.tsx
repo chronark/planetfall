@@ -14,7 +14,7 @@ export const Form: React.FC = () => {
 
 	if (state === "sent") {
 		return (
-			<div className="flex flex-col items-center justify-center px-4 py-6 pt-8 space-y-3 text-center">
+			<div className="flex flex-col items-center justify-center px-4 py-6 pt-8 text-center space-y-3">
 				<h2 className="text-2xl font-semibold text-zinc-900">
 					Check Your Email
 				</h2>
@@ -29,7 +29,7 @@ export const Form: React.FC = () => {
 		<div>
 			<Card>
 				<CardContent>
-					<div className="flex flex-col items-center justify-center px-12 py-24 space-y-3 text-center">
+					<div className="flex flex-col items-center justify-center px-12 py-24 text-center space-y-3">
 						<Link href="https://planetfall.io">
 							<Logo className="w-10 h-10" />
 						</Link>

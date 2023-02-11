@@ -28,7 +28,7 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 	}
 	return (
 		<div className="flex flex-col w-full gap-4 md:gap-0">
-			<div className="flex flex-col w-full py-1 duration-500 rounded md:flex-row md:gap-4 md:items-center hover:bg-zinc-100">
+			<div className="flex flex-col w-full py-1 rounded duration-500 md:flex-row md:gap-4 md:items-center hover:bg-zinc-100">
 				<div className="flex justify-between w-1/2 text-sm text-zinc-500 whitespace-nowrap ">
 					<span>DNS</span>
 					<span>
@@ -46,7 +46,7 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-full py-1 duration-500 rounded md:flex-row md:gap-4 md:items-center hover:bg-zinc-100">
+			<div className="flex flex-col w-full py-1 rounded duration-500 md:flex-row md:gap-4 md:items-center hover:bg-zinc-100">
 				<div className="flex justify-between w-1/2 text-sm text-zinc-500 whitespace-nowrap ">
 					<span>Connection</span>
 					<span>
@@ -69,7 +69,7 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 			{timings.tlsHandshakeDone > 0 && timings.tlsHandshakeStart > 0 ? (
-				<div className="flex flex-col w-full py-1 duration-500 rounded md:flex-row md:gap-4 md:items-center hover:bg-zinc-100">
+				<div className="flex flex-col w-full py-1 rounded duration-500 md:flex-row md:gap-4 md:items-center hover:bg-zinc-100">
 					<div className="flex justify-between w-1/2 text-sm text-zinc-500 whitespace-nowrap ">
 						<span>TLS</span>
 						<span>
@@ -99,7 +99,7 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			) : null}
 
-			<div className="flex flex-col w-full py-1 duration-500 rounded md:flex-row md:gap-4 md:items-center hover:bg-zinc-100">
+			<div className="flex flex-col w-full py-1 rounded duration-500 md:flex-row md:gap-4 md:items-center hover:bg-zinc-100">
 				<div className="flex justify-between w-1/2 text-sm text-zinc-500 whitespace-nowrap ">
 					<span>TTFB</span>
 					<span>
@@ -123,7 +123,7 @@ export const Trace: React.FC<TraceProps> = ({ timings }): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-full py-1 duration-500 rounded md:flex-row md:gap-4 md:items-center hover:bg-zinc-100">
+			<div className="flex flex-col w-full py-1 rounded duration-500 md:flex-row md:gap-4 md:items-center hover:bg-zinc-100">
 				<div className="flex justify-between w-1/2 text-sm text-zinc-500 whitespace-nowrap ">
 					<span>Transfer</span>
 					<span>

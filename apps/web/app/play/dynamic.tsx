@@ -136,7 +136,7 @@ export const Inner: React.FC<Props> = ({
 								</Link>
 							</Dialog.Description>
 
-							<div className="flex justify-end pt-4 space-x-2 border-t border-zinc-200 ">
+							<div className="flex justify-end pt-4 border-t space-x-2 border-zinc-200 ">
 								<Dialog.Cancel>
 									<Button type="secondary">Close</Button>
 								</Dialog.Cancel>
@@ -185,7 +185,7 @@ export const Inner: React.FC<Props> = ({
 											key="submit"
 											type="submit"
 											disabled={isLoading}
-											className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
+											className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all duration-300 ease-in-out shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
 										>
 											{isLoading ? <Loading /> : "Check"}
 										</button>
@@ -333,10 +333,10 @@ export const Inner: React.FC<Props> = ({
 										<div role="group">
 											<div className="sm:grid sm:items-baseline sm:gap-4">
 												<div className="mt-4 sm:col-span-3 sm:mt-0">
-													<h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
+													<h4 className="w-full mt-8 mb-4 font-medium text-center leading-6 md:mb-8 md:mt-16 text-zinc-900">
 														Vercel Edge Regions
 													</h4>
-													<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+													<fieldset className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
 														{allRegions
 															.filter((r) => r.platform === "vercelEdge")
 															.map((r) => (
@@ -369,11 +369,11 @@ export const Inner: React.FC<Props> = ({
 																</button>
 															))}
 													</fieldset>
-													<h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
+													<h4 className="w-full mt-8 mb-4 font-medium text-center leading-6 md:mb-8 md:mt-16 text-zinc-900">
 														AWS Lambda Regions
 													</h4>
 
-													<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+													<fieldset className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
 														{allRegions
 															.filter((r) => r.platform === "aws")
 															.map((r) => (

@@ -92,7 +92,7 @@ export const Hero: React.FC = (): JSX.Element => {
 							Understand the true performance of your API by monitoring it from
 							around the world.
 						</p>
-						<div className="flex flex-col justify-center w-full gap-4 mx-auto mt-8 sm:flex-row sm:max-w-lg ">
+						<div className="flex flex-col justify-center w-full mx-auto mt-8 gap-4 sm:flex-row sm:max-w-lg ">
 							<Link
 								href="/play"
 								className="sm:w-1/2 sm:text-center inline-block space-x-2 rounded px-4 py-1.5 md:py-2 text-base font-semibold leading-7 text-zinc-900  ring-1 ring-zinc-600 backdrop-blur hover:bg-white hover:text-zinc-900 duration-150 "

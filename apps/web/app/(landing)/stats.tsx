@@ -5,7 +5,6 @@ import { asyncComponent } from "lib/api/component";
 import CountingNumbers from "./counting-numbers";
 import { Section } from "./section";
 
-
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
@@ -50,16 +49,16 @@ export const Stats = asyncComponent(async () => {
 	]);
 	return (
 		<Section id="stats">
-			<div className="container grid grid-cols-1 gap-4 mx-auto sm:grid-cols-2 md:grid-cols-4">
+			<div className="container mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
 				{stats.map(({ label, value }) => (
 					<div
 						key={label}
-						className="flex items-center justify-between gap-2 px-4 py-3 overflow-hidden rounded m sm:flex-col"
+						className="flex items-center justify-between px-4 py-3 overflow-hidden rounded gap-2 m sm:flex-col"
 					>
-						<dt className="text-lg leading-6 text-center text-zinc-500">
+						<dt className="text-lg text-center leading-6 text-zinc-500">
 							{label}
 						</dt>
-						<dd className="text-2xl font-bold tracking-tight text-center sm:text-5xl text-zinc-900">
+						<dd className="text-2xl font-bold tracking-tight text-center text-zinc-900 sm:text-5xl ">
 							<CountingNumbers value={value} />
 						</dd>
 					</div>

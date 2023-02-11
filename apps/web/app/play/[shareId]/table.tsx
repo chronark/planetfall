@@ -105,7 +105,7 @@ export const Table: React.FC<Props> = ({ regions }) => {
 			accessor("latency", {
 				header: "Check",
 				cell: (info) => (
-					<div className="flex flex-col items-start gap-1 text-sm font-semibold text-left ">
+					<div className="flex flex-col items-start text-sm font-semibold text-left gap-1 ">
 						<div className="flex items-center">
 							<span className="w-3 h-3 bg-blue-500" /> Cold
 						</div>

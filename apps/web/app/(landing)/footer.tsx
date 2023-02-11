@@ -7,7 +7,7 @@ export const Footer: React.FC = (): JSX.Element => {
 		<footer className="container mx-auto">
 			<div className="py-8 text-center ">
 				<nav className="text-sm " aria-label="quick links">
-					<div className="flex justify-center gap-1 -my-1 text-zinc-500">
+					<div className="flex justify-center -my-1 gap-1 text-zinc-500">
 						Built by
 						<Link
 							href="https://twitter.com/chronark_"
