@@ -1,16 +1,21 @@
 "use client";
 import { Endpoint } from "@planetfall/db";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Link from "next/link";
 import { Loading } from "@/components/loading";
 import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/utils/trpc";
+import { Button } from "@/components/button";
 type Props = {
 	teamId: string;
 	teamSlug: string;
-	endpoints: Endpoint[];
+	endpoints: {
+		id: string;
+		name: string;
+		url: string;
+	}[];
 };
 
 type FormData = {
@@ -49,9 +54,11 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, endpoints }) => {
 				endpointIds: selectedEndpoints,
 				teamId: teamId,
 			});
-
 			const url = `https://${slug}.planetfall.io`;
-			router.push(url);
+
+			try {
+				window?.location.assign(url);
+			} catch {}
 		} catch (err) {
 			console.error(err);
 			alert((err as Error).message);

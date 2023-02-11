@@ -8,7 +8,6 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 	const { session } = await getSession();
 	if (!session) {
 		return redirect("/auth/sign-in");
-		return;
 	}
 
 	const team = await db.team.findUnique({
@@ -32,7 +31,11 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 				<Form
 					teamId={team.id}
 					teamSlug={team.slug}
-					endpoints={team.endpoints}
+					endpoints={team.endpoints.map((e) => ({
+						id: e.id,
+						name: e.name,
+						url: e.url,
+					}))}
 				/>
 			</div>
 		</div>
