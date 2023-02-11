@@ -68,23 +68,23 @@ export default async function Page(props: { params: { slug: string } }) {
 			<main className="container min-h-screen mx-auto md:py-16 ">
 				<ul
 					className="flex flex-col gap-4 lg:gap-8" // initial="hidden"
-				// animate="show"
-				// variants={{
-				//   hidden: {},
-				//   show: {
-				//     transition: {
-				//       staggerChildren: 0.1,
-				//     },
-				//   },
-				// }}
+					// animate="show"
+					// variants={{
+					//   hidden: {},
+					//   show: {
+					//     transition: {
+					//       staggerChildren: 0.1,
+					//     },
+					//   },
+					// }}
 				>
 					{Object.entries(endpoints).map(([regionId, endpoint]) => (
 						<li
 							key={regionId}
-						// variants={{
-						//   hidden: { scale: 0.9, opacity: 0 },
-						//   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
-						// }}
+							// variants={{
+							//   hidden: { scale: 0.9, opacity: 0 },
+							//   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
+							// }}
 						>
 							<Row endpoint={endpoint} />
 						</li>

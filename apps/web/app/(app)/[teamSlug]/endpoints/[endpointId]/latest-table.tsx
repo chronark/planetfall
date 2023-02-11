@@ -80,7 +80,11 @@ export const LatestTable: React.FC<Props> = ({
 							"text-red-500": timeout && latency && latency > timeout,
 						})}
 					>
-						{latency?.toLocaleString()} ms
+						{typeof latency === "number" ? (
+							`${latency.toLocaleString()} ms`
+						) : (
+							<Minus className="w-4 h-4 text-zinc-400" />
+						)}
 					</span>
 				);
 			},

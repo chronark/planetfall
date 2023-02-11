@@ -6,6 +6,8 @@ SQL >
     %
 SELECT
     regionId,
+    countMerge(count) AS count,
+    countMerge(errors) AS errors,
     quantileTimingMerge(0.5)(p50) AS p50,
     quantileTimingMerge(0.95)(p95) AS p95,
     quantileTimingMerge(0.99)(p99) AS p99
