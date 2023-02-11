@@ -1,17 +1,47 @@
 VERSION 1
-TOKEN "live" READ
-
-NODE filter
+NODE aggregate_globally
 SQL >
+
     %
-SELECT
-    regionId,
-    countMerge(count) AS count,
-    countMerge(errors) AS errors,
-    quantileTimingMerge(0.5)(p50) AS p50,
-    quantileTimingMerge(0.95)(p95) AS p95,
-    quantileTimingMerge(0.99)(p99) AS p99
-FROM endpoint_stats__v1
-WHERE
-    endpointId ={{ String(endpointId, required=True) }}
-GROUP BY regionId
+    SELECT
+        'global' as regionId,
+        count() AS count,
+        count(error) AS errors,
+        quantileTiming(0.5)(latency) AS p50,
+        quantileTiming(0.95)(latency) AS p95,
+        quantileTiming(0.99)(latency) AS p99
+    FROM checks_metrics__v2
+    WHERE
+        endpointId ={{ String(endpointId, required=True) }}
+    AND 
+        time >= now() - INTERVAL 1 DAY
+    GROUP BY regionId
+
+
+
+NODE aggregate_per_region
+SQL >
+
+    %
+    SELECT
+        regionId,
+        count() AS count,
+        count(error) AS errors,
+        quantileTiming(0.5)(latency) AS p50,
+        quantileTiming(0.95)(latency) AS p95,
+        quantileTiming(0.99)(latency) AS p99
+    FROM checks_metrics__v2
+    WHERE
+        endpointId ={{ String(endpointId, required=True) }}
+    AND 
+        time >= now() - INTERVAL 1 DAY
+    GROUP BY regionId
+
+
+
+NODE combine
+SQL >
+
+    SELECT * FROM aggregate_per_region UNION ALL SELECT  * FROM aggregate_globally
+
+

@@ -1,0 +1,14 @@
+VERSION 2
+DESCRIPTION >
+    Smaller table for running cheaper queries on the data.
+
+SCHEMA >
+    `endpointId` String,
+    `regionId` String,
+    `latency` Nullable(Int16),
+    `time` Int64,
+    `error` Nullable(String)
+
+ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "endpointId, regionId, time"
+ENGINE_TTL "toDate(fromUnixTimestamp64Milli(time)) + toIntervalDay(90)"

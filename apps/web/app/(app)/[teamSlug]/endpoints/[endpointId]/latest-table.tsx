@@ -14,7 +14,7 @@ import ms from "ms";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Time } from "@/components/time";
-import { Minus } from "lucide-react";
+import { ChevronRight, Minus } from "lucide-react";
 export type Props = {
 	endpointId: string;
 	checks: Check[];
@@ -98,7 +98,9 @@ export const LatestTable: React.FC<Props> = ({
 		accessor("id", {
 			header: "",
 			cell: (info) => (
-				<Link href={`/${teamSlug}/checks/${info.getValue()}`}>Details</Link>
+				<Link href={`/${teamSlug}/checks/${info.getValue()}`}>
+					<ChevronRight className="duration-150 text-zinc-500 hover:text-zinc-800" />
+				</Link>
 			),
 		}),
 	];

@@ -1,0 +1,21 @@
+VERSION 2
+DESCRIPTION >
+	Copy a subset
+
+
+NODE checks_metrics_pipe_0925_0
+SQL >
+
+    SELECT
+            endpointId,
+            regionId,
+            time,
+            latency,
+            error
+        FROM checks__v2
+
+TYPE materialized
+DATASOURCE checks_metrics__v2
+ENGINE "MergeTree"
+ENGINE_SORTING_KEY "endpointId, regionId, time"
+
