@@ -142,7 +142,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											variant="outline"
 											onClick={nameForm.handleSubmit(async ({ name }) => {
 												await trpc.endpoint.update
 													.mutate({
@@ -249,7 +248,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											variant="outline"
 											onClick={urlForm.handleSubmit(async ({ url, method }) => {
 												await trpc.endpoint.update
 													.mutate({
@@ -357,7 +355,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											variant="outline"
 											onClick={requestForm.handleSubmit(
 												async ({ headers, body }) => {
 													await trpc.endpoint.update
@@ -485,7 +482,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											variant="outline"
 											onClick={latencyForm.handleSubmit(
 												async ({ timeout, degradedAfter }) => {
 													await trpc.endpoint.update
@@ -576,7 +572,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 												/>
 												<div>
 													<Button
-														variant="outline"
 														onClick={() => statusAssertions.remove(i)}
 														size="lg"
 													>
@@ -588,7 +583,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 
 										<div className="w-full">
 											<Button
-												variant="outline"
 												onClick={() =>
 													statusAssertions.append({
 														version: "v1",
@@ -605,7 +599,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											variant="outline"
 											onClick={nameForm.handleSubmit(async ({ name }) => {
 												await trpc.endpoint.update
 													.mutate({
@@ -681,7 +674,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 												/>
 												<div>
 													<Button
-														variant="outline"
 														onClick={() => headerAssertions.remove(i)}
 														size="lg"
 													>
@@ -693,7 +685,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 
 										<div className="w-full">
 											<Button
-												variant="outline"
 												onClick={() =>
 													headerAssertions.append({
 														version: "v1",
@@ -711,7 +702,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											variant="outline"
 											onClick={nameForm.handleSubmit(async ({ name }) => {
 												await trpc.endpoint.update
 													.mutate({
@@ -804,7 +794,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											variant="outline"
 											onClick={async () => {
 												await trpc.endpoint.update
 													.mutate({
@@ -910,7 +899,6 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 									</div>
 									<div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
 										<Button
-											variant="outline"
 											onClick={intervalForm.handleSubmit(
 												async ({ interval, distribution }) => {
 													await trpc.endpoint.update

@@ -313,7 +313,6 @@ export const Inner: React.FC<Props> = ({
 									</div>
 									<Button
 										type="button"
-										variant="outline"
 										onClick={() => {
 											if (selectedRegions.length >= allRegions.length / 2) {
 												setSelectedRegions([]);

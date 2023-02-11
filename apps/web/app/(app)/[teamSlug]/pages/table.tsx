@@ -77,7 +77,7 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 			header: "",
 			cell: (info) => (
 				<div className="flex items-center gap-2">
-					<Button variant="outline">
+					<Button>
 						<Link href={`/${teamSlug}/pages/${info.getValue()}/settings`}>
 							Edit
 						</Link>

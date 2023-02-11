@@ -112,7 +112,7 @@ export default async function Page(props: {
 						key="settings"
 						href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/settings`}
 					>
-						<Button variant="outline">Settings</Button>
+						<Button>Settings</Button>
 					</Link>,
 					<DeleteButton
 						endpointId={endpoint.id}

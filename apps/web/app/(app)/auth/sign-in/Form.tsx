@@ -40,7 +40,6 @@ export const Form: React.FC = () => {
 							</p>
 							<Button
 								size="lg"
-								variant="outline"
 								onClick={async () => {
 									setState("loading");
 									await signIn("github");

@@ -70,14 +70,26 @@ func Ping(ctx context.Context, req Request) ([]Response, error) {
 
 	responses := make([]Response, req.Checks)
 	for i := 0; i < req.Checks; i++ {
-		var err error
-		responses[i], err = check(ctx, client, req)
+		res, err := retry(func() (Response, error) {
+			return check(ctx, client, req)
+		}, 2)
 		if err != nil {
-			return []Response{}, err
+			return nil, err
 		}
+		responses[i] = res
+
 	}
 	return responses, nil
+}
 
+func retry[T any](f func() (T, error), retries int) (t T, err error) {
+	for i := 0; i < retries; i++ {
+		res, err := f()
+		if err == nil {
+			return res, nil
+		}
+	}
+	return t, err
 }
 
 func check(ctx context.Context, client *http.Client, input Request) (Response, error) {

@@ -102,14 +102,14 @@ export const TeamCard: React.FC<Props> = ({
 		actions.push(
 			<Dialog>
 				<DialogTrigger asChild>
-					<Button variant="outline">Invite User</Button>
+					<Button>Invite User</Button>
 				</DialogTrigger>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>Are you sure absolutely sure?</DialogTitle>
+						<DialogTitle>Dang, I'm too slow to ship new features</DialogTitle>
 						<DialogDescription>
-							This action cannot be undone. This will permanently delete your
-							account and remove your data from our servers.
+							Sorry this isn't available yet. I'm working on it! Send an email
+							to andreas@planetfall.io and I'll manually add your teammates.
 						</DialogDescription>
 					</DialogHeader>
 				</DialogContent>
@@ -178,7 +178,6 @@ export const TeamCard: React.FC<Props> = ({
 					</tfoot>
 				</table>
 			</CardContent>
-			<CardFooter />
 		</Card>
 	);
 };

@@ -87,7 +87,7 @@ export default async function Page(props: {
 				title="Errors"
 				description={endpoint.name}
 				actions={[
-					<Button variant="outline">
+					<Button>
 						<Link
 							href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}}`}
 						>

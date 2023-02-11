@@ -435,7 +435,6 @@ export const Form: React.FC<Props> = ({
 										<div>
 											<Button
 												type="button"
-												variant="outline"
 												onClick={() => statusAssertions.remove(i)}
 												size="lg"
 											>
@@ -448,7 +447,6 @@ export const Form: React.FC<Props> = ({
 								<div className="w-full">
 									<Button
 										type="button"
-										variant="outline"
 										onClick={() =>
 											statusAssertions.append({
 												version: "v1",
@@ -510,7 +508,6 @@ export const Form: React.FC<Props> = ({
 										<div>
 											<Button
 												type="button"
-												variant="outline"
 												onClick={() => headerAssertions.remove(i)}
 												size="lg"
 											>
@@ -523,7 +520,6 @@ export const Form: React.FC<Props> = ({
 								<div className="w-full">
 									<Button
 										type="button"
-										variant="outline"
 										onClick={() =>
 											headerAssertions.append({
 												version: "v1",
@@ -556,7 +552,6 @@ export const Form: React.FC<Props> = ({
 						</div>
 						<Button
 							type="button"
-							variant="outline"
 							onClick={() => {
 								if (selectedRegions.length >= regions.length / 2) {
 									setSelectedRegions([]);

@@ -1,6 +1,5 @@
 import React from "react";
 import { Heading } from "../../heading";
-import { Text } from "../../text/text";
 
 export interface CardHeaderTitleProps {
 	title: string | React.ReactNode;
@@ -14,8 +13,8 @@ export const CardHeaderTitle: React.FC<CardHeaderTitleProps> = ({
 	actions,
 }): JSX.Element => {
 	return (
-		<div>
-			<div className="flex items-center justify-between">
+		<div className="flex flex-col w-full ">
+			<div className="flex items-center justify-between w-full">
 				<Heading h3>{title}</Heading>
 				<div className="flex items-center gap-2">{actions}</div>
 			</div>
