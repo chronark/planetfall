@@ -126,13 +126,13 @@ export const Features = asyncComponent(async () => {
 					icon: Layers,
 					title: "Easy Creation.",
 					description:
-						"Simply choose the endpoints to include and give it a name. That's all.",
+						"Create a status page in seconds with a few clicks.",
 				},
 				{
 					icon: Share2,
 					title: "Sharable.",
 					description:
-						" status pages with your customers to keep them informed and build trust.",
+						"Share status pages with your customers to keep them informed and build trust.",
 				},
 				{
 					icon: Link2,
