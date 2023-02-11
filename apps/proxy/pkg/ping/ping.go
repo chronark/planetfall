@@ -82,14 +82,15 @@ func Ping(ctx context.Context, req Request) ([]Response, error) {
 	return responses, nil
 }
 
-func retry[T any](f func() (T, error), retries int) (t T, err error) {
+func retry[T any](f func() (T, error), retries int) (res T, err error) {
+
 	for i := 0; i < retries; i++ {
-		res, err := f()
+		res, err = f()
 		if err == nil {
 			return res, nil
 		}
 	}
-	return t, err
+	return res, err
 }
 
 func check(ctx context.Context, client *http.Client, input Request) (Response, error) {
