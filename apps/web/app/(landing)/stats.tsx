@@ -5,7 +5,9 @@ import { asyncComponent } from "lib/api/component";
 import CountingNumbers from "./counting-numbers";
 import { Section } from "./section";
 
-export const revalidate = 86400; // revalidate every day
+
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export const Stats = asyncComponent(async () => {
 	const stats = await Promise.all([
@@ -16,6 +18,10 @@ export const Stats = asyncComponent(async () => {
 		{
 			label: "Endpoints",
 			value: await db.endpoint.count(),
+		},
+		{
+			label: "Status Pages",
+			value: await db.statusPage.count(),
 		},
 		{
 			label: "Ø Checks Per Day",
@@ -44,7 +50,7 @@ export const Stats = asyncComponent(async () => {
 	]);
 	return (
 		<Section id="stats">
-			<div className="container grid grid-cols-1 gap-4 mx-auto sm:grid-cols-3">
+			<div className="container grid grid-cols-1 gap-4 mx-auto sm:grid-cols-2 md:grid-cols-4">
 				{stats.map(({ label, value }) => (
 					<div
 						key={label}
