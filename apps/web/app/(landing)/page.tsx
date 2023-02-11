@@ -6,7 +6,7 @@ import { Cta } from "./cta";
 import { Hero } from "./hero";
 import { Pricing } from "./pricing";
 import Script from "next/script";
-// import { Stats } from "./stats";
+import { Stats } from "./stats";
 // import { Companies } from "./companies";
 
 export const dynamic = "force-static";
@@ -25,7 +25,7 @@ export default async function LandingPage() {
 			<Hero />
 
 			{/* <Companies /> */}
-			{/* <Stats /> */}
+			<Stats />
 			<Features />
 			{/* <Testimonials /> */}
 			<Cta />
