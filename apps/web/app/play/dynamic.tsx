@@ -13,7 +13,6 @@ import { trpc } from "lib/utils/trpc";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { ToastProvider, useToast } from "@/components/toast";
-import { Toast } from "@/components/toast/toast";
 
 type FormData = {
 	url: string;
@@ -331,39 +330,81 @@ export const Inner: React.FC<Props> = ({
 								</div>
 								<div className="space-y-6 divide-y divide-zinc-200 sm:space-y-5">
 									<div className="pt-6 sm:pt-5">
-										<div role="group" aria-labelledby="label-email">
+										<div role="group">
 											<div className="sm:grid sm:items-baseline sm:gap-4">
 												<div className="mt-4 sm:col-span-3 sm:mt-0">
+													<h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
+														Vercel Edge Regions
+													</h4>
 													<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
-														{allRegions.map((r) => (
-															<button
-																type="button"
-																key={r.id}
-																className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-																	selectedRegions.includes(r.id)
-																		? "border-zinc-900 bg-zinc-50"
-																		: "border-zinc-300"
-																}`}
-																onClick={() => {
-																	if (selectedRegions.includes(r.id)) {
-																		setSelectedRegions(
-																			selectedRegions.filter(
-																				(id) => id !== r.id,
-																			),
-																		);
-																	} else {
-																		setSelectedRegions([
-																			...selectedRegions,
-																			r.id,
-																		]);
-																	}
-																}}
-															>
-																<span className="px-2 py-1 lg:px-4">
-																	{r.name}
-																</span>
-															</button>
-														))}
+														{allRegions
+															.filter((r) => r.platform === "vercelEdge")
+															.map((r) => (
+																<button
+																	type="button"
+																	key={r.id}
+																	className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+																		selectedRegions.includes(r.id)
+																			? "border-zinc-900 bg-zinc-50"
+																			: "border-zinc-300"
+																	}`}
+																	onClick={() => {
+																		if (selectedRegions.includes(r.id)) {
+																			setSelectedRegions(
+																				selectedRegions.filter(
+																					(id) => id !== r.id,
+																				),
+																			);
+																		} else {
+																			setSelectedRegions([
+																				...selectedRegions,
+																				r.id,
+																			]);
+																		}
+																	}}
+																>
+																	<span className="px-2 py-1 lg:px-4">
+																		{r.name}
+																	</span>
+																</button>
+															))}
+													</fieldset>
+													<h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
+														AWS Lambda Regions
+													</h4>
+
+													<fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+														{allRegions
+															.filter((r) => r.platform === "aws")
+															.map((r) => (
+																<button
+																	type="button"
+																	key={r.id}
+																	className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+																		selectedRegions.includes(r.id)
+																			? "border-zinc-900 bg-zinc-50"
+																			: "border-zinc-300"
+																	}`}
+																	onClick={() => {
+																		if (selectedRegions.includes(r.id)) {
+																			setSelectedRegions(
+																				selectedRegions.filter(
+																					(id) => id !== r.id,
+																				),
+																			);
+																		} else {
+																			setSelectedRegions([
+																				...selectedRegions,
+																				r.id,
+																			]);
+																		}
+																	}}
+																>
+																	<span className="px-2 py-1 lg:px-4">
+																		{r.name}
+																	</span>
+																</button>
+															))}
 													</fieldset>
 													{errors.regions ? (
 														<p className="mt-2 text-sm text-red-500">
