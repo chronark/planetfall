@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { UpgradeButton } from "./UpgradeButton";
 import { PortalButton } from "./PortalButton";
+import { Tag } from "@/components/tag";
 
 type Props = {
 	team: {
@@ -42,9 +43,9 @@ export const BillingCard: React.FC<Props> = ({
 					subtitle={
 						<Text>
 							You are currently on the{" "}
-							<span className="px-1 border rounded border-zinc-300 bg-zinc-50">
+							<Tag variant="outline" size="sm">
 								{team.plan}
-							</span>{" "}
+							</Tag>{" "}
 							plan.
 						</Text>
 					}
@@ -78,7 +79,7 @@ export const BillingCard: React.FC<Props> = ({
 								: null}
 						</Text>
 						{usagePercentage !== null ? (
-							<div className="overflow-hidden bg-zinc-200 rounded-full">
+							<div className="overflow-hidden rounded-full bg-zinc-200">
 								<div
 									className="h-2 rounded bg-primary-600"
 									style={{ width: `${usagePercentage}%` }}

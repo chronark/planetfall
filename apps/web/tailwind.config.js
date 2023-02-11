@@ -130,6 +130,15 @@ module.exports = {
 				"8xl": "88rem",
 			},
 			keyframes: {
+				"accordion-down": {
+					from: { height: 0 },
+					to: { height: "var(--radix-accordion-content-height)" },
+				},
+				"accordion-up": {
+					from: { height: "var(--radix-accordion-content-height)" },
+					to: { height: 0 },
+				},
+
 				"spin-forward": {
 					from: {
 						transform: "rotate(0deg)",
@@ -229,6 +238,9 @@ module.exports = {
 				},
 			},
 			animation: {
+				"accordion-down": "accordion-down 0.2s ease-out",
+				"accordion-up": "accordion-up 0.2s ease-out",
+
 				// Rings in hero
 				"spin-forward-slow": "spin-forward 8s linear infinite",
 				"spin-reverse-slower": "spin-reverse 10s linear infinite",
@@ -263,7 +275,7 @@ module.exports = {
 	},
 	plugins: [
 		require("@tailwindcss/typography"),
-		require("tailwindcss-radix")(),
 		require("tailwindcss-debug-screens"),
+		require("tailwindcss-animate"),
 	],
 };

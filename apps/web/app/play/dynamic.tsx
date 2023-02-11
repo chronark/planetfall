@@ -12,7 +12,7 @@ import { Logo } from "@/components/logo";
 import { trpc } from "lib/utils/trpc";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
-import { ToastProvider, useToaster } from "@/components/toast";
+import { ToastProvider, useToast } from "@/components/toast";
 import { Toast } from "@/components/toast/toast";
 
 type FormData = {
@@ -51,7 +51,7 @@ export const Inner: React.FC<Props> = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const searchParams = useSearchParams();
 	const router = useRouter();
-	const toast = useToaster();
+	const { addToast } = useToast();
 
 	async function submit(data: FormData) {
 		if (selectedRegions.length === 0) {
@@ -66,15 +66,18 @@ export const Inner: React.FC<Props> = ({
 				repeat: data.repeat === "true",
 			})
 			.then(({ shareId }) => {
-				toast.addToast({
-					type: "info",
+				addToast({
 					title: "All Checks are done",
 					content: "Redirecting to results page",
 				});
 				router.push(`/play/${shareId}`);
 			})
 			.catch((err) => {
-				alert(err.message);
+				addToast({
+					title: "Error",
+					content: (err as Error).message,
+					variant: "error",
+				});
 			})
 			.finally(() => {
 				setIsLoading(false);
@@ -162,14 +165,14 @@ export const Inner: React.FC<Props> = ({
 							{/* Desktop navigation */}
 							<nav className="flex items-center grow">
 								<ul className="flex flex-wrap items-center justify-end gap-8 grow">
-									<li className="hidden md:block">
+									{/* <li className="hidden md:block">
 										<Link
 											className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-500 hover:text-zinc-700 lg:px-5"
 											href="/docs"
 										>
 											Docs
 										</Link>
-									</li>
+									</li> */}
 									<li className="hidden md:block">
 										<Link
 											className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-500 hover:text-zinc-700 lg:px-5"

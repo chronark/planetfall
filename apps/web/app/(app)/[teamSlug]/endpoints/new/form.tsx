@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import * as assertions from "@planetfall/assertions";
 import { trpc } from "lib/utils/trpc";
 import { Minus } from "lucide-react";
+import { Toaster, useToast } from "@/components/toast";
 type Props = {
 	teamId: string;
 	teamSlug: string;
@@ -54,6 +55,7 @@ export const Form: React.FC<Props> = ({
 		},
 	});
 
+	const { addToast } = useToast();
 	const router = useRouter();
 
 	const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
@@ -104,7 +106,11 @@ export const Form: React.FC<Props> = ({
 			router.push(`/${teamSlug}/endpoints/${id}`);
 		} catch (err) {
 			console.error(err);
-			alert((err as Error).message);
+			addToast({
+				title: "Error",
+				content: (err as Error).message,
+				variant: "error",
+			});
 		} finally {
 			setLoading(false);
 		}
@@ -121,6 +127,7 @@ export const Form: React.FC<Props> = ({
 
 	return (
 		<form className="space-y-8 divide-y divide-zinc-200">
+			<Toaster />
 			<div className="space-y-8 sm:space-y-5 lg:space-y-24">
 				<div className="space-y-6 sm:space-y-5">
 					<div>

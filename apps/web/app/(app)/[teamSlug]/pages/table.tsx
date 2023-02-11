@@ -46,15 +46,14 @@ export const StatuspagesTable: React.FC<Props> = ({ teamSlug, pages }) => {
 		accessor("endpoints", {
 			header: "Endpoints",
 			cell: (info) => (
-				<ul className="grid grid-flow-col gap-2 auto-cols-max">
+				<ul className="flex flex-wrap items-center gap-2">
 					{info.getValue().map((endpoint) => (
 						<li key={endpoint.id}>
-							<Link
-								href={`/${teamSlug}/endpoints/${endpoint.id}`}
-								className="px-2 py-1 border rounded border-zinc-300 bg-zinc-50 hover:bg-white hover:border-zinc-600"
-							>
-								{endpoint.name}
-							</Link>
+							<Button size="sm" variant="secondary">
+								<Link href={`/${teamSlug}/endpoints/${endpoint.id}`}>
+									{endpoint.name}
+								</Link>
+							</Button>
 						</li>
 					))}
 				</ul>

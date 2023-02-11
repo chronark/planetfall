@@ -15,6 +15,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Time } from "@/components/time";
 import { ChevronRight, Minus } from "lucide-react";
+import { Tag } from "@/components/tag";
 export type Props = {
 	endpointId: string;
 	checks: Check[];
@@ -58,9 +59,9 @@ export const LatestTable: React.FC<Props> = ({
 		accessor("status", {
 			header: "Status",
 			cell: (info) => (
-				<span className="px-2 py-0.5 bg-zinc-50 border-zinc-200 rounded border">
+				<Tag variant="outline" size="sm">
 					{info.getValue()}
-				</span>
+				</Tag>
 			),
 		}),
 		accessor("error", {

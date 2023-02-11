@@ -38,6 +38,7 @@ import { trpc } from "@/lib/utils/trpc";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/input";
 import { Loading } from "@/components/loading";
+import { Toaster, useToast } from "@/components/toast";
 
 type Props = {
 	teamSlug: string;
@@ -62,6 +63,7 @@ export const DeleteCard: React.FC<Props> = ({
 	} = useForm<{ slug: string }>({ reValidateMode: "onSubmit" });
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
+	const { addToast } = useToast();
 	async function submit(data: FormData) {
 		if (data.slug !== teamSlug) {
 			setError("slug", { message: "Slug must match" });
@@ -73,13 +75,18 @@ export const DeleteCard: React.FC<Props> = ({
 			router.push("/home");
 		} catch (err) {
 			console.error(err);
-			alert((err as Error).message);
+			addToast({
+				title: "Error",
+				content: (err as Error).message,
+				variant: "error",
+			});
 		} finally {
 			setLoading(false);
 		}
 	}
 	return (
 		<Card>
+			<Toaster />
 			<CardHeader>
 				<CardHeaderTitle
 					title="Delete Team"

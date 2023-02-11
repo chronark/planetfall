@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Loading } from "@/components/loading";
 import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/utils/trpc";
+import { Toaster, useToast } from "@/components/toast";
 type Props = {
 	teamSlug: string;
 	page: {
@@ -46,6 +47,7 @@ export const Form: React.FC<Props> = ({ page, teamSlug, endpoints }) => {
 		page.endpointIds,
 	);
 
+	const { addToast } = useToast();
 	const [loading, setLoading] = useState(false);
 
 	async function submit(data: FormData) {
@@ -62,7 +64,11 @@ export const Form: React.FC<Props> = ({ page, teamSlug, endpoints }) => {
 			});
 		} catch (err) {
 			console.error(err);
-			alert((err as Error).message);
+			addToast({
+				title: "Error",
+				content: (err as Error).message,
+				variant: "error",
+			});
 		} finally {
 			setLoading(false);
 		}
@@ -70,6 +76,7 @@ export const Form: React.FC<Props> = ({ page, teamSlug, endpoints }) => {
 
 	return (
 		<form className="space-y-8 divide-y divide-zinc-200">
+			<Toaster />
 			<div className="space-y-8 sm:space-y-5 lg:space-y-24">
 				<div className="space-y-6 sm:space-y-5">
 					<div>

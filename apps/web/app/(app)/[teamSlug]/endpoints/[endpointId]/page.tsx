@@ -10,7 +10,7 @@ import { LatestTable } from "./latest-table";
 import { DeleteButton } from "./delete";
 import { getSession } from "lib/auth";
 import { Button } from "@/components/button";
-import Toggle from "./toggle";
+import { Toggle } from "./toggle";
 import { Text } from "@/components/text";
 import { ChartsSection } from "./chart-by-region";
 import Link from "next/link";
@@ -25,7 +25,6 @@ import {
 	CardHeaderTitle,
 } from "@/components/card";
 import { Divider } from "@/components/divider";
-import { AlertCircle } from "lucide-react";
 
 export const revalidate = 10;
 

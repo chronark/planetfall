@@ -1,5 +1,6 @@
 "use client";
 
+import { Tag } from "@/components/tag";
 import {
 	createColumnHelper,
 	flexRender,
@@ -42,9 +43,9 @@ export const TeamTable: React.FC<Props> = ({ members }) => {
 		accessor("role", {
 			header: "Role",
 			cell: (info) => (
-				<span className="px-2 py-1 border bg-zinc-50 border-zinc-300 text-zinc-900 ">
+				<Tag variant="outline" size="sm">
 					{info.getValue()}
-				</span>
+				</Tag>
 			),
 		}),
 	];

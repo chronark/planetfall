@@ -7,5 +7,5 @@ export * from "./logo";
 export * from "./page";
 export * from "./stats";
 export * from "./text";
-export * from "./toast";
+export * from "./toast/toast";
 export * from "./trace";

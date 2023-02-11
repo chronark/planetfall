@@ -5,7 +5,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { Endpoint, Region } from "@planetfall/db";
 import { Button } from "@/components/button";
 import { trpc } from "lib/utils/trpc";
-import { ToastProvider, useToaster } from "@/components/toast";
+import { ToastProvider, useToast } from "@/components/toast";
 import { useRouter } from "next/navigation";
 import * as Slider from "@radix-ui/react-slider";
 import {
@@ -34,7 +34,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 };
 
 export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
-	const { addToast } = useToaster();
+	const { addToast } = useToast();
 	const [selectedRegions, setSelectedRegions] = useState(endpoint.regions);
 	const router = useRouter();
 
@@ -154,8 +154,8 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 													})
 													.catch((err) => {
 														addToast({
-															type: "error",
 															title: "Error",
+
 															content: (err as Error).message,
 														});
 													});
@@ -261,7 +261,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 													})
 													.catch((err) => {
 														addToast({
-															type: "error",
+															variant: "error",
 															title: "Error",
 															content: (err as Error).message,
 														});
@@ -375,7 +375,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 														})
 														.catch((err) => {
 															addToast({
-																type: "error",
+																variant: "error",
 																title: "Error",
 																content: (err as Error).message,
 															});
@@ -496,7 +496,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 														})
 														.catch((err) => {
 															addToast({
-																type: "error",
+																variant: "error",
 																title: "Error",
 																content: (err as Error).message,
 															});
@@ -612,7 +612,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 													})
 													.catch((err) => {
 														addToast({
-															type: "error",
+															variant: "error",
 															title: "Error",
 															content: (err as Error).message,
 														});
@@ -715,7 +715,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 													})
 													.catch((err) => {
 														addToast({
-															type: "error",
+															variant: "error",
 															title: "Error",
 															content: (err as Error).message,
 														});
@@ -806,7 +806,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 													})
 													.catch((err) => {
 														addToast({
-															type: "error",
+															variant: "error",
 															title: "Error",
 															content: (err as Error).message,
 														});
@@ -913,7 +913,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 														})
 														.catch((err) => {
 															addToast({
-																type: "error",
+																variant: "error",
 																title: "Error",
 																content: (err as Error).message,
 															});

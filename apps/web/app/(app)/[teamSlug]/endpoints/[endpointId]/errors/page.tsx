@@ -10,7 +10,7 @@ import { LatestTable } from "../latest-table";
 import { DeleteButton } from "../delete";
 import { getSession } from "lib/auth";
 import { Button } from "@/components/button";
-import Toggle from "../toggle";
+import { Toggle } from "../toggle";
 import { Text } from "@/components/text";
 import { ChartsSection } from "../chart-by-region";
 import { Edu_NSW_ACT_Foundation } from "@next/font/google";
@@ -33,7 +33,6 @@ export const revalidate = 10;
 export default async function Page(props: {
 	params: { teamSlug: string; endpointId: string };
 }) {
-	console.log("HELLO ALERTS");
 	const { session } = await getSession();
 	if (!session) {
 		return redirect("/auth/sign-in");

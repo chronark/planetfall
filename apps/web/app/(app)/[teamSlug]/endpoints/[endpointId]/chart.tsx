@@ -42,7 +42,7 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
 		<Card>
 			<CardHeader border={false}>
 				<CardHeaderTitle title="Latency by Region" />
-				<div className="flex items-center justify-between gap-4">
+				<div className="flex items-center justify-end w-full gap-4">
 					{regions.length > 10 ? (
 						<Select onValueChange={(v) => setShowTopBottom(v === "true")}>
 							<SelectTrigger>
@@ -55,7 +55,7 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
 						</Select>
 					) : null}
 					<Select onValueChange={(v) => setSelected(v)}>
-						<SelectTrigger className="w-[180px]">
+						<SelectTrigger>
 							<SelectValue placeholder={selected} />
 						</SelectTrigger>
 						<SelectContent>

@@ -46,7 +46,7 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks }) => {
 		<Card>
 			<CardHeader>
 				<CardHeaderTitle title="Latency" />
-				<div>
+				<div className="flex justify-end w-full">
 					<Select onValueChange={(v) => setSelectedRegion(v)}>
 						<SelectTrigger>
 							<SelectValue
