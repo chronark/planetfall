@@ -19,6 +19,10 @@ import {
 import React, { cache } from "react";
 import { Feature, Props } from "./feature";
 
+
+export const dynamic = 'force-static'
+export const revalidate = 3600;
+
 export const Features = asyncComponent(async () => {
 	const regions = await cache(() => db.region.findMany())();
 	const stats = await cache(async () => {
