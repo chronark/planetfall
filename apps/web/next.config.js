@@ -1,5 +1,5 @@
 const withMarkdoc = require("@markdoc/next.js")();
-
+const { withAxiom } = require("next-axiom");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	pageExtensions: ["tsx", "ts", "jsx", "mdx", "md"],
@@ -18,4 +18,4 @@ const nextConfig = {
 	},
 };
 
-module.exports = withMarkdoc(nextConfig);
+module.exports = withAxiom(withMarkdoc(nextConfig));

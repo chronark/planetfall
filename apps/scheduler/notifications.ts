@@ -145,7 +145,7 @@ export class Notifications {
 					teamSlug: team.slug,
 					endpointName: endpoint.name,
 					endpointId: endpoint.id,
-				})
+				});
 				await this.email
 					.sendEndpointAlert({
 						to: member.user.email,
