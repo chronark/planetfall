@@ -13,5 +13,4 @@ RUN pnpm install -r
 RUN pnpm turbo run build --filter=scheduler
 
 
-ENV NODE_ENV=production
 CMD ["node", "./apps/scheduler/dist/main.js"]

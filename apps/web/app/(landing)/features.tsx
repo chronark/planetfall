@@ -19,8 +19,6 @@ import {
 import React, { cache } from "react";
 import { Feature, Props } from "./feature";
 
-
-
 export const Features = asyncComponent(async () => {
 	const regions = await cache(() => db.region.findMany())();
 	const stats = await cache(async () => {
