@@ -4,25 +4,22 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	
+
 	"log"
 	"time"
 
 	"github.com/go-redis/redis/v8"
 )
 
-func RedisPing(ctx context.Context, req Request) ([]Response, error) {
-	if req.Checks == 0 {
-		req.Checks = 1
-	}
+func RedisPing(ctx context.Context, req PingRequest) ([]Response, error) {
 
-	opts, err := redis.ParseURL(req.Url)
+	opts, err := redis.ParseURL(req.Urls[0])
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse testRedisUrl: %w", err)
 	}
 
 	db := redis.NewClient(opts)
-	defer func(){
+	defer func() {
 		err := db.Close()
 		if err != nil {
 			log.Printf("Error closing redis connection: %v", err)
@@ -32,19 +29,24 @@ func RedisPing(ctx context.Context, req Request) ([]Response, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to ping redis: %w", err)
 	}
-	responses := make([]Response, req.Checks)
-	for i := 0; i < req.Checks; i++ {
-		var err error
-		responses[i], err = redisCheck(ctx, db, req)
-		if err != nil {
-			return nil, err
-		}
+	responses := make([]Response, 1)
+
+	responses[0], err = redisCheck(ctx, db, checkRequest{
+		Url:     req.Urls[0],
+		Method:  req.Method,
+		Body:    req.Body,
+		Headers: req.Headers,
+		Timeout: req.Timeout,
+	})
+	if err != nil {
+		return nil, err
 	}
+
 	return responses, nil
 
 }
 
-func redisCheck(ctx context.Context, db *redis.Client, input Request) (Response, error) {
+func redisCheck(ctx context.Context, db *redis.Client, input checkRequest) (Response, error) {
 	log.Printf("Checking redis")
 	key := "planetfall:testkey"
 	now := time.Now()
@@ -54,8 +56,6 @@ func redisCheck(ctx context.Context, db *redis.Client, input Request) (Response,
 	if err != nil {
 		return Response{}, fmt.Errorf("unable to get testkey: %w", err)
 	}
-
-
 
 	return Response{
 		Time:    now.UnixMilli(),

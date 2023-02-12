@@ -106,7 +106,7 @@ func main() {
 			c.Response().Header.Add("Fly-Replay", fmt.Sprintf("region=%s", requestedRegion))
 			return c.SendStatus(202)
 		}
-		req := ping.Request{}
+		req := ping.PingRequest{}
 		err := c.BodyParser(&req)
 		if err != nil {
 			return handleError(c, 400, "BAD_REQUEST", err.Error())

@@ -55,13 +55,16 @@ func HandleRequest(ctx context.Context, event events.LambdaFunctionURLRequest) (
 		return events.LambdaFunctionURLResponse{StatusCode: 400, Body: "use application/json"}, nil
 	}
 
-	req := ping.Request{}
+	req := ping.PingRequest{}
 	err := json.Unmarshal([]byte(event.Body), &req)
 	if err != nil {
 		return handleError(err, http.StatusBadRequest)
 	}
 
 	responses, err := ping.Ping(ctx, req)
+	if err != nil {
+		return handleError(err, http.StatusInternalServerError)
+	}
 	responseBody, err := json.Marshal(responses)
 	if err != nil {
 		return handleError(err, http.StatusInternalServerError)
