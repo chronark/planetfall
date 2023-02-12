@@ -138,6 +138,14 @@ export class Notifications {
 
 		await Promise.all(
 			team.members.map(async (member) => {
+				this.logger.info("Sending email", {
+					to: member.user.email,
+					time: event.check.time,
+					error: event.check.error,
+					teamSlug: team.slug,
+					endpointName: endpoint.name,
+					endpointId: endpoint.id,
+				})
 				await this.email
 					.sendEndpointAlert({
 						to: member.user.email,

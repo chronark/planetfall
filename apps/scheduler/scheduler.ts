@@ -168,10 +168,10 @@ export class Scheduler {
 				endpoint.distribution === "ALL"
 					? endpoint.regions
 					: [
-							endpoint.regions[
-								Math.floor(Math.random() * endpoint.regions.length)
-							],
-					  ];
+						endpoint.regions[
+						Math.floor(Math.random() * endpoint.regions.length)
+						],
+					];
 			this.logger.info("testing endpoint", {
 				endpointId: endpoint.id,
 				regions: regions.map((r) => r.id),
@@ -295,6 +295,15 @@ export class Scheduler {
 					});
 					for (const d of data) {
 						if (d.error) {
+							this.logger.info("emitting notification event", {
+								check: {
+									id: d.id,
+									endpointId: d.endpointId,
+									teamId: d.teamId,
+									time: d.time,
+									error: d.error,
+								},
+							})
 							this.notifications
 								.notify({
 									type: "check",
