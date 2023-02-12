@@ -1,12 +1,19 @@
 type PingRequest = {
+	urls: string[];
+	method: string;
+	body: string;
+	headers: Record<string, string>;
+	//Timeout in milliseconds
+	timeout: number;
+};
+
+type CheckRequest = {
 	url: string;
 	method: string;
 	body: string;
 	headers: Record<string, string>;
 	//Timeout in milliseconds
 	timeout: number;
-	// How many checks should run
-	checks?: number;
 };
 
 type PingResponse = {
@@ -20,14 +27,20 @@ type PingResponse = {
 };
 
 export async function ping(req: PingRequest): Promise<PingResponse[]> {
-	req.checks ??= 1;
 	const responses: PingResponse[] = [];
 
-	for (let i = 0; i < req.checks; i++) {
+	for (let i = 0; i < req.urls.length; i++) {
 		try {
+			const checkRequest: CheckRequest = {
+				url: req.urls[i],
+				method: req.method,
+				body: req.body,
+				headers: req.headers,
+				timeout: req.timeout,
+			};
 			// 1 retry if the request fails
-			const res = await check(req).catch(() => {
-				return check(req);
+			const res = await check(checkRequest).catch(() => {
+				return check(checkRequest);
 			});
 			responses.push(res);
 		} catch (e) {
@@ -43,7 +56,7 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
 	return responses;
 }
 
-async function check(req: PingRequest): Promise<PingResponse> {
+async function check(req: CheckRequest): Promise<PingResponse> {
 	const now = Date.now();
 	const controller = new AbortController();
 	const timeout = setTimeout(

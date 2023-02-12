@@ -16,15 +16,21 @@ import (
 	"github.com/chronark/planetfall/apps/proxy/pkg/tags"
 )
 
-type Request struct {
+type PingRequest struct {
+	Urls    []string          `json:"urls"`
+	Method  string            `json:"method"`
+	Body    string            `json:"body"`
+	Headers map[string]string `json:"headers"`
+	//Timeout in milliseconds
+	Timeout int `json:"timeout"`
+}
+type checkRequest struct {
 	Url     string            `json:"url"`
 	Method  string            `json:"method"`
 	Body    string            `json:"body"`
 	Headers map[string]string `json:"headers"`
 	//Timeout in milliseconds
 	Timeout int `json:"timeout"`
-	// How many checks should run
-	Checks int `json:"checks"`
 }
 
 // All values are unix timestamps in milliseconds
@@ -52,11 +58,7 @@ type Response struct {
 	Tags    []string          `json:"tags,omitempty"`
 }
 
-func Ping(ctx context.Context, req Request) ([]Response, error) {
-
-	if req.Checks == 0 {
-		req.Checks = 1
-	}
+func Ping(ctx context.Context, req PingRequest) ([]Response, error) {
 	t := &http.Transport{}
 	client := &http.Client{
 		Transport: t,
@@ -68,32 +70,31 @@ func Ping(ctx context.Context, req Request) ([]Response, error) {
 	}
 	defer t.CloseIdleConnections()
 
-	responses := make([]Response, req.Checks)
-	for i := 0; i < req.Checks; i++ {
-		res, err := retry(func() (Response, error) {
-			return check(ctx, client, req)
-		}, 2)
+	responses := make([]Response, len(req.Urls))
+	for i, url := range req.Urls {
+		checkReq := checkRequest{
+			Url:     url,
+			Method:  req.Method,
+			Body:    req.Body,
+			Headers: req.Headers,
+			Timeout: req.Timeout,
+		}
+		res, err := check(ctx, client, checkReq)
+		if err != nil {
+			return nil, err
+		}
+		if res.Error != "" {
+			res, err = check(ctx, client, checkReq)
+		}
 		if err != nil {
 			return nil, err
 		}
 		responses[i] = res
-
 	}
 	return responses, nil
 }
 
-func retry[T any](f func() (T, error), retries int) (res T, err error) {
-
-	for i := 0; i < retries; i++ {
-		res, err = f()
-		if err == nil {
-			return res, nil
-		}
-	}
-	return res, err
-}
-
-func check(ctx context.Context, client *http.Client, input Request) (Response, error) {
+func check(ctx context.Context, client *http.Client, input checkRequest) (Response, error) {
 	log.Printf("Checking [%s] %s: %#v\n", input.Method, input.Url, input)
 
 	now := time.Now()

@@ -91,14 +91,17 @@ export const playRouter = t.router({
 						"Content-Type": "application/json",
 					});
 
+					const urls = [input.url];
+					if (input.repeat) {
+						urls.push(input.url);
+					}
 					const res = await fetch(region.url, {
 						method: "POST",
 						headers,
 						body: JSON.stringify({
-							url: input.url,
+							urls,
 							method: input.method,
 							timeout: 10000,
-							checks: input.repeat ? 2 : 1,
 						}),
 					}).catch((err) => {
 						console.error(err);

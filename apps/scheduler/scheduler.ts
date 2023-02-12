@@ -206,12 +206,11 @@ export class Scheduler {
 						method: "POST",
 						headers,
 						body: JSON.stringify({
-							url: endpoint.url,
+							urls: [endpoint.url],
 							method: endpoint.method,
 							headers: endpoint.headers,
 							body: endpoint.body ?? undefined,
 							timeout: endpoint.timeout ?? undefined,
-							checks: 1,
 						}),
 					});
 					if (res.status !== 200) {
