@@ -113,6 +113,9 @@ export class Scheduler {
 		}
 
 		this.updatedAt = now.getTime();
+		this.logger.info("Synced endpoints", {
+			totalEndpoints: this.clearIntervals.size,
+		});
 	}
 
 	public async addEndpoint(endpointId: string): Promise<void> {
