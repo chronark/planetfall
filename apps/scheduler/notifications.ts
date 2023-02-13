@@ -158,6 +158,7 @@ export class Notifications {
 					})
 					.catch((err: Error) => {
 						this.logger.error("Error sending email", {
+							email: member.user.email,
 							error: err.message,
 							teamId: team.id,
 							userId: member.userId,
