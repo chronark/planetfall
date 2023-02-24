@@ -23,12 +23,12 @@ export const Chart: React.FC<Props> = ({ regions }) => {
 				.flatMap((r) => [
 					{
 						region: r.name,
-						type: "Cold",
+						url: r.checks[0].url,
 						latency: r.checks[0]?.latency ?? -1,
 					},
 					{
 						region: r.name,
-						type: "Hot",
+						url: r.checks[1].url,
 						latency: r.checks[1]?.latency ?? -1,
 					},
 				])}

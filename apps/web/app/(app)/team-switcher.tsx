@@ -27,7 +27,6 @@ import { Loading } from "@/components/loading";
 
 type Props = {
 	teams: {
-		isPersonal: Boolean;
 		id: string;
 		name: string;
 		slug: string;
@@ -39,9 +38,7 @@ export const TeamSwitcher: React.FC<Props> = ({
 	teams,
 	currentTeamId,
 }): JSX.Element => {
-	const personalTeam = teams.find((team) => team.isPersonal)!;
 	const currentTeam = teams.find((team) => team.id === currentTeamId)!;
-	const sharedTeams = teams.filter((team) => !team.isPersonal);
 	const router = useRouter();
 
 	const [loading, setLoading] = useState(false);
@@ -76,23 +73,6 @@ export const TeamSwitcher: React.FC<Props> = ({
 				className="z-30 p-4 bg-white border rounded shadow-lg divide-y divide-zinc-200"
 			>
 				<div className="py-2">
-					<h3 className="px-3 text-xs font-medium text-zinc-500">Personal</h3>
-					<div className="mt-1 space-y-1" aria-labelledby="projects-headline">
-						<Link
-							href={`/${personalTeam?.slug}`}
-							className={`gap-4 lg:gap-8 xl:gap-16 group flex items-center justify-between rounded-md px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 ${
-								currentTeam.id === personalTeam.id ? "bg-zinc-100" : ""
-							}`}
-						>
-							<span className="truncate">{personalTeam.name}</span>
-
-							{currentTeam.id === personalTeam.id ? (
-								<Check className="w-4 h-4" />
-							) : null}
-						</Link>
-					</div>
-				</div>
-				<div className="py-2">
 					<h3
 						className="px-3 text-xs font-medium text-zinc-500"
 						id="projects-headline"
@@ -100,7 +80,7 @@ export const TeamSwitcher: React.FC<Props> = ({
 						Teams
 					</h3>
 					<div className="mt-1 space-y-1">
-						{sharedTeams.map((team) => (
+						{teams.map((team) => (
 							<Link
 								key={team.slug}
 								href={`/${team?.slug}`}

@@ -37,7 +37,6 @@ export const authOptions: NextAuthOptions = {
                   id: newId("team"),
                   name,
                   slug,
-                  isPersonal: true,
                   maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
                   maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
                   maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,

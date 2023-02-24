@@ -108,7 +108,7 @@ enum Plan {
 
 model Team {
   id         String   @id
-  isPersonal Boolean
+  isPersonal Boolean?
   name       String
   slug       String   @unique
   createdAt  DateTime @default(now())

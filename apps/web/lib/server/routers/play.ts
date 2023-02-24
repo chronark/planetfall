@@ -1,5 +1,5 @@
 import { newId, newShortId } from "@planetfall/id";
-import { TRPCError } from "@trpc/server";
+import { TRPCError, unsetMarker } from "@trpc/server";
 import { z } from "zod";
 import { t } from "../trpc";
 import { db } from "@planetfall/db";
@@ -22,6 +22,7 @@ const playChecks = z.object({
 			checks: z.array(
 				z.object({
 					id: z.string(),
+					url: z.string().url(),
 					latency: z.number().optional(),
 					time: z.number(),
 					status: z.number(),
@@ -122,6 +123,7 @@ export const playRouter = t.router({
 
 					let checks: {
 						time: number;
+						url: string;
 						status: number;
 						latency: number;
 						body: string;
@@ -142,7 +144,7 @@ export const playRouter = t.router({
 					}[] = [];
 
 					try {
-						checks = await res.json();
+						checks = { url: region.url, ...(await res.json()) };
 					} catch (e) {
 						console.error(e);
 					}

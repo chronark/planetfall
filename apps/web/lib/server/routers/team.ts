@@ -68,7 +68,6 @@ export const teamRouter = t.router({
 					},
 					maxEndpoints: DEFAULT_QUOTA.PRO.maxEndpoints,
 					maxMonthlyRequests: DEFAULT_QUOTA.PRO.maxMonthlyRequests,
-					isPersonal: false,
 					maxTimeout: DEFAULT_QUOTA.PRO.maxTimeout,
 					plan: "PRO",
 					stripeCustomerId: customer.id,

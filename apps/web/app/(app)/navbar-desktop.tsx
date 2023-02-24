@@ -50,7 +50,6 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 						teamSwitcher={
 							<TeamSwitcher
 								teams={teams.map((t) => ({
-									isPersonal: t.isPersonal,
 									id: t.id,
 									name: t.name,
 									slug: t.slug,

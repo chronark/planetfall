@@ -10,7 +10,6 @@ export default async function Home() {
 
 	const team = await db.team.findFirst({
 		where: {
-			isPersonal: true,
 			members: {
 				some: {
 					userId: session.user.id,

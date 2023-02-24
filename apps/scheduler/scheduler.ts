@@ -151,8 +151,9 @@ export class Scheduler {
 	public removeEndpoint(endpointId: string): void {
 		this.logger.info("removing endpoint", { endpointId });
 
-		if (this.clearIntervals.has(endpointId)) {
-			this.clearIntervals.get(endpointId)!();
+		const clear = this.clearIntervals.get(endpointId);
+		if (clear) {
+			clear();
 			this.clearIntervals.delete(endpointId);
 		}
 	}
@@ -162,16 +163,26 @@ export class Scheduler {
 	): Promise<void> {
 		try {
 			if (endpoint.regions.length === 0) {
-				throw new Error(`endpoint ${endpoint.id} has no active regions`);
+				this.logger.info("endpoint has no regions, disabling it..", {
+					endpointId: endpoint.id,
+				});
+				await this.db.endpoint.update({
+					where: { id: endpoint.id },
+					data: {
+						active: false,
+					},
+				});
+				this.removeEndpoint(endpoint.id);
+				return;
 			}
 			const regions =
 				endpoint.distribution === "ALL"
 					? endpoint.regions
 					: [
-						endpoint.regions[
-						Math.floor(Math.random() * endpoint.regions.length)
-						],
-					];
+							endpoint.regions[
+								Math.floor(Math.random() * endpoint.regions.length)
+							],
+					  ];
 			this.logger.info("testing endpoint", {
 				endpointId: endpoint.id,
 				regions: regions.map((r) => r.id),
@@ -285,7 +296,7 @@ export class Scheduler {
 						};
 					});
 					for (const d of data) {
-						this.logger.info("storing check", d)
+						this.logger.info("storing check", { checkId: d.id });
 					}
 					await this.tinybird.publishChecks(data).catch((err) => {
 						this.logger.error("error publishing checks", {

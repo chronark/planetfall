@@ -118,35 +118,18 @@ export default async function webhookHandler(
 					throw new Error("plan does not exist");
 				}
 
-				if (team.isPersonal) {
-					await db.team.update({
-						where: {
-							stripeCustomerId: subscription.customer.toString(),
-						},
-						data: {
-							plan: "FREE",
-							stripeSubscriptionId: null,
-							maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
-							maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
-							maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
-							stripeCurrentBillingPeriodStart: null,
-							stripeCurrentBillingPeriodEnd: null,
-						},
-					});
-				} else {
-					await db.team.update({
-						where: {
-							stripeCustomerId: subscription.customer.toString(),
-						},
-						data: {
-							plan: "DISABLED",
-							stripeSubscriptionId: null,
-							maxMonthlyRequests: 0,
-							stripeCurrentBillingPeriodStart: null,
-							stripeCurrentBillingPeriodEnd: null,
-						},
-					});
-				}
+				await db.team.update({
+					where: {
+						stripeCustomerId: subscription.customer.toString(),
+					},
+					data: {
+						plan: "FREE",
+						stripeSubscriptionId: null,
+						maxMonthlyRequests: 0,
+						stripeCurrentBillingPeriodStart: null,
+						stripeCurrentBillingPeriodEnd: null,
+					},
+				});
 
 				break;
 			}

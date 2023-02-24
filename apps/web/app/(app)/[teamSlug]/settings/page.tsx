@@ -77,7 +77,6 @@ export default async function SettingsPage(props: {
 				<BillingCard
 					team={{
 						id: team.id,
-						isPersonal: team.isPersonal,
 						plan: team.plan,
 						maxMonthlyRequests: team.maxMonthlyRequests,
 					}}
@@ -86,6 +85,7 @@ export default async function SettingsPage(props: {
 					year={year}
 					month={month}
 				/>
+
 				<Divider />
 				<TeamCard
 					currentUser={{ userId: user.userId, role: user.role }}

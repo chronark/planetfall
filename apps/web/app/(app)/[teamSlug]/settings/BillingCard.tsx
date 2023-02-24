@@ -19,7 +19,6 @@ type Props = {
 	team: {
 		id: string;
 		plan: string;
-		isPersonal: boolean;
 		maxMonthlyRequests: number;
 	};
 	usage: number;
@@ -126,14 +125,10 @@ export const BillingCard: React.FC<Props> = ({
 				<CardFooterActions>
 					{team.plan !== "FREE" ? <PortalButton teamId={team.id} /> : null}
 
-					{team.isPersonal ? (
-						team?.plan === "FREE" ? (
-							<UpgradeButton teamId={team.id} />
-						) : team?.plan === "PRO" ? (
-							<Link href="mailto:support@planetfall.io?subject=planetfall.io enterprise upgrade">
-								<Button> Upgrade to Enterprise</Button>
-							</Link>
-						) : null
+					{team?.plan === "PRO" ? (
+						<Link href="mailto:support@planetfall.io?subject=planetfall.io enterprise upgrade">
+							<Button> Upgrade to Enterprise</Button>
+						</Link>
 					) : team?.plan === "DISABLED" ? (
 						<UpgradeButton teamId={team.id} />
 					) : (
