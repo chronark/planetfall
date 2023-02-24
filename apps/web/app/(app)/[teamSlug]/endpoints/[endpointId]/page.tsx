@@ -106,7 +106,11 @@ export default async function Page(props: {
 				title={endpoint.name}
 				description={endpoint.url}
 				actions={[
-					<Toggle endpointId={endpoint.id} active={endpoint.active} />,
+					<Toggle
+						key="toggle"
+						endpointId={endpoint.id}
+						active={endpoint.active}
+					/>,
 					<Link
 						key="settings"
 						href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/settings`}
@@ -114,6 +118,7 @@ export default async function Page(props: {
 						<Button>Settings</Button>
 					</Link>,
 					<DeleteButton
+						key="delete"
 						endpointId={endpoint.id}
 						endpointName={endpoint.name}
 						endpointUrl={endpoint.url}
@@ -196,6 +201,7 @@ export default async function Page(props: {
 								<Button>
 									<Link
 										href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/errors`}
+										className="whitespace-nowrap"
 									>
 										Go to Errors
 									</Link>

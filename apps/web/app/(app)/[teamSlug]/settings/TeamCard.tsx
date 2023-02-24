@@ -33,6 +33,7 @@ import {
 	DialogTrigger,
 } from "@/components/dialog";
 import { Tag } from "@/components/tag";
+import Image from "next/image";
 
 type Props = {
 	currentUser: {
@@ -60,10 +61,12 @@ export const TeamCard: React.FC<Props> = ({
 			header: "User",
 			cell: (info) => (
 				<div className="flex items-center">
-					<img
+					<Image
+						width={64}
+						height={64}
 						className="w-10 h-10 rounded-full"
 						src={info.getValue().image ?? ""}
-						alt=""
+						alt={`Profile image of ${info.getValue().name}`}
 					/>
 					<span className="ml-3 text-sm font-medium text-zinc-900">
 						{info.getValue().name}
@@ -107,10 +110,13 @@ export const TeamCard: React.FC<Props> = ({
 				</DialogTrigger>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>Dang, I'm too slow to ship new features</DialogTitle>
+						<DialogTitle>
+							Dang, I&apos;m too slow to ship new features
+						</DialogTitle>
 						<DialogDescription>
-							Sorry this isn't available yet. I'm working on it! Send an email
-							to andreas@planetfall.io and I'll manually add your teammates.
+							Sorry this isn&apos;t available yet. I&apos;m working on it! Send
+							an email to andreas@planetfall.io and I&apos;ll manually add your
+							teammates.
 						</DialogDescription>
 					</DialogHeader>
 				</DialogContent>

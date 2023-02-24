@@ -72,10 +72,12 @@ export const Row: React.FC<{
 	const availability = totalChecks === 0 ? 1 : 1 - errors / totalChecks;
 
 	const current =
+		endpoint.stats["global"]?.series.at(-1) &&
 		endpoint.stats["global"]?.series.at(-1)!.errors > 0
 			? "Error"
 			: endpoint.degradedAfter &&
-			  endpoint.stats["global"]?.series.at(-1)!.p99 > endpoint.degradedAfter
+			  endpoint.stats["global"].series.at(-1) &&
+			  endpoint.stats["global"].series.at(-1)!.p99 > endpoint.degradedAfter
 			? "Degraded"
 			: "Operational";
 

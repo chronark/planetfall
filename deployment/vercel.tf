@@ -39,12 +39,7 @@ resource "vercel_project" "web" {
       value  = "https://vercel-vitals.axiom.co/api/v1/send?configurationId=icfg_oPwbzTXCEWVftFAoGBeNQFKJ&projectId=b5766f87-cc3f-4925-9480-53e74b861789&type=web-vitals"
       target = ["production"]
     },
-    {
-      key    = "SENDGRID_API_KEY"
-      value  = var.sendgrid_api_key
-      target = ["production", "preview", "development"]
-    },
-
+  
     {
       key   = "DATABASE_URL",
       value = var.database_url,

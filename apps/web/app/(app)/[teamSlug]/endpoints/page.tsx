@@ -61,8 +61,11 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 			/>
 			<main className="container mx-auto">
 				{team.endpoints.length === 0 ? (
-					<div className="flex flex-col items-center justify-center max-w-sm p-4 mx-auto md:p-8">
-						<Text>You don't have any endpoints yet.</Text>
+					<div
+						key="x"
+						className="flex flex-col items-center justify-center max-w-sm p-4 mx-auto md:p-8"
+					>
+						<Text>You don&apos;t have any endpoints yet.</Text>
 						<Button size="lg" className="flex items-center mt-2 gap-2 ">
 							<Plus className="w-5 h-5" />
 							<Link href={`/${team.slug}/endpoints/new`}>

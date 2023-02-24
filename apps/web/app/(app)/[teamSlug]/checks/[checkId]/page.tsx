@@ -227,7 +227,7 @@ export default async function Page(props: {
 				title={endpoint?.name ?? endpoint?.url ?? check.id}
 				description={new Date(check.time).toUTCString()}
 				actions={[
-					<Tag variant="outline" size="sm">
+					<Tag key="check" variant="outline" size="sm">
 						{check.id}
 					</Tag>,
 				]}

@@ -8,6 +8,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
+import Image from "next/image";
 
 type Member = {
 	role: string;
@@ -29,10 +30,12 @@ export const TeamTable: React.FC<Props> = ({ members }) => {
 			header: "User",
 			cell: (info) => (
 				<div className="flex items-center">
-					<img
+					<Image
+						width={64}
+						height={64}
 						className="w-10 h-10 rounded-full"
 						src={info.getValue().image ?? ""}
-						alt=""
+						alt={`Profile image of ${info.getValue().name}`}
 					/>
 					<span className="ml-3 text-sm font-medium text-zinc-900">
 						{info.getValue().email}

@@ -91,7 +91,7 @@ export const DeleteCard: React.FC<Props> = ({
 				<CardHeaderTitle
 					title="Delete Team"
 					actions={[
-						<Dialog>
+						<Dialog key="delete">
 							<DialogTrigger asChild>
 								<Button variant="danger">Delete Team</Button>
 							</DialogTrigger>
