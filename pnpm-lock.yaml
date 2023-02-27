@@ -338,7 +338,6 @@ importers:
       '@react-email/section': 0.0.7-canary.1
       '@react-email/tailwind': ^0.0.4
       '@react-email/text': ^0.0.4
-      '@sendgrid/mail': ^7.2.1
       '@types/node': ^18.13.0
       '@types/react': 18.0.27
       nodemailer: ^6.9.1
@@ -360,7 +359,6 @@ importers:
       '@react-email/section': 0.0.7-canary.1
       '@react-email/tailwind': 0.0.4
       '@react-email/text': 0.0.4
-      '@sendgrid/mail': 7.7.0
       react: 18.2.0
       react-email: 1.7.11
       resend: 0.10.0
@@ -3001,33 +2999,6 @@ packages:
       selderee: 0.10.0
     dev: false
 
-  /@sendgrid/client/7.7.0:
-    resolution: {integrity: sha512-SxH+y8jeAQSnDavrTD0uGDXYIIkFylCo+eDofVmZLQ0f862nnqbC3Vd1ej6b7Le7lboyzQF6F7Fodv02rYspuA==}
-    engines: {node: 6.* || 8.* || >=10.*}
-    dependencies:
-      '@sendgrid/helpers': 7.7.0
-      axios: 0.26.1
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
-  /@sendgrid/helpers/7.7.0:
-    resolution: {integrity: sha512-3AsAxfN3GDBcXoZ/y1mzAAbKzTtUZ5+ZrHOmWQ279AuaFXUNCh9bPnRpN504bgveTqoW+11IzPg3I0WVgDINpw==}
-    engines: {node: '>= 6.0.0'}
-    dependencies:
-      deepmerge: 4.3.0
-    dev: false
-
-  /@sendgrid/mail/7.7.0:
-    resolution: {integrity: sha512-5+nApPE9wINBvHSUxwOxkkQqM/IAAaBYoP9hw7WwgDNQPxraruVqHizeTitVtKGiqWCKm2mnjh4XGN3fvFLqaw==}
-    engines: {node: 6.* || 8.* || >=10.*}
-    dependencies:
-      '@sendgrid/client': 7.7.0
-      '@sendgrid/helpers': 7.7.0
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
   /@sindresorhus/is/4.6.0:
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
     engines: {node: '>=10'}
@@ -3980,14 +3951,6 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.13
       is-retry-allowed: 2.2.0
-    dev: false
-
-  /axios/0.26.1:
-    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
-    dependencies:
-      follow-redirects: 1.15.2
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   /axios/0.27.2:

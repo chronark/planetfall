@@ -31,7 +31,6 @@
     "@react-email/section": "0.0.7-canary.1",
     "@react-email/tailwind": "^0.0.4",
     "@react-email/text": "^0.0.4",
-    "@sendgrid/mail": "^7.2.1",
     "react": "^18.2.0",
     "react-email": "^1.7.11",
     "resend": "^0.10.0"

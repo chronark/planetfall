@@ -51,11 +51,6 @@ variable "stripe_price_id_pro" {
 
 
 
-variable "sendgrid_api_key" {
-  type      = string
-  sensitive = true
-}
-
 
 
 variable "axiom_token" {
@@ -96,6 +91,10 @@ variable "nextauth_secret" {
   sensitive = true
 }
 
+variable "nextauth_secret_preview" {
+  type      = string
+  sensitive = true
+}
 
 variable "proton_verification" {
   type      = string
@@ -138,4 +137,10 @@ variable "fly_token" {
 variable "fly_org" {
   type    = string
   default = "planetfall"
+}
+
+
+variable "preview_user_password" {
+  type      = string
+  sensitive = true
 }

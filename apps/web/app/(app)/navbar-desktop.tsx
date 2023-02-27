@@ -22,6 +22,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 	const navigation: { name: string; href: string }[] = [
 		{ name: "Endpoints", href: `/${props.teamSlug}/endpoints` },
 		{ name: "Pages", href: `/${props.teamSlug}/pages` },
+		{ name: "Playground", href: "/play" },
 		{ name: "Settings", href: `/${props.teamSlug}/settings` },
 	];
 	const user = await db.user.findUnique({ where: { id: session.user.id } });
