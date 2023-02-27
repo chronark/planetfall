@@ -21,38 +21,38 @@ import { Feature, Props } from "./feature";
 
 export const Features = asyncComponent(async () => {
 	const regions = await cache(() => db.region.findMany())();
-	const stats = await cache(async () => {
-		const endpoint = await db.endpoint.findUnique({
-			where: {
-				id:
-					process.env.NODE_ENV === "production"
-						? "ept_Mf5j3QP7me7DRByaDzbS4y"
-						: "ept_Jk9p1kGTRdvb54PUfZSmZu",
-			},
-		});
-		if (!endpoint) {
-			return null;
-		}
-		const stats = await getStats(endpoint);
+	// const stats = await cache(async () => {
+	// 	const endpoint = await db.endpoint.findUnique({
+	// 		where: {
+	// 			id:
+	// 				process.env.NODE_ENV === "production"
+	// 					? "ept_Mf5j3QP7me7DRByaDzbS4y"
+	// 					: "ept_Jk9p1kGTRdvb54PUfZSmZu",
+	// 		},
+	// 	});
+	// 	if (!endpoint) {
+	// 		return null;
+	// 	}
+	// 	const stats = await getStats(endpoint);
 
-		return {
-			id: endpoint.id,
-			name: endpoint.name,
-			url: endpoint.url,
-			degradedAfter: endpoint.degradedAfter ?? undefined,
-			timeout: endpoint.timeout ?? undefined,
-			stats: Object.entries(stats).reduce(
-				(acc, [regionId, value]) => {
-					const regionName =
-						regions.find((r) => r.id === regionId)?.name ?? regionId;
-					acc[regionName] = value;
-					return acc;
-				},
+	// 	return {
+	// 		id: endpoint.id,
+	// 		name: endpoint.name,
+	// 		url: endpoint.url,
+	// 		degradedAfter: endpoint.degradedAfter ?? undefined,
+	// 		timeout: endpoint.timeout ?? undefined,
+	// 		stats: Object.entries(stats).reduce(
+	// 			(acc, [regionId, value]) => {
+	// 				const regionName =
+	// 					regions.find((r) => r.id === regionId)?.name ?? regionId;
+	// 				acc[regionName] = value;
+	// 				return acc;
+	// 			},
 
-				{} as any,
-			),
-		};
-	})();
+	// 			{} as any,
+	// 		),
+	// 	};
+	// })();
 
 	const features: Props["feature"][] = [
 		{
@@ -120,7 +120,7 @@ export const Features = asyncComponent(async () => {
 			description:
 				"Create custom status pages for your APIs to share with your customers.",
 
-			image: stats ? <Row endpoint={stats} /> : undefined,
+			// image: stats ? <Row endpoint={stats} /> : undefined,
 			bullets: [
 				{
 					icon: Layers,
