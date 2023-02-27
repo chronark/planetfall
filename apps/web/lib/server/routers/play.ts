@@ -144,7 +144,12 @@ export const playRouter = t.router({
 					}[] = [];
 
 					try {
-						checks = { url: region.url, ...(await res.json()) };
+						checks.push(
+							...((await res.json()) as any[]).map((r) => ({
+								url: region.url,
+								...r,
+							})),
+						);
 					} catch (e) {
 						console.error(e);
 					}

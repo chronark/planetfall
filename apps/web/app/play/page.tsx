@@ -1,3 +1,4 @@
+import { getSession } from "@/lib/auth";
 import { db } from "@planetfall/db";
 import { Form } from "./dynamic";
 
@@ -11,7 +12,13 @@ export default async function PlayPage(props: {
 		repeat?: string;
 	};
 }) {
-	const regions = await db.region.findMany({ where: { visible: true } });
+	const { session } = await getSession();
+
+	const regions = session
+		? await db.region.findMany({ where: { visible: true } })
+		: await db.region.findMany({
+				where: { visible: true, platform: "vercelEdge" },
+		  });
 	return (
 		<Form
 			regions={regions}
@@ -19,7 +26,6 @@ export default async function PlayPage(props: {
 				url: props.searchParams?.url,
 				method: props.searchParams?.method?.toUpperCase(),
 				regions: props.searchParams?.regions?.split(","),
-				repeat: props.searchParams?.repeat,
 			}}
 		/>
 	);

@@ -1,20 +1,46 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
 import { DEFAULT_QUOTA } from "plans";
 import slugify from "slugify";
+import { env } from "@/lib/env";
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_OAUTH_ID!,
-      clientSecret: process.env.GITHUB_OAUTH_SECRET!,
-    }),
+    env.VERCEL_ENV === "preview" ? CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        username: {
+          label: "Email",
+          type: "email",
+          placeholder: "jsmith",
+        },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.username || !credentials?.password) {
+          return null
+        }
+        if (credentials.password !== process.env.PREVIEW_USER_PASSWORD) {
+          return null
+        }
+
+        return await db.user.findUnique({
+          where: { email: credentials.username },
+        });
+        
+      }
+    }) :
+      GithubProvider({
+        clientId: process.env.GITHUB_OAUTH_ID!,
+        clientSecret: process.env.GITHUB_OAUTH_SECRET!,
+      }),
   ],
 
   adapter: {

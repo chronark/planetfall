@@ -14,28 +14,34 @@ const defaultStyle = {
 	},
 };
 export const Chart: React.FC<Props> = ({ regions }) => {
+	console.log({ regions });
 	if (regions[0].checks.length > 1) {
+		const data = regions
+
+		.flatMap((r) => [
+			{
+				type: "Cold",
+				region: r.name,
+				url: r.checks[0].url,
+				latency: r.checks[0]?.latency ?? -1,
+			},
+			{
+				type: "Warm",
+				region: r.name,
+				url: r.checks[1].url,
+				latency: r.checks[1]?.latency ?? -1,
+			},
+		]);
+		console.log({ data });
 		return (
 			<Column
 				{...defaultStyle}
-				data={regions
-
-				.flatMap((r) => [
-					{
-						region: r.name,
-						url: r.checks[0].url,
-						latency: r.checks[0]?.latency ?? -1,
-					},
-					{
-						region: r.name,
-						url: r.checks[1].url,
-						latency: r.checks[1]?.latency ?? -1,
-					},
-				])}
+				data={data}
 				isGroup={true}
-				seriesField="type"
+				isStack={false}
 				xField="region"
 				yField="latency"
+				seriesField="type"
 				xAxis={{
 					title: { text: "Regions" },
 					label: {
@@ -47,6 +53,12 @@ export const Chart: React.FC<Props> = ({ regions }) => {
 					title: { text: "Latency (ms)" },
 				}}
 				color={["#3b82f6", "#ef4444"]}
+				tooltip={{
+					formatter: (datum) => ({
+						name: datum.type,
+						value: `${datum.latency} ms`,
+					}),
+				}}
 			/>
 		);
 	} else {

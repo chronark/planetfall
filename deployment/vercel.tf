@@ -39,7 +39,7 @@ resource "vercel_project" "web" {
       value  = "https://vercel-vitals.axiom.co/api/v1/send?configurationId=icfg_oPwbzTXCEWVftFAoGBeNQFKJ&projectId=b5766f87-cc3f-4925-9480-53e74b861789&type=web-vitals"
       target = ["production"]
     },
-  
+
     {
       key   = "DATABASE_URL",
       value = var.database_url,
@@ -84,8 +84,8 @@ resource "vercel_project" "web" {
     },
     {
       key    = "NEXTAUTH_SECRET"
-      value  = var.nextauth_secret
-      target = ["production"]
+      value  = var.nextauth_secret_preview
+      target = ["preview"]
       }, {
       key    = "UPSTASH_REDIS_REST_URL"
       value  = "https:${upstash_redis_database.planetfall.endpoint}"
@@ -96,9 +96,9 @@ resource "vercel_project" "web" {
       target = ["production", "preview", "development"]
     },
     {
-      key    = "SENDGRID_API_KEY"
-      value  = var.sendgrid_api_key
-      target = ["production", "preview", "development"]
+      key    = "PREVIEW_USER_PASSWORD"
+      value  = var.preview_user_password
+      target = ["preview"]
     },
 
 
@@ -254,6 +254,21 @@ resource "vercel_project_domain" "wildcard" {
   domain     = "*.planetfall.io"
 }
 
+
+
+
+
+data "vercel_project_directory" "root" {
+  path = "../"
+}
+
+
+resource "vercel_deployment" "planetfall" {
+  project_id = vercel_project.web.id
+  team_id    = var.vercel_team_id
+  files       = data.vercel_project_directory.root.files
+  path_prefix = data.vercel_project_directory.root.path
+}
 
 
 

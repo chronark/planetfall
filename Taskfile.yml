@@ -26,7 +26,7 @@ tasks:
   
   deploy:
     deps:
-      - clear
+      - build
     env:
           TF_VAR_check_runner_image: "{{.CHECK_RUNNER_IMAGE}}:{{.VERSION}}"
     cmds:
