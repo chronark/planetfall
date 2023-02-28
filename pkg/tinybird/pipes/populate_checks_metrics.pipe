@@ -3,7 +3,7 @@ DESCRIPTION >
 	Copy a subset
 
 
-NODE checks_metrics_pipe_0925_0
+NODE copy_checks
 SQL >
 
     SELECT
@@ -15,7 +15,7 @@ SQL >
         FROM checks__v2
 
 TYPE materialized
-DATASOURCE checks_metrics__v2
+DATASOURCE checks_metrics__v1
 ENGINE "MergeTree"
 ENGINE_SORTING_KEY "endpointId, regionId, time"
 

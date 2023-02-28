@@ -16,7 +16,7 @@ SQL >
         COUNTState(error) AS errors,
         regionId
     FROM checks__v2
-    WHERE time >= now() - INTERVAL 1 DAY 
+    WHERE time >= toUnixTimestamp64Milli(toDateTime64(now() - INTERVAL 1 DAY,3))
     GROUP BY endpointId, regionId
 
 TYPE MATERIALIZED

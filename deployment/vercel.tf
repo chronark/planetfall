@@ -83,6 +83,11 @@ resource "vercel_project" "web" {
       target = ["production"]
     },
     {
+      key : "NEXTAUTH_SECRET",
+      value : var.nextauth_secret,
+      target : ["production"]
+    },
+    {
       key    = "NEXTAUTH_SECRET"
       value  = var.nextauth_secret_preview
       target = ["preview"]
@@ -264,8 +269,8 @@ data "vercel_project_directory" "root" {
 
 
 resource "vercel_deployment" "planetfall" {
-  project_id = vercel_project.web.id
-  team_id    = var.vercel_team_id
+  project_id  = vercel_project.web.id
+  team_id     = var.vercel_team_id
   files       = data.vercel_project_directory.root.files
   path_prefix = data.vercel_project_directory.root.path
 }

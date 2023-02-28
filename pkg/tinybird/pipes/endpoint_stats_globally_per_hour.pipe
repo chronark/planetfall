@@ -17,5 +17,6 @@ SQL >
         quantile(0.99)(latency) as p99,
         COUNT(error) as errors
     FROM checks__v2
-    WHERE  endpointId={{ String(endpointId, required=True)}} AND time >= now() - INTERVAL {{ Int32(days,7)}} DAY 
+    WHERE  endpointId={{ String(endpointId, required=True)}} AND
+    time >= toUnixTimestamp64Milli(toDateTime64(now() - INTERVAL {{ Int32(days,7)}} DAY,3))
     GROUP BY toUnixTimestamp64Milli(toDateTime64(toStartOfHour(fromUnixTimestamp64Milli(time)),3)) as time

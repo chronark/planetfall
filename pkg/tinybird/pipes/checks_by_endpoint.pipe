@@ -9,13 +9,11 @@ DESCRIPTION >
 NODE checks_by_endpoint_0
 SQL >
 
-    %
-    SELECT * 
+   %
+    SELECT id,time,status,regionId, error
     FROM checks__v2
     WHERE endpointId = {{String(endpointId, required=True)}}
+    AND time > toUnixTimestamp64Milli(toDateTime64(now() - INTERVAL 1 DAY,3))
     ORDER BY time DESC
     LIMIT {{Int(limit, default=10)}}
     
-
-
-

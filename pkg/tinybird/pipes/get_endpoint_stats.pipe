@@ -10,7 +10,7 @@ SQL >
         quantileTiming(0.5)(latency) AS p50,
         quantileTiming(0.95)(latency) AS p95,
         quantileTiming(0.99)(latency) AS p99
-    FROM checks_metrics__v2
+    FROM checks_metrics__v1
     WHERE
         endpointId ={{ String(endpointId, required=True) }}
     AND 
@@ -30,7 +30,7 @@ SQL >
         quantileTiming(0.5)(latency) AS p50,
         quantileTiming(0.95)(latency) AS p95,
         quantileTiming(0.99)(latency) AS p99
-    FROM checks_metrics__v2
+    FROM checks_metrics__v1
     WHERE
         endpointId ={{ String(endpointId, required=True) }}
     AND 
