@@ -66,7 +66,7 @@ export const BillingCard: React.FC<Props> = ({
                 ]} */}
 			<CardContent>
 				<div className="flex justify-around py-4 divide-x divide-zinc-200">
-					<div className="flex flex-col w-1/3 px-8 gap-2">
+					<div className="flex flex-col w-1/3 gap-2 px-8">
 						<Text size="xl">Current Usage</Text>
 						<Text>
 							{usage.toLocaleString()} /{" "}
@@ -87,7 +87,7 @@ export const BillingCard: React.FC<Props> = ({
 						) : null}
 					</div>
 
-					<div className="flex flex-col w-1/3 px-8 gap-2">
+					<div className="flex flex-col w-1/3 gap-2 px-8">
 						<Text size="xl">Cost</Text>
 						<Text>
 							$
@@ -97,7 +97,7 @@ export const BillingCard: React.FC<Props> = ({
 							)}
 						</Text>
 					</div>
-					<div className="flex flex-col w-1/3 px-8 gap-2">
+					<div className="flex flex-col w-1/3 gap-2 px-8">
 						<Text size="xl">Current Billing Cycle</Text>
 						<Text>
 							{new Date(year, month - 1, 1).toLocaleString(undefined, {

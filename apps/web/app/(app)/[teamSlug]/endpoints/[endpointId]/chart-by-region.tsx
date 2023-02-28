@@ -152,7 +152,7 @@ const Chart: React.FC<Props> = ({ endpoint, checks }) => {
 		<Line
 			data={checks.map((c) => ({
 				latency: c.latency ?? 0,
-				time: new Date(c.time).toLocaleString(),
+				time: new Date(c.time).toUTCString(),
 			}))}
 			xField="time"
 			yField="latency"

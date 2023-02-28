@@ -12,7 +12,6 @@ export default async function PlayPage(props: {
 		repeat?: string;
 	};
 }) {
-
 	let regions = await db.region.findMany({
 		where: { visible: true },
 	});

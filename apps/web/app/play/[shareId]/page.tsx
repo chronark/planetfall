@@ -9,7 +9,6 @@ import { Chart } from "./chart";
 import { Table } from "./table";
 import { Details } from "./details";
 import { PlayChecks } from "lib/server/routers/play";
-import { DateDisplay } from "./DateDisplay";
 import {
 	Card,
 	CardContent,
@@ -92,7 +91,7 @@ export default async function Share(props: { params: { shareId: string } }) {
 			<PageHeader
 				sticky={true}
 				title={url}
-				description={<DateDisplay time={time} />}
+				description={new Date(time).toUTCString()}
 			/>
 			<div className="container relative min-h-screen pb-20 mx-auto mt-24 -pt-24">
 				<div className="space-y-4 md:space-y-8 lg:space-y-16">
