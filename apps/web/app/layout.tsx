@@ -1,11 +1,13 @@
 import "./globals.css";
 import { Analytics } from "app/components/analytics";
 import { Inter } from "@next/font/google";
+import Script from "next/script";
 
 const inter = Inter({
 	variable: "--font-inter",
 	subsets: ["latin"],
 });
+const crispyScript = `window.$crisp=[];window.CRISP_WEBSITE_ID="36468086-4e2e-4499-8b8d-32238bb2831c";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();`;
 
 export default function RootLayout({
 	children,
@@ -19,6 +21,11 @@ export default function RootLayout({
 				<meta name="description" content="Global Latency Monitoring" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="icon" href="/logo.svg" />
+				<Script
+					id="crispy-script"
+					dangerouslySetInnerHTML={{ __html: crispyScript }}
+					strategy="lazyOnload"
+				/>
 			</head>
 			<body
 				className={

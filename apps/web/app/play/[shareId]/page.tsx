@@ -19,6 +19,7 @@ import {
 import { Divider } from "@/components/divider";
 const redis = Redis.fromEnv();
 
+export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export default async function Share(props: { params: { shareId: string } }) {
@@ -136,10 +137,10 @@ export default async function Share(props: { params: { shareId: string } }) {
 									/>
 								</CardHeader>
 								<CardContent>
-									<ul className="w-full mx-auto mt-4 grid grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-6">
+									<ul className="grid w-full grid-cols-2 gap-4 mx-auto mt-4 md:grid-cols-4 xl:grid-cols-6">
 										{tags.map((tag) => (
 											<li
-												className="px-2 py-1 text-center rounded duration-150 whitespace-nowrap ring-1 ring-zinc-900 hover:bg-zinc-50"
+												className="px-2 py-1 text-center duration-150 rounded whitespace-nowrap ring-1 ring-zinc-900 hover:bg-zinc-50"
 												key={tag}
 											>
 												{tag}

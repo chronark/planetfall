@@ -2,7 +2,8 @@ import { getSession } from "@/lib/auth";
 import { db } from "@planetfall/db";
 import { Form } from "./dynamic";
 
-export const revalidate = 60;
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export default async function PlayPage(props: {
 	searchParams?: {
