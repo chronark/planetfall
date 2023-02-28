@@ -18,7 +18,6 @@ import {
 import { Divider } from "@/components/divider";
 const redis = Redis.fromEnv();
 
-export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export default async function Share(props: { params: { shareId: string } }) {
