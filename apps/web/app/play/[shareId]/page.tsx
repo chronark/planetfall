@@ -1,14 +1,12 @@
-import { Heading } from "@/components/heading";
 import PageHeader from "@/components/page/header";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { Redis } from "@upstash/redis";
-import type { Input } from "pages/api/v1/play/share";
 import { Chart } from "./chart";
 import { Table } from "./table";
 import { Details } from "./details";
-import { PlayChecks } from "lib/server/routers/play";
+import type { PlayChecks } from "lib/server/routers/play";
 import {
 	Card,
 	CardContent,
