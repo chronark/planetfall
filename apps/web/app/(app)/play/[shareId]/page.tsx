@@ -38,59 +38,12 @@ export default async function Share(props: { params: { shareId: string } }) {
 
 	return (
 		<div className="bg-zinc-50">
-			<header className="w-full backdrop-blur">
-				<div className="container mx-auto">
-					<div className="flex items-center justify-between h-16 md:h-20">
-						{/* Site branding */}
-						<div className="mr-4 shrink-0">
-							{/* Logo */}
-							<Link href="/" aria-label="Planetfall">
-								<div className="flex items-center gap-2 group ">
-									<Logo className="w-10 h-10 duration-500 group-hover:text-zinc-700 text-zinc-900" />
-									<span className="text-2xl font-semibold duration-500 group-hover:text-black text-zinc-900">
-										Planetfall
-									</span>
-								</div>
-							</Link>
-						</div>
-						{/* Desktop navigation */}
-						<nav className="flex items-center grow">
-							<ul className="flex flex-wrap items-center justify-end gap-8 grow">
-								{/* <li className="hidden md:block">
-									<Link
-										className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-500 hover:text-zinc-700 lg:px-5"
-										href="/docs"
-									>
-										Docs
-									</Link>
-								</li> */}
-								<li className="hidden md:block">
-									<Link
-										className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-500 hover:text-zinc-700 lg:px-5"
-										href="/play"
-									>
-										Play
-									</Link>
-								</li>
-								<li className="hidden md:block">
-									<Link
-										className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-500 hover:text-zinc-700 lg:px-5"
-										href="/home"
-									>
-										Dashboard
-									</Link>
-								</li>
-							</ul>
-						</nav>
-					</div>
-				</div>
-			</header>
 			<PageHeader
 				sticky={true}
 				title={url}
 				description={new Date(time).toUTCString()}
 			/>
-			<div className="container relative min-h-screen pb-20 mx-auto mt-24 -pt-24">
+			<div className="container relative min-h-screen pb-20 mx-auto">
 				<div className="space-y-4 md:space-y-8 lg:space-y-16">
 					{regions.length >= 2 ? (
 						<>
@@ -108,19 +61,24 @@ export default async function Share(props: { params: { shareId: string } }) {
 						</>
 					) : null}
 
-					<Card>
-						<CardHeader>
-							<CardHeaderTitle
-								title="Request Trace"
-								subtitle="Edge functions do not support tracing yet."
-							/>
-						</CardHeader>
-						<CardContent>
-							<Table regions={regions} />
-						</CardContent>
-					</Card>
+					{/* Only if there is at least one region with timing data: show the table and details. */}
+					{regions.some((r) => r.checks.some((c) => c.timing)) ? (
+						<>
+							<Card>
+								<CardHeader>
+									<CardHeaderTitle
+										title="Request Trace"
+										subtitle="Edge functions do not support tracing yet."
+									/>
+								</CardHeader>
+								<CardContent>
+									<Table regions={regions} />
+								</CardContent>
+							</Card>
 
-					<Divider />
+							<Divider />
+						</>
+					) : null}
 					<Details regions={regions} />
 					{tags.length > 0 ? (
 						<>

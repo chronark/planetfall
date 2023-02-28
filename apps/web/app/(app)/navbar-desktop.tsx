@@ -47,7 +47,6 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 			<div className="container px-4 pt-2 mx-auto sm:px-0">
 				<div className="flex items-center justify-between">
 					<Breadcrumbs
-						teamSlug={props.teamSlug}
 						teamSwitcher={
 							<TeamSwitcher
 								teams={teams.map((t) => ({

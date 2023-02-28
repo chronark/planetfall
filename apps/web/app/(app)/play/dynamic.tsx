@@ -85,46 +85,19 @@ export const Inner: React.FC<Props> = ({
 	}
 	return (
 		<form onSubmit={handleSubmit(submit)}>
-			<header className="fixed top-0 z-50 w-full backdrop-blur">
-				<div className="container mx-auto px-4">
-					<div className="flex items-center justify-between h-16 md:h-20">
-						{/* Site branding */}
-						<div className="mr-4 shrink-0">
-							{/* Logo */}
-							<Link href="/" aria-label="Planetfall">
-								<div className="flex items-center gap-2 group ">
-									<Logo className="w-10 h-10 duration-500 group-hover:text-zinc-700 text-zinc-900" />
-									<span className="text-2xl font-semibold duration-500 group-hover:text-black text-zinc-900">
-										Planetfall
-									</span>
-								</div>
-							</Link>
-						</div>
-						{/* Desktop navigation */}
-						<nav className="flex items-center grow justify-end">
-							{/* <li className="hidden md:block">
-										<Link
-											className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-500 hover:text-zinc-700 lg:px-5"
-											href="/docs"
-										>
-											Docs
-										</Link>
-									</li> */}
-							<Link
-								className="hidden md:flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-500 hover:text-zinc-700 lg:px-5"
-								href="/home"
-							>
-								Dashboard
-							</Link>
-							<Button key="submit" type="submit" variant="primary">
-								{isLoading ? <Loading /> : "Check"}
-							</Button>
-						</nav>
-					</div>
-				</div>
-			</header>
-			<div className="container min-h-screen pb-20 mx-auto mt-24 -pt-24 px-4">
-				<div className="pt-8 space-y-6  sm:space-y-5 sm:pt-10">
+			<PageHeader
+				sticky={true}
+				title="Playground"
+				description="Test your API endpoint from different regions for free."
+				actions={[
+					<Button key="submit" type="submit" variant="primary">
+						{isLoading ? <Loading /> : "Check"}
+					</Button>,
+				]}
+			/>
+
+			<div className="container min-h-screen px-4 pb-20 mx-auto ">
+				<div className="pt-8 space-y-6 sm:space-y-5 sm:pt-10">
 					<div className="flex items-center justify-between">
 						<div>
 							<h3 className="text-lg font-medium leading-6 text-zinc-900">
@@ -135,8 +108,8 @@ export const Inner: React.FC<Props> = ({
 							</p>
 						</div>
 					</div>
-					<div className="space-y-8 sm:space-y-5 lg:space-y-24 mt-8 lg:mt-16">
-						<div className="flex items-center justify-start rounded border-zinc-900 border overflow-hidden group focus:border-zinc-900  hover:bg-zinc-50 duration-300 ease-in-out">
+					<div className="mt-8 space-y-8 sm:space-y-5 lg:space-y-24 lg:mt-16">
+						<div className="flex items-center justify-start overflow-hidden duration-300 ease-in-out border rounded border-zinc-900 group focus:border-zinc-900 hover:bg-zinc-50">
 							<select
 								{...register("method", { required: true })}
 								className={
@@ -195,12 +168,12 @@ export const Inner: React.FC<Props> = ({
 						<div className="space-y-6 sm:space-y-5">
 							<div role="group">
 								<div className="sm:grid sm:items-baseline sm:gap-4">
-									<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+									<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
 										<div>
-											<h4 className="w-full mt-8 mb-4 font-medium text-center leading-6 md:mb-8 md:mt-16 text-zinc-900">
+											<h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
 												Vercel Edge
 											</h4>
-											<fieldset className="w-full grid grid-cols-1 gap-2 md:grid-cols-2 ">
+											<fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 ">
 												{vercelRegions.map((r) => (
 													<button
 														type="button"
@@ -229,12 +202,12 @@ export const Inner: React.FC<Props> = ({
 										</div>
 
 										<div className="h-full">
-											<h4 className="w-full mt-8 mb-4 font-medium text-center leading-6 md:mb-8 md:mt-16 text-zinc-900">
+											<h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
 												AWS Lambda
 											</h4>
 
 											{awsRegions.length > 0 ? (
-												<fieldset className="w-full grid grid-cols-1 gap-2 md:grid-cols-2 ">
+												<fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 ">
 													{awsRegions.map((r) => (
 														<button
 															type="button"
@@ -264,7 +237,7 @@ export const Inner: React.FC<Props> = ({
 													))}
 												</fieldset>
 											) : (
-												<div className="flex justify-center w-full items-center p-8 lg:p-24 border border-zinc-300 rounded border-dashed ">
+												<div className="flex items-center justify-center w-full p-8 border border-dashed rounded lg:p-24 border-zinc-300 ">
 													<Link href="/auth/sign-in">
 														<Button variant="primary" type="button">
 															Sign In to get access to AWS Lambda regions
