@@ -84,7 +84,8 @@ export class Scheduler {
 					billingEnd,
 					usage,
 				});
-				break;
+
+				continue;
 			}
 
 			for (const e of t.endpoints) {
