@@ -1,4 +1,4 @@
-VERSION 2
+VERSION 1
 
 TOKEN "live" READ
 
@@ -8,7 +8,7 @@ NODE aggregate_globally_per_hour
 SQL >
     %
     SELECT
-        time,
+        toStartOfHour(time) as time,
         COUNT(*) as count,
         min(latency) as min,
         max(latency) as max,
@@ -16,7 +16,7 @@ SQL >
         quantile(0.95)(latency) as p95,
         quantile(0.99)(latency) as p99,
         COUNT(error) as errors
-    FROM checks__v2
+    FROM checks__v3
     WHERE  endpointId={{ String(endpointId, required=True)}} AND
-    time >= toUnixTimestamp64Milli(toDateTime64(now() - INTERVAL {{ Int32(days,7)}} DAY,3))
-    GROUP BY toUnixTimestamp64Milli(toDateTime64(toStartOfHour(fromUnixTimestamp64Milli(time)),3)) as time
+    time >= now() - INTERVAL {{ Int32(days,7)}} DAY
+    GROUP BY time

@@ -11,10 +11,10 @@ SQL >
     SELECT
         teamId,
         COUNTState() AS usage,
-        toYear(fromUnixTimestamp64Milli(time)) AS year,
-        toMonth(fromUnixTimestamp64Milli(time)) AS month,
-        toDayOfMonth(fromUnixTimestamp64Milli(time)) AS day
-    FROM checks__v2
+        toYear(time) AS year,
+        toMonth(time) AS month,
+        toDayOfMonth(time) AS day
+    FROM checks__v3
     GROUP BY
         teamId,
         year,

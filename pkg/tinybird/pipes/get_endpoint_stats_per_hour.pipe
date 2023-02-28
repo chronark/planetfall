@@ -12,5 +12,5 @@ SELECT
     quantileTimingMerge(0.99)(p99) AS p99
 FROM endpoint_stats_per_hour__v1
 WHERE
-    endpointId ={{ String(endpointId, required=True) }} AND fromUnixTimestamp64Milli(time) >= now() - INTERVAL {{ Int32(days, 7) }} DAY
+    endpointId ={{ String(endpointId, required=True) }} AND time >= now() - INTERVAL {{ Int32(days, 7) }} DAY
 GROUP BY regionId, time

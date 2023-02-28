@@ -1,4 +1,4 @@
-VERSION 2
+VERSION 1
 DESCRIPTION >
 	Copy a subset
 
@@ -12,7 +12,7 @@ SQL >
             time,
             latency,
             error
-        FROM checks__v2
+        FROM checks__v3
 
 TYPE materialized
 DATASOURCE checks_metrics__v1

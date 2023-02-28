@@ -7,7 +7,7 @@ NODE aggregate_by_region_per_hour
 SQL >
     %
     SELECT
-        time,
+        toStartOfHour(time) as time,
         COUNT(*) as count,
         min(latency) as min,
         max(latency) as max,
@@ -16,6 +16,6 @@ SQL >
         quantile(0.99)(latency) as p99,
         regionId,
         COUNT(error) as errors
-    FROM checks__v2
-    WHERE  endpointId={{ String(endpointId, required=True)}} AND time >= toUnixTimestamp64Milli(toDateTime64(now() - INTERVAL {{Int32(days)}} DAY,3))
-    GROUP BY toUnixTimestamp64Milli(toDateTime64(toStartOfHour(fromUnixTimestamp64Milli(time)),3)) as time, regionId
+    FROM checks__v3
+    WHERE  endpointId={{ String(endpointId, required=True)}} AND time >= now() - INTERVAL {{Int32(days)}} DAY
+    GROUP BY time, regionId

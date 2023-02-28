@@ -3,7 +3,7 @@ VERSION 1
 
 SCHEMA >
     `endpointId` String,
-    `time` Int64,
+    `time` DateTime,
     `count` AggregateFunction(count),
     `p50` AggregateFunction(quantileTiming(0.5), Nullable(Int16)),
     `p95` AggregateFunction(quantileTiming(0.95), Nullable(Int16)),
@@ -12,5 +12,5 @@ SCHEMA >
     `regionId` String
 
 ENGINE "AggregatingMergeTree"
-ENGINE_TTL "toDate(fromUnixTimestamp64Milli(time)) + INTERVAL 90 DAY"
+ENGINE_TTL "time + INTERVAL 90 DAY"
 ENGINE_SORTING_KEY "endpointId,regionId,time"

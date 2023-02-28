@@ -7,7 +7,7 @@ TOKEN "live" READ
 
 NODE copy_checks
 SQL >
-    SELECT * FROM checks__v2
+    SELECT * FROM checks__v3
 
 TYPE MATERIALIZED
 DATASOURCE checks_by_id

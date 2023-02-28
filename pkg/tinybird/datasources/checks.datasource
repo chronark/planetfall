@@ -1,4 +1,4 @@
-VERSION 2
+VERSION 3
 # TOKEN "live" READWRITE
 
 SCHEMA >
@@ -11,11 +11,11 @@ SCHEMA >
     `source` String `json:$.source`,
     `status` Nullable(Int16) `json:$.status`,
     `teamId` String `json:$.teamId`,
-    `time` Int64 `json:$.time`,
+    `time` DateTime `json:$.time`,
     `timing` Nullable(String) `json:$.timing`,
     `error` Nullable(String) `json:$.error`,
     `tags` Array(String) `json:$.tags[:]`
 
 ENGINE "MergeTree"
-ENGINE_TTL "toDate(fromUnixTimestamp64Milli(time)) + INTERVAL 90 DAY"
+ENGINE_TTL "time + INTERVAL 90 DAY"
 ENGINE_SORTING_KEY "endpointId,regionId,time"
