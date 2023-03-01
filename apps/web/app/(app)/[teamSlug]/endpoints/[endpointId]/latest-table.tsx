@@ -101,10 +101,7 @@ export const LatestTable: React.FC<Props> = ({
     }),
   ];
 
-  const data: Check[] = [];
-  for (let i = checks.length - 1; i >= 0; i--) {
-    data.push(checks[i]);
-  }
+  
 
   const table = useReactTable({
     data,
