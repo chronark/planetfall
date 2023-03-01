@@ -73,8 +73,6 @@ resource "fly_machine" "check_runner" {
       "internal_port" : 8080
     }
   ]
-
-
 }
 
 
