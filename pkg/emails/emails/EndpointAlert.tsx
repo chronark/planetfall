@@ -49,7 +49,7 @@ export function EndpointAlert({
 
             <Button
               href={checkLink}
-              className="px-8 py-4 mx-auto font-medium rounded bg-zinc-900 text-zinc-50 "
+              className="px-8 py-4 mx-auto font-medium rounded bg-zinc-900 text-zinc-50"
             >
               See More Details
             </Button>

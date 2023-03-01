@@ -2,6 +2,51 @@ import "./globals.css";
 import { Analytics } from "app/components/analytics";
 import { Inter } from "@next/font/google";
 import Script from "next/script";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Planetfall',
+    template: '%s | Lee Robinson',
+  },
+  description: 'Global Latency Monitoring',
+  openGraph: {
+    title: 'Planetfall',
+    description: 'Global Latency Monitoring',
+    url: 'https://planetfall.io',
+    siteName: 'planetfall.io',
+    images: [
+      {
+        url: 'https://planetfall.io/img/og.png',
+        width: 1920,
+        height: 1080,
+      },
+    ],
+    locale: 'en-US',
+    type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  twitter: {
+    title: 'Plantfall',
+    card: 'summary_large_image',
+  },
+  icons: {
+    shortcut: '/favicon.ico',
+  }
+}
+
+
 
 const inter = Inter({
   variable: "--font-inter",
