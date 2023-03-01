@@ -45,11 +45,10 @@ variable "stripe_publishable_key" {
   type = string
 }
 
-variable "stripe_price_id_pro" {
+
+variable "stripe_price_id_checks" {
   type = string
 }
-
-
 
 
 
