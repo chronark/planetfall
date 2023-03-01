@@ -2,11 +2,32 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "correctness": {
+        "noUnusedVariables": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "style": {
+        "useBlockStatements": "error"
+      }
     },
-    "ignore": ["node_modules", ".next", "dist"]
+    "ignore": [
+      "node_modules",
+      ".next",
+      "dist"
+    ]
   },
   "formatter": {
-    "ignore": ["node_modules", ".next", "dist"]
+    "indentStyle": "space",
+    "indentSize": 2,
+    "enabled": true,
+    "lineWidth": 100,
+    "ignore": [
+      "node_modules",
+      ".next",
+      "dist"
+    ]
   }
 }

@@ -6,18 +6,18 @@ export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export default async function Landing({
-	children,
+  children,
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-	const { session } = await getSession();
+  const { session } = await getSession();
 
-	return (
-		<div className="flex flex-col min-h-screen overflow-hidden">
-			<Header session={session} />
+  return (
+    <div className="flex flex-col min-h-screen overflow-hidden">
+      <Header session={session} />
 
-			<main>{children}</main>
-			<Footer />
-		</div>
-	);
+      <main>{children}</main>
+      <Footer />
+    </div>
+  );
 }

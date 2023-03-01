@@ -7,6 +7,7 @@ SQL >
 SELECT
     regionId,
     time,
+    countMerge(errors) AS errors,
     countMerge(count) AS count,
     quantileTimingMerge(0.5)(p50) AS p50,
     quantileTimingMerge(0.95)(p95) AS p95,

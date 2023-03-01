@@ -3,42 +3,38 @@ import { useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 export default function CountingNumbers({
-	value,
-	duration = 800,
+  value,
+  duration = 800,
 }: {
-	value: number;
-	duration?: number;
+  value: number;
+  duration?: number;
 }) {
-	const [n, setNumber] = useState(0);
-	const increment = Math.max(1, Math.floor(value / 100));
-	const interval = duration * (increment / value);
-	const ref = useRef(null);
-	const isInView = useInView(ref);
+  const [n, setNumber] = useState(0);
+  const increment = Math.max(1, Math.floor(value / 100));
+  const interval = duration * (increment / value);
+  const ref = useRef(null);
+  const isInView = useInView(ref);
 
-	useEffect(() => {
-		if (isInView) {
-			let timer = setInterval(() => {
-				if (n < value) {
-					setNumber((num) => {
-						let newValue = num + increment;
-						if (newValue > value) {
-							newValue = value;
-							if (timer) {
-								clearInterval(timer);
-							}
-						}
-						return newValue;
-					});
-				} else if (timer) {
-					clearInterval(timer);
-				}
-			}, interval);
-		}
-	}, [isInView, increment, interval]);
+  useEffect(() => {
+    if (isInView) {
+      let _timer = setInterval(() => {
+        if (n < value) {
+          setNumber((num) => {
+            let newValue = num + increment;
+            if (newValue > value) {
+              newValue = value;
+              if (_timer) {
+                clearInterval(_timer);
+              }
+            }
+            return newValue;
+          });
+        } else if (_timer) {
+          clearInterval(_timer);
+        }
+      }, interval);
+    }
+  }, [isInView, increment, interval]);
 
-	return (
-		<span ref={ref}>
-			{Intl.NumberFormat(undefined, { notation: "compact" }).format(n)}
-		</span>
-	);
+  return <span ref={ref}>{Intl.NumberFormat(undefined, { notation: "compact" }).format(n)}</span>;
 }

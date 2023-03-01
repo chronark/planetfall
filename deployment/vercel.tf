@@ -62,8 +62,8 @@ resource "vercel_project" "web" {
       target = ["production"]
     },
     {
-      key    = "STRIPE_PRICE_ID_PRO"
-      value  = var.stripe_price_id_pro
+      key    = "STRIPE_PRICE_ID_CHECKS"
+      value  = var.stripe_price_id_checks
       target = ["production"]
     },
 

@@ -4,7 +4,7 @@ import React, { PropsWithChildren } from "react";
 export interface CardContentProps {}
 
 export const CardContent: React.FC<PropsWithChildren<CardContentProps>> = ({
-	children,
+  children,
 }): JSX.Element => {
-	return <div className="w-full p-4 lg:px-6">{children}</div>;
+  return <div className="w-full p-4 lg:px-6">{children}</div>;
 };

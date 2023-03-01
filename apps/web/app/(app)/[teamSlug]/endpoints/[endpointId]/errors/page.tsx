@@ -18,12 +18,12 @@ import Link from "next/link";
 import { Switch } from "@/components/switch";
 import { Chart } from "../chart";
 import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardFooterStatus,
-	CardHeader,
-	CardHeaderTitle,
+  Card,
+  CardContent,
+  CardFooter,
+  CardFooterStatus,
+  CardHeader,
+  CardHeaderTitle,
 } from "@/components/card";
 import { Divider } from "@/components/divider";
 import { AlertCircle } from "lucide-react";
@@ -31,84 +31,79 @@ import { AlertCircle } from "lucide-react";
 export const revalidate = 10;
 
 export default async function Page(props: {
-	params: { teamSlug: string; endpointId: string };
+  params: { teamSlug: string; endpointId: string };
 }) {
-	const { session } = await getSession();
-	if (!session) {
-		return redirect("/auth/sign-in");
-	}
+  const { session } = await getSession();
+  if (!session) {
+    return redirect("/auth/sign-in");
+  }
 
-	const endpoint = await db.endpoint.findUnique({
-		where: {
-			id: props.params.endpointId,
-		},
-		include: {
-			regions: true,
-			team: {
-				include: {
-					members: true,
-				},
-			},
-		},
-	});
-	if (!endpoint) {
-		redirect(`/${props.params.teamSlug}/endpoints`);
-	}
+  const endpoint = await db.endpoint.findUnique({
+    where: {
+      id: props.params.endpointId,
+    },
+    include: {
+      regions: true,
+      team: {
+        include: {
+          members: true,
+        },
+      },
+    },
+  });
+  if (!endpoint) {
+    redirect(`/${props.params.teamSlug}/endpoints`);
+  }
 
-	if (
-		endpoint.team.slug !== props.params.teamSlug ||
-		!endpoint.team.members.find((m) => m.userId === session.user.id)
-	) {
-		return notFound();
-	}
+  if (
+    endpoint.team.slug !== props.params.teamSlug ||
+    !endpoint.team.members.find((m) => m.userId === session.user.id)
+  ) {
+    return notFound();
+  }
 
-	const tb = new Tinybird();
+  const tb = new Tinybird();
 
-	const checks = await tb.getLatestChecksByEndpoint(endpoint.id, {
-		limit: 10000,
-	});
+  const checks = await tb.getLatestChecksByEndpoint(endpoint.id, {
+    limit: 10000,
+  });
 
-	const errors = checks
-		.filter((c) => Boolean(c.error))
-		.map((e) => ({
-			id: e.id,
-			time: e.time,
-			error: e.error!,
-			latency: e.latency,
-			region: endpoint.regions.find((r) => r.id === e.regionId)!.name,
-			detailsUrl: `/${props.params.teamSlug}/checks/${e.id}`,
-		}));
+  const errors = checks
+    .filter((c) => Boolean(c.error))
+    .map((e) => ({
+      id: e.id,
+      time: e.time,
+      error: e.error!,
+      latency: e.latency,
+      region: endpoint.regions.find((r) => r.id === e.regionId)!.name,
+      detailsUrl: `/${props.params.teamSlug}/checks/${e.id}`,
+    }));
 
-	return (
-		<div>
-			<PageHeader
-				sticky={true}
-				title="Errors"
-				description={endpoint.name}
-				actions={[
-					<Button key="endpoint">
-						<Link
-							href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}}`}
-						>
-							Endpoint
-						</Link>
-					</Button>,
-				]}
-			/>
-			<main className="container mx-auto">
-				<Card>
-					<CardHeader>
-						<CardHeaderTitle
-							title={`${errors.length} Errors`}
-							subtitle="in the last 24 hours"
-						/>
-					</CardHeader>
-					<CardContent>
-						<ErrorsTable errors={errors} />
-					</CardContent>
-				</Card>
-				<Divider />
-			</main>
-		</div>
-	);
+  return (
+    <div>
+      <PageHeader
+        sticky={true}
+        title="Errors"
+        description={endpoint.name}
+        actions={[
+          <Button key="endpoint">
+            <Link href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}}`}>
+              Endpoint
+            </Link>
+          </Button>,
+        ]}
+      />
+      <main className="container mx-auto">
+        <Card>
+          <CardHeader>
+            <CardHeaderTitle title={`${errors.length} Errors`} subtitle="in the last 24 hours" />
+          </CardHeader>
+          <CardContent>
+            <ErrorsTable errors={errors} />
+          </CardContent>
+        </Card>
+        <Divider />
+      </main>
+    </div>
+  );
 }

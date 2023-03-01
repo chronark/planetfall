@@ -9,19 +9,19 @@ const HoverCard = HoverCardPrimitive.Root;
 const HoverCardTrigger = HoverCardPrimitive.Trigger;
 
 const HoverCardContent = React.forwardRef<
-	React.ElementRef<typeof HoverCardPrimitive.Content>,
-	React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>
+  React.ElementRef<typeof HoverCardPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>
 >(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
-	<HoverCardPrimitive.Content
-		ref={ref}
-		align={align}
-		sideOffset={sideOffset}
-		className={cn(
-			"z-50 w-64 rounded-md border border-zinc-100 bg-white p-4 shadow-md outline-none animate-in zoom-in-90 dark:border-zinc-800 dark:bg-zinc-800",
-			className,
-		)}
-		{...props}
-	/>
+  <HoverCardPrimitive.Content
+    ref={ref}
+    align={align}
+    sideOffset={sideOffset}
+    className={cn(
+      "z-50 w-64 rounded-md border border-zinc-100 bg-white p-4 shadow-md outline-none animate-in zoom-in-90 dark:border-zinc-800 dark:bg-zinc-800",
+      className,
+    )}
+    {...props}
+  />
 ));
 HoverCardContent.displayName = HoverCardPrimitive.Content.displayName;
 

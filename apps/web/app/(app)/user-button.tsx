@@ -9,32 +9,30 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 import { BookOpen, Settings, LogOut } from "lucide-react";
 type Props = {
-	user: {
-		name: string;
-		email: string;
-		image: string | null;
-	};
+  user: {
+    name: string;
+    email: string;
+    image: string | null;
+  };
 };
 
 export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
-	const router = useRouter();
-	return (
-		<Dropdown.DropdownMenu>
-			<Dropdown.DropdownMenuTrigger className="flex items-center justify-between px-2 py-1 rounded gap-4 duration-500 text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100">
-				<span className="text-sm ">{user.name}</span>
+  const _router = useRouter();
+  return (
+    <Dropdown.DropdownMenu>
+      <Dropdown.DropdownMenuTrigger className="flex items-center justify-between px-2 py-1 rounded gap-4 duration-500 text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100">
+        <span className="text-sm ">{user.name}</span>
 
-				<Avatar>
-					<AvatarImage src={user.image ?? ""} />
-					<AvatarFallback>
-						{user.name.split(" ").map((s) => s[0].toUpperCase())}
-					</AvatarFallback>
-				</Avatar>
-			</Dropdown.DropdownMenuTrigger>
-			<Dropdown.DropdownMenuContent
-				sideOffset={5}
-				className="z-30 p-4 bg-white border rounded shadow-lg"
-			>
-				{/* <Link
+        <Avatar>
+          <AvatarImage src={user.image ?? ""} />
+          <AvatarFallback>{user.name.split(" ").map((s) => s[0].toUpperCase())}</AvatarFallback>
+        </Avatar>
+      </Dropdown.DropdownMenuTrigger>
+      <Dropdown.DropdownMenuContent
+        sideOffset={5}
+        className="z-30 p-4 bg-white border rounded shadow-lg"
+      >
+        {/* <Link
 					href="/docs"
 					className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium gap-4 rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
 				>
@@ -42,26 +40,26 @@ export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
 
 					<BookOpen className="w-4 h-4" />
 				</Link> */}
-				<button
-					disabled={true}
-					// href={`/${personalTeam?.slug}`}
-					className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium gap-4 rounded-md lg:gap-8 xl:gap-16 group text-zinc-400 "
-				>
-					<span className="truncate">Settings</span>
+        <button
+          disabled={true}
+          // href={`/${personalTeam?.slug}`}
+          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium gap-4 rounded-md lg:gap-8 xl:gap-16 group text-zinc-400 "
+        >
+          <span className="truncate">Settings</span>
 
-					<Settings className="w-4 h-4" />
-				</button>
+          <Settings className="w-4 h-4" />
+        </button>
 
-				<div className="w-full h-px border-t border-zinc-200" />
-				<button
-					onClick={() => signOut()}
-					className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium gap-4 rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
-				>
-					<span className="truncate">Sign Out</span>
+        <div className="w-full h-px border-t border-zinc-200" />
+        <button
+          onClick={() => signOut()}
+          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium gap-4 rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+        >
+          <span className="truncate">Sign Out</span>
 
-					<LogOut className="w-4 h-4" />
-				</button>
-			</Dropdown.DropdownMenuContent>
-		</Dropdown.DropdownMenu>
-	);
+          <LogOut className="w-4 h-4" />
+        </button>
+      </Dropdown.DropdownMenuContent>
+    </Dropdown.DropdownMenu>
+  );
 };

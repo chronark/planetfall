@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-	return res.json({
-		status: "ok",
-	});
+export default function handler(_req: NextApiRequest, res: NextApiResponse) {
+  return res.json({
+    status: "ok",
+  });
 }

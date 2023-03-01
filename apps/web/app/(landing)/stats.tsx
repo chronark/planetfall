@@ -9,61 +9,54 @@ export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export const Stats = asyncComponent(async () => {
-	const stats = await Promise.all([
-		{
-			label: "Teams",
-			value: await db.team.count(),
-		},
-		{
-			label: "Endpoints",
-			value: await db.endpoint.count(),
-		},
-		{
-			label: "Status Pages",
-			value: await db.statusPage.count(),
-		},
-		{
-			label: "Ø Checks Per Day",
-			value: await fetch(
-				"https://api.tinybird.co/v0/pipes/average_usage__v1.json",
-				{
-					headers: {
-						Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
-					},
-				},
-			)
-				.then(
-					async (res) => (await res.json()) as { data: { average: number }[] },
-				)
-				.then((res) => {
-					if (!Array.isArray(res.data)) {
-						return -1;
-					}
-					if (res.data.length === 0) {
-						return -1;
-					}
+  const stats = await Promise.all([
+    {
+      label: "Teams",
+      value: await db.team.count(),
+    },
+    {
+      label: "Endpoints",
+      value: await db.endpoint.count(),
+    },
+    {
+      label: "Status Pages",
+      value: await db.statusPage.count(),
+    },
+    {
+      label: "Ø Checks Per Day",
+      value: await fetch("https://api.tinybird.co/v0/pipes/average_usage__v1.json", {
+        headers: {
+          Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
+        },
+      })
+        .then(async (res) => (await res.json()) as { data: { average: number }[] })
+        .then((res) => {
+          if (!Array.isArray(res.data)) {
+            return -1;
+          }
+          if (res.data.length === 0) {
+            return -1;
+          }
 
-					return res.data[0].average;
-				}),
-		},
-	]);
-	return (
-		<Section id="stats">
-			<div className="container mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-				{stats.map(({ label, value }) => (
-					<div
-						key={label}
-						className="flex items-center justify-between px-4 py-3 overflow-hidden rounded gap-2 m sm:flex-col"
-					>
-						<dt className="text-lg text-center leading-6 text-zinc-500">
-							{label}
-						</dt>
-						<dd className="text-2xl font-bold tracking-tight text-center text-zinc-900 sm:text-5xl ">
-							<CountingNumbers value={value} />
-						</dd>
-					</div>
-				))}
-			</div>
-		</Section>
-	);
+          return res.data[0].average;
+        }),
+    },
+  ]);
+  return (
+    <Section id="stats">
+      <div className="container mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+        {stats.map(({ label, value }) => (
+          <div
+            key={label}
+            className="flex items-center justify-between px-4 py-3 overflow-hidden rounded gap-2 m sm:flex-col"
+          >
+            <dt className="text-lg text-center leading-6 text-zinc-500">{label}</dt>
+            <dd className="text-2xl font-bold tracking-tight text-center text-zinc-900 sm:text-5xl ">
+              <CountingNumbers value={value} />
+            </dd>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
 });

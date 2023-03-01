@@ -12,17 +12,17 @@ export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export default async function LandingPage() {
-	return (
-		<div className="bg-white">
-			<Hero />
+  return (
+    <div className="bg-white">
+      <Hero />
 
-			{/* <Companies /> */}
-			{/* <Stats /> */}
-			<Features />
-			{/* <Testimonials /> */}
-			<Cta />
+      {/* <Companies /> */}
+      {/* <Stats /> */}
+      <Features />
+      {/* <Testimonials /> */}
+      <Cta />
 
-			<Pricing />
-		</div>
-	);
+      <Pricing />
+    </div>
+  );
 }

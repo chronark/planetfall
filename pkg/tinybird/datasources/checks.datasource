@@ -9,7 +9,7 @@ SCHEMA >
     `status` Nullable(Int16) `json:$.status`,
     `teamId` String `json:$.teamId`,
     `time` DateTime `json:$.time`,
-    `error` UInt8 `json:$.error`
+    `error` Nullable(String) `json:$.error`
 
 ENGINE "MergeTree"
 ENGINE_TTL "time + INTERVAL 90 DAY"

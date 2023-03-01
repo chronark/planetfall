@@ -12,75 +12,73 @@ import { Card, CardContent } from "@/components/card";
 import { Plus, PlusCircle, Settings } from "lucide-react";
 
 export default async function Page(props: { params: { teamSlug: string } }) {
-	const session = await getSession();
-	if (!session) {
-		return redirect("/auth/sign-in");
-	}
+  const session = await getSession();
+  if (!session) {
+    return redirect("/auth/sign-in");
+  }
 
-	const team = await db.team.findUnique({
-		where: { slug: props.params.teamSlug },
-		include: { endpoints: true },
-	});
-	if (!team) {
-		console.warn(__filename, "Team not found");
+  const team = await db.team.findUnique({
+    where: { slug: props.params.teamSlug },
+    include: { endpoints: true },
+  });
+  if (!team) {
+    console.warn(__filename, "Team not found");
 
-		notFound();
-	}
+    notFound();
+  }
 
-	const endpointStats = await Promise.all(
-		team?.endpoints.map(async (endpoint) => {
-			const stats = await new Tinybird().getEndpointStats(endpoint.id);
+  const endpointStats = await Promise.all(
+    team?.endpoints.map(async (endpoint) => {
+      const stats = await new Tinybird().getEndpointStats(endpoint.id);
 
-			return {
-				id: endpoint.id,
-				name: endpoint.name,
-				url: endpoint.url,
-				stats: stats.find((s) => s.regionId === "global") ?? {
-					regionId: "global",
-					count: 0,
-					p50: 0,
-					p95: 0,
-					p99: 0,
-					errors: 0,
-				},
-			};
-		}),
-	);
+      return {
+        id: endpoint.id,
+        name: endpoint.name,
+        url: endpoint.url,
+        stats: stats.find((s) => s.regionId === "global") ?? {
+          regionId: "global",
+          count: 0,
+          p50: 0,
+          p95: 0,
+          p99: 0,
+          errors: 0,
+        },
+      };
+    }),
+  );
 
-	return (
-		<div>
-			<PageHeader
-				sticky={true}
-				title="Endpoints"
-				description="Aggregated over the last 24 hours"
-				actions={[
-					<Link key="new" href={`/${team.slug}/endpoints/new`}>
-						<Button>New Endpoint</Button>
-					</Link>,
-				]}
-			/>
-			<main className="container mx-auto">
-				{team.endpoints.length === 0 ? (
-					<div
-						key="x"
-						className="flex flex-col items-center justify-center max-w-sm p-4 mx-auto md:p-8"
-					>
-						<Text>You don&apos;t have any endpoints yet.</Text>
-						<Button size="lg" className="flex items-center mt-2 gap-2 ">
-							<Plus className="w-5 h-5" />
-							<Link href={`/${team.slug}/endpoints/new`}>
-								Create your first Endpoint
-							</Link>
-						</Button>
-					</div>
-				) : (
-					<Card>
-						<CardContent>
-							<EndpointsTable endpoints={endpointStats} />
-						</CardContent>
-					</Card>
-				)}
-			</main>
-		</div>
-	);
+  return (
+    <div>
+      <PageHeader
+        sticky={true}
+        title="Endpoints"
+        description="Aggregated over the last 24 hours"
+        actions={[
+          <Link key="new" href={`/${team.slug}/endpoints/new`}>
+            <Button>New Endpoint</Button>
+          </Link>,
+        ]}
+      />
+      <main className="container mx-auto">
+        {team.endpoints.length === 0 ? (
+          <div
+            key="x"
+            className="flex flex-col items-center justify-center max-w-sm p-4 mx-auto md:p-8"
+          >
+            <Text>You don&apos;t have any endpoints yet.</Text>
+            <Button size="lg" className="flex items-center mt-2 gap-2 ">
+              <Plus className="w-5 h-5" />
+              <Link href={`/${team.slug}/endpoints/new`}>Create your first Endpoint</Link>
+            </Button>
+          </div>
+        ) : (
+          <Card>
+            <CardContent>
+              <EndpointsTable endpoints={endpointStats} />
+            </CardContent>
+          </Card>
+        )}
+      </main>
+    </div>
+  );
 }

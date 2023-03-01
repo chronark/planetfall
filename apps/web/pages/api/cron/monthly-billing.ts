@@ -1,0 +1,68 @@
+import { env } from "@/lib/env";
+import { db } from "@planetfall/db";
+import { NextApiRequest, NextApiResponse } from "next";
+import Stripe from "stripe";
+import { Client as Tinybird } from "@planetfall/tinybird";
+
+const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+  apiVersion: "2022-11-15",
+});
+
+const tinybird = new Tinybird();
+
+const key = "480a32723978b74dae12dd2508033952861256ae63698e18a3f031eabdc45e38";
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.query.key !== key) {
+    res.status(404).end();
+    return;
+  }
+  // Times of the past month
+  const now = new Date();
+  const start = new Date(now.getUTCFullYear(), now.getUTCMonth() - 1, 1, 0, 0, 0, 0);
+  const end = new Date(now.getUTCFullYear(), now.getUTCMonth(), 1, 0, 0, 0, 0);
+
+  const teams = await db.team.findMany({
+    where: {
+      stripeCustomerId: {
+        not: null,
+      },
+    },
+  });
+  for (const team of teams) {
+    console.log("creating invoice", { teamId: team.id });
+
+    const usage = await tinybird.getUsage(team.id, {
+      year: now.getUTCFullYear(),
+      month: now.getUTCMonth() + 1,
+    });
+    const totalUsage = usage.reduce((total, day) => total + day.usage, 0);
+
+    const billableUsage = totalUsage; //- team.includedRequests ?? 0;
+
+    if (billableUsage > 0) {
+      const invoice = await stripe.invoices.create({
+        customer: team.stripeCustomerId!,
+        auto_advance: false,
+        metadata: {
+          teamId: team.id,
+          plan: team.plan,
+        },
+      });
+      const invoiceItem = await stripe.invoiceItems.create({
+        customer: team.stripeCustomerId!,
+        invoice: invoice.id,
+        quantity: billableUsage,
+        price: env.STRIPE_PRICE_ID_CHECKS,
+        period: {
+          start: Math.floor(start.getTime() / 1000),
+          end: Math.floor(end.getTime() / 1000),
+        },
+        description: `Usage for ${team.name} (${team.plan})`,
+      });
+      console.log("created invoice item", { id: invoiceItem.id });
+    }
+  }
+
+  res.status(200).end();
+}

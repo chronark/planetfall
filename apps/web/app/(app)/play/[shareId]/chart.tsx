@@ -5,90 +5,90 @@ import { Column } from "@ant-design/plots";
 import { PlayChecks } from "lib/server/routers/play";
 
 type Props = {
-	regions: PlayChecks["regions"];
-	urls: PlayChecks["urls"];
+  regions: PlayChecks["regions"];
+  urls: PlayChecks["urls"];
 };
 
 const defaultStyle = {
-	columnStyle: {
-		radius: [2, 2, 0, 0],
-	},
+  columnStyle: {
+    radius: [2, 2, 0, 0],
+  },
 };
 export const Chart: React.FC<Props> = ({ regions, urls }) => {
-	if (regions[0].checks.length > 1) {
-		const data = regions
+  if (regions[0].checks.length > 1) {
+    const data = regions
 
-		.flatMap((r) => [
-			{
-				url: urls[0],
-				region: r.name,
-				latency: r.checks[0]?.latency ?? -1,
-			},
-			{
-				url: urls[1],
-				region: r.name,
-				latency: r.checks[1]?.latency ?? -1,
-			},
-		]);
-		return (
-			<Column
-				{...defaultStyle}
-				data={data}
-				isGroup={true}
-				isStack={false}
-				xField="region"
-				yField="latency"
-				seriesField="url"
-				xAxis={{
-					title: { text: "Regions" },
-					label: {
-						autoRotate: true,
-					},
-				}}
-				yAxis={{
-					maxTickCount: 3,
-					title: { text: "Latency (ms)" },
-				}}
-				color={["#3b82f6", "#ef4444"]}
-				tooltip={{
-					formatter: (datum) => ({
-						name: datum.url,
-						value: `${datum.latency} ms`,
-					}),
-				}}
-			/>
-		);
-	} else {
-		return (
-			<Column
-				{...defaultStyle}
-				data={regions.map((r) => ({
-					region: r.name,
-					Latency: r.checks[0].latency!,
-				}))}
-				xField="region"
-				yField="Latency"
-				color={["#3366FF"]}
-				seriesField="region"
-				legend={false}
-				xAxis={{
-					title: { text: "Regions" },
-					label: {
-						autoRotate: true,
-					},
-				}}
-				yAxis={{
-					maxTickCount: 3,
+    .flatMap((r) => [
+      {
+        url: urls[0],
+        region: r.name,
+        latency: r.checks[0]?.latency ?? -1,
+      },
+      {
+        url: urls[1],
+        region: r.name,
+        latency: r.checks[1]?.latency ?? -1,
+      },
+    ]);
+    return (
+      <Column
+        {...defaultStyle}
+        data={data}
+        isGroup={true}
+        isStack={false}
+        xField="region"
+        yField="latency"
+        seriesField="url"
+        xAxis={{
+          title: { text: "Regions" },
+          label: {
+            autoRotate: true,
+          },
+        }}
+        yAxis={{
+          maxTickCount: 3,
+          title: { text: "Latency (ms)" },
+        }}
+        color={["#3b82f6", "#ef4444"]}
+        tooltip={{
+          formatter: (datum) => ({
+            name: datum.url,
+            value: `${datum.latency} ms`,
+          }),
+        }}
+      />
+    );
+  } else {
+    return (
+      <Column
+        {...defaultStyle}
+        data={regions.map((r) => ({
+          region: r.name,
+          Latency: r.checks[0].latency!,
+        }))}
+        xField="region"
+        yField="Latency"
+        color={["#3366FF"]}
+        seriesField="region"
+        legend={false}
+        xAxis={{
+          title: { text: "Regions" },
+          label: {
+            autoRotate: true,
+          },
+        }}
+        yAxis={{
+          maxTickCount: 3,
 
-					title: { text: "Latency (ms)" },
-				}}
-				tooltip={{
-					formatter: (datum) => ({
-						name: datum.region,
-						value: `${datum.Latency} ms`,
-					}),
-				}}
-			/>
-		);
-	}
+          title: { text: "Latency (ms)" },
+        }}
+        tooltip={{
+          formatter: (datum) => ({
+            name: datum.region,
+            value: `${datum.Latency} ms`,
+          }),
+        }}
+      />
+    );
+  }
 };

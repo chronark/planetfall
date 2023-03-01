@@ -1,8 +1,7 @@
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-    referentialIntegrity = "prisma"
-
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 generator client {
@@ -116,11 +115,8 @@ model Team {
 
   plan Plan
 
-  stripeCustomerId                String?   @unique
-  stripeSubscriptionId            String?   @unique
-  stripeCurrentBillingPeriodStart DateTime?
-  stripeCurrentBillingPeriodEnd   DateTime?
-  stripeTrialExpires              DateTime?
+  stripeCustomerId String?   @unique
+  trialExpires     DateTime?
 
   invitations TeamInvitation[]
 
@@ -131,6 +127,7 @@ model Team {
   maxMonthlyRequests Int
   maxEndpoints       Int
   maxTimeout         Int // [milliseconds]
+  includedRequests   Int? // How many requests are included in the plan and not charged
   endpoints          Endpoint[]
   pages              StatusPage[]
 
@@ -232,7 +229,7 @@ model Check {
   endpoint   Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
   endpointId String
 
-  body     String? @db.Text
+  body     String?  @db.Text
   header   Json?
   status   Int?
   latency  Int?

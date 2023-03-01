@@ -10,69 +10,66 @@ import { newId } from "@planetfall/id";
 import { getRole } from "lib/api";
 
 const input = z.object({
-	method: z.enum(["POST"]),
-	headers: z.object({
-		"content-type": z.enum(["application/json"]),
-	}),
-	body: z.object({
-		name: z.string(),
-		slug: z.string().regex(/^[a-z0-9-_]+$/),
-		endpointIds: z.array(z.string()).min(1),
-		teamId: z.string(),
-	}),
+  method: z.enum(["POST"]),
+  headers: z.object({
+    "content-type": z.enum(["application/json"]),
+  }),
+  body: z.object({
+    name: z.string(),
+    slug: z.string().regex(/^[a-z0-9-_]+$/),
+    endpointIds: z.array(z.string()).min(1),
+    teamId: z.string(),
+  }),
 });
 export type Input = z.infer<typeof input>;
 export type Output = ApiResponse<{
-	id: string;
+  id: string;
 }>;
 
-async function handler(
-	req: NextApiRequest,
-	res: NextApiResponse<Output>,
-): Promise<void> {
-	const { role } = await getRole(req, res);
-	const auth = role.authorize({ page: ["create"] });
-	if (!auth.success) {
-		throw new ApiError({
-			status: 401,
-			message: auth.error,
-		});
-	}
+async function handler(req: NextApiRequest, res: NextApiResponse<Output>): Promise<void> {
+  const { role } = await getRole(req, res);
+  const auth = role.authorize({ page: ["create"] });
+  if (!auth.success) {
+    throw new ApiError({
+      status: 401,
+      message: auth.error,
+    });
+  }
 
-	const request = input.safeParse(req);
-	if (!request.success) {
-		throw new ApiError({
-			status: 400,
-			message: JSON.stringify(JSON.parse(request.error.message)),
-		});
-	}
-	const team = await db.team.findUnique({
-		where: {
-			id: request.data.body.teamId,
-		},
-	});
-	if (!team) {
-		throw new ApiError({ status: 404, message: "team not found" });
-	}
+  const request = input.safeParse(req);
+  if (!request.success) {
+    throw new ApiError({
+      status: 400,
+      message: JSON.stringify(JSON.parse(request.error.message)),
+    });
+  }
+  const team = await db.team.findUnique({
+    where: {
+      id: request.data.body.teamId,
+    },
+  });
+  if (!team) {
+    throw new ApiError({ status: 404, message: "team not found" });
+  }
 
-	const page = await db.statusPage.create({
-		data: {
-			id: newId("page"),
-			name: request.data.body.name,
-			slug: request.data.body.slug,
-			endpoints: {
-				connect: request.data.body.endpointIds.map((id) => ({ id })),
-			},
-			// assertions: assertions.serialize(as),
-			team: {
-				connect: {
-					id: team.id,
-				},
-			},
-		},
-	});
+  const page = await db.statusPage.create({
+    data: {
+      id: newId("page"),
+      name: request.data.body.name,
+      slug: request.data.body.slug,
+      endpoints: {
+        connect: request.data.body.endpointIds.map((id) => ({ id })),
+      },
+      // assertions: assertions.serialize(as),
+      team: {
+        connect: {
+          id: team.id,
+        },
+      },
+    },
+  });
 
-	res.json({ data: page });
+  res.json({ data: page });
 }
 
 export default withMiddleware(handler, withRecoverer());

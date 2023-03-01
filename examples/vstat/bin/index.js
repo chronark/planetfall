@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const optionDefinitions = {
-	boolean: ["show-body", "json-output"],
+  boolean: ["show-body", "json-output"],
 };
 
 const minimist = require("minimist");
@@ -13,7 +13,7 @@ const httpstat = require("httpstat");
 const reporter = require("./reporter");
 
 const showHelp = () => {
-	console.log(`
+  console.log(`
     ${pack.description}
     Usage: httpstat [options...] <url>
     options:
@@ -25,34 +25,32 @@ const showHelp = () => {
       --json-output output response in json format
       --show-body Show response body
   `);
-	process.exit(0);
+  process.exit(0);
 };
 
 if (opts.help) {
-	showHelp();
+  showHelp();
 } else if (opts.version) {
-	console.log(pack.version);
-	process.exit(0);
+  console.log(pack.version);
+  process.exit(0);
 } else if (!opts.target) {
-	showHelp();
+  showHelp();
 }
 
 const headers = opts.headers || [];
 headers.push("x-vercel-debug-proxy-timing: 1");
 
 httpstat(opts.target, opts.options, headers, opts.data, opts.formInputs)
-	.then((results) => {
-		const serverTiming = results.response.headers["server-timing"] || "";
-		const timings = {};
-		serverTiming
-			.split(",")
-			.map((part) => part.split(";dur="))
-			.forEach(
-				(part) => console.log(part) || (timings[part[0]] = Number(part[1])),
-			);
-		reporter(results, opts, timings);
-	})
-	.catch((e) => {
-		console.error(e);
-		process.exit(1);
-	});
+  .then((results) => {
+    const serverTiming = results.response.headers["server-timing"] || "";
+    const timings = {};
+    serverTiming
+      .split(",")
+      .map((part) => part.split(";dur="))
+      .forEach((part) => console.log(part) || (timings[part[0]] = Number(part[1])));
+    reporter(results, opts, timings);
+  })
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });

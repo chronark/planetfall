@@ -5,11 +5,11 @@ import { billingRouter } from "./billing";
 import { pageRouter } from "./page";
 import { teamRouter } from "./team";
 export const router = t.router({
-	play: playRouter,
-	endpoint: endpointRouter,
-	billing: billingRouter,
-	page: pageRouter,
-	team: teamRouter,
+  play: playRouter,
+  endpoint: endpointRouter,
+  billing: billingRouter,
+  page: pageRouter,
+  team: teamRouter,
 });
 
 // export type definition of API

@@ -7,7 +7,7 @@ SCHEMA >
     `p50` AggregateFunction(quantileTiming(0.5), Nullable(Int16)),
     `p95` AggregateFunction(quantileTiming(0.95), Nullable(Int16)),
     `p99` AggregateFunction(quantileTiming(0.99), Nullable(Int16)),
-    `errors` AggregateFunction(count, UInt8),
+    `errors` AggregateFunction(count),
     `regionId` String
 
 ENGINE "AggregatingMergeTree"

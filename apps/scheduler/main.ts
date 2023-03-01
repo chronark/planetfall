@@ -11,22 +11,20 @@ import { Email } from "@planetfall/emails/dist/client";
 const logger = new Logger();
 
 const notifications = new Notifications({
-	logger,
-	db: db,
-	email: new Email(),
+  logger,
+  db: db,
+  email: new Email(),
 });
 
 const s = new Scheduler({ logger, notifications });
 // const e = new Events({ scheduler: s, logger });
 
 // e.run();
-
-s.syncEndpoints();
-setInterval(() => s.syncEndpoints(), 60 * 1000);
+s.run();
 
 const server = http.createServer((_req, res) => {
-	logger.info("Incoming health check");
-	res.writeHead(200);
-	res.end("OK");
+  logger.info("Incoming health check");
+  res.writeHead(200);
+  res.end("OK");
 });
 server.listen(process.env.PORT ?? 8000);
