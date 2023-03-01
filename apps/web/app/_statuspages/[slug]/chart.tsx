@@ -66,7 +66,6 @@ export const Row: React.FC<{
 	};
 }> = ({ endpoint, nBuckets = 72 }): JSX.Element => {
 	const [expanded, setExpanded] = useState(false);
-	console.log(endpoint.stats);
 
 	const totalChecks = endpoint.stats["global"]?.metrics.count ?? 0;
 	const errors = endpoint.stats["global"]?.metrics.errors ?? 0;
@@ -204,7 +203,6 @@ const Chart: React.FC<{
 	t.setSeconds(0);
 	t.setMilliseconds(0);
 
-	console.log(series);
 	return (
 		<div>
 			<div className={`flex bg-white ${height ?? "h-12"} items-end`}>

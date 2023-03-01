@@ -32,7 +32,6 @@ export async function getStats(endpoint: Endpoint) {
 			errors: s.errors ?? 0,
 		});
 	}
-	console.log(regions.global.series);
 
 	return regions;
 }
