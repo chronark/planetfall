@@ -110,6 +110,7 @@ importers:
       '@docsearch/react': ^3.3.0
       '@markdoc/markdoc': ^0.2.1
       '@markdoc/next.js': ^0.2.2
+      '@next/font': ^13.2.3
       '@planetfall/assertions': workspace:*
       '@planetfall/db': workspace:*
       '@planetfall/emails': workspace:*
@@ -189,6 +190,7 @@ importers:
       '@docsearch/react': 3.3.3_hf5ijsloe6gzee4vmv74rvas4u
       '@markdoc/markdoc': 0.2.2_pmekkgnqduwlme35zpnqhenc34
       '@markdoc/next.js': 0.2.2_lpbigjx4hl7jd5okyyutt632ua
+      '@next/font': 13.2.3
       '@planetfall/assertions': link:../../pkg/assertions
       '@planetfall/db': link:../../pkg/db
       '@planetfall/emails': link:../../pkg/emails
@@ -367,6 +369,12 @@ importers:
       '@planetfall/tsconfig': link:../tsconfig
       '@types/node': 18.14.2
       typescript: 4.9.5
+
+  pkg/tinybird/apps/web:
+    specifiers:
+      '@next/font': ^13.2.3
+    dependencies:
+      '@next/font': 13.2.3
 
   pkg/tsconfig:
     specifiers: {}
@@ -1576,6 +1584,10 @@ packages:
     dependencies:
       glob: 7.1.7
     dev: true
+
+  /@next/font/13.2.3:
+    resolution: {integrity: sha512-7EHzk0f7FVYICLUZTpyPk93IfcTUao++Xt1Sgb+Zk5dVOCYHabqLtlF5ywSoXIqyFlo0qlshEBxsrzHAGTWkDw==}
+    dev: false
 
   /@next/swc-android-arm-eabi/13.1.6:
     resolution: {integrity: sha512-F3/6Z8LH/pGlPzR1AcjPFxx35mPqjE5xZcf+IL+KgbW9tMkp7CYi1y7qKrEWU7W4AumxX/8OINnDQWLiwLasLQ==}
