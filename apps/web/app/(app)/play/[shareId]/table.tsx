@@ -11,6 +11,7 @@ import { PlayChecks } from "lib/server/routers/play";
 
 type Props = {
 	regions: PlayChecks["regions"];
+	urls: PlayChecks["urls"];
 };
 
 const Cell: React.FC<{ value: (number | string | undefined)[] }> = ({
@@ -28,7 +29,7 @@ const Cell: React.FC<{ value: (number | string | undefined)[] }> = ({
 	}
 };
 
-export const Table: React.FC<Props> = ({ regions }) => {
+export const Table: React.FC<Props> = ({ regions, urls }) => {
 	const fmt = (n: number | undefined) => {
 		if (n === undefined) {
 			return "N/A";
@@ -106,11 +107,11 @@ export const Table: React.FC<Props> = ({ regions }) => {
 				header: "Check",
 				cell: (info) => (
 					<div className="flex flex-col items-start gap-1 text-sm font-semibold text-left ">
-						<div className="flex items-center">
-							<span className="w-3 h-3 bg-blue-500" /> Cold
+						<div className="flex items-center gap-1">
+							<span className="w-2 h-2 bg-blue-500 rounded-sm" /> {urls[0]}
 						</div>
-						<div className="flex items-center">
-							<span className="w-3 h-3 bg-red-500" /> Hot
+						<div className="flex items-center gap-1">
+							<span className="w-2 h-2 bg-red-500 rounded-sm" /> {urls[1]}
 						</div>
 					</div>
 				),

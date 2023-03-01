@@ -6,6 +6,7 @@ import { PlayChecks } from "lib/server/routers/play";
 
 type Props = {
 	regions: PlayChecks["regions"];
+	urls: PlayChecks["urls"];
 };
 
 const defaultStyle = {
@@ -13,21 +14,19 @@ const defaultStyle = {
 		radius: [2, 2, 0, 0],
 	},
 };
-export const Chart: React.FC<Props> = ({ regions }) => {
+export const Chart: React.FC<Props> = ({ regions, urls }) => {
 	if (regions[0].checks.length > 1) {
 		const data = regions
 
 		.flatMap((r) => [
 			{
-				type: "Cold",
+				url: urls[0],
 				region: r.name,
-				url: r.checks[0].url,
 				latency: r.checks[0]?.latency ?? -1,
 			},
 			{
-				type: "Warm",
+				url: urls[1],
 				region: r.name,
-				url: r.checks[1].url,
 				latency: r.checks[1]?.latency ?? -1,
 			},
 		]);
@@ -39,7 +38,7 @@ export const Chart: React.FC<Props> = ({ regions }) => {
 				isStack={false}
 				xField="region"
 				yField="latency"
-				seriesField="type"
+				seriesField="url"
 				xAxis={{
 					title: { text: "Regions" },
 					label: {
@@ -53,7 +52,7 @@ export const Chart: React.FC<Props> = ({ regions }) => {
 				color={["#3b82f6", "#ef4444"]}
 				tooltip={{
 					formatter: (datum) => ({
-						name: datum.type,
+						name: datum.url,
 						value: `${datum.latency} ms`,
 					}),
 				}}

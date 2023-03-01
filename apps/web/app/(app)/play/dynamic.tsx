@@ -15,7 +15,8 @@ import { Button } from "@/components/button";
 import { ToastProvider, useToast } from "@/components/toast";
 
 type FormData = {
-	url: string;
+	url1: string;
+	url2?: string;
 	method: string;
 	regions: string[];
 };
@@ -23,6 +24,7 @@ type FormData = {
 type Props = {
 	regions: Region[];
 	defaultValues: Partial<FormData>;
+	signedIn: boolean;
 };
 
 export const Form: React.FC<Props> = (props): JSX.Element => {
@@ -36,6 +38,7 @@ export const Form: React.FC<Props> = (props): JSX.Element => {
 export const Inner: React.FC<Props> = ({
 	defaultValues,
 	regions: allRegions,
+	signedIn,
 }): JSX.Element => {
 	const {
 		register,
@@ -59,9 +62,13 @@ export const Inner: React.FC<Props> = ({
 			setError("regions", { message: "Select at least 1 region" });
 		}
 		setIsLoading(true);
+		const urls = [data.url1];
+		if (data.url2) {
+			urls.push(data.url2);
+		}
 		await trpc.play.check
 			.mutate({
-				url: data.url,
+				urls,
 				method: data.method as any,
 				regionIds: selectedRegions,
 			})
@@ -96,8 +103,8 @@ export const Inner: React.FC<Props> = ({
 				]}
 			/>
 
-			<div className="container min-h-screen px-4 pb-20 mx-auto ">
-				<div className="pt-8 space-y-6 sm:space-y-5 sm:pt-10">
+			<div className="container min-h-screen px-4 pb-20 mx-auto space-y-8 md:space-y-16 ">
+				<div className="space-y-6">
 					<div className="flex items-center justify-between">
 						<div>
 							<h3 className="text-lg font-medium leading-6 text-zinc-900">
@@ -123,58 +130,128 @@ export const Inner: React.FC<Props> = ({
 							</select>
 							<input
 								type="text"
-								{...register("url", {
+								{...register("url1", {
 									required: true,
 									validate: (v) => z.string().url().safeParse(v).success,
 								})}
 								placeholder="https://example.com"
 								className={`transition-all flex-grow focus:bg-zinc-50 md:px-4 md:h-12 focus:outline-none  group-hover:bg-zinc-50  w-full ${
-									errors.url ? "border-red-500" : "border-zinc-700"
+									errors.url1 ? "border-red-500" : "border-zinc-700"
 								}   focus:outline-none `}
 							/>
 						</div>
-						{errors.url ? (
+
+						{errors.url1 ? (
 							<p className="mt-2 text-sm text-red-500">
-								{errors.url.message || "A URL is required"}
+								{errors.url1.message || "A URL is required"}
 							</p>
 						) : null}
 					</div>
-
-					<div className="pt-8 space-y-6 sm:space-y-5 sm:pt-10">
-						<div className="flex items-center justify-between">
-							<div>
-								<h3 className="text-lg font-medium leading-6 text-zinc-900">
-									Regions
-								</h3>
-								<p className="max-w-2xl mt-1 text-sm text-zinc-500">
-									Select the regions from where we should call your API.
-								</p>
-							</div>
-							<Button
-								type="button"
-								onClick={() => {
-									if (selectedRegions.length >= allRegions.length / 2) {
-										setSelectedRegions([]);
-									} else {
-										setSelectedRegions(allRegions.map((r) => r.id));
-									}
-								}}
-							>
-								{selectedRegions.length >= allRegions.length / 2
-									? "Deselect all"
-									: "Select all"}
-							</Button>
+				</div>
+				<div className="space-y-6">
+					<div className="flex items-center justify-between">
+						<div>
+							<h3 className="text-lg font-medium leading-6 text-zinc-900">
+								Compare
+							</h3>
+							<p className="max-w-2xl mt-1 text-sm text-zinc-500">
+								Optionally enter a second URL. This will run the same checks
+								against both urls and compare the results.
+							</p>
 						</div>
-						<div className="space-y-6 sm:space-y-5">
-							<div role="group">
-								<div className="sm:grid sm:items-baseline sm:gap-4">
-									<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-										<div>
-											<h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
-												Vercel Edge
-											</h4>
+					</div>
+					<div className="mt-8 space-y-8 sm:space-y-5 lg:space-y-24 lg:mt-16">
+						<div className="flex items-center justify-start overflow-hidden duration-300 ease-in-out border rounded border-zinc-900 group focus:border-zinc-900 hover:bg-zinc-50">
+							<input
+								type="text"
+								{...register("url2", {
+									required: false,
+									validate: (v) => z.string().url().safeParse(v).success,
+								})}
+								placeholder="https://example.com"
+								className={`transition-all flex-grow focus:bg-zinc-50 md:px-4 md:h-12 focus:outline-none  group-hover:bg-zinc-50  w-full ${
+									errors.url2 ? "border-red-500" : "border-zinc-700"
+								}   focus:outline-none `}
+							/>
+						</div>
+
+						{errors.url2 ? (
+							<p className="mt-2 text-sm text-red-500">
+								{errors.url2.message || "A URL is required"}
+							</p>
+						) : null}
+					</div>
+				</div>
+
+				<div className="space-y-6">
+					<div className="flex items-center justify-between">
+						<div>
+							<h3 className="text-lg font-medium leading-6 text-zinc-900">
+								Regions
+							</h3>
+							<p className="max-w-2xl mt-1 text-sm text-zinc-500">
+								Select the regions from where we should call your API.
+							</p>
+						</div>
+						<Button
+							type="button"
+							onClick={() => {
+								if (selectedRegions.length >= allRegions.length / 2) {
+									setSelectedRegions([]);
+								} else {
+									setSelectedRegions(allRegions.map((r) => r.id));
+								}
+							}}
+						>
+							{selectedRegions.length >= allRegions.length / 2
+								? "Deselect all"
+								: "Select all"}
+						</Button>
+					</div>
+					<div className="space-y-6 sm:space-y-5">
+						<div role="group">
+							<div className="sm:grid sm:items-baseline sm:gap-4">
+								<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+									<div>
+										<h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
+											Vercel Edge
+										</h4>
+										<fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 ">
+											{vercelRegions.map((r) => (
+												<button
+													type="button"
+													key={r.id}
+													className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+														selectedRegions.includes(r.id)
+															? "border-zinc-900 bg-zinc-50"
+															: "border-zinc-300"
+													}`}
+													onClick={() => {
+														if (selectedRegions.includes(r.id)) {
+															setSelectedRegions(
+																selectedRegions.filter((id) => id !== r.id),
+															);
+														} else {
+															setSelectedRegions([...selectedRegions, r.id]);
+														}
+													}}
+												>
+													<span className="px-2 py-1 lg:px-4">
+														{r.name.replace("@edge", "")}
+													</span>
+												</button>
+											))}
+										</fieldset>
+									</div>
+
+									<div className="h-full">
+										<h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
+											AWS Lambda
+										</h4>
+
+										{awsRegions.length > 0 ? (
 											<fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 ">
-												{vercelRegions.map((r) => (
+												{awsRegions.map((r) => (
 													<button
 														type="button"
 														key={r.id}
@@ -193,67 +270,27 @@ export const Inner: React.FC<Props> = ({
 															}
 														}}
 													>
-														<span className="px-2 py-1 lg:px-4">
-															{r.name.replace("@edge", "")}
-														</span>
+														<span className="px-2 py-1 lg:px-4">{r.name}</span>
 													</button>
 												))}
 											</fieldset>
-										</div>
-
-										<div className="h-full">
-											<h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
-												AWS Lambda
-											</h4>
-
-											{awsRegions.length > 0 ? (
-												<fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 ">
-													{awsRegions.map((r) => (
-														<button
-															type="button"
-															key={r.id}
-															className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-																selectedRegions.includes(r.id)
-																	? "border-zinc-900 bg-zinc-50"
-																	: "border-zinc-300"
-															}`}
-															onClick={() => {
-																if (selectedRegions.includes(r.id)) {
-																	setSelectedRegions(
-																		selectedRegions.filter((id) => id !== r.id),
-																	);
-																} else {
-																	setSelectedRegions([
-																		...selectedRegions,
-																		r.id,
-																	]);
-																}
-															}}
-														>
-															<span className="px-2 py-1 lg:px-4">
-																{r.name}
-															</span>
-														</button>
-													))}
-												</fieldset>
-											) : (
-												<div className="flex items-center justify-center w-full p-8 border border-dashed rounded lg:p-24 border-zinc-300 ">
-													<Link href="/auth/sign-in">
-														<Button variant="primary" type="button">
-															Sign In to get access to AWS Lambda regions
-														</Button>
-													</Link>
-												</div>
-											)}
-										</div>
+										) : (
+											<div className="flex items-center justify-center w-full p-8 border border-dashed rounded lg:p-24 border-zinc-300 ">
+												<Link href="/auth/sign-in">
+													<Button variant="primary" type="button">
+														Sign In to get access to AWS Lambda regions
+													</Button>
+												</Link>
+											</div>
+										)}
 									</div>
 								</div>
-								{errors.regions ? (
-									<p className="mt-2 text-sm text-red-500">
-										{errors.regions.message || "Select at least one region"}
-									</p>
-								) : null}
 							</div>
+							{errors.regions ? (
+								<p className="mt-2 text-sm text-red-500">
+									{errors.regions.message || "Select at least one region"}
+								</p>
+							) : null}
 						</div>
 					</div>
 				</div>

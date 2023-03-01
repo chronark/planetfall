@@ -26,7 +26,7 @@ export default async function Share(props: { params: { shareId: string } }) {
 		return notFound();
 	}
 
-	const { url, time } = res;
+	const { urls, time } = res;
 	const tags = [
 		...new Set(
 			res.regions.flatMap((r) => r.checks).flatMap((c) => c.tags ?? []),
@@ -40,7 +40,7 @@ export default async function Share(props: { params: { shareId: string } }) {
 		<div className="bg-zinc-50">
 			<PageHeader
 				sticky={true}
-				title={url}
+				title={urls.length > 1 ? urls.join(" vs. ") : urls[0]}
 				description={new Date(time).toUTCString()}
 			/>
 			<div className="container relative min-h-screen pb-20 mx-auto">
@@ -53,7 +53,7 @@ export default async function Share(props: { params: { shareId: string } }) {
 								</CardHeader>
 								<CardContent>
 									<div className="h-80">
-										<Chart regions={regions} />
+										<Chart regions={regions} urls={urls} />
 									</div>
 								</CardContent>
 							</Card>
@@ -72,14 +72,14 @@ export default async function Share(props: { params: { shareId: string } }) {
 									/>
 								</CardHeader>
 								<CardContent>
-									<Table regions={regions} />
+									<Table regions={regions} urls={urls} />
 								</CardContent>
 							</Card>
 
 							<Divider />
 						</>
 					) : null}
-					<Details regions={regions} />
+					<Details regions={regions} urls={urls} />
 					{tags.length > 0 ? (
 						<>
 							<Divider />

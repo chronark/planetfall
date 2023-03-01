@@ -13,7 +13,7 @@ const ratelimit = new Ratelimit({
 });
 
 const playChecks = z.object({
-	url: z.string(),
+	urls: z.array(z.string().url()),
 	time: z.number(),
 	regions: z.array(
 		z.object({
@@ -55,7 +55,7 @@ export const playRouter = t.router({
 		.input(
 			z.object({
 				method: z.enum(["GET", "POST", "PUT", "DELETE"]),
-				url: z.string().url(),
+				urls: z.array(z.string().url()),
 				regionIds: z.array(z.string()).min(1),
 				repeat: z.boolean().optional(),
 			}),
@@ -92,15 +92,11 @@ export const playRouter = t.router({
 						"Content-Type": "application/json",
 					});
 
-					const urls = [input.url];
-					if (input.repeat) {
-						urls.push(input.url);
-					}
 					const res = await fetch(region.url, {
 						method: "POST",
 						headers,
 						body: JSON.stringify({
-							urls,
+							urls: input.urls,
 							method: input.method,
 							timeout: 10000,
 						}),
@@ -166,7 +162,7 @@ export const playRouter = t.router({
 			);
 
 			const out: PlayChecks = {
-				url: input.url,
+				urls: input.urls,
 				time: Date.now(),
 				regions: [],
 			};

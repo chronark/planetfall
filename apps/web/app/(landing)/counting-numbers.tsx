@@ -34,7 +34,7 @@ export default function CountingNumbers({
 				}
 			}, interval);
 		}
-	}, [isInView]);
+	}, [isInView, increment, interval]);
 
 	return (
 		<span ref={ref}>

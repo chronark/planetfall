@@ -20,10 +20,11 @@ import {
 } from "@/components/card";
 
 type Props = {
+	urls: PlayChecks["urls"];
 	regions: PlayChecks["regions"];
 };
 
-export const Details: React.FC<Props> = ({ regions }) => {
+export const Details: React.FC<Props> = ({ regions, urls }) => {
 	const [selectedRegion, setSelectedRegion] = React.useState<
 		PlayChecks["regions"][0] | undefined
 	>(regions[0]);
@@ -68,7 +69,7 @@ export const Details: React.FC<Props> = ({ regions }) => {
 								<div className="flex flex-col items-center justify-between">
 									{selectedRegion.checks.length > 1 ? (
 										<>
-											<Heading h3={true}>{i === 0 ? "Cold" : "Hot"}</Heading>
+											<Heading h3={true}>{urls[i]}</Heading>
 											<span className="text-sm text-zinc-500">
 												{new Date(c.time).toISOString()}
 											</span>

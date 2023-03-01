@@ -24,8 +24,9 @@ export default async function PlayPage(props: {
 	return (
 		<Form
 			regions={regions}
+			signedIn={Boolean(session)}
 			defaultValues={{
-				url: props.searchParams?.url,
+				url1: props.searchParams?.url,
 				method: props.searchParams?.method?.toUpperCase(),
 				regions: props.searchParams?.regions?.split(","),
 			}}
