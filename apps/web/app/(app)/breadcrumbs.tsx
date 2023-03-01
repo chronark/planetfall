@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { useSelectedLayoutSegments } from "next/navigation";
+// import { useSelectedLayoutSegments } from "next/navigation";
 import React from "react";
 
 export type Props = {
@@ -15,7 +15,8 @@ export const Breadcrumbs: React.FC<Props> = ({
 	withWordMark,
 	prefix,
 }) => {
-	const segments = useSelectedLayoutSegments();
+	// const segments = useSelectedLayoutSegments();
+
 	return (
 		<ul role="list" className="flex items-center">
 			<li key="home" className="pr-2">
@@ -51,7 +52,7 @@ export const Breadcrumbs: React.FC<Props> = ({
 					</Link>
 				</li>
 			))}
-			{segments.map((s, i) => (
+			{/* {segments.map((s, i) => (
 				<li key={s} className="flex items-center ">
 					<span className="px-2 text-zinc-400">/</span>
 					<Link
@@ -61,7 +62,7 @@ export const Breadcrumbs: React.FC<Props> = ({
 						{s}
 					</Link>
 				</li>
-			))}
+			))} */}
 		</ul>
 	);
 };
