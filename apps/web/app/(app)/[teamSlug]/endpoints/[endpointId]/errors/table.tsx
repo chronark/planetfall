@@ -10,13 +10,13 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import Link from "next/link";
-import { ChevronRight, Minus } from "lucide-react";
+import { ChevronRight, Minus, X } from "lucide-react";
 
 type ErrorCheck = {
 	detailsUrl: string;
 	time: number;
 	region: string;
-	error: string;
+	error: boolean;
 	latency?: number;
 	status?: number;
 };
@@ -50,6 +50,12 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
 		}),
 		accessor("error", {
 			header: "Error",
+			cell: (info) =>
+				info.getValue() ? (
+					<X className="w-4 h-4 text-red-400" />
+				) : (
+					<Minus className="w-4 h-4 text-zinc-400" />
+				),
 		}),
 		accessor("latency", {
 			header: "Latency",

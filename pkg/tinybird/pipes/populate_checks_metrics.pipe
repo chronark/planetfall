@@ -12,7 +12,7 @@ SQL >
             time,
             latency,
             error
-        FROM checks__v3
+        FROM checks__v1
 
 TYPE materialized
 DATASOURCE checks_metrics__v1

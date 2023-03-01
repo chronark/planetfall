@@ -16,6 +16,6 @@ SQL >
         quantile(0.99)(latency) as p99,
         regionId,
         COUNT(error) as errors
-    FROM checks__v3
+    FROM checks__v1
     WHERE  endpointId={{ String(endpointId, required=True)}} AND time >= now() - INTERVAL {{Int32(days)}} DAY
     GROUP BY time, regionId

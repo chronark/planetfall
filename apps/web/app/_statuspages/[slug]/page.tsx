@@ -34,7 +34,6 @@ export default async function Page(props: { params: { slug: string } }) {
 		})),
 	);
 
-	console.log({ regions });
 	/**
 	 * Translate region ids to names for display
 	 */
@@ -51,8 +50,6 @@ export default async function Page(props: { params: { slug: string } }) {
 			{} as any,
 		),
 	}));
-
-	console.log(endpoints);
 
 	return (
 		<div className="flex flex-col min-h-screen px-4 overflow-hidden md:px-0 ">

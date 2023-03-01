@@ -6,15 +6,19 @@ import { Button } from "@/components/button";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { Card, CardContent } from "@/components/card";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export const Form: React.FC = () => {
 	const [state, setState] = useState<"idle" | "loading" | "sent">("idle");
+	const searchParams = useSearchParams();
+	const to = searchParams?.get("to");
+	const router = useRouter();
 
 	const [email, setEmail] = useState("");
 
 	if (state === "sent") {
 		return (
-			<div className="flex flex-col items-center justify-center px-4 py-6 pt-8 text-center space-y-3">
+			<div className="flex flex-col items-center justify-center px-4 py-6 pt-8 space-y-3 text-center">
 				<h2 className="text-2xl font-semibold text-zinc-900">
 					Check Your Email
 				</h2>
@@ -29,7 +33,7 @@ export const Form: React.FC = () => {
 		<div>
 			<Card>
 				<CardContent>
-					<div className="flex flex-col items-center justify-center px-12 py-24 text-center space-y-3">
+					<div className="flex flex-col items-center justify-center px-12 py-24 space-y-3 text-center">
 						<Link href="https://planetfall.io">
 							<Logo className="w-10 h-10" />
 						</Link>
@@ -42,7 +46,7 @@ export const Form: React.FC = () => {
 								size="lg"
 								onClick={async () => {
 									setState("loading");
-									await signIn("github");
+									await signIn("github", { callbackUrl: to ?? undefined });
 									setState("idle");
 								}}
 							>

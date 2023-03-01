@@ -15,7 +15,7 @@ SQL >
         quantileTimingState(0.99)(latency) AS p99,
         COUNTState(error) AS errors,
         regionId
-    FROM checks__v3
+    FROM checks__v1
     WHERE time >= now() - INTERVAL 1 DAY
     GROUP BY endpointId, regionId
 

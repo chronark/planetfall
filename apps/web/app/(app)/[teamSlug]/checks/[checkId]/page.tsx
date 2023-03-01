@@ -201,7 +201,9 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 export default async function Page(props: {
 	params: { teamSlug: string; checkId: string };
 }) {
-	const check = await new Tinybird().getCheckById(props.params.checkId);
+	const check = await db.check.findUnique({
+		where: { id: props.params.checkId },
+	});
 
 	if (!check) {
 		console.warn(__filename, "User not found");
@@ -270,7 +272,7 @@ export default async function Page(props: {
 								<CardHeaderTitle title="Trace" />
 							</CardHeader>
 							<CardContent>
-								<DNS timings={JSON.parse(check.timing) as Timings} />
+								<DNS timings={check.timing as Timings} />
 							</CardContent>
 						</Card>
 					</>
@@ -299,7 +301,7 @@ export default async function Page(props: {
 							<CardContent>
 								<HeaderTable
 									header={Object.entries(
-										JSON.parse(check.header) as Record<string, string>,
+										check.header as Record<string, string>,
 									).map(([key, value]) => ({ key, value }))}
 								/>
 							</CardContent>

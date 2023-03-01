@@ -1,13 +1,12 @@
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+    referentialIntegrity = "prisma"
+
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  provider = "prisma-client-js"
 }
 
 model User {
@@ -107,11 +106,11 @@ enum Plan {
 }
 
 model Team {
-  id         String   @id
-  name       String
-  slug       String   @unique
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   members Membership[]
 
@@ -136,6 +135,7 @@ model Team {
   pages              StatusPage[]
 
   webhookAlerts WebhookAlert[]
+  Check         Check[]
 
   @@index([slug])
 }
@@ -157,6 +157,7 @@ model Region {
   url       String
   endpoints Endpoint[]
   visible   Boolean
+  Check     Check[]
 
   @@unique([platform, region])
 }
@@ -211,7 +212,6 @@ model Endpoint {
   // This counts as a failed request
   timeout      Int?
   distribution Distribution
-  // string[] of region Ids
   regions      Region[]
   // json encoded map
   // { KEY: VALUE}
@@ -222,7 +222,30 @@ model Endpoint {
 
   pages StatusPage[]
 
+  checks Check[]
+
   @@index([teamId])
+}
+
+model Check {
+  id         String   @id
+  endpoint   Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  endpointId String
+
+  body     String?
+  header   Json?
+  status   Int?
+  latency  Int?
+  region   Region   @relation(fields: [platform, regionId], references: [platform, region])
+  platform Platform
+  regionId String
+  team     Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId   String
+  time     DateTime
+  error    String?
+  timing   Json?
+
+  @@index([endpointId])
 }
 
 model VerificationRequest {

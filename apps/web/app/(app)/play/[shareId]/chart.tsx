@@ -14,7 +14,6 @@ const defaultStyle = {
 	},
 };
 export const Chart: React.FC<Props> = ({ regions }) => {
-	console.log({ regions });
 	if (regions[0].checks.length > 1) {
 		const data = regions
 
@@ -32,7 +31,6 @@ export const Chart: React.FC<Props> = ({ regions }) => {
 				latency: r.checks[1]?.latency ?? -1,
 			},
 		]);
-		console.log({ data });
 		return (
 			<Column
 				{...defaultStyle}

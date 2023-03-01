@@ -80,15 +80,6 @@ export class Client {
 		return data;
 	}
 
-	public async getCheckById(checkId: string): Promise<Check | null> {
-		const data = await this.fetch<Check[]>("get_check_by_id__v1", { checkId });
-
-		if (data.length === 0) {
-			return null;
-		}
-
-		return data[0];
-	}
 	/**
 	 *
 	 * @param teamId
@@ -149,11 +140,7 @@ export type Check = {
 	teamId: string;
 	// Unix timestamp with millisecond precision
 	time: number;
-	timing?: string;
-	body?: string;
-	header?: string;
-	source?: string;
-	error?: string;
+	error: boolean;
 };
 
 export type Metric = {

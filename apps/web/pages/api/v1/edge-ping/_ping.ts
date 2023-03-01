@@ -27,7 +27,6 @@ type PingResponse = {
 };
 
 export async function ping(req: PingRequest): Promise<PingResponse[]> {
-	console.log({ req });
 	const responses: PingResponse[] = [];
 
 	for (let i = 0; i < req.urls.length; i++) {

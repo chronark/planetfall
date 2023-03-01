@@ -2,7 +2,6 @@ import { Button } from "@/components/button";
 import { db } from "@planetfall/db";
 import { getSession } from "lib/auth";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Breadcrumbs } from "../breadcrumbs";
 import { DesktopNavbar } from "../navbar-desktop";
 import { NavLink } from "../navlink";
@@ -39,7 +38,7 @@ export default async function PlayLayout(props: {
 								}}
 							/>
 						) : (
-							<Link href="/auth/sign-in">
+							<Link href="/auth/sign-in?to=/play">
 								<Button variant="link">Sign In</Button>
 							</Link>
 						)}

@@ -282,31 +282,44 @@ export class Scheduler {
 
 						return {
 							id: newId("check"),
-							source: "scheduler",
 							endpointId: endpoint.id,
 							teamId: endpoint.teamId,
 							latency: c.latency,
-							time: c.time,
+							time: new Date(c.time),
 							status: c.status,
 							regionId,
 							error: c.error,
 							body: c.body,
-							tags: c.tags ?? [],
-							header: JSON.stringify(c.headers),
-							timing: JSON.stringify(c.timing),
+							header: c.headers,
+							timing: c.timing,
+							platform: region.platform,
 						};
 					});
 					for (const d of data) {
 						this.logger.info("storing check", { checkId: d.id });
 					}
-					await this.tinybird.publishChecks(data).catch((err) => {
-						this.logger.error("error publishing checks", {
-							endpointId: endpoint.id,
-							regionId: region.id,
-							error: (err as Error).message,
+
+					await this.db.check.createMany({ data });
+					await this.tinybird
+						.publishChecks(
+							data.map((d) => ({
+								id: d.id,
+								endpointId: d.endpointId,
+								teamId: d.teamId,
+								latency: d.latency,
+								time: d.time.getTime(),
+								error: !!d.error,
+								regionId: d.regionId,
+							})),
+						)
+						.catch((err) => {
+							this.logger.error("error publishing checks to tinybird", {
+								endpointId: endpoint.id,
+								regionId: region.id,
+								error: (err as Error).message,
+							});
+							throw err;
 						});
-						throw err;
-					});
 					for (const d of data) {
 						if (d.error) {
 							this.logger.info("emitting notification event", {
@@ -325,7 +338,7 @@ export class Scheduler {
 										id: d.id,
 										endpointId: d.endpointId,
 										teamId: d.teamId,
-										time: d.time,
+										time: d.time.getTime(),
 										error: d.error,
 									},
 								})
