@@ -8,7 +8,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: {
     default: 'Planetfall',
-    template: '%s | Lee Robinson',
+    template: '%s | Planetfall',
   },
   description: 'Global Latency Monitoring',
   openGraph: {
