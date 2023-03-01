@@ -21,7 +21,7 @@ export class Client {
 				url.searchParams.set(key, String(value));
 			}
 		}
-		const res = await fetch(url, {
+		const res = await fetch(url.toString(), {
 			headers: { Authorization: `Bearer ${this.token}` },
 		});
 		if (!res.ok) {
