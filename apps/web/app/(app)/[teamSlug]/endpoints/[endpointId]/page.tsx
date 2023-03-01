@@ -67,7 +67,6 @@ export default async function Page(props: {
 		tb.getLatestChecksByEndpoint(endpoint.id, { limit: 10000 }),
 	]);
 
-	console.log({ checks });
 	if (!stats) {
 		console.warn(__filename, "Stats not found");
 

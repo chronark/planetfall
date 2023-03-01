@@ -127,7 +127,7 @@ export class Client {
 		}
 		const data = await this.fetch<Check[]>("checks_by_endpoint__v1", params);
 
-		return data;
+		return data.map((d) => ({ ...d, error: Boolean(d.error) }));
 	}
 }
 
