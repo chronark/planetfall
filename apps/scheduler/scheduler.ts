@@ -278,7 +278,6 @@ export class Scheduler {
               body: c.body,
               header: c.headers,
               timing: c.timing,
-              platform: region.platform,
             };
           });
           for (const d of data) {

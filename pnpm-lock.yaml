@@ -4038,8 +4038,8 @@ packages:
     resolution: {integrity: sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==}
     engines: {node: '>= 0.4'}
 
-  /aws-sdk/2.1325.0:
-    resolution: {integrity: sha512-ztg9HG5aoUHTprY+/eqjqb25E4joCgz+8ToxsP4OSKFQCtaBcF6my03j4e/J2j3fmpPifJnZSPMu4kV7DBj8WA==}
+  /aws-sdk/2.1326.0:
+    resolution: {integrity: sha512-LSGiO4RSooupHnkvYbPOuOYqwAxmcnYinwIxBz4P1YI8ulhZZ/pypOj/HKqC629UyhY1ndSMtlM1l56U74UclA==}
     engines: {node: '>= 10.0.0'}
     dependencies:
       buffer: 4.9.2
@@ -4180,7 +4180,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001458
-      electron-to-chromium: 1.4.314
+      electron-to-chromium: 1.4.315
       node-releases: 2.0.10
       update-browserslist-db: 1.0.10_browserslist@4.21.5
     dev: true
@@ -5063,8 +5063,8 @@ packages:
     dependencies:
       jake: 10.8.5
 
-  /electron-to-chromium/1.4.314:
-    resolution: {integrity: sha512-+3RmNVx9hZLlc0gW//4yep0K5SYKmIvB5DXg1Yg6varsuAHlHwTeqeygfS8DWwLCsNOWrgj+p9qgM5WYjw1lXQ==}
+  /electron-to-chromium/1.4.315:
+    resolution: {integrity: sha512-ndBQYz3Eyy3rASjjQ9poMJGoAlsZ/aZnq6GBsGL4w/4sWIAwiUHVSsMuADbxa8WJw7pZ0oxLpGbtoDt4vRTdCg==}
     dev: true
 
   /emoji-regex/8.0.0:
@@ -7326,7 +7326,7 @@ packages:
       globby: 11.1.0
       isbinaryfile: 5.0.0
       mem-fs: 2.3.0
-      minimatch: 7.4.1
+      minimatch: 7.4.2
       multimatch: 5.0.0
       normalize-path: 3.0.0
       textextensions: 5.15.0
@@ -7400,8 +7400,8 @@ packages:
     dependencies:
       brace-expansion: 2.0.1
 
-  /minimatch/7.4.1:
-    resolution: {integrity: sha512-Oz1iPEP+MGl7KS3SciLsLLcuZ7VsBfb7Qrz/jYt/s/sYAv272P26HSLz2f77Y6hzTKXiBi6g765fqpEDNc5fJw==}
+  /minimatch/7.4.2:
+    resolution: {integrity: sha512-xy4q7wou3vUoC9k1xGTXc+awNdGaGVHtFUaey8tiX4H1QRc04DZ/rmDFwNm2EBsuYEhAZ6SgMmYf3InGY6OauA==}
     engines: {node: '>=10'}
     dependencies:
       brace-expansion: 2.0.1
@@ -8041,7 +8041,7 @@ packages:
       '@oclif/plugin-help': 5.2.6
       '@oclif/plugin-not-found': 2.3.21
       '@oclif/plugin-warn-if-update-available': 2.0.29
-      aws-sdk: 2.1325.0
+      aws-sdk: 2.1326.0
       concurrently: 7.6.0
       debug: 4.3.4
       find-yarn-workspace-root: 2.0.0
