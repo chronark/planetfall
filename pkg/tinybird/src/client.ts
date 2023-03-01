@@ -125,7 +125,7 @@ export class Client {
     }
     const data = await this.fetch<Check[]>("checks_by_endpoint__v1", params);
 
-    return data;
+    return data.sort((a, b) => a.time - b.time);
   }
 }
 

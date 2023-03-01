@@ -14,6 +14,6 @@ SQL >
     FROM checks__v1
     WHERE endpointId = {{String(endpointId, required=True)}}
     AND time > now() - INTERVAL 1 DAY
-    ORDER BY time ASC
+    ORDER BY time DESC
     LIMIT {{Int32(limit, default=10)}}
     
