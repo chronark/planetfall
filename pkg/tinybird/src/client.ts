@@ -77,7 +77,7 @@ export class Client {
 			{ endpointId, days: 7 },
 		);
 
-		return data;
+		return data.map((d) => ({ ...d, time: new Date(d.time).getTime() }));
 	}
 
 	/**
