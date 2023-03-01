@@ -219,7 +219,7 @@ const Chart: React.FC<{
 					// ? p99 > endpoint.degradedAfter
 					// : 0;
 					const cn = [
-						"flex-1 bg-white rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
+						"flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
 					];
 
 					if (bucket.time < 0) {
