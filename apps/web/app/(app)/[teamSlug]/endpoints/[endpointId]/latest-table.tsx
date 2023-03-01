@@ -104,7 +104,7 @@ export const LatestTable: React.FC<Props> = ({
   
 
   const table = useReactTable({
-    data,
+    data: checks,
     columns,
 
     getCoreRowModel: getCoreRowModel(),
