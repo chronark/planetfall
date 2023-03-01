@@ -103,7 +103,7 @@ export const Inner: React.FC<Props> = ({
 				]}
 			/>
 
-			<div className="container min-h-screen px-4 pb-20 mx-auto space-y-8 md:space-y-16 ">
+			<div className="container min-h-screen pb-20 mx-auto space-y-8 md:space-y-16">
 				<div className="space-y-6">
 					<div className="flex items-center justify-between">
 						<div>
@@ -114,6 +114,16 @@ export const Inner: React.FC<Props> = ({
 								Enter the URL you want to check.
 							</p>
 						</div>
+
+						{signedIn ? null : (
+							<Link
+								href="/auth/sign-in?to=/play"
+								className="text-sm duration-150 text-zinc-500 hover:text-zinc-900"
+							>
+								Sign in to compare mutiple urls and analyse their performance
+								difference.
+							</Link>
+						)}
 					</div>
 					<div className="mt-8 space-y-8 sm:space-y-5 lg:space-y-24 lg:mt-16">
 						<div className="flex items-center justify-start overflow-hidden duration-300 ease-in-out border rounded border-zinc-900 group focus:border-zinc-900 hover:bg-zinc-50">
@@ -129,7 +139,7 @@ export const Inner: React.FC<Props> = ({
 								<option value="DELETE">DELETE</option>
 							</select>
 							<input
-								type="text"
+								type="url"
 								{...register("url1", {
 									required: true,
 									validate: (v) => z.string().url().safeParse(v).success,
@@ -148,40 +158,41 @@ export const Inner: React.FC<Props> = ({
 						) : null}
 					</div>
 				</div>
-				<div className="space-y-6">
-					<div className="flex items-center justify-between">
-						<div>
-							<h3 className="text-lg font-medium leading-6 text-zinc-900">
-								Compare
-							</h3>
-							<p className="max-w-2xl mt-1 text-sm text-zinc-500">
-								Optionally enter a second URL. This will run the same checks
-								against both urls and compare the results.
-							</p>
+				{signedIn ? (
+					<div className="space-y-6">
+						<div className="flex items-center justify-between">
+							<div>
+								<h3 className="text-lg font-medium leading-6 text-zinc-900">
+									Compare
+								</h3>
+								<p className="max-w-2xl mt-1 text-sm text-zinc-500">
+									Optionally enter a second URL. This will run the same checks
+									against both urls and compare the results.
+								</p>
+							</div>
 						</div>
-					</div>
-					<div className="mt-8 space-y-8 sm:space-y-5 lg:space-y-24 lg:mt-16">
-						<div className="flex items-center justify-start overflow-hidden duration-300 ease-in-out border rounded border-zinc-900 group focus:border-zinc-900 hover:bg-zinc-50">
-							<input
-								type="text"
-								{...register("url2", {
-									required: false,
-									validate: (v) => z.string().url().safeParse(v).success,
-								})}
-								placeholder="https://example.com"
-								className={`transition-all flex-grow focus:bg-zinc-50 md:px-4 md:h-12 focus:outline-none  group-hover:bg-zinc-50  w-full ${
-									errors.url2 ? "border-red-500" : "border-zinc-700"
-								}   focus:outline-none `}
-							/>
-						</div>
+						<div className="mt-8 space-y-8 sm:space-y-5 lg:space-y-24 lg:mt-16">
+							<div className="flex items-center justify-start overflow-hidden duration-300 ease-in-out border rounded border-zinc-900 group focus:border-zinc-900 hover:bg-zinc-50">
+								<input
+									type="url"
+									{...register("url2", {
+										required: false,
+										validate: (v) =>
+											v === "" || z.string().url().safeParse(v).success,
+									})}
+									placeholder="https://example.com"
+									className={`transition-all flex-grow focus:bg-zinc-50 md:px-4 md:h-12 focus:outline-none  group-hover:bg-zinc-50  w-full ${
+										errors.url2 ? "border-red-500" : "border-zinc-700"
+									}   focus:outline-none `}
+								/>
+							</div>
 
-						{errors.url2 ? (
-							<p className="mt-2 text-sm text-red-500">
-								{errors.url2.message || "A URL is required"}
-							</p>
-						) : null}
+							{errors.url2 ? (
+								<p className="mt-2 text-sm text-red-500">{errors.url2.type}</p>
+							) : null}
+						</div>
 					</div>
-				</div>
+				) : null}
 
 				<div className="space-y-6">
 					<div className="flex items-center justify-between">
