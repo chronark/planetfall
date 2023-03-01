@@ -284,7 +284,14 @@ export class Scheduler {
             this.logger.info("storing check", { checkId: d.id });
           }
 
-          await this.db.check.createMany({ data });
+          await this.db.check.createMany({ data }).catch((err) => {
+            this.logger.error("error publishing checks to planetscale", {
+              endpointId: endpoint.id,
+              regionId: region.id,
+              error: (err as Error).message,
+            });
+            throw err;
+          });
           await this.tinybird
             .publishChecks(
               data.map((d) => ({
