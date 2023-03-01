@@ -121,7 +121,7 @@ export const Row: React.FC<{
 						<div className="flex items-center gap-2 px-3 py-1 border rounded-full border-zinc-300">
 							<div
 								className={cn("w-2.5 h-2.5 rounded-full", {
-									"bg-green-500": current === "Operational",
+									"bg-emerald-500": current === "Operational",
 									"bg-yellow-500": current === "Degraded",
 									"bg-red-500": current === "Error",
 								})}
@@ -229,7 +229,7 @@ const Chart: React.FC<{
 					} else if (bucketDegraded) {
 						cn.push(" bg-yellow-400  ");
 					} else {
-						cn.push(" bg-green-400 ");
+						cn.push(" bg-emerald-400 ");
 					}
 
 					return (
