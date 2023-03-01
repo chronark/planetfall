@@ -1,30 +1,29 @@
 import "./globals.css";
 import { Analytics } from "app/components/analytics";
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 import Script from "next/script";
 import { Metadata } from "next";
 
-
 export const metadata: Metadata = {
   title: {
-    default: 'Planetfall',
-    template: '%s | Planetfall',
+    default: "Planetfall",
+    template: "%s | Planetfall",
   },
-  description: 'Global Latency Monitoring',
+  description: "Global Latency Monitoring",
   openGraph: {
-    title: 'Planetfall',
-    description: 'Global Latency Monitoring',
-    url: 'https://planetfall.io',
-    siteName: 'planetfall.io',
+    title: "Planetfall",
+    description: "Global Latency Monitoring",
+    url: "https://planetfall.io",
+    siteName: "planetfall.io",
     images: [
       {
-        url: 'https://planetfall.io/img/og.png',
+        url: "https://planetfall.io/img/og.png",
         width: 1920,
         height: 1080,
       },
     ],
-    locale: 'en-US',
-    type: 'website',
+    locale: "en-US",
+    type: "website",
   },
   robots: {
     index: true,
@@ -32,21 +31,19 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   twitter: {
-    title: 'Plantfall',
-    card: 'summary_large_image',
+    title: "Plantfall",
+    card: "summary_large_image",
   },
   icons: {
-    shortcut: '/favicon.ico',
-  }
-}
-
-
+    shortcut: "/favicon.ico",
+  },
+};
 
 const inter = Inter({
   variable: "--font-inter",

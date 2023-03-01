@@ -12,7 +12,6 @@ import {
   HeaderAssertion,
   deserialize,
 } from "@planetfall/assertions";
-import { kafka } from "lib/kafka";
 
 export const endpointRouter = t.router({
   create: t.procedure
@@ -90,7 +89,6 @@ export const endpointRouter = t.router({
           body: input.body,
         },
       });
-      kafka.producer().produce("endpoint.created", JSON.stringify({ endpointId: created.id }));
 
       return created;
     }),
@@ -169,9 +167,7 @@ export const endpointRouter = t.router({
         },
       });
 
-      await kafka
-        .producer()
-        .produce("endpoint.updated", JSON.stringify({ endpointId: endpoint.id }));
+
 
       return updatedEndpoint;
     }),
