@@ -232,7 +232,7 @@ model Check {
   endpoint   Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
   endpointId String
 
-  body     String?
+  body     String? @db.Text
   header   Json?
   status   Int?
   latency  Int?
