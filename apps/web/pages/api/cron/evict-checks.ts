@@ -21,7 +21,3 @@ export default async function handler(
 	console.log("Deleted", deleted.count, "checks");
 	res.status(200).end();
 }
-
-export const config = {
-	cron: "* * * * *",
-};
