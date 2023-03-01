@@ -237,7 +237,7 @@ export default async function Page(props: {
                 <LatestTable
                   endpointId={props.params.endpointId}
                   teamSlug={props.params.teamSlug}
-                  checks={checks.slice(checks.length - 20).reverse()}
+                  checks={checks.slice(checks.length - 20)}
                   degradedAfter={endpoint.degradedAfter}
                   timeout={endpoint.timeout}
                   regions={endpoint.regions}
