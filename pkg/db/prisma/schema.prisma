@@ -132,7 +132,7 @@ model Team {
   pages              StatusPage[]
 
   webhookAlerts WebhookAlert[]
-  Check         Check[]
+
 
   @@index([slug])
 }
@@ -154,7 +154,6 @@ model Region {
   url       String
   endpoints Endpoint[]
   visible   Boolean
-  Check     Check[]
 
   @@unique([platform, region])
 }
@@ -233,10 +232,7 @@ model Check {
   header   Json?
   status   Int?
   latency  Int?
-  region   Region   @relation(fields: [platform, regionId], references: [platform, region])
-  platform Platform
   regionId String
-  team     Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId   String
   time     DateTime
   error    String?
