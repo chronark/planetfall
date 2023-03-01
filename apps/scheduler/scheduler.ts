@@ -310,6 +310,7 @@ export class Scheduler {
 								time: d.time.getTime(),
 								error: !!d.error,
 								regionId: d.regionId,
+								status: d.status,
 							})),
 						)
 						.catch((err) => {

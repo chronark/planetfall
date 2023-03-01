@@ -67,6 +67,7 @@ export default async function Page(props: {
 		tb.getLatestChecksByEndpoint(endpoint.id, { limit: 10000 }),
 	]);
 
+	console.log({ checks });
 	if (!stats) {
 		console.warn(__filename, "Stats not found");
 
@@ -128,7 +129,7 @@ export default async function Page(props: {
 			<main className="container mx-auto">
 				<div className="pt-2 mb-4 md:pt-4 lg:pt-8 md:mb-8 lg:mb-16">
 					<div>
-						<div className="w-full grid grid-cols-3 gap-2 lg:grid-cols-6 md:gap-4 lg:gap-8">
+						<div className="grid w-full grid-cols-3 gap-2 lg:grid-cols-6 md:gap-4 lg:gap-8">
 							<Stats
 								label="Availability"
 								value={(availability * 100).toLocaleString(undefined, {

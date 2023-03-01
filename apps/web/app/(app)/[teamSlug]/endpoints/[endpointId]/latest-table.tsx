@@ -26,7 +26,6 @@ export type Props = {
 };
 
 export const LatestTable: React.FC<Props> = ({
-	endpointId,
 	checks,
 	teamSlug,
 	degradedAfter,
