@@ -56,7 +56,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
           <UserButton
             user={{
               email: user.emailAddresses[0]?.emailAddress,
-              name: user.username!,
+              name: user.username ?? user.emailAddresses[0]?.emailAddress ?? "Unknown",
               image: user.profileImageUrl,
             }}
           />
