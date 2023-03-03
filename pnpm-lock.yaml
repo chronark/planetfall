@@ -370,12 +370,6 @@ importers:
       '@types/node': 18.14.2
       typescript: 4.9.5
 
-  pkg/tinybird/apps/web:
-    specifiers:
-      '@next/font': ^13.2.3
-    dependencies:
-      '@next/font': 13.2.3
-
   pkg/tsconfig:
     specifiers: {}
 

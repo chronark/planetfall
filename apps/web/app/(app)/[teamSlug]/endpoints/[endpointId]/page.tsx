@@ -88,8 +88,8 @@ export default async function Page(props: {
   const degraded =
     checks && checks.length > 0
       ? (endpoint.degradedAfter
-        ? checks.filter((d) => d.latency && d.latency >= endpoint.degradedAfter!).length
-        : 0) / checks.length
+          ? checks.filter((d) => d.latency && d.latency >= endpoint.degradedAfter!).length
+          : 0) / checks.length
       : 1;
 
   return (
@@ -144,8 +144,8 @@ export default async function Page(props: {
                   endpoint.timeout && globalStats.p50 > endpoint.timeout
                     ? "error"
                     : endpoint.degradedAfter && globalStats.p50 > endpoint.degradedAfter
-                      ? "warn"
-                      : undefined
+                    ? "warn"
+                    : undefined
                 }
               />
               <Stats
@@ -156,8 +156,8 @@ export default async function Page(props: {
                   endpoint.timeout && globalStats.p95 > endpoint.timeout
                     ? "error"
                     : endpoint.degradedAfter && globalStats.p95 > endpoint.degradedAfter
-                      ? "warn"
-                      : undefined
+                    ? "warn"
+                    : undefined
                 }
               />
               <Stats
@@ -168,8 +168,8 @@ export default async function Page(props: {
                   endpoint.timeout && globalStats.p99 > endpoint.timeout
                     ? "error"
                     : endpoint.degradedAfter && globalStats.p99 > endpoint.degradedAfter
-                      ? "warn"
-                      : undefined
+                    ? "warn"
+                    : undefined
                 }
               />
             </div>

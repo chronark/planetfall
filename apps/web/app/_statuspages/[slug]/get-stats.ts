@@ -17,6 +17,9 @@ export async function getStats(endpoint: Endpoint) {
     };
   }
   for (const s of endpointSeries) {
+    if (!(s.regionId in regions)) {
+      continue;
+    }
     regions[s.regionId].series.push({
       regionId: s.regionId,
       time: s.time,
