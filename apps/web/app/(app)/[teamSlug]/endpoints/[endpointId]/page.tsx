@@ -81,7 +81,7 @@ export default async function Page(props: {
       time: e.time,
       error: e.error!,
       latency: e.latency,
-      region: endpoint.regions.find((r) => r.id === e.regionId)!.name,
+      region: endpoint.regions.find((r) => r.id === e.regionId)?.name ?? e.regionId,
     }));
 
   const availability = globalStats.count > 0 ? 1 - errors.length / globalStats.count : 1;

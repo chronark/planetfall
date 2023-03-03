@@ -132,6 +132,7 @@ model Team {
   pages              StatusPage[]
 
 
+  // webhookAlerts WebhookAlert[]
 
   @@index([slug])
 }
@@ -217,14 +218,11 @@ model Endpoint {
 
   pages StatusPage[]
 
-  checks Check[]
-
   @@index([teamId])
 }
 
 model Check {
-  id         String   @id
-  endpoint   Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  id         String @id
   endpointId String
 
   body     String?  @db.Text
