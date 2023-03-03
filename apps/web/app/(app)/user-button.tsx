@@ -1,13 +1,12 @@
 "use client";
 
-import { signOut } from "next-auth/react";
+import { useClerk } from "@clerk/nextjs/app-beta/client";
 import * as Dropdown from "@/components/dropdown";
 
 import React from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
-import { BookOpen, Settings, LogOut } from "lucide-react";
+import { Settings, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 type Props = {
   user: {
     name: string;
@@ -17,10 +16,11 @@ type Props = {
 };
 
 export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
-  const _router = useRouter();
+  const clerk = useClerk();
+  const router = useRouter();
   return (
     <Dropdown.DropdownMenu>
-      <Dropdown.DropdownMenuTrigger className="flex items-center justify-between px-2 py-1 rounded gap-4 duration-500 text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100">
+      <Dropdown.DropdownMenuTrigger className="flex items-center justify-between gap-4 px-2 py-1 duration-500 rounded text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100">
         <span className="text-sm ">{user.name}</span>
 
         <Avatar>
@@ -34,7 +34,7 @@ export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
       >
         {/* <Link
 					href="/docs"
-					className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium gap-4 rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+					className="flex items-center justify-between w-full gap-4 px-3 py-2 text-sm font-medium rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
 				>
 					<span className="truncate">Documentation</span>
 
@@ -43,7 +43,7 @@ export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
         <button
           disabled={true}
           // href={`/${personalTeam?.slug}`}
-          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium gap-4 rounded-md lg:gap-8 xl:gap-16 group text-zinc-400 "
+          className="flex items-center justify-between w-full gap-4 px-3 py-2 text-sm font-medium rounded-md lg:gap-8 xl:gap-16 group text-zinc-400 "
         >
           <span className="truncate">Settings</span>
 
@@ -52,8 +52,11 @@ export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
 
         <div className="w-full h-px border-t border-zinc-200" />
         <button
-          onClick={() => signOut()}
-          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium gap-4 rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+          onClick={async () => {
+            await clerk.signOut()
+            router.refresh()
+          }}
+          className="flex items-center justify-between w-full gap-4 px-3 py-2 text-sm font-medium rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
         >
           <span className="truncate">Sign Out</span>
 
