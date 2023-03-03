@@ -8,7 +8,7 @@ export default async function Home() {
     return redirect("/auth/sign-in");
   }
 
-  const team = await db.team.findFirst({
+  let team = await db.team.findFirst({
     where: {
       members: {
         some: {
@@ -20,7 +20,21 @@ export default async function Home() {
   });
 
   if (!team) {
-    notFound();
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    team = await db.team.findFirst({
+      where: {
+        members: {
+          some: {
+            userId,
+          },
+        },
+      },
+      take: 1,
+    });
+
   }
-  redirect(`/${team.slug}`);
+  if (!team) {
+    return notFound();
+  }
+  redirect(`/${team!.slug}`);
 }
