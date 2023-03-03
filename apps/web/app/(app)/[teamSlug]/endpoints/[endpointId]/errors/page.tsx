@@ -33,8 +33,8 @@ export const revalidate = 10;
 export default async function Page(props: {
   params: { teamSlug: string; endpointId: string };
 }) {
-    const {userId} =auth();
-  if(!userId){
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 

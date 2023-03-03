@@ -6,7 +6,6 @@ import { PageHeader } from "@/components/page/header";
 import { BillingCard } from "./BillingCard";
 import { TeamCard } from "./TeamCard";
 import { Divider } from "@/components/divider";
-import { getSession } from "@/lib/auth";
 import { DeleteCard } from "./DeleteCard";
 import { auth } from "@clerk/nextjs/app-beta";
 
@@ -69,7 +68,7 @@ export default async function SettingsPage(props: {
       <PageHeader
         sticky={true}
         title="Settings"
-      // description=""
+        // description=""
       />
       <main className="container mx-auto">
         <BillingCard

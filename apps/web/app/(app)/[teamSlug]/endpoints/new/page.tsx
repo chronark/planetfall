@@ -5,8 +5,8 @@ import { Form } from "./form";
 import { currentUser } from "@clerk/nextjs/app-beta";
 
 export default async function Page(props: { params: { teamSlug: string } }) {
-    const user =await currentUser();
-  if(!user){
+  const user = await currentUser();
+  if (!user) {
     return redirect("/auth/sign-in");
   }
 

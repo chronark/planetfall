@@ -17,8 +17,7 @@ const navigation = [
 export default async function PlayLayout(props: {
   children: React.ReactNode;
 }) {
-    const user =await currentUser();
-
+  const user = await currentUser();
 
   return (
     <div className="min-h-screen pb-8 bg-zinc-50 lg:pb-16">

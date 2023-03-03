@@ -101,8 +101,23 @@ resource "vercel_project" "web" {
       target = ["production", "preview", "development"]
     },
     {
-      key    = "PREVIEW_USER_PASSWORD"
-      value  = var.preview_user_password
+      key    = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
+      value  = var.clerk_publishable_key.production
+      target = ["production"]
+    },
+    {
+      key    = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
+      value  = var.clerk_publishable_key.preview
+      target = ["preview"]
+    },
+{
+      key    = "CLERK_SECRET_KEY"
+      value  = var.clerk_secret_key.production
+      target = ["production"]
+    },
+    {
+      key    = "CLERK_SECRET_KEY"
+      value  = var.clerk_secret_key.preview
       target = ["preview"]
     },
 

@@ -139,7 +139,20 @@ variable "fly_org" {
 }
 
 
-variable "preview_user_password" {
-  type      = string
+
+variable "clerk_publishable_key" {
+  type = object({
+    production = string
+    preview    = string
+  })
+
+}
+
+variable "clerk_secret_key" {
+  type = object({
+    production = string
+    preview    = string
+  })
   sensitive = true
+
 }

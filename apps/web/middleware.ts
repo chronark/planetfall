@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { withClerkMiddleware } from "@clerk/nextjs/server";
 
 export const config = {
-  matcher: "/((?!.*\\.).*)",
+  matcher: "/((?!_next|_static|_vercel|[\\w-]+\\.\\w+).*)",
 };
 
 function middleware(req: NextRequest) {

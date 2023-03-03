@@ -15,7 +15,7 @@ export const pageRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const team = await db.team.findUnique({
@@ -29,7 +29,7 @@ export const pageRouter = t.router({
         });
       }
 
-      if (!team.members.some((m) => m.userId === ctx.session!.user.id)) {
+      if (!team.members.some((m) => m.userId === ctx.user!.id)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });
@@ -58,7 +58,7 @@ export const pageRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const page = await db.statusPage.findUnique({
@@ -72,7 +72,7 @@ export const pageRouter = t.router({
         });
       }
 
-      if (!page.team.members.some((m) => m.userId === ctx.session!.user.id)) {
+      if (!page.team.members.some((m) => m.userId === ctx.user!.id)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });
@@ -99,7 +99,7 @@ export const pageRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const page = await db.statusPage.findUnique({
@@ -113,7 +113,7 @@ export const pageRouter = t.router({
         });
       }
 
-      if (!page.team.members.some((m) => m.userId === ctx.session!.user.id)) {
+      if (!page.team.members.some((m) => m.userId === ctx.user!.id)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });

@@ -173,8 +173,8 @@ export default async function Page(props: {
     return;
   }
 
-  const {userId} = await auth();
-  if(!userId){
+  const { userId } = await auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 

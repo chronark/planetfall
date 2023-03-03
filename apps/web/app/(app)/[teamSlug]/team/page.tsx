@@ -5,8 +5,8 @@ import { db } from "@planetfall/db";
 
 import { auth, currentUser } from "@clerk/nextjs/app-beta";
 export default async function Page(props: { params: { teamSlug: string } }) {
-    const {userId}=auth();
-  if(!userId){
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 

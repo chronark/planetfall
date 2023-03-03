@@ -1,14 +1,13 @@
 import { inferAsyncReturnType } from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getAuth } from "@clerk/nextjs/server";
 export async function createContext({ req, res }: trpcNext.CreateNextContextOptions) {
-  const session = await getServerSession(req, res, authOptions);
+  const { userId } = getAuth(req);
 
   return {
     req,
     res,
-    session,
+    user: userId ? { id: userId } : undefined,
   };
 }
 

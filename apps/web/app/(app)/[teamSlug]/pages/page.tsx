@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/card";
 import { Text } from "@/components/text";
 import { Plus } from "lucide-react";
 export default async function Page(props: { params: { teamSlug: string } }) {
-  const { userId } = auth()
+  const { userId } = auth();
   if (!userId) {
     return redirect("/auth/sign-in");
   }

@@ -12,7 +12,7 @@ import { Card, CardContent } from "@/components/card";
 import { Plus, PlusCircle, Settings } from "lucide-react";
 
 export default async function Page(props: { params: { teamSlug: string } }) {
-  const { userId } = auth()
+  const { userId } = auth();
   if (!userId) {
     return redirect("/auth/sign-in");
   }
