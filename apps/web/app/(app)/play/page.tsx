@@ -16,8 +16,8 @@ export default async function PlayPage(props: {
     where: { visible: true },
   });
 
-  const { session } = await getSession();
-  if (!session) {
+    const user =await currentUser();
+  if(!user){
     regions = regions.filter((r) => r.platform === "vercelEdge");
   }
 

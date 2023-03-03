@@ -6,14 +6,14 @@ import { Text } from "@/components/text";
 import { Button } from "@/components/button";
 import { EndpointsTable } from "./table";
 import { db } from "@planetfall/db";
-import { getSession } from "lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/card";
 import { Plus, PlusCircle, Settings } from "lucide-react";
 
 export default async function Page(props: { params: { teamSlug: string } }) {
-  const session = await getSession();
-  if (!session) {
+  const { userId } = auth()
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 
@@ -66,7 +66,7 @@ export default async function Page(props: { params: { teamSlug: string } }) {
             className="flex flex-col items-center justify-center max-w-sm p-4 mx-auto md:p-8"
           >
             <Text>You don&apos;t have any endpoints yet.</Text>
-            <Button size="lg" className="flex items-center mt-2 gap-2 ">
+            <Button size="lg" className="flex items-center gap-2 mt-2 ">
               <Plus className="w-5 h-5" />
               <Link href={`/${team.slug}/endpoints/new`}>Create your first Endpoint</Link>
             </Button>

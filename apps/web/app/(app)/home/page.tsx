@@ -1,10 +1,10 @@
 import { db } from "@planetfall/db";
-import { getSession } from "lib/auth";
+import { currentUser } from "@clerk/nextjs/app-beta";
 import { notFound, redirect } from "next/navigation";
 
 export default async function Home() {
-  const { session } = await getSession();
-  if (!session) {
+    const user =await currentUser();
+  if(!user){
     return redirect("/auth/sign-in");
   }
 

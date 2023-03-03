@@ -167,8 +167,6 @@ export const endpointRouter = t.router({
         },
       });
 
-
-
       return updatedEndpoint;
     }),
 

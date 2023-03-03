@@ -6,16 +6,16 @@ import { TeamSwitcher } from "./team-switcher";
 import { Breadcrumbs } from "./breadcrumbs";
 
 import { db } from "@planetfall/db";
-import { getSession } from "lib/auth";
+import { currentUser } from "@clerk/nextjs/app-beta";
 
 export type NavbarProps = {
   teamSlug: string;
 };
 
 export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
-  const { session } = await getSession();
+  const user = await currentUser();
 
-  if (!session) {
+  if (!user) {
     return redirect("/auth/sign-in");
   }
 
@@ -25,15 +25,10 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
     { name: "Playground", href: "/play" },
     { name: "Settings", href: `/${props.teamSlug}/settings` },
   ];
-  const user = await db.user.findUnique({ where: { id: session.user.id } });
-  if (!user) {
-    console.warn(__filename, "User not found");
-    notFound();
-  }
 
   const teams = await db.team.findMany({
     where: {
-      members: { some: { userId: session.user.id } },
+      members: { some: { userId: user.id } },
     },
   });
 
@@ -60,9 +55,9 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
           />
           <UserButton
             user={{
-              email: user.email,
-              name: user.name,
-              image: user.image,
+              email: user.emailAddresses[0]?.emailAddress,
+              name: user.username!,
+              image: user.profileImageUrl,
             }}
           />
         </div>

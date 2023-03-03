@@ -8,14 +8,15 @@ import { TeamCard } from "./TeamCard";
 import { Divider } from "@/components/divider";
 import { getSession } from "@/lib/auth";
 import { DeleteCard } from "./DeleteCard";
+import { auth } from "@clerk/nextjs/app-beta";
 
 export const revalidate = 60; // 1 minute
 
 export default async function SettingsPage(props: {
   params: { teamSlug: string };
 }) {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 
@@ -32,7 +33,7 @@ export default async function SettingsPage(props: {
   if (!team) {
     return notFound();
   }
-  const user = team.members.find((m) => m.userId === session.user.id);
+  const user = team.members.find((m) => m.userId === userId);
   if (!user) {
     return notFound();
   }
@@ -68,7 +69,7 @@ export default async function SettingsPage(props: {
       <PageHeader
         sticky={true}
         title="Settings"
-        // description=""
+      // description=""
       />
       <main className="container mx-auto">
         <BillingCard

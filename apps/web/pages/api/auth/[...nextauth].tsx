@@ -107,7 +107,7 @@ export const authOptions: NextAuthOptions = {
         where: { sessionToken },
         include: { user: true },
       });
-      if (!session) {
+      if(!user){
         return null;
       }
       return {

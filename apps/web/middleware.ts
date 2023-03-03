@@ -1,8 +1,9 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { withClerkMiddleware } from "@clerk/nextjs/server";
 
 export const config = {
-  matcher: "/((?!_next|_static|_vercel|api|play|[\\w-]+\\.\\w+).*)",
+  matcher: "/((?!.*\\.).*)",
 };
 
 function middleware(req: NextRequest) {
@@ -29,4 +30,4 @@ function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-export default middleware;
+export default withClerkMiddleware(middleware);

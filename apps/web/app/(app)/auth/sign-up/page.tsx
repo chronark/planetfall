@@ -1,10 +1,10 @@
 import { auth } from "@clerk/nextjs/app-beta";
 import { redirect } from "next/navigation";
-import { SignIn } from "@clerk/nextjs/app-beta";
+import { SignUp } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 
-export default function SignInpage() {
+export default function SignUppage() {
   const { userId } = auth();
   if (userId) {
     return redirect("/home");
@@ -20,7 +20,7 @@ export default function SignInpage() {
             <h3 className="text-xl font-semibold">Sign In</h3>
             <div className="flex flex-col w-full gap-4">
               <p className="text-sm text-zinc-500">Use your GitHub account to sign in.</p>
-              <SignIn signUpUrl="/auth/sign-up" />
+              <SignUp signInUrl="/auth/sign-in" />
             </div>
           </div>
         </div>
