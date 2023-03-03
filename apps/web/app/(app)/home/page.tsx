@@ -19,6 +19,7 @@ export default async function Home() {
     take: 1,
   });
 
+  // Wait for the team to be created in case the user just signed up
   if (!team) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     team = await db.team.findFirst({
@@ -31,7 +32,6 @@ export default async function Home() {
       },
       take: 1,
     });
-
   }
   if (!team) {
     return notFound();
