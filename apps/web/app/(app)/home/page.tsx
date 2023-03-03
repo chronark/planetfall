@@ -31,7 +31,6 @@ export default async function Home() {
       },
       take: 1,
     });
-
   }
   if (!team) {
     return notFound();

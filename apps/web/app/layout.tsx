@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs/app-beta";
+import { Chat } from "./chat";
 
 export const metadata: Metadata = {
   title: {
@@ -50,7 +51,15 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
-const crispyScript = `window.$crisp=[];window.CRISP_WEBSITE_ID="36468086-4e2e-4499-8b8d-32238bb2831c";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();`;
+const plainScript = `
+window.$plain = window.$plain || [];
+typeof plain === 'undefined' && (plain = function () { $plain.push(arguments); });
+
+plain("init", {
+  appKey: "appKey_uk_01GTMCKHYR6PD0WKNB61TQ0WS0"
+});
+
+`
 
 export default function RootLayout({
   children,
@@ -64,16 +73,20 @@ export default function RootLayout({
         <meta name="description" content="Global Latency Monitoring" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/logo.svg" />
+        <Script async src="https://customer-chat.cdn-plain.com/latest/customerChat.js" />
+
         <Script
           id="crispy-script"
-          dangerouslySetInnerHTML={{ __html: crispyScript }}
+          dangerouslySetInnerHTML={{ __html: plainScript }}
           strategy="lazyOnload"
         />
+
       </head>
       <ClerkProvider>
         <body className={process.env.NODE_ENV === "development" ? "debug-screens" : undefined}>
           {children}
           <Analytics />
+          {/* <Chat/> */}
         </body>
       </ClerkProvider>
     </html>
