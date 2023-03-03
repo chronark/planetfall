@@ -278,17 +278,17 @@ resource "vercel_project_domain" "wildcard" {
 
 
 
-data "vercel_project_directory" "root" {
-  path = "../"
-}
+# data "vercel_project_directory" "root" {
+#   path = "../"
+# }
 
 
-resource "vercel_deployment" "planetfall" {
-  project_id  = vercel_project.web.id
-  team_id     = var.vercel_team_id
-  files       = data.vercel_project_directory.root.files
-  path_prefix = data.vercel_project_directory.root.path
-}
+# resource "vercel_deployment" "planetfall" {
+#   project_id  = vercel_project.web.id
+#   team_id     = var.vercel_team_id
+#   files       = data.vercel_project_directory.root.files
+#   path_prefix = data.vercel_project_directory.root.path
+# }
 
 
 
