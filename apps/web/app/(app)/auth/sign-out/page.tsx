@@ -13,7 +13,7 @@ export default function SignUppage() {
       <Button
         onClick={async () => {
           setLoading(true);
-          await clerk.signOut
+          await clerk.signOut()
           router.refresh()
 
           setLoading(false);
