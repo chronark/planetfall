@@ -131,6 +131,7 @@ model Team {
   endpoints          Endpoint[]
   pages              StatusPage[]
 
+
   // webhookAlerts WebhookAlert[]
 
   @@index([slug])

@@ -9,7 +9,7 @@ import { Heading } from "@/components/heading";
 import ms from "ms";
 import { Text } from "@/components/text";
 import { HeaderTable } from "./header-table";
-import { getSession } from "lib/auth";
+import { auth, currentUser } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
 import { Tag } from "@/components/tag";
 import { AlertCircle, Check } from "lucide-react";
@@ -173,8 +173,8 @@ export default async function Page(props: {
     return;
   }
 
-  const session = await getSession();
-  if (!session) {
+  const { userId } = await auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 

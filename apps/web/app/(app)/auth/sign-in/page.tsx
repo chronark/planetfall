@@ -1,18 +1,8 @@
-import { asyncComponent } from "lib/api/component";
-import { getSession } from "lib/auth";
-import { redirect } from "next/navigation";
-import { Form } from "./Form";
-
-export default asyncComponent(async () => {
-  const { session } = await getSession();
-  if (session) {
-    return redirect("/home");
-  }
+import { SignIn } from "@clerk/nextjs/app-beta";
+export default function SignInpage() {
   return (
-    <div className="flex flex-col justify-center min-h-screen bg-gradient-to-tr from-zinc-100 to-white">
-      <main className="relative flex items-center justify-center h-full">
-        <Form />
-      </main>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tr from-zinc-100 to-white">
+      <SignIn signUpUrl="/auth/sign-up" redirectUrl="/home" />
     </div>
   );
-});
+}

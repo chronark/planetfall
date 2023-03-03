@@ -3,15 +3,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@planetfall/db";
 import { Role } from "@chronark/access";
 import { hashToken, roles, Statements } from "lib/auth";
-import { getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getAuth } from "@clerk/nextjs/server";
 
-export async function getRole(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions);
-  if (session) {
+export async function getRole(req: NextApiRequest, _res: NextApiResponse) {
+  const { userId } = getAuth(req);
+  if (userId) {
     return {
       role: roles.root,
-      userId: session.user.id,
+      userId,
     };
   }
 

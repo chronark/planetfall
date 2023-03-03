@@ -10,7 +10,8 @@ export function address(): string {
 }
 
 const schema = z.object({
-  PREVIEW_USER_PASSWORD: z.string().optional(),
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
+  CLERK_SECRET_KEY: z.string(),
   VERCEL_ENV: z.enum(["development", "preview", "production"]).optional(),
   VERCEL_URL: z.string().optional(),
   DATABASE_URL: z.string(),

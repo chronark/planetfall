@@ -1,6 +1,6 @@
 import { Button } from "@/components/button";
 import { db } from "@planetfall/db";
-import { getSession } from "lib/auth";
+import { currentUser } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
 import { Breadcrumbs } from "../breadcrumbs";
 import { DesktopNavbar } from "../navbar-desktop";
@@ -17,9 +17,7 @@ const navigation = [
 export default async function PlayLayout(props: {
   children: React.ReactNode;
 }) {
-  const { session } = await getSession();
-
-  const user = session ? await db.user.findUnique({ where: { id: session.user.id } }) : null;
+  const user = await currentUser();
 
   return (
     <div className="min-h-screen pb-8 bg-zinc-50 lg:pb-16">
@@ -30,9 +28,9 @@ export default async function PlayLayout(props: {
             {user ? (
               <UserButton
                 user={{
-                  email: user.email,
-                  name: user.name,
-                  image: user.image,
+                  email: user.emailAddresses[0]?.emailAddress,
+                  name: user.username!,
+                  image: user.profileImageUrl,
                 }}
               />
             ) : (
