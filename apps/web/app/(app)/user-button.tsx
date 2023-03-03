@@ -18,6 +18,7 @@ type Props = {
 export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
   const clerk = useClerk();
   const router = useRouter();
+  console.log({user})
   return (
     <Dropdown.DropdownMenu>
       <Dropdown.DropdownMenuTrigger className="flex items-center justify-between gap-4 px-2 py-1 duration-500 rounded text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100">
