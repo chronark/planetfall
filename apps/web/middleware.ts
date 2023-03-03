@@ -44,8 +44,8 @@ function middleware(req: NextRequest) {
       signInUrl.searchParams.set("redirect_url", req.url);
       return NextResponse.redirect(signInUrl);
     }
-    return NextResponse.next();
   }
+  return NextResponse.next();
 }
 
 export default withClerkMiddleware(middleware);
