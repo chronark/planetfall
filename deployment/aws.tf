@@ -641,31 +641,3 @@ module "check_runner_eu_south_1" {
 
 
 
-
-
-output "urls" {
-  value = [
-    module.check_runner_af_south_1.url,
-    module.check_runner_ap_east_1.url,
-    module.check_runner_ap_northeast_1.url,
-    module.check_runner_ap_northeast_2.url,
-    module.check_runner_ap_northeast_3.url,
-    module.check_runner_ap_south_1.url,
-    module.check_runner_ap_southeast_1.url,
-    module.check_runner_ap_southeast_2.url,
-    module.check_runner_ap_southeast_3.url,
-    module.check_runner_ca_central_1.url,
-    module.check_runner_eu_central_1.url,
-    module.check_runner_eu_north_1.url,
-    module.check_runner_eu_south_1.url,
-    module.check_runner_eu_west_1.url,
-    module.check_runner_eu_west_2.url,
-    module.check_runner_eu_west_3.url,
-    module.check_runner_me_south_1.url,
-    module.check_runner_sa_east_1.url,
-    module.check_runner_us_east_1.url,
-    module.check_runner_us_east_2.url,
-    module.check_runner_us_west_1.url,
-    module.check_runner_us_west_2.url,
-  ]
-}
