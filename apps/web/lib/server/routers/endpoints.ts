@@ -148,6 +148,7 @@ export const endpointRouter = t.router({
       const updatedEndpoint = await db.endpoint.update({
         where: { id: input.endpointId },
         data: {
+          updatedAt: new Date(),
           method: input.method,
           name: input.name,
           url: input.url,
@@ -206,6 +207,7 @@ export const endpointRouter = t.router({
         where: { id: input.endpointId },
         data: {
           active: !endpoint.active,
+          updatedAt: new Date(),
         },
       });
     }),
