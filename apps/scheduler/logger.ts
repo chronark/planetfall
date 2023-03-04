@@ -7,6 +7,7 @@ export class Logger {
   constructor() {
     this.logger = new tslog.Logger({
       type: process.env.NODE_ENV === "production" ? "json" : "pretty",
+      // minLevel: 3, // info and above
     });
 
     const axiomToken = process.env.AXIOM_TOKEN;
@@ -19,6 +20,10 @@ export class Logger {
 
       this.logger.attachTransport((logObj) => axiom.ingestEvents("scheduler", [logObj]));
     }
+  }
+
+  public debug(message: string, fields?: Record<string, unknown>) {
+    this.logger.debug({ message, ...fields });
   }
   public info(message: string, fields?: Record<string, unknown>) {
     this.logger.info({ message, ...fields });

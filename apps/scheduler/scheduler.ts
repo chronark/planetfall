@@ -7,8 +7,8 @@ import { Notifications } from "./notifications";
 import { Stripe } from "stripe";
 
 export class Scheduler {
-  // Map of endpoint id -> clearInterval function
-  private clearIntervals: Map<string, () => void>;
+  // key: endpointId
+  private endpoints: Map<string, { updatedAt: number; intervalId: NodeJS.Timeout }>;
   private db: PrismaClient;
   private updatedAt = 0;
   private logger: Logger;
@@ -20,7 +20,7 @@ export class Scheduler {
   constructor({ logger, notifications }: { logger: Logger; notifications: Notifications }) {
     this.db = new PrismaClient();
     this.tinybird = new tb.Client();
-    this.clearIntervals = new Map();
+    this.endpoints = new Map();
     this.logger = logger;
     this.regions = {};
     this.notifications = notifications;
@@ -39,8 +39,7 @@ export class Scheduler {
   }
 
   public async syncEndpoints(): Promise<void> {
-    this.logger.info("Syncing endpoints");
-    const now = new Date();
+    this.logger.warn("Syncing endpoints");
 
     const want: Record<string, Endpoint> = {};
 
@@ -77,7 +76,7 @@ export class Scheduler {
       });
       const totalUsage = usage.reduce((sum, u) => sum + u.usage, 0);
 
-      this.logger.info("evaluating team usage", {
+      this.logger.debug("evaluating team usage", {
         teamId: t.id,
         totalUsage,
       });
@@ -86,7 +85,7 @@ export class Scheduler {
         this.logger.info("team has exceeded monthly requests", {
           teamId: t.id,
           maxMonthlyRequests: t.maxMonthlyRequests,
-          usage,
+          totalUsage,
         });
 
         continue;
@@ -99,7 +98,7 @@ export class Scheduler {
       }
     }
 
-    for (const endpointId of Object.keys(this.clearIntervals)) {
+    for (const endpointId of Object.keys(this.endpoints)) {
       if (!want[endpointId]) {
         this.logger.info("endpoint needs to be removed", { endpointId });
         this.removeEndpoint(endpointId);
@@ -108,25 +107,28 @@ export class Scheduler {
     }
 
     for (const endpoint of Object.values(want)) {
-      if (this.clearIntervals.has(endpoint.id)) {
-        // if it was updated since the last time
-        if (endpoint.updatedAt.getTime() > this.updatedAt) {
-          this.logger.info("endpoint needs to be updated", {
-            endpointId: endpoint.id,
-            updatedAt: endpoint.updatedAt,
-          });
-          this.removeEndpoint(endpoint.id);
-          this.addEndpoint(endpoint.id);
-          this.logger.info("endpoint updated", { endpointId: endpoint.id });
-        }
-      } else {
-        this.addEndpoint(endpoint.id);
+      const active = this.endpoints.get(endpoint.id);
+      if (!active) {
+        this.logger.info("endpoint needs to be added", { endpointId: endpoint.id });
+        await this.addEndpoint(endpoint.id);
+        this.logger.info("endpoint added", { endpointId: endpoint.id });
+        continue;
+      }
+
+      if (endpoint.updatedAt.getTime() > active.updatedAt) {
+        this.logger.info("endpoint needs to be updated", {
+          endpointId: endpoint.id,
+          updatedAt: endpoint.updatedAt,
+          activeUpdatedAt: active.updatedAt,
+        });
+        this.removeEndpoint(endpoint.id);
+        await this.addEndpoint(endpoint.id);
+        this.logger.info("endpoint updated", { endpointId: endpoint.id });
       }
     }
 
-    this.updatedAt = now.getTime();
-    this.logger.info("Synced endpoints", {
-      totalEndpoints: this.clearIntervals.size,
+    this.logger.warn("Synced endpoints", {
+      totalEndpoints: this.endpoints.size,
     });
   }
 
@@ -145,16 +147,16 @@ export class Scheduler {
     this.removeEndpoint(endpoint.id);
     this.testEndpoint(endpoint);
     const intervalId = setInterval(() => this.testEndpoint(endpoint), endpoint.interval);
-    this.clearIntervals.set(endpoint.id, () => clearInterval(intervalId));
+    this.endpoints.set(endpoint.id, { updatedAt: endpoint.updatedAt.getTime(), intervalId });
   }
 
   public removeEndpoint(endpointId: string): void {
     this.logger.info("removing endpoint", { endpointId });
 
-    const clear = this.clearIntervals.get(endpointId);
-    if (clear) {
-      clear();
-      this.clearIntervals.delete(endpointId);
+    const endpoint = this.endpoints.get(endpointId);
+    if (endpoint) {
+      clearInterval(endpoint.intervalId);
+      this.endpoints.delete(endpointId);
     }
   }
 
@@ -177,7 +179,7 @@ export class Scheduler {
         endpoint.distribution === "ALL"
           ? endpoint.regions
           : [endpoint.regions[Math.floor(Math.random() * endpoint.regions.length)]];
-      this.logger.info("testing endpoint", {
+      this.logger.debug("testing endpoint", {
         endpointId: endpoint.id,
         regions: regions.map((r) => r.id),
       });
@@ -195,7 +197,7 @@ export class Scheduler {
             region = res;
             this.regions[regionId] = res;
           }
-          this.logger.info("testing endpoint", {
+          this.logger.debug("testing endpoint", {
             endpointId: endpoint.id,
             regionId: region.id,
           });
@@ -288,7 +290,7 @@ export class Scheduler {
             };
           });
           for (const d of data) {
-            this.logger.info("storing check", { checkId: d.id });
+            this.logger.debug("storing check", { checkId: d.id });
           }
 
           await this.db.check.createMany({ data }).catch((err) => {
