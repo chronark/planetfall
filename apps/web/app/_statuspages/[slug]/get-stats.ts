@@ -17,17 +17,18 @@ export async function getStats(endpoint: Endpoint) {
     };
   }
   for (const s of endpointSeries) {
-    regions[s.regionId].series.push({
-      regionId: s.regionId,
-      time: s.time,
-      count: s.count ?? 0,
-      p50: s.p50 ?? 0,
-      p95: s.p95 ?? 0,
-      p99: s.p99 ?? 0,
-      errors: s.errors ?? 0,
-    });
+    if (regions[s.regionId]) {
+      regions[s.regionId].series.push({
+        regionId: s.regionId,
+        time: s.time,
+        count: s.count ?? 0,
+        p50: s.p50 ?? 0,
+        p95: s.p95 ?? 0,
+        p99: s.p99 ?? 0,
+        errors: s.errors ?? 0,
+      });
+    }
   }
-  console.log({ regions });
 
   return regions;
 }

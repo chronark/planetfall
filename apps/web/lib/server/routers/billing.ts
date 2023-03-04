@@ -68,7 +68,6 @@ export const billingRouter = t.router({
           },
         });
       }
-      console.log({ team });
       const checkoutSession = await stripe.checkout.sessions.create({
         customer: team.stripeCustomerId!, // we just created it, so we know it exists
         mode: "setup",

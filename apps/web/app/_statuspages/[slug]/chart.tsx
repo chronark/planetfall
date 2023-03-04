@@ -178,7 +178,6 @@ const Chart: React.FC<{
   timeout?: number;
 }> = ({ series, height, degradedAfter }): JSX.Element => {
   const p99 = Math.max(...series.map((m) => m.p99));
-  console.log({ series });
   let t = new Date();
   t.setMinutes(0);
   t.setSeconds(0);

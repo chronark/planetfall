@@ -54,6 +54,7 @@ export class Scheduler {
         endpoints: true,
       },
     });
+
     for (const t of teams) {
       if (t.plan === "DISABLED") {
         this.logger.info("Skipping team with DISABLED plan", {
@@ -100,16 +101,23 @@ export class Scheduler {
 
     for (const endpointId of Object.keys(this.clearIntervals)) {
       if (!want[endpointId]) {
+        this.logger.info("endpoint needs to be removed", { endpointId });
         this.removeEndpoint(endpointId);
+        this.logger.info("endpoint removed", { endpointId });
       }
     }
 
     for (const endpoint of Object.values(want)) {
-      if (endpoint.id in this.clearIntervals) {
+      if (this.clearIntervals.has(endpoint.id)) {
         // if it was updated since the last time
         if (endpoint.updatedAt.getTime() > this.updatedAt) {
+          this.logger.info("endpoint needs to be updated", {
+            endpointId: endpoint.id,
+            updatedAt: endpoint.updatedAt,
+          });
           this.removeEndpoint(endpoint.id);
           this.addEndpoint(endpoint.id);
+          this.logger.info("endpoint updated", { endpointId: endpoint.id });
         }
       } else {
         this.addEndpoint(endpoint.id);
@@ -128,7 +136,6 @@ export class Scheduler {
       where: { id: endpointId },
       include: {
         regions: true,
-        team: true,
       },
     });
     if (!endpoint) {
