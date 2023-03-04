@@ -18,6 +18,7 @@ model User {
   sessions       Session[]
   teams          Membership[]
   createdAt      DateTime     @default(now())
+  usageUpdatedAt DateTime?     @default(now())
 
   teamInvitations TeamInvitation[]
 }
