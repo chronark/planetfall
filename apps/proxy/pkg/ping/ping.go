@@ -104,8 +104,10 @@ func check(ctx context.Context, client *http.Client, input checkRequest) (Respon
 	if err != nil {
 		return Response{}, err
 	}
+	req.Header.Set("User-Agent", "planetfall/1.0")
+
 	for key, value := range input.Headers {
-		req.Header.Add(key, value)
+		req.Header.Set(key, value)
 	}
 	trace := &httptrace.ClientTrace{
 		DNSStart:          func(_ httptrace.DNSStartInfo) { timing.DnsStart = time.Now().UnixMilli() },

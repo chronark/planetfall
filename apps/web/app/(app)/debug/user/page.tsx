@@ -2,6 +2,7 @@ import { Button } from "@/components/button";
 import { getSession } from "@/lib/auth";
 import { db } from "@planetfall/db";
 import { Link } from "lucide-react";
+import { Email } from "@planetfall/emails";
 
 export default async function DebugUserPage() {
   const { session } = await getSession();
@@ -23,6 +24,15 @@ export default async function DebugUserPage() {
       teams: true,
     },
   });
+
+  const email = new Email();
+  // not awaited
+  email
+    .sendDebugEvent({
+      time: Date.now(),
+      data: { session, user },
+    })
+    .catch((e) => console.error(e));
 
   return (
     <div className="flex items-center justify-center w-screen min-h-screen">

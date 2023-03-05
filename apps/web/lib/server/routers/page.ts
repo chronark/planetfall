@@ -20,12 +20,34 @@ export const pageRouter = t.router({
       }
       const team = await db.team.findUnique({
         where: { id: input.teamId },
-        include: { members: true },
+        select: {
+          id: true,
+          maxTimeout: true,
+          maxPages: true,
+          _count: {
+            select: {
+              pages: true,
+            },
+          },
+          members: {
+            select: {
+              userId: true,
+              role: true,
+            },
+          },
+        },
       });
       if (!team) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "endpoint not found",
+        });
+      }
+
+      if (team._count.pages >= (team.maxPages ?? 5)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You have reached your endpoint limit",
         });
       }
 

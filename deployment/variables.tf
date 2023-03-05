@@ -95,32 +95,6 @@ variable "nextauth_secret_preview" {
   sensitive = true
 }
 
-variable "proton_verification" {
-  type      = string
-  sensitive = true
-}
-variable "proton_spf" {
-  type      = string
-  sensitive = true
-}
-
-
-variable "proton_domainkey" {
-  type      = string
-  sensitive = true
-}
-variable "proton_domainkey2" {
-  type      = string
-  sensitive = true
-}
-variable "proton_domainkey3" {
-  type      = string
-  sensitive = true
-}
-variable "proton_dmarc" {
-  type      = string
-  sensitive = true
-}
 variable "git_credentials" {
   type      = string
   sensitive = true
@@ -140,6 +114,11 @@ variable "fly_org" {
 
 
 variable "preview_user_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "resend_api_key" {
   type      = string
   sensitive = true
 }

@@ -45,9 +45,25 @@ export const endpointRouter = t.router({
         where: {
           id: input.teamId,
         },
+        select: {
+          id: true,
+          maxTimeout: true,
+          maxEndpoints: true,
+          _count: {
+            select: {
+              endpoints: true,
+            },
+          },
+        },
       });
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND", message: "team not found" });
+      }
+      if (team._count.endpoints >= team.maxEndpoints) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You have reached your endpoint limit",
+        });
       }
 
       if (input.timeout && input.timeout > team.maxTimeout) {
