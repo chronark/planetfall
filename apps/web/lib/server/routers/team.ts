@@ -1,19 +1,12 @@
 import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
-import { date, z } from "zod";
+import { z } from "zod";
 import { t } from "../trpc";
 import { db } from "@planetfall/db";
 import slugify from "slugify";
-import { maxHeaderSize } from "http";
 import { DEFAULT_QUOTA } from "plans";
-import { env } from "@/lib/env";
-import Stripe from "stripe";
-import { Client as Tinybird } from "@planetfall/tinybird";
 import { createInvoice } from "@/lib/billing/stripe";
-
-const _stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2022-11-15",
-});
+import { Email } from "@planetfall/emails";
 
 export const teamRouter = t.router({
   create: t.procedure
@@ -78,7 +71,11 @@ export const teamRouter = t.router({
           id: input.teamId,
         },
         include: {
-          members: true,
+          members: {
+            include: {
+              user: true,
+            },
+          },
         },
       });
       if (!team) {
@@ -104,14 +101,17 @@ export const teamRouter = t.router({
         });
       }
 
-      await db.teamInvitation.upsert({
+      const invitation = await db.teamInvitation.upsert({
         where: {
           teamId_userId: {
             teamId: input.teamId,
             userId: invitedUser.id,
           },
         },
-        update: {},
+        update: {
+          // extend the invitation
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        },
         create: {
           id: newId("invitation"),
           team: {
@@ -126,6 +126,15 @@ export const teamRouter = t.router({
           },
           expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
         },
+      });
+
+      await new Email().sendTeamInvitation({
+        to: invitedUser.email,
+        username: invitedUser.name,
+        team: team.name,
+        invitedFrom: currentUser.user.name,
+
+        inviteLink: `https://planetfall/invite/${invitation.id}`,
       });
     }),
   updateMember: t.procedure

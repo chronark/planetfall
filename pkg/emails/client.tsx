@@ -2,6 +2,7 @@ import { render } from "@react-email/render";
 import { Resend } from "resend";
 import { EndpointAlert } from "./emails/EndpointAlert";
 import { DebugEvent } from "./emails/DebugEvent";
+import TeamInvitation from "./emails/TeamInvitation";
 export class Email {
   private client: Resend;
 
@@ -51,6 +52,28 @@ export class Email {
       from: "chronark@planetfall.io",
       to: "debug@planetfall.io",
       subject: "Planetfall Debug Event",
+      html,
+    });
+  }
+  public async sendTeamInvitation(opts: {
+    to: string;
+    team: string;
+    username: string;
+    inviteLink: string;
+    invitedFrom: string;
+  }) {
+    const html = render(
+      <TeamInvitation
+        invitedFrom={opts.invitedFrom}
+        team={opts.team}
+        username={opts.username}
+        inviteLink={opts.inviteLink}
+      />,
+    );
+    return await this.client.sendEmail({
+      from: "andreas@planetfall.io",
+      to: opts.to,
+      subject: "Planetfall Team Invitation",
       html,
     });
   }

@@ -88,6 +88,7 @@ export default async function SettingsPage(props: {
 
         <Divider />
         <TeamCard
+          teamId={team.id}
           currentUser={{ userId: user.userId, role: user.role }}
           members={team.members.map((m) => ({
             user: { id: m.userId, name: m.user.name, image: m.user.image },

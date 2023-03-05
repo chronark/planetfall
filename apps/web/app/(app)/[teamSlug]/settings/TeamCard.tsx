@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Card,
@@ -33,8 +33,13 @@ import {
 } from "@/components/dialog";
 import { Tag } from "@/components/tag";
 import Image from "next/image";
+import { Input } from "@/components/input";
+import { trpc } from "@/lib/utils/trpc";
+import { useToast, Toaster } from "@/components/toast";
+import { Loading } from "@/components/loading";
 
 type Props = {
+  teamId: string;
   currentUser: {
     userId: string;
     role: MemberRole;
@@ -49,8 +54,12 @@ type Props = {
   }[];
 };
 
-export const TeamCard: React.FC<Props> = ({ members, currentUser }): JSX.Element => {
+export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX.Element => {
   const { accessor } = createColumnHelper<Props["members"][0]>();
+
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const columns = [
     accessor("user", {
@@ -104,12 +113,40 @@ export const TeamCard: React.FC<Props> = ({ members, currentUser }): JSX.Element
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Dang, I&apos;m too slow to ship new features</DialogTitle>
-            <DialogDescription>
-              Sorry this isn&apos;t available yet. I&apos;m working on it! Send an email to
-              andreas@planetfall.io and I&apos;ll manually add your teammates.
-            </DialogDescription>
+            <DialogTitle>Send an invitation</DialogTitle>
           </DialogHeader>
+
+          <Text>
+            Send an invitation to join this team. The user will receive an email and be able to join
+            the team.
+          </Text>
+
+          <form
+            className="flex items-center gap-4"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setLoading(true);
+              await trpc.team.createInvitation.mutate({
+                teamId: teamId,
+                email: inviteEmail,
+              });
+              setLoading(false);
+              toast.addToast({
+                title: "Invitation sent",
+                content: `An email has been sent to ${inviteEmail}`,
+              });
+            }}
+          >
+            <Input
+              type="email"
+              placeholder="user@email.com"
+              value={inviteEmail}
+              onChange={(v) => setInviteEmail(v.currentTarget.value)}
+            />
+            <Button type="submit" variant="primary">
+              {loading ? <Loading /> : "Invite"}
+            </Button>
+          </form>
         </DialogContent>
       </Dialog>,
     );
