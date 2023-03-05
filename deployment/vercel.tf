@@ -106,8 +106,8 @@ resource "vercel_project" "web" {
       target = ["preview"]
     },
     {
-      key = "RESEND_API_KEY"
-      value = var.resend_api_key,
+      key    = "RESEND_API_KEY"
+      value  = var.resend_api_key,
       target = ["production", "preview", "development"]
 
     }
