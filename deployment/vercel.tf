@@ -140,36 +140,18 @@ resource "vercel_project_domain" "wildcard" {
 
 
 
-data "vercel_project_directory" "root" {
-  path = "../"
-}
+# data "vercel_project_directory" "root" {
+#   path = "../"
+# }
 
 
-resource "vercel_deployment" "planetfall" {
-  project_id  = vercel_project.web.id
-  team_id     = var.vercel_team_id
-  files       = data.vercel_project_directory.root.files
-  path_prefix = data.vercel_project_directory.root.path
-}
-
-
-
+# resource "vercel_deployment" "planetfall" {
+#   project_id  = vercel_project.web.id
+#   team_id     = var.vercel_team_id
+#   files       = data.vercel_project_directory.root.files
+#   path_prefix = data.vercel_project_directory.root.path
+# }
 
 
 
-resource "vercel_project" "nextjs_13_appdir" {
-  name      = "planetfall-nextjs-13-appdir"
-  team_id   = var.vercel_team_id
-  framework = "nextjs"
-
-
-  build_command              = "cd ../.. && pnpm turbo run build --filter=nextjs13-appdir"
-  root_directory             = "apps/nextjs13-appdir"
-  serverless_function_region = "fra1"
-
-  git_repository = {
-    repo = "chronark/planetfall"
-    type = "github"
-  }
-}
 
