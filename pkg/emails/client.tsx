@@ -1,6 +1,7 @@
 import { render } from "@react-email/render";
 import { Resend } from "resend";
 import { EndpointAlert } from "./emails/EndpointAlert";
+import { DebugEvent } from "./emails/DebugEvent";
 export class Email {
   private client: Resend;
 
@@ -38,6 +39,18 @@ export class Email {
       from: "chronark@planetfall.io",
       to: opts.to,
       subject: "Planetfall Endpoint Alert",
+      html,
+    });
+  }
+  public async sendDebugEvent(opts: {
+    time: number;
+    data: Record<string, unknown>;
+  }) {
+    const html = render(<DebugEvent time={opts.time} data={opts.data} />);
+    return await this.client.sendEmail({
+      from: "chronark@planetfall.io",
+      to: "debug@planetfall.io",
+      subject: "Planetfall Debug Event",
       html,
     });
   }

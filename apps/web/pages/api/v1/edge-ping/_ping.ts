@@ -35,7 +35,10 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
         url: req.urls[i],
         method: req.method,
         body: req.body,
-        headers: req.headers,
+        headers: {
+          "User-Agent": "planetfall/1.0",
+          ...req.headers,
+        },
         timeout: req.timeout,
       };
       // 1 retry if the request fails
