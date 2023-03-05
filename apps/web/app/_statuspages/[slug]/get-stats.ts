@@ -7,7 +7,7 @@ export async function getStats(endpoint: Endpoint) {
 
   const [endpointStats, endpointSeries] = await Promise.all([
     tinybird.getEndpointStats(endpoint.id),
-    tinybird.getEndpointStatsPerHour(endpoint.id),
+    tinybird.getEndpointStatsPerDay(endpoint.id),
   ]);
 
   for (const metrics of endpointStats) {
