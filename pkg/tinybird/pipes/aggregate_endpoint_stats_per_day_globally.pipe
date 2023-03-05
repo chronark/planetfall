@@ -1,0 +1,25 @@
+VERSION 1
+
+DESCRIPTION >
+    Aggregate endpoint stats globally per day
+
+TOKEN "live" READ
+
+NODE aggreagate_endpoint_daily
+SQL >
+    SELECT
+        endpointId,
+        toStartOfDay(time) AS time,
+        COUNTState() AS count,
+        quantileTimingState(0.5)(latency) AS p50,
+        quantileTimingState(0.95)(latency) AS p95,
+        quantileTimingState(0.99)(latency) AS p99,
+        COUNTState(error) AS errors,
+        'global' as regionId
+    FROM checks__v1
+    GROUP BY time, endpointId, regionId
+
+TYPE MATERIALIZED
+DATASOURCE endpoint_stats_per_day__v1
+ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "endpointId,regionId,time"
