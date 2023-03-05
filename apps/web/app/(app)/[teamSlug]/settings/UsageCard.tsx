@@ -33,7 +33,7 @@ type Props = {
   month: number;
 };
 
-export const BillingCard: React.FC<Props> = ({
+export const UsageCard: React.FC<Props> = ({
   usagePercentage,
   team,
   usage,
@@ -44,14 +44,16 @@ export const BillingCard: React.FC<Props> = ({
     <Card>
       <CardHeader>
         <CardHeaderTitle
-          title="Billing"
+          title="Usage"
           subtitle={
             <Text>
-              You are currently on the{" "}
-              <Tag variant="outline" size="sm">
-                {team.plan}
-              </Tag>{" "}
-              plan.
+              Current billing cycle:{" "}
+              <strong>
+                {new Date(year, month - 1, 1).toLocaleString(undefined, {
+                  month: "long",
+                })}{" "}
+                {year}
+              </strong>{" "}
             </Text>
           }
         />
@@ -72,7 +74,7 @@ export const BillingCard: React.FC<Props> = ({
                 ]} */}
       <CardContent>
         <div className="flex justify-around py-4 divide-x divide-zinc-200">
-          <div className="flex flex-col w-1/3 gap-2 px-8">
+          <div className="flex flex-col w-1/2 gap-2 px-8">
             <Text size="xl">Current Usage</Text>
             <Text>
               {usage.toLocaleString()} / {team.maxMonthlyRequests?.toLocaleString() ?? "∞"}{" "}
@@ -92,7 +94,7 @@ export const BillingCard: React.FC<Props> = ({
             ) : null}
           </div>
 
-          <div className="flex flex-col w-1/3 gap-2 px-8">
+          <div className="flex flex-col w-1/2 gap-2 px-8">
             <Text size="xl">Cost</Text>
             <Text>
               $
@@ -101,37 +103,8 @@ export const BillingCard: React.FC<Props> = ({
               })}
             </Text>
           </div>
-          <div className="flex flex-col w-1/3 gap-2 px-8">
-            <Text size="xl">Current Billing Cycle</Text>
-            <Text>
-              {new Date(year, month - 1, 1).toLocaleString(undefined, {
-                month: "long",
-              })}{" "}
-              {year}
-            </Text>
-          </div>
         </div>
       </CardContent>
-
-      <CardFooter>
-        <span>
-          Upgrade for{" "}
-          <Link
-            href="/pricing"
-            target="_blank"
-            className="border-b border-primary-500 text-primary-600 hover:text-zinc-900"
-          >
-            increased limits
-          </Link>
-          .
-        </span>
-
-        <CardFooterActions>
-          <UpgradeButton team={team} />
-          <DowngradeButton team={team} />
-          <BillingButton teamId={team.id} stripeCustomerId={team.stripeCustomerId} />
-        </CardFooterActions>
-      </CardFooter>
     </Card>
   );
 };

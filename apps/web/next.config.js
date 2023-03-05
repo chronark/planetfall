@@ -10,6 +10,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
     esmExternals: "loose",
+    // typedRoutes: true,
     serverComponentsExternalPackages: ["@planetfall/db", "@prisma/client"],
   },
   webpack: (config) => {

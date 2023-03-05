@@ -110,7 +110,8 @@ export const billingRouter = t.router({
       if (locked) {
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",
-          message: "You can only change your plan once a day",
+          message:
+            "You can only change your plan once a day. If this is an emergency, please contact support@planetfall.io",
         });
       }
 

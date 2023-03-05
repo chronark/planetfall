@@ -2,8 +2,7 @@ import React from "react";
 import { Client as Tinybird } from "@planetfall/tinybird";
 import { db } from "@planetfall/db";
 import { notFound, redirect } from "next/navigation";
-import { PageHeader } from "@/components/page/header";
-import { BillingCard } from "./BillingCard";
+import { UsageCard } from "./UsageCard";
 import { TeamCard } from "./TeamCard";
 import { Divider } from "@/components/divider";
 import { getSession } from "@/lib/auth";
@@ -65,13 +64,8 @@ export default async function SettingsPage(props: {
 
   return (
     <div>
-      <PageHeader
-        sticky={true}
-        title="Settings"
-        // description=""
-      />
       <main className="container mx-auto">
-        <BillingCard
+        <UsageCard
           team={{
             id: team.id,
             name: team.name,
