@@ -9,6 +9,18 @@ import { RelativeTime } from "./RelativeTime";
 
 export const revalidate = 60;
 
+/**
+ * New deployments will purge the cache.
+ * But we don't want to have slow status pages for new deployments.
+ * So we regenerate all of them during the build process.
+ */
+export async function generateStaticParams() {
+  const statusPages = await db.statusPage.findMany({
+    select: { slug: true },
+  });
+  return statusPages.map((s) => ({ slug: s.slug }));
+}
+
 export default async function Page(props: { params: { slug: string } }) {
   const now = Date.now();
   const statusPage = await db.statusPage.findUnique({
