@@ -119,6 +119,7 @@ export const Row: React.FC<{
         <div className="flex flex-col -mt-4 space-y-2">
           <div className="sm:hidden">
             <Chart
+              withXAxis
               series={resizeSeries(endpoint.stats["global"]?.series ?? [], 30, "global")}
               degradedAfter={endpoint.degradedAfter}
               timeout={endpoint.timeout}
@@ -126,6 +127,7 @@ export const Row: React.FC<{
           </div>
           <div className="hidden sm:block md:hidden">
             <Chart
+              withXAxis
               series={resizeSeries(endpoint.stats["global"]?.series ?? [], 60, "global")}
               degradedAfter={endpoint.degradedAfter}
               timeout={endpoint.timeout}
@@ -133,6 +135,7 @@ export const Row: React.FC<{
           </div>
           <div className="hidden md:block">
             <Chart
+              withXAxis
               series={resizeSeries(endpoint.stats["global"]?.series ?? [], 90, "global")}
               degradedAfter={endpoint.degradedAfter}
               timeout={endpoint.timeout}
@@ -161,22 +164,42 @@ export const Row: React.FC<{
               .map(([region, { metrics, series }]) => (
                 <li
                   key={region}
-                  className="flex items-center justify-between w-full gap-4 p-2 border rounded border-zinc-200"
+                  className="flex flex-col items-center justify-between w-full gap-4 p-2 border rounded md:flex-row border-zinc-200"
                 >
-                  <div className="flex flex-col items-start justify-between space-y-2 ">
+                  <div className="flex flex-col items-center justify-between space-y-2 md:items-start md:w-2/5 lg:w-1/4">
                     <h4 className="text-lg text-bold text-zinc-600 whitespace-nowrap">{region}</h4>
-                    <div className="flex flex-wrap items-center justify-start w-full gap-2 sm:gap-4 md:flex-nowrap">
+                    <div className="flex items-center justify-center w-full gap-2 md:justify-start sm:gap-4 ">
                       <Stat label="p50" value={metrics.p50} />
                       <Stat label="p95" value={metrics.p95} />
                       <Stat label="p99" value={metrics.p99} />
                     </div>
                   </div>
-                  <Chart
-                    height="h-12"
-                    series={series}
-                    degradedAfter={endpoint.degradedAfter}
-                    timeout={endpoint.timeout}
-                  />
+                  <div className="w-full md:w-3/5 lg:w-3/4">
+                    <div className="sm:hidden">
+                      <Chart
+                        height="h-12"
+                        series={resizeSeries(series, 30, region)}
+                        degradedAfter={endpoint.degradedAfter}
+                        timeout={endpoint.timeout}
+                      />
+                    </div>
+                    <div className="hidden sm:block md:hidden">
+                      <Chart
+                        height="h-12"
+                        series={resizeSeries(series, 60, region)}
+                        degradedAfter={endpoint.degradedAfter}
+                        timeout={endpoint.timeout}
+                      />
+                    </div>
+                    <div className="hidden md:block">
+                      <Chart
+                        height="h-12"
+                        series={resizeSeries(series, 90, region)}
+                        degradedAfter={endpoint.degradedAfter}
+                        timeout={endpoint.timeout}
+                      />
+                    </div>
+                  </div>
                 </li>
               ))}
           </ul>
@@ -191,7 +214,8 @@ const Chart: React.FC<{
   series: MetricOverTime[];
   degradedAfter?: number;
   timeout?: number;
-}> = ({ series, height, degradedAfter }): JSX.Element => {
+  withXAxis?: boolean;
+}> = ({ series, height, degradedAfter, withXAxis }): JSX.Element => {
   const p99 = Math.max(...series.map((m) => m.p99));
   let t = new Date();
   t.setMinutes(0);
@@ -269,10 +293,12 @@ const Chart: React.FC<{
           );
         })}
       </div>
-      <div className="flex items-center justify-between mt-1">
-        <span className="text-xs font-medium text-zinc-500">{series.length} Days ago</span>
-        <span className="text-xs font-medium text-zinc-500">Today</span>
-      </div>
+      {withXAxis ? (
+        <div className="flex items-center justify-between mt-1">
+          <span className="text-xs font-medium text-zinc-500">{series.length} Days ago</span>
+          <span className="text-xs font-medium text-zinc-500">Today</span>
+        </div>
+      ) : null}
     </div>
   );
 };
