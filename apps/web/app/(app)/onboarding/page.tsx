@@ -17,39 +17,37 @@ export default async function OnboardingPage() {
     : newAnimalId();
 
 
-  const user = await db.user.upsert({
-    where: {
-      id: clerkUser.id,
-    },
-    update: {
-      email: clerkUser.emailAddresses[0].emailAddress,
-      name: slug,
-    },
-    create: {
-      id: clerkUser.id,
-      name: slug,
-      email: clerkUser.emailAddresses[0].emailAddress,
-    },
-  });
-
-
-  const team = await db.team.create({
+  const user = await db.user.create({
     data: {
-      id: newId("team"),
-      name: "Personal",
-      slug,
-      maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
-      maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
-      maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
-      maxPages: DEFAULT_QUOTA.FREE.maxStatusPages,
-      plan: "FREE",
-      members: {
+      id: clerkUser.id,
+      name: slug,
+      email: clerkUser.emailAddresses[0].emailAddress,
+      teams: {
         create: {
-          userId: user.id,
           role: "OWNER",
-        },
-      },
+          team: {
+            create: {
+              id: newId("team"),
+              name: "Personal",
+              slug,
+              maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
+              maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
+              maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
+              maxPages: DEFAULT_QUOTA.FREE.maxStatusPages,
+              plan: "FREE",
+            }
+          }
+        }
+      }
     },
+    include:{
+      teams: {
+        include: {
+          team: true
+        }
+      }
+    }
   });
-  return redirect(`/${team.slug}`);
+
+  return redirect(`/${user.teams[0].team.slug}`);
 }
