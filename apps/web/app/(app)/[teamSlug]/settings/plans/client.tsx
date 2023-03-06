@@ -148,9 +148,7 @@ export const ClientPage: React.FC<Props> = ({ team }): JSX.Element => {
     },
   ];
   return (
-    <ToastProvider>
-      <Toaster />
-
+    <>
       <div className="max-w-md mx-auto space-y-8 md:hidden">
         {tiers.map((tier) => (
           <section key={tier.name} className='p-8'>
@@ -311,6 +309,6 @@ export const ClientPage: React.FC<Props> = ({ team }): JSX.Element => {
           </table>
         </div>
       </div>
-    </ToastProvider>
+    </>
   );
 };
