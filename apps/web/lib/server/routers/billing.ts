@@ -15,69 +15,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const redis = Redis.fromEnv();
 
 export const billingRouter = t.router({
-  setup: t.procedure
-    .input(
-      z.object({
-        teamId: z.string(),
-      }),
-    )
-    .query(async ({ input, ctx }) => {
-      if (!ctx.session) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
 
-      let team = await db.team.findUnique({
-        where: { id: input.teamId },
-        include: {
-          members: {
-            where: {
-              userId: ctx.session.user.id,
-            },
-          },
-        },
-      });
-
-      if (!team) {
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
-
-      if (!team.stripeCustomerId) {
-        const user = await db.user.findUnique({
-          where: { id: ctx.session.user.id },
-        });
-        if (!user) {
-          throw new TRPCError({ code: "NOT_FOUND" });
-        }
-        const customer = await stripe.customers.create({
-          email: user.email,
-          name: team.name,
-        });
-
-        team = await db.team.update({
-          where: { id: team.id },
-          data: {
-            trialExpires: null,
-            stripeCustomerId: customer.id,
-          },
-          include: {
-            members: {
-              where: {
-                userId: ctx.session.user.id,
-              },
-            },
-          },
-        });
-      }
-      const checkoutSession = await stripe.checkout.sessions.create({
-        customer: team.stripeCustomerId!, // we just created it, so we know it exists
-        mode: "setup",
-        payment_method_types: ["card"],
-        success_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
-        cancel_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
-      });
-
-      return { url: checkoutSession.url };
-    }),
   changePlan: t.procedure
     .input(
       z.object({
@@ -158,6 +96,9 @@ export const billingRouter = t.router({
         where: { id: input.teamId },
         include: {
           members: {
+            include: {
+              user: true
+            },
             where: {
               userId: ctx.session.user.id,
             },
@@ -168,9 +109,26 @@ export const billingRouter = t.router({
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
+      if (!team.stripeCustomerId) {
+        const customer = await stripe.customers.create({
+          email: team.members[0].user.email,
+          name: team.name,
+        })
+
+        // @ts-ignore We don't return all the fields, but we don't need them anyways
+        // Fixing the type would require useless db lookups
+        team = await db.team.update({
+          where: {
+            id: team.id
+          },
+          data: {
+            stripeCustomerId: customer.id
+          }
+        })
+      }
 
       const portal = await stripe.billingPortal.sessions.create({
-        customer: team.stripeCustomerId!,
+        customer: team!.stripeCustomerId!,
         return_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
       });
 
