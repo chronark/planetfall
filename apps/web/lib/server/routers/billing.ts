@@ -6,6 +6,7 @@ import { db } from "@planetfall/db";
 import Stripe from "stripe";
 import { Redis } from "@upstash/redis";
 import { createInvoice } from "@/lib/billing/stripe";
+import { DEFAULT_QUOTA } from "plans";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2022-11-15",
@@ -76,6 +77,11 @@ export const billingRouter = t.router({
         where: { id: team.id },
         data: {
           plan: input.plan,
+          maxEndpoints: DEFAULT_QUOTA[input.plan].maxEndpoints,
+          maxMonthlyRequests: DEFAULT_QUOTA[input.plan].maxMonthlyRequests,
+          maxTimeout: DEFAULT_QUOTA[input.plan].maxTimeout,
+          maxPages: DEFAULT_QUOTA[input.plan].maxStatusPages,
+
         },
       });
       await redis.set(redisLockKey, true, { ex: 60 * 60 * 24 });

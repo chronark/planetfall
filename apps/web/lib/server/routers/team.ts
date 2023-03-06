@@ -55,6 +55,7 @@ export const teamRouter = t.router({
           },
           maxEndpoints: DEFAULT_QUOTA.PRO.maxEndpoints,
           maxMonthlyRequests: DEFAULT_QUOTA.PRO.maxMonthlyRequests,
+          maxPages: DEFAULT_QUOTA.PRO.maxStatusPages,
           maxTimeout: DEFAULT_QUOTA.PRO.maxTimeout,
           plan: "PRO",
         },
