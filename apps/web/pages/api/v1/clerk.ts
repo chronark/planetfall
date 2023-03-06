@@ -1,9 +1,9 @@
 import { db } from "@planetfall/db";
-import { newId } from "@planetfall/id";
+import { newId, newAnimalId } from "@planetfall/id";
 import { NextApiRequest, NextApiResponse } from "next";
 import { DEFAULT_QUOTA } from "plans";
-import slugify from "slugify";
 import { z } from "zod";
+import { env } from "@/lib/env";
 
 const validation = z.object({
   data: z.object({
@@ -28,6 +28,9 @@ const validation = z.object({
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+    if (req.headers.authorization !== env.CLERK_WEBHOOK_SECRET){
+      return res.status(401).send("unauthorized");
+    }
     const v = validation.safeParse(req.body);
     if (!v.success) {
       console.error(JSON.stringify(v.error, null, 2));
@@ -56,13 +59,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     if (v.data.type === "user.created") {
-      const slug = slugify(v.data.data.username!, { lower: true, strict: true });
-
       await db.team.create({
         data: {
           id: newId("team"),
           name: user.name,
-          slug: slug,
+          slug: newAnimalId(),
           members: {
             create: {
               role: "OWNER",

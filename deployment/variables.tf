@@ -142,4 +142,8 @@ variable "clerk_publishable_key" {
   })
   
 }
+variable "clerk_webhook_secret"{
+  type = string
+  sensitive = true
+}
 
