@@ -3,6 +3,7 @@ import { Analytics } from "app/components/analytics";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import { Metadata } from "next";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {
@@ -64,7 +65,7 @@ export default function RootLayout({
         <link rel="icon" href="/logo.svg" />
       </head>
       <body className={process.env.NODE_ENV === "development" ? "debug-screens" : undefined}>
-        {children}
+        <Providers>{children}</Providers>
         <Analytics />
       </body>
     </html>
