@@ -12,10 +12,8 @@ export default async function OnboardingPage() {
     return redirect("/auth/sign-in");
   }
 
-  const slug = clerkUser.username
-    ? slugify(clerkUser.username, { lower: true, trim: true })
-    : newAnimalId();
-    
+
+
   const user = await db.user.upsert({
     where: {
       id: clerkUser.id,
@@ -31,22 +29,14 @@ export default async function OnboardingPage() {
     },
   });
 
-  const existingTeam = await db.team.findFirst({
-    where: {
-      slug,
-    },
-    include: {
-      members: true,
-    },
-  });
-  if (existingTeam?.members.find((m) => m.userId === clerkUser.id)) {
-    return redirect(`/${existingTeam.slug}`);
-  }
+  const slug = clerkUser.username
+    ? slugify(clerkUser.username, { lower: true, trim: true })
+    : newAnimalId();
 
   const team = await db.team.create({
     data: {
       id: newId("team"),
-      name: existingTeam ? newAnimalId() : slug,
+      name: "Personal",
       slug,
       maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
       maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
