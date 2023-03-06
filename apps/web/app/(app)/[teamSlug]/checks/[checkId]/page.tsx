@@ -192,7 +192,7 @@ export default async function Page(props: {
         description={new Date(check.time).toUTCString()}
         actions={[
           <Tag key="check" variant="outline" size="sm">
-            {endpoint.url}
+            {endpoint?.url}
           </Tag>,
         ]}
       />
