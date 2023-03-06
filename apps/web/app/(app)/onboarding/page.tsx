@@ -4,6 +4,7 @@ import { newAnimalId } from "@planetfall/id";
 import { newId } from "@planetfall/id";
 import { redirect } from "next/navigation";
 import { DEFAULT_QUOTA } from "plans";
+import slugify from "slugify";
 
 export default async function OnboardingPage() {
   const clerkUser = await currentUser();
@@ -11,53 +12,54 @@ export default async function OnboardingPage() {
     return redirect("/auth/sign-in");
   }
 
-  const slug = newAnimalId();
-  let user = await db.user.findUnique({
+  const slug = clerkUser.username
+    ? slugify(clerkUser.username, { lower: true, trim: true })
+    : newAnimalId();
+    
+  const user = await db.user.upsert({
     where: {
       id: clerkUser.id,
     },
+    update: {
+      email: clerkUser.emailAddresses[0].emailAddress,
+      name: slug,
+    },
+    create: {
+      id: clerkUser.id,
+      name: slug,
+      email: clerkUser.emailAddresses[0].emailAddress,
+    },
+  });
+
+  const existingTeam = await db.team.findFirst({
+    where: {
+      slug,
+    },
     include: {
-      teams: {
-        include: {
-          team: true,
+      members: true,
+    },
+  });
+  if (existingTeam?.members.find((m) => m.userId === clerkUser.id)) {
+    return redirect(`/${existingTeam.slug}`);
+  }
+
+  const team = await db.team.create({
+    data: {
+      id: newId("team"),
+      name: existingTeam ? newAnimalId() : slug,
+      slug,
+      maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
+      maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
+      maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
+      maxPages: DEFAULT_QUOTA.FREE.maxStatusPages,
+      plan: "FREE",
+      members: {
+        create: {
+          userId: user.id,
+          role: "OWNER",
         },
       },
     },
   });
-
-  if (!user) {
-    user = await db.user.create({
-      data: {
-        id: clerkUser.id,
-        name: clerkUser.username ?? slug,
-        email: clerkUser.emailAddresses[0].emailAddress,
-        teams: {
-          create: {
-            role: "OWNER",
-            team: {
-              create: {
-                id: newId("team"),
-                name: clerkUser.username ?? slug,
-                slug,
-                maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
-                maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
-                maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
-                maxPages: DEFAULT_QUOTA.FREE.maxStatusPages,
-                plan: "FREE",
-              },
-            },
-          },
-        },
-      },
-      include: {
-        teams: {
-          include: {
-            team: true,
-          },
-        },
-      },
-    });
-  }
-
-  redirect(`/${user.teams[0].team.slug}`);
+  return redirect(`/${team.slug}`);
 }
