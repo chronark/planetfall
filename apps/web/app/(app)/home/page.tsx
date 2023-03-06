@@ -8,6 +8,8 @@ export default async function Home() {
     return redirect("/auth/sign-in");
   }
 
+  console.log({ userId })
+
   const team = await db.team.findFirst({
     where: {
       members: {
