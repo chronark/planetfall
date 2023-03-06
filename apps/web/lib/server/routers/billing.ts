@@ -24,7 +24,7 @@ export const billingRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
@@ -33,7 +33,7 @@ export const billingRouter = t.router({
         include: {
           members: {
             where: {
-              userId: ctx.session.user.id,
+              userId: ctx.user.id,
             },
           },
         },
@@ -92,7 +92,7 @@ export const billingRouter = t.router({
       }),
     )
     .query(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
@@ -104,7 +104,7 @@ export const billingRouter = t.router({
               user: true,
             },
             where: {
-              userId: ctx.session.user.id,
+              userId: ctx.user.id,
             },
           },
         },

@@ -1,12 +1,12 @@
 import { Button } from "@/components/button";
-import { getSession } from "@/lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
 import { Link } from "lucide-react";
 import { Email } from "@planetfall/emails";
 
 export default async function DebugUserPage() {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId, session } = auth();
+  if (!userId) {
     return (
       <div className="flex items-center justify-center w-screen min-h-screen">
         <Link href="/auth/sign-in">
@@ -19,7 +19,7 @@ export default async function DebugUserPage() {
   }
 
   const user = await db.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: userId },
     include: {
       teams: true,
     },

@@ -1,4 +1,3 @@
-export * from "./authorize";
 export * from "./call";
 export * from "./component";
 export * from "./error";

@@ -1,4 +1,4 @@
-import { getSession } from "lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 import { redirect } from "next/navigation";
 import { Banner } from "@/components/banner";
 import Link from "next/link";
@@ -11,8 +11,8 @@ export default async function SettingsLayout(props: {
   children: React.ReactNode;
   params: { teamSlug: string };
 }) {
-  const session = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 

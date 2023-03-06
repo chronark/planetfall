@@ -8,7 +8,7 @@ import { ErrorsTable } from "./table";
 import { Heading } from "@/components/heading";
 import { LatestTable } from "../latest-table";
 import { DeleteButton } from "../delete";
-import { getSession } from "lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 import { Button } from "@/components/button";
 import { Toggle } from "../toggle";
 import { Text } from "@/components/text";
@@ -26,15 +26,14 @@ import {
   CardHeaderTitle,
 } from "@/components/card";
 import { Divider } from "@/components/divider";
-import { AlertCircle } from "lucide-react";
 
 export const revalidate = 10;
 
 export default async function Page(props: {
   params: { teamSlug: string; endpointId: string };
 }) {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 
@@ -57,7 +56,7 @@ export default async function Page(props: {
 
   if (
     endpoint.team.slug !== props.params.teamSlug ||
-    !endpoint.team.members.find((m) => m.userId === session.user.id)
+    !endpoint.team.members.find((m) => m.userId === userId)
   ) {
     return notFound();
   }

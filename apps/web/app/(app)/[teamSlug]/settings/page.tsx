@@ -1,19 +1,16 @@
 import React from "react";
-import { Client as Tinybird } from "@planetfall/tinybird";
 import { db } from "@planetfall/db";
 import { notFound, redirect } from "next/navigation";
 import { TeamCard } from "./TeamCard";
 import { Divider } from "@/components/divider";
-import { getSession } from "@/lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 import { DeleteCard } from "./DeleteCard";
-
-export const revalidate = 60; // 1 minute
 
 export default async function SettingsPage(props: {
   params: { teamSlug: string };
 }) {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 
@@ -30,7 +27,7 @@ export default async function SettingsPage(props: {
   if (!team) {
     return notFound();
   }
-  const user = team.members.find((m) => m.userId === session.user.id);
+  const user = team.members.find((m) => m.userId === userId);
   if (!user) {
     return notFound();
   }

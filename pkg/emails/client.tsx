@@ -36,7 +36,7 @@ export class Email {
       />,
     );
     return await this.client.sendEmail({
-      from: "chronark@planetfall.io",
+      from: "alerts@planetfall.io",
       to: opts.to,
       subject: "Planetfall Endpoint Alert",
       html,
@@ -48,7 +48,7 @@ export class Email {
   }) {
     const html = render(<DebugEvent time={opts.time} data={opts.data} />);
     return await this.client.sendEmail({
-      from: "chronark@planetfall.io",
+      from: "alerts@planetfall.io",
       to: "debug@planetfall.io",
       subject: "Planetfall Debug Event",
       html,

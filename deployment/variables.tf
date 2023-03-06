@@ -122,3 +122,24 @@ variable "resend_api_key" {
   type      = string
   sensitive = true
 }
+
+variable "clerk_secret_key" {
+  type = object({
+    production = string
+    preview    = string
+    development = string
+  })
+  sensitive = true
+}
+
+
+variable "clerk_publishable_key" {
+  type = object({
+    production = string
+    preview    = string
+        development = string
+
+  })
+  
+}
+

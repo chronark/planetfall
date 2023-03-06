@@ -1,12 +1,12 @@
 import PageHeader from "@/components/page/header";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { TeamTable } from "./table";
 import { db } from "@planetfall/db";
 
-import { getSession } from "lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 export default async function Page(props: { params: { teamSlug: string } }) {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 
@@ -23,10 +23,10 @@ export default async function Page(props: { params: { teamSlug: string } }) {
     },
   });
   if (!team) {
-    redirect("/home");
+    return notFound();
   }
-  if (!team.members.some((m) => m.userId === session.user.id)) {
-    redirect("/home");
+  if (!team.members.some((m) => m.userId === userId)) {
+    return notFound();
   }
 
   return (
