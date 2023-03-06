@@ -2,7 +2,6 @@ import React from "react";
 import { Client as Tinybird } from "@planetfall/tinybird";
 import { db } from "@planetfall/db";
 import { notFound, redirect } from "next/navigation";
-import { UsageCard } from "./UsageCard";
 import { TeamCard } from "./TeamCard";
 import { Divider } from "@/components/divider";
 import { getSession } from "@/lib/auth";
@@ -52,35 +51,9 @@ export default async function SettingsPage(props: {
   //     }
   // }
 
-  const now = new Date();
-  const year = now.getUTCFullYear();
-  const month = now.getUTCMonth() + 1;
-
-  const usage = await new Tinybird().getUsage(team.id, {
-    year,
-    month,
-  });
-  const totalUsage = usage.reduce((total, curr) => total + curr.usage, 0);
-
   return (
     <div>
       <main className="container mx-auto">
-        <UsageCard
-          team={{
-            id: team.id,
-            name: team.name,
-            plan: team.plan,
-            maxMonthlyRequests: team.maxMonthlyRequests,
-            trialExpires: team.trialExpires,
-            stripeCustomerId: team.stripeCustomerId,
-          }}
-          usage={totalUsage}
-          usagePercentage={(totalUsage / team.maxMonthlyRequests) * 100}
-          year={year}
-          month={month}
-        />
-
-        <Divider />
         <TeamCard
           currentUser={{ userId: user.userId, role: user.role }}
           members={team.members.map((m) => ({
