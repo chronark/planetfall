@@ -66,6 +66,7 @@ export const authOptions: NextAuthOptions = {
                   maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
                   maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
                   maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
+                  maxPages: DEFAULT_QUOTA.FREE.maxStatusPages,
                   plan: "FREE",
                 },
               },

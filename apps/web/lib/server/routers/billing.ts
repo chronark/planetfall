@@ -81,7 +81,6 @@ export const billingRouter = t.router({
           maxMonthlyRequests: DEFAULT_QUOTA[input.plan].maxMonthlyRequests,
           maxTimeout: DEFAULT_QUOTA[input.plan].maxTimeout,
           maxPages: DEFAULT_QUOTA[input.plan].maxStatusPages,
-
         },
       });
       await redis.set(redisLockKey, true, { ex: 60 * 60 * 24 });
