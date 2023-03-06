@@ -3,7 +3,8 @@ import { Client as Tinybird, Metric, MetricOverTime } from "@planetfall/tinybird
 
 export async function getStats(endpoint: Endpoint) {
   const tinybird = new Tinybird();
-  const regions: Record<string, { metrics: Metric; series: MetricOverTime[] }> = {};
+  const regions: Record<string, { regionId: string; metrics: Metric; series: MetricOverTime[] }> =
+    {};
 
   const [endpointStats, endpointSeries] = await Promise.all([
     tinybird.getEndpointStats(endpoint.id),
@@ -12,6 +13,7 @@ export async function getStats(endpoint: Endpoint) {
 
   for (const metrics of endpointStats) {
     regions[metrics.regionId] = {
+      regionId: metrics.regionId,
       metrics,
       series: [],
     };
@@ -30,5 +32,5 @@ export async function getStats(endpoint: Endpoint) {
     }
   }
 
-  return regions;
+  return Object.values(regions);
 }

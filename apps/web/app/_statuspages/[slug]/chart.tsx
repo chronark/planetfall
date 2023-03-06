@@ -9,6 +9,9 @@ import { CardContent, CardHeader, Card } from "@/components/card";
 import cn from "classnames";
 import { Text } from "@/components/text";
 import { Metric, MetricOverTime } from "@planetfall/tinybird";
+import { Platform } from "@planetfall/db";
+import { AwsLambda } from "@/components/icons/AwsLambda";
+import { VercelEdge } from "@/components/icons/VercelEdge";
 function format(n: number): string {
   return Intl.NumberFormat(undefined).format(Math.round(n));
 }
@@ -52,35 +55,38 @@ export const Row: React.FC<{
     url: string;
     degradedAfter?: number;
     timeout?: number;
-    stats: Record<
-      string,
-      {
-        series: MetricOverTime[];
-        metrics: Metric;
-      }
-    >;
+    stats: {
+      region: {
+        id: string;
+        name: string;
+        platform: Platform;
+      };
+      series: MetricOverTime[];
+      metrics: Metric;
+    }[];
   };
 }> = ({ endpoint, nBuckets = 90 }): JSX.Element => {
   const [expanded, setExpanded] = useState(false);
 
-  const totalChecks = endpoint.stats["global"]?.metrics.count ?? 0;
-  const errors = endpoint.stats["global"]?.metrics.errors ?? 0;
+  const globalStats = endpoint.stats.find((s) => s.region.id === "global");
+  const totalChecks = globalStats?.metrics.count ?? 0;
+  const errors = globalStats?.metrics.errors ?? 0;
   const availability = totalChecks === 0 ? 1 : 1 - errors / totalChecks;
 
   const current =
-    endpoint.stats["global"]?.series.at(-1) && endpoint.stats["global"]?.series.at(-1)!.errors > 0
+    globalStats?.series.at(-1) && globalStats?.series.at(-1)!.errors > 0
       ? "Error"
       : endpoint.degradedAfter &&
-        endpoint.stats["global"].series.at(-1) &&
-        endpoint.stats["global"].series.at(-1)!.p99 > endpoint.degradedAfter
+        globalStats?.series.at(-1) &&
+        globalStats?.series.at(-1)!.p99 > endpoint.degradedAfter
       ? "Degraded"
       : "Operational";
 
-  for (const regionId of Object.keys(endpoint.stats)) {
-    endpoint.stats[regionId].series = resizeSeries(
-      endpoint.stats[regionId].series,
+  for (let i = 0; i < endpoint.stats.length; i++) {
+    endpoint.stats[i].series = resizeSeries(
+      endpoint.stats[i].series,
       nBuckets,
-      regionId,
+      endpoint.stats[i].region.name,
     );
   }
 
@@ -91,9 +97,9 @@ export const Row: React.FC<{
           <div className="flex flex-col items-start justify-between w-full gap-2 md:items-center md:flex-row">
             <Heading h3>{endpoint.name}</Heading>
             <div className="flex items-center justify-start gap-2 md:gap-4">
-              <Stat label="p50" value={endpoint.stats["global"]?.metrics.p50 ?? 0} />
-              <Stat label="p95" value={endpoint.stats["global"]?.metrics.p95 ?? 0} />
-              <Stat label="p99" value={endpoint.stats["global"]?.metrics.p99 ?? 0} />
+              <Stat label="p50" value={globalStats?.metrics.p50 ?? 0} />
+              <Stat label="p95" value={globalStats?.metrics.p95 ?? 0} />
+              <Stat label="p99" value={globalStats?.metrics.p99 ?? 0} />
             </div>
           </div>
 
@@ -120,7 +126,7 @@ export const Row: React.FC<{
           <div className="sm:hidden">
             <Chart
               withXAxis
-              series={resizeSeries(endpoint.stats["global"]?.series ?? [], 30, "global")}
+              series={resizeSeries(globalStats?.series ?? [], 30, "global")}
               degradedAfter={endpoint.degradedAfter}
               timeout={endpoint.timeout}
             />
@@ -128,7 +134,7 @@ export const Row: React.FC<{
           <div className="hidden sm:block md:hidden">
             <Chart
               withXAxis
-              series={resizeSeries(endpoint.stats["global"]?.series ?? [], 60, "global")}
+              series={resizeSeries(globalStats?.series ?? [], 60, "global")}
               degradedAfter={endpoint.degradedAfter}
               timeout={endpoint.timeout}
             />
@@ -136,7 +142,7 @@ export const Row: React.FC<{
           <div className="hidden md:block">
             <Chart
               withXAxis
-              series={resizeSeries(endpoint.stats["global"]?.series ?? [], 90, "global")}
+              series={resizeSeries(globalStats?.series ?? [], 90, "global")}
               degradedAfter={endpoint.degradedAfter}
               timeout={endpoint.timeout}
             />
@@ -158,27 +164,34 @@ export const Row: React.FC<{
         </div>
 
         {expanded ? (
-          <ul className="flex flex-col gap-4 py-8">
-            {Object.entries(endpoint.stats)
-              .filter(([region]) => region !== "global")
-              .map(([region, { metrics, series }]) => (
+          <ul className="flex flex-col gap-4 py-8 divide-y divide-zinc-200">
+            {endpoint.stats
+              .filter(({ region }) => region.id !== "global")
+              .map((r) => (
                 <li
-                  key={region}
-                  className="flex flex-col items-center justify-between w-full gap-4 p-2 border rounded md:flex-row border-zinc-200"
+                  key={r.region.id}
+                  className="flex flex-col items-center justify-between w-full gap-4 p-2 md:flex-row "
                 >
                   <div className="flex flex-col items-center justify-between space-y-2 md:items-start md:w-2/5 lg:w-1/4">
-                    <h4 className="text-lg text-bold text-zinc-600 whitespace-nowrap">{region}</h4>
+                    <h4 className="flex items-center gap-2 text-lg text-bold text-zinc-600 whitespace-nowrap">
+                      {r.region.platform === "aws" ? (
+                        <AwsLambda className="w-4 h-4" />
+                      ) : r.region.platform === "vercelEdge" ? (
+                        <VercelEdge className="w-4 h-4" />
+                      ) : null}
+                      {r.region.name}
+                    </h4>
                     <div className="flex items-center justify-center w-full gap-2 md:justify-start sm:gap-4 ">
-                      <Stat label="p50" value={metrics.p50} />
-                      <Stat label="p95" value={metrics.p95} />
-                      <Stat label="p99" value={metrics.p99} />
+                      <Stat label="p50" value={r.metrics.p50} />
+                      <Stat label="p95" value={r.metrics.p95} />
+                      <Stat label="p99" value={r.metrics.p99} />
                     </div>
                   </div>
                   <div className="w-full md:w-3/5 lg:w-3/4">
                     <div className="sm:hidden">
                       <Chart
                         height="h-12"
-                        series={resizeSeries(series, 30, region)}
+                        series={resizeSeries(r.series, 30, r.region.id)}
                         degradedAfter={endpoint.degradedAfter}
                         timeout={endpoint.timeout}
                       />
@@ -186,7 +199,7 @@ export const Row: React.FC<{
                     <div className="hidden sm:block md:hidden">
                       <Chart
                         height="h-12"
-                        series={resizeSeries(series, 60, region)}
+                        series={resizeSeries(r.series, 60, r.region.id)}
                         degradedAfter={endpoint.degradedAfter}
                         timeout={endpoint.timeout}
                       />
@@ -194,7 +207,7 @@ export const Row: React.FC<{
                     <div className="hidden md:block">
                       <Chart
                         height="h-12"
-                        series={resizeSeries(series, 90, region)}
+                        series={resizeSeries(r.series, 90, r.region.id)}
                         degradedAfter={endpoint.degradedAfter}
                         timeout={endpoint.timeout}
                       />

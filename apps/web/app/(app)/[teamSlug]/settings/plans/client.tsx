@@ -114,7 +114,7 @@ export const ClientPage: React.FC<Props> = ({ team }): JSX.Element => {
       name: "Regions",
       features: [
         {
-          name: "20 Vercel Edge Regions",
+          name: "18 Vercel Edge Regions",
           tiers: {
             Free: true,
             Pro: true,
@@ -122,7 +122,7 @@ export const ClientPage: React.FC<Props> = ({ team }): JSX.Element => {
           },
         },
         {
-          name: "26 AWS Regions",
+          name: "22 AWS Regions",
           tiers: {
             Free: false,
             Pro: true,

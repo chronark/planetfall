@@ -19,6 +19,8 @@ import { z } from "zod";
 import classNames from "classnames";
 import Link from "next/link";
 import { Minus, Plus } from "lucide-react";
+import { AwsLambda } from "@/components/icons/AwsLambda";
+import { VercelEdge } from "@/components/icons/VercelEdge";
 type Props = {
   teamSlug: string;
   endpoint: Omit<Endpoint, "createdAt" | "updatedAt"> & { regions: Region[] };
@@ -676,7 +678,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                           <button
                             type="button"
                             key={r.id}
-                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-zinc-700 ${
+                            className={`flex items-center justify-between border rounded px-2 lg:px-4 py-1 hover:border-zinc-700 ${
                               selectedRegions.find((region) => region.id === r.id)
                                 ? "border-zinc-900 bg-zinc-50"
                                 : "border-zinc-300"
@@ -692,6 +694,11 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                             }}
                           >
                             {r.name}
+                            {r.platform === "aws" ? (
+                              <AwsLambda className="w-4 h-4" />
+                            ) : (
+                              <VercelEdge className="w-4 h-4" />
+                            )}
                           </button>
                         ))}
                       </fieldset>

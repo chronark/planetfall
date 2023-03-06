@@ -202,7 +202,7 @@ export default async function Page(props: {
             <Chart
               regions={stats.map((region) => ({
                 ...region,
-                region:
+                regionName:
                   endpoint.regions.find((r) => r.id === region.regionId)?.name ?? region.regionId,
               }))}
               endpoint={{

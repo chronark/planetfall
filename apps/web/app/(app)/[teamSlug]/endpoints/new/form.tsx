@@ -12,6 +12,8 @@ import * as assertions from "@planetfall/assertions";
 import { trpc } from "lib/utils/trpc";
 import { Minus } from "lucide-react";
 import { Toaster, useToast } from "@/components/toast";
+import { VercelEdge } from "@/components/icons/VercelEdge";
+import { AwsLambda } from "@/components/icons/AwsLambda";
 type Props = {
   teamId: string;
   teamSlug: string;
@@ -319,10 +321,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                         min: 1,
                       })}
                       min={1}
-                      className="block w-full px-4 py-3 border border-r-0 rounded-none rounded-l transition-all duration-300 ease-in-out group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
+                      className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
                     />
                   </div>
-                  <div className="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium border border-l-0 rounded-r space-x-2 border-zinc-900 bg-zinc-50 text-zinc-700 ">
+                  <div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
                     <span>ms</span>
                   </div>
                 </div>
@@ -352,10 +354,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                         min: 0,
                       })}
                       min={0}
-                      className="block w-full px-4 py-3 border border-r-0 rounded-none rounded-l transition-all duration-300 ease-in-out group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
+                      className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
                     />
                   </div>
-                  <div className="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium border border-l-0 rounded-r space-x-2 border-zinc-900 bg-zinc-50 text-zinc-700 ">
+                  <div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
                     <span>ms</span>
                   </div>
                 </div>
@@ -542,17 +544,17 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
               <div role="group" aria-labelledby="label-email">
                 <div className="sm:grid sm:items-baseline sm:gap-4">
                   <div className="mt-4 sm:col-span-3 sm:mt-0">
-                    <h4 className="w-full mt-8 mb-4 font-medium text-center leading-6 md:mb-8 md:mt-16 text-zinc-900">
+                    <h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
                       Vercel Edge Regions
                     </h4>
-                    <fieldset className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+                    <fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
                       {regions
                         .filter((r) => r.platform === "vercelEdge")
                         .map((r) => (
                           <button
                             type="button"
                             key={r.id}
-                            className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+                            className={`flex justify-between items-center px-2 py-1 lg:px-4 border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
                               selectedRegions.includes(r.id)
                                 ? "border-zinc-900 bg-zinc-50"
                                 : "border-zinc-300"
@@ -565,22 +567,23 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                               }
                             }}
                           >
-                            <span className="px-2 py-1 lg:px-4">{r.name}</span>
+                            <span>{r.name}</span>
+                            <VercelEdge className="w-4 h-4" />
                           </button>
                         ))}
                     </fieldset>
-                    <h4 className="w-full mt-8 mb-4 font-medium text-center leading-6 md:mb-8 md:mt-16 text-zinc-900">
+                    <h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
                       AWS Lambda Regions
                     </h4>
 
-                    <fieldset className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+                    <fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
                       {regions
                         .filter((r) => r.platform === "aws")
                         .map((r) => (
                           <button
                             type="button"
                             key={r.id}
-                            className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+                            className={`flex justify-between items-center px-2 py-1 lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
                               selectedRegions.includes(r.id)
                                 ? "border-zinc-900 bg-zinc-50"
                                 : "border-zinc-300"
@@ -593,7 +596,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                               }
                             }}
                           >
-                            <span className="px-2 py-1 lg:px-4">{r.name}</span>
+                            <span>{r.name}</span>
+                            <AwsLambda className="w-4 h-4" />
                           </button>
                         ))}
                     </fieldset>
@@ -630,10 +634,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                       min: 1,
                     })}
                     defaultValue={15}
-                    className="block w-full border border-r-0 rounded-none rounded-l transition-all duration-300 ease-in-out group-focus:bg-zinc-50 md:px-4 md:h-12 border-zinc-900 hover:bg-zinc-50 focus:outline-none"
+                    className="block w-full transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 md:px-4 md:h-12 border-zinc-900 hover:bg-zinc-50 focus:outline-none"
                   />
                 </div>
-                <div className="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium border border-l-0 rounded-r space-x-2 border-zinc-900 bg-zinc-50 text-zinc-700 ">
+                <div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
                   <span>s</span>
                 </div>
               </div>
@@ -680,7 +684,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                 Expected monthly requests
               </label>
               <div className="flex mt-1 sm:col-span-4 sm:mt-0">
-                <div className="inline-flex items-center w-full border rounded cursor-not-allowed transition-all duration-300 ease-in-out md:px-4 md:h-12 border-zinc-900 focus:outline-none">
+                <div className="inline-flex items-center w-full transition-all duration-300 ease-in-out border rounded cursor-not-allowed md:px-4 md:h-12 border-zinc-900 focus:outline-none">
                   {monthlyRequests.toLocaleString()}
                 </div>
               </div>
@@ -693,14 +697,14 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
         <div className="flex justify-end gap-8">
           <Link
             href={`/${teamSlug}/endpoints`}
-            className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all duration-300 ease-in-out shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 text-zinc-900 md:hover:bg-zinc-50 hover:text-zinc-900 group"
+            className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 text-zinc-900 md:hover:bg-zinc-50 hover:text-zinc-900 group"
           >
             Cancel
           </Link>
           <button
             type="button"
             onClick={handleSubmit(submit)}
-            className="inline-flex items-center justify-center py-2 font-medium leading-snug rounded transition-all duration-300 ease-in-out shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
+            className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
           >
             {loading ? <Loading /> : "Create"}
           </button>

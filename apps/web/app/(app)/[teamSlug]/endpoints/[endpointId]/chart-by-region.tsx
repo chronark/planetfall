@@ -2,6 +2,8 @@
 
 import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
 import { Heading } from "@/components/heading";
+import { AwsLambda } from "@/components/icons/AwsLambda";
+import { VercelEdge } from "@/components/icons/VercelEdge";
 import { MultiSelect } from "@/components/multiselect";
 import { SelectItem, SelectTrigger, Select, SelectContent, SelectValue } from "@/components/select";
 import { Area, Line } from "@ant-design/plots";
@@ -36,14 +38,21 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks }) => {
       <CardHeader>
         <CardHeaderTitle title="Latency" />
         <div className="flex justify-end w-full">
-          <Select onValueChange={(v) => setSelectedRegion(v)}>
+          <Select onValueChange={(v) => setSelectedRegion(v)} defaultValue={selectedRegion}>
             <SelectTrigger>
-              <SelectValue placeholder={regionIdToName(endpoint.regions, selectedRegion)} />
+              <SelectValue defaultValue={selectedRegion} />
             </SelectTrigger>
             <SelectContent>
               {endpoint.regions.map((r) => (
                 <SelectItem key={r.id} value={r.id}>
-                  {r.name}
+                  <div className="flex items-center gap-1">
+                    {r.id.startsWith("aws:") ? (
+                      <AwsLambda className="w-4 h-4" />
+                    ) : (
+                      <VercelEdge className="w-4 h-4" />
+                    )}
+                    {r.name}
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>
