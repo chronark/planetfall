@@ -1,7 +1,10 @@
 import { db, Plan } from "@planetfall/db";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { CurrentButton, DowngradeButton, ContactButton } from "./cta";
+import { CurrentButton, DowngradeButton, UpgradeButton, ContactButton } from "./cta";
+import { DEFAULT_QUOTA } from "plans";
+import { Check, Minus } from "lucide-react";
+import { Fragment } from "react";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
