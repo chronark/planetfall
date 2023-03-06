@@ -130,7 +130,6 @@ model Team {
   includedRequests   Int? // How many requests are included in the plan and not charged
   endpoints          Endpoint[]
   pages              StatusPage[]
-
   // webhookAlerts WebhookAlert[]
 
   @@index([slug])
