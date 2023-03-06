@@ -80,7 +80,7 @@ importers:
       ts-node: ^10.9.1
       tslog: ^4.8.2
       typescript: ^4.9.5
-      zod: ^3.21.2
+      zod: ^3.21.3
     dependencies:
       '@axiomhq/axiom-node': 0.11.0
       '@planetfall/assertions': link:../../pkg/assertions
@@ -94,7 +94,7 @@ importers:
       ms: 2.1.3
       stripe: 11.13.0
       tslog: 4.8.2
-      zod: 3.21.2
+      zod: 3.21.3
     devDependencies:
       '@planetfall/tsconfig': link:../../pkg/tsconfig
       '@types/ms': 0.7.31
@@ -138,7 +138,7 @@ importers:
       '@stripe/react-stripe-js': ^1.16.4
       '@stripe/stripe-js': ^1.46.0
       '@tailwindcss/typography': ^0.5.8
-      '@tanstack/react-query': ^4.26.0
+      '@tanstack/react-query': ^4.26.1
       '@tanstack/react-table': ^8.7.8
       '@trpc/client': ^10.14.0
       '@trpc/next': ^10.14.0
@@ -162,7 +162,7 @@ importers:
       eslint-config-next: 13.2.3
       focus-visible: ^5.2.0
       framer-motion: ^10.1.0
-      lucide-react: ^0.123.0
+      lucide-react: ^0.124.0
       ms: ^2.1.3
       next: 13.2.3
       next-axiom: ^0.17.0
@@ -176,14 +176,13 @@ importers:
       slugify: ^1.6.5
       stripe: ^11.13.0
       superjson: ^1.12.2
-      swr: ^2.0.3
       tailwind-merge: ^1.10.0
       tailwindcss: 3.2.7
       tailwindcss-animate: ^1.0.5
       tailwindcss-debug-screens: ^2.2.1
       tailwindcss-radix: ^2.8.0
       typescript: 4.9.5
-      zod: ^3.21.2
+      zod: ^3.21.3
     dependencies:
       '@ant-design/plots': 1.2.5_biqbaboplfbrettd7655fr4n2y
       '@chronark/access': 0.0.16
@@ -218,11 +217,11 @@ importers:
       '@stripe/react-stripe-js': 1.16.5_zw7zferaqqsd3ootrrf2mrlpoi
       '@stripe/stripe-js': 1.47.0
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.7
-      '@tanstack/react-query': 4.26.0_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query': 4.26.1_biqbaboplfbrettd7655fr4n2y
       '@tanstack/react-table': 8.7.9_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.14.0_@trpc+server@10.14.0
-      '@trpc/next': 10.14.0_x6gg3jfwfdz6xcek5wczo75xfu
-      '@trpc/react-query': 10.14.0_gqzahltmmgiv44m4moyfehsu6m
+      '@trpc/next': 10.14.0_yf32ovkked5vr7aayspt5ctp64
+      '@trpc/react-query': 10.14.0_4pqoitdl65f6hbwuj4o2xagtj4
       '@trpc/server': 10.14.0
       '@upstash/kafka': 1.3.2
       '@upstash/ratelimit': 0.3.9
@@ -235,7 +234,7 @@ importers:
       clsx: 1.2.1
       focus-visible: 5.2.0
       framer-motion: 10.1.0_biqbaboplfbrettd7655fr4n2y
-      lucide-react: 0.123.0_react@18.2.0
+      lucide-react: 0.124.0_react@18.2.0
       ms: 2.1.3
       next: 13.2.3_biqbaboplfbrettd7655fr4n2y
       next-axiom: 0.17.0_next@13.2.3
@@ -247,11 +246,10 @@ importers:
       slugify: 1.6.5
       stripe: 11.13.0
       superjson: 1.12.2
-      swr: 2.0.4_react@18.2.0
       tailwind-merge: 1.10.0
       tailwindcss-animate: 1.0.5_tailwindcss@3.2.7
       tailwindcss-radix: 2.8.0
-      zod: 3.21.2
+      zod: 3.21.3
     devDependencies:
       '@types/ms': 0.7.31
       '@types/node': 18.14.6
@@ -274,7 +272,7 @@ importers:
       jsonpath-plus: ^7.2.0
       tsx: ^3.10.1
       typescript: ^4.9.5
-      zod: ^3.21.2
+      zod: ^3.21.3
     dependencies:
       ajv: 8.12.0
       jsonpath-plus: 7.2.0
@@ -283,7 +281,7 @@ importers:
       '@types/node': 18.14.6
       tsx: 3.12.3
       typescript: 4.9.5
-      zod: 3.21.2
+      zod: 3.21.3
 
   pkg/db:
     specifiers:
@@ -3227,12 +3225,12 @@ packages:
       tailwindcss: 3.2.7_postcss@8.4.21
     dev: false
 
-  /@tanstack/query-core/4.26.0:
-    resolution: {integrity: sha512-9CRqXmCH82KZDKmezoGU4FOn1Oqbzlp2/zf71n+9nC58e7NSqCIjfSCMpqQWcu9YqUcUykxZEUunOyKHVc6BJA==}
+  /@tanstack/query-core/4.26.1:
+    resolution: {integrity: sha512-Zrx2pVQUP4ndnsu6+K/m8zerXSVY8QM+YSbxA1/jbBY21GeCd5oKfYl92oXPK0hPEUtoNuunIdiq0ZMqLos+Zg==}
     dev: false
 
-  /@tanstack/react-query/4.26.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-Y5qKyr9AtreTHBPAsn+ulR02E7SyZXPQbwL2tkOcgUAGH2KHHcf7j7NHBhKpaAGB6/vPqkxGYW46epu29V0HqA==}
+  /@tanstack/react-query/4.26.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-i3dnz4TOARGIXrXQ5P7S25Zfi4noii/bxhcwPurh2nrf5EUCcAt/95TB2HSmMweUBx206yIMWUMEQ7ptd6zwDg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -3243,7 +3241,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@tanstack/query-core': 4.26.0
+      '@tanstack/query-core': 4.26.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
@@ -3284,7 +3282,7 @@ packages:
       '@trpc/server': 10.14.0
     dev: false
 
-  /@trpc/next/10.14.0_x6gg3jfwfdz6xcek5wczo75xfu:
+  /@trpc/next/10.14.0_yf32ovkked5vr7aayspt5ctp64:
     resolution: {integrity: sha512-uuoqVrXv/vdV7Jiy4kvwMsegDNmYltz14xHpfJPBr+zOq2uAeFzY6C8ISplyOqBfrBkp6gzKiD3k3sJbn/B04w==}
     peerDependencies:
       '@tanstack/react-query': ^4.3.8
@@ -3295,9 +3293,9 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.26.0_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query': 4.26.1_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.14.0_@trpc+server@10.14.0
-      '@trpc/react-query': 10.14.0_gqzahltmmgiv44m4moyfehsu6m
+      '@trpc/react-query': 10.14.0_4pqoitdl65f6hbwuj4o2xagtj4
       '@trpc/server': 10.14.0
       next: 13.2.3_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
@@ -3305,7 +3303,7 @@ packages:
       react-ssr-prepass: 1.5.0_react@18.2.0
     dev: false
 
-  /@trpc/react-query/10.14.0_gqzahltmmgiv44m4moyfehsu6m:
+  /@trpc/react-query/10.14.0_4pqoitdl65f6hbwuj4o2xagtj4:
     resolution: {integrity: sha512-EInZaeQzbs0YyKgAD8XfcjckMQw8is9mwtNVbmL2qHb8LPr54lvYB7V5s419BAYNYrSlw4lP4iOUZXA04vVkBA==}
     peerDependencies:
       '@tanstack/react-query': ^4.3.8
@@ -3314,7 +3312,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.26.0_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query': 4.26.1_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.14.0_@trpc+server@10.14.0
       '@trpc/server': 10.14.0
       react: 18.2.0
@@ -7390,8 +7388,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /lucide-react/0.123.0_react@18.2.0:
-    resolution: {integrity: sha512-HQ8YJHO+wAHrvx/e8AXS1HdYa0lZmxn3IxRxENleompyHk02MiIfviUtY+qh+K1SqoiPMhSzUEJkHOcmUjHgIg==}
+  /lucide-react/0.124.0_react@18.2.0:
+    resolution: {integrity: sha512-U1TGpFPLVOOIfs4SIeJ1F6gNcdpFpt5GDesgOaak6Tr7jTLkhjCdmBok0UksmpYfehN5zMMW+g37nzU2XHCtnw==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
@@ -9608,16 +9606,6 @@ packages:
       react: 18.2.0
     dev: false
 
-  /swr/2.0.4_react@18.2.0:
-    resolution: {integrity: sha512-4GUiTjknRUVuw4MWUHR7mzJ9G/DWL+yZz/TgWDfiA0OZ9tL6qyrTkN2wPeboBpL3OJTkej3pexh3mWCnv8cFkQ==}
-    engines: {pnpm: '7'}
-    peerDependencies:
-      react: ^16.11.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 18.2.0
-      use-sync-external-store: 1.2.0_react@18.2.0
-    dev: false
-
   /synckit/0.8.5:
     resolution: {integrity: sha512-L1dapNV6vu2s/4Sputv8xGsCdAVlb5nRDMFU/E27D44l5U6cw1g0dGd45uLc+OXjNMmF4ntiMdCimzcjFKQI8Q==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -10627,5 +10615,5 @@ packages:
       wrap-ansi: 2.1.0
     dev: true
 
-  /zod/3.21.2:
-    resolution: {integrity: sha512-0Ygy2/IZNIxHterZdHjE5Vb8hp1fUHJD/BGvSHj8QJx+UipEVNvo9WLchoyBpz5JIaN6KmdGDGYdloGzpFK98g==}
+  /zod/3.21.3:
+    resolution: {integrity: sha512-tz1QgJomEhMTQhOBvQxnnrTo8q77EjpGLlaWicCoEEkMzScuONzDkJKIHr83CS89fGY24iGCStj2ZOCHpPOEyA==}

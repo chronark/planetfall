@@ -24,7 +24,7 @@
     "ms": "^2.1.3",
     "stripe": "^11.13.0",
     "tslog": "^4.8.2",
-    "zod": "^3.21.2"
+    "zod": "^3.21.3"
   },
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",

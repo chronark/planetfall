@@ -44,7 +44,7 @@ export default async function Page(props: {
             slug: page.slug,
             endpointIds: page.endpoints.map((endpoint) => endpoint.id),
           }}
-          endpoints={page.endpoints.map((endpoint) => ({
+          endpoints={team.endpoints.map((endpoint) => ({
             id: endpoint.id,
             name: endpoint.name,
             url: endpoint.url,
