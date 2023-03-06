@@ -33,8 +33,9 @@ export const BillingButton: React.FC<Props> = (props): JSX.Element => {
         }
       }}
       disabled={loading}
+      variant="link"
     >
-      {loading ? <Loading /> : "Manage Billing"}
+      {loading ? <Loading /> : "Manage Billing and past Invoices"}
     </Button>
   );
 };

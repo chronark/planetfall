@@ -14,6 +14,7 @@ import { Text } from "@/components/text";
 import { Button } from "@/components/button";
 import Link from "next/link";
 import { UsageChart } from "./chart";
+import { BillingButton } from "./button";
 
 export default async function UsagePage(props: { params: { teamSlug: string } }) {
   const { session } = await getSession();
@@ -43,7 +44,7 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
       <Card>
         <CardHeader>
           <CardHeaderTitle
-            title="Usage"
+            title="Usage & Billing"
             subtitle={
               <Text>
                 Current billing cycle:{" "}
@@ -55,6 +56,7 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
                 </strong>{" "}
               </Text>
             }
+            actions={[<BillingButton key="billing" teamId={team.id} />]}
           />
         </CardHeader>
 
@@ -97,11 +99,9 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
           </div>
         </CardContent>
         <CardFooter>
-          <CardFooterActions>
-            <Link href={`/${team.slug}/settings/plans`}>
-              <Button variant="link">Change your plan</Button>
-            </Link>
-          </CardFooterActions>
+          <Link key="plans" href={`/${team.slug}/settings/plans`}>
+            <Button variant="link">Change your plan</Button>
+          </Link>
         </CardFooter>
       </Card>
     </div>
