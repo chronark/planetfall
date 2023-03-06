@@ -17,11 +17,12 @@ export default async function OnboardingPage() {
     : newAnimalId();
 
 
+    console.log({clerkUser})
   const user = await db.user.create({
     data: {
       id: clerkUser.id,
       name: slug,
-      email: clerkUser.emailAddresses[0].emailAddress,
+      email: clerkUser.emailAddresses[0]?.emailAddress ?? "",
       teams: {
         create: {
           role: "OWNER",
@@ -40,7 +41,7 @@ export default async function OnboardingPage() {
         }
       }
     },
-    include:{
+    include: {
       teams: {
         include: {
           team: true
