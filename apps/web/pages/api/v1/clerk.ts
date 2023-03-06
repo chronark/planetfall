@@ -1,7 +1,5 @@
 import { db } from "@planetfall/db";
-import { newId, newAnimalId } from "@planetfall/id";
 import { NextApiRequest, NextApiResponse } from "next";
-import { DEFAULT_QUOTA } from "plans";
 import { z } from "zod";
 import { env } from "@/lib/env";
 
@@ -23,7 +21,7 @@ const validation = z.object({
     updated_at: z.number(),
   }),
   object: z.literal("event"),
-  type: z.enum(["user.created", "user.updated"]),
+  type: z.enum(["user.updated"]),
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -40,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     console.log(JSON.stringify(v.data, null, 2));
 
-    const user = await db.user.upsert({
+    await db.user.upsert({
       where: {
         id: v.data.data.id,
       },
@@ -57,31 +55,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         image: v.data.data.profile_image_url,
       },
     });
-
-    if (v.data.type === "user.created") {
-      await db.team.create({
-        data: {
-          id: newId("team"),
-          name: user.name,
-          slug: newAnimalId(),
-          members: {
-            create: {
-              role: "OWNER",
-              user: {
-                connect: {
-                  id: user.id,
-                },
-              },
-            },
-          },
-          maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
-          maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
-          maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
-          maxPages: DEFAULT_QUOTA.FREE.maxStatusPages,
-          plan: "FREE",
-        },
-      });
-    }
 
     return res.status(200).send("ok");
   } catch (e) {
