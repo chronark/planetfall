@@ -15,7 +15,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const redis = Redis.fromEnv();
 
 export const billingRouter = t.router({
-
   changePlan: t.procedure
     .input(
       z.object({
@@ -97,7 +96,7 @@ export const billingRouter = t.router({
         include: {
           members: {
             include: {
-              user: true
+              user: true,
             },
             where: {
               userId: ctx.session.user.id,
@@ -113,18 +112,18 @@ export const billingRouter = t.router({
         const customer = await stripe.customers.create({
           email: team.members[0].user.email,
           name: team.name,
-        })
+        });
 
         // @ts-ignore We don't return all the fields, but we don't need them anyways
         // Fixing the type would require useless db lookups
         team = await db.team.update({
           where: {
-            id: team.id
+            id: team.id,
           },
           data: {
-            stripeCustomerId: customer.id
-          }
-        })
+            stripeCustomerId: customer.id,
+          },
+        });
       }
 
       const portal = await stripe.billingPortal.sessions.create({
