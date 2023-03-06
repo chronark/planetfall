@@ -125,7 +125,7 @@ model Team {
   // How many checks may be done per month
   maxMonthlyRequests Int
   maxEndpoints       Int
-  maxPages           Int?
+  maxPages           Int
   maxTimeout         Int // [milliseconds]
   includedRequests   Int? // How many requests are included in the plan and not charged
   endpoints          Endpoint[]
