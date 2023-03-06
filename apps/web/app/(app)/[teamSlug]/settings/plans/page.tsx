@@ -1,23 +1,27 @@
 import { db, Plan } from "@planetfall/db";
-import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { CurrentButton, DowngradeButton, UpgradeButton, ContactButton } from "./cta";
 import { DEFAULT_QUOTA } from "plans";
 import { Check, Minus } from "lucide-react";
 import { Fragment } from "react";
+import { auth } from "@clerk/nextjs/app-beta";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 export default async function PlanPage(props: { params: { teamSlug: string } }) {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
   const team = await db.team.findUnique({
     where: { slug: props.params.teamSlug },
+    include: { members: true },
   });
   if (!team) {
+    return redirect("/home");
+  }
+  if (!team.members.find((m) => m.userId === userId)) {
     return redirect("/home");
   }
 

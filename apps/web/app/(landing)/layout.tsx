@@ -1,6 +1,6 @@
 import { Header } from "./header";
 import { Footer } from "./footer";
-import { getSession } from "lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 
 export const dynamic = "force-static";
 export const revalidate = 3600;
@@ -10,11 +10,9 @@ export default async function Landing({
 }: {
   children: React.ReactNode;
 }) {
-  const { session } = await getSession();
-
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
-      <Header session={session} />
+      <Header />
 
       <main>{children}</main>
       <Footer />

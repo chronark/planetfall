@@ -23,13 +23,13 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
       const user = await db.user.findUnique({
         where: {
-          id: ctx.session.user.id,
+          id: ctx.user.id,
         },
       });
       if (!user) {
@@ -47,7 +47,7 @@ export const teamRouter = t.router({
             create: {
               user: {
                 connect: {
-                  id: ctx.session.user.id,
+                  id: ctx.user.id,
                 },
               },
               role: "OWNER",
@@ -71,7 +71,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const team = await db.team.findUnique({
@@ -85,7 +85,7 @@ export const teamRouter = t.router({
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
-      const currentUser = team.members.find((m) => m.userId === ctx.session!.user.id);
+      const currentUser = team.members.find((m) => m.userId === ctx.user!.id);
       if (!currentUser) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
@@ -138,7 +138,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const team = await db.team.findUnique({
@@ -152,7 +152,7 @@ export const teamRouter = t.router({
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
-      const currentUser = team.members.find((m) => m.userId === ctx.session!.user.id);
+      const currentUser = team.members.find((m) => m.userId === ctx.user!.id);
       if (!currentUser) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
@@ -185,7 +185,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const team = await db.team.findUnique({
@@ -206,7 +206,7 @@ export const teamRouter = t.router({
         });
       }
 
-      const currentUser = team.members.find((m) => m.userId === ctx.session!.user.id);
+      const currentUser = team.members.find((m) => m.userId === ctx.user!.id);
       if (!currentUser) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
@@ -247,7 +247,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const team = await db.team.findUnique({
@@ -262,7 +262,7 @@ export const teamRouter = t.router({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-      if (team.members.find((m) => m.userId === ctx.session!.user.id)?.role !== "OWNER") {
+      if (team.members.find((m) => m.userId === ctx.user!.id)?.role !== "OWNER") {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 

@@ -1,14 +1,7 @@
 import { db } from "@planetfall/db";
-import { getSession } from "@/lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 import { redirect } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardFooterActions,
-  CardHeader,
-  CardHeaderTitle,
-} from "@/components/card";
+import { Card, CardContent, CardFooter, CardHeader, CardHeaderTitle } from "@/components/card";
 import { Client as Tinybird } from "@planetfall/tinybird";
 import { Text } from "@/components/text";
 import { Button } from "@/components/button";
@@ -17,8 +10,8 @@ import { UsageChart } from "./chart";
 import { BillingButton } from "./button";
 
 export default async function UsagePage(props: { params: { teamSlug: string } }) {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
   const team = await db.team.findUnique({

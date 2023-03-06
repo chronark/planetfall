@@ -2,13 +2,13 @@ import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 import { db } from "@planetfall/db";
 import { Form } from "./form";
-import { getSession } from "lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 
 export default async function Page(props: {
   params: { teamSlug: string; pageId: string };
 }) {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 

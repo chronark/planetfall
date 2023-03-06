@@ -2,22 +2,26 @@ import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 import { db } from "@planetfall/db";
 import { Form } from "./form";
-import { getSession } from "lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 
 export default async function Page(props: { params: { teamSlug: string } }) {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 
   const team = await db.team.findUnique({
     where: { slug: props.params.teamSlug },
-    include: { endpoints: true },
+    include: { endpoints: true, members: true },
   });
   if (!team) {
     console.warn(__filename, "Team not found");
 
-    notFound();
+    return notFound();
+  }
+
+  if (!team.members.find((m) => m.userId === userId)) {
+    return notFound();
   }
 
   return (

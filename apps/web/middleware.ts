@@ -1,8 +1,9 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { withClerkMiddleware } from "@clerk/nextjs/server";
 
 export const config = {
-  matcher: "/((?!_next|_static|_vercel|api|play|[\\w-]+\\.\\w+).*)",
+  matcher: "/((?!_next|_static|_vercel|[\\w-]+\\.\\w+).*)",
 };
 
 function middleware(req: NextRequest) {
@@ -22,6 +23,7 @@ function middleware(req: NextRequest) {
     url.pathname = `/api${url.pathname}`;
     return NextResponse.rewrite(url);
   }
+  console.log({ subdomain })
   if (subdomain !== "") {
     url.pathname = `/_statuspages/${subdomain}`;
     return NextResponse.rewrite(url);
@@ -29,4 +31,4 @@ function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-export default middleware;
+export default withClerkMiddleware(middleware);
