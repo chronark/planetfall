@@ -12,6 +12,9 @@ export default async function OnboardingPage() {
     return redirect("/auth/sign-in");
   }
 
+  const slug = clerkUser.username
+    ? slugify(clerkUser.username, { lower: true, trim: true })
+    : newAnimalId();
 
 
   const user = await db.user.upsert({
@@ -29,9 +32,6 @@ export default async function OnboardingPage() {
     },
   });
 
-  const slug = clerkUser.username
-    ? slugify(clerkUser.username, { lower: true, trim: true })
-    : newAnimalId();
 
   const team = await db.team.create({
     data: {
