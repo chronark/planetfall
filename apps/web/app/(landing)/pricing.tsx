@@ -25,14 +25,14 @@ const tiers: {
 }[] = [
   {
     name: "Free",
-    href: "/auth/sign-in",
+    href: "/auth/sign-up",
     price: "$0",
     description: "No credit card required",
     cta: "Start for free",
   },
   {
     name: "Pro",
-    href: "/auth/sign-in",
+    href: "/auth/sign-up",
     price: {
       checks: 10000,
       price: 1,
