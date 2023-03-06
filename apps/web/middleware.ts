@@ -23,6 +23,7 @@ function middleware(req: NextRequest) {
     url.pathname = `/api${url.pathname}`;
     return NextResponse.rewrite(url);
   }
+  console.log({subdomain})
   // if (subdomain !== "") {
   //   url.pathname = `/_statuspages/${subdomain}`;
   //   return NextResponse.rewrite(url);
