@@ -32,8 +32,6 @@ export class IdGenerator<TPrefixes extends string> {
       encodeBase58(Buffer.from(randomUUID().replace(/-/g, ""), "hex")),
     ].join("_");
   };
-
-
 }
 
 export const newId = new IdGenerator({
@@ -50,5 +48,7 @@ export const newId = new IdGenerator({
 
 export const newShortId = () => encodeBase58(randomBytes(8));
 
-export const newAnimalId = () => [adjectives[randomInt(0, adjectives.length - 1)], animals[randomInt(0, animals.length - 1)]].join("-");
-
+export const newAnimalId = () =>
+  [adjectives[randomInt(0, adjectives.length - 1)], animals[randomInt(0, animals.length - 1)]].join(
+    "-",
+  );

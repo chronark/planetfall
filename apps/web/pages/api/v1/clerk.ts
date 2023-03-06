@@ -28,7 +28,7 @@ const validation = z.object({
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    if (req.headers.authorization !== env.CLERK_WEBHOOK_SECRET){
+    if (req.headers.authorization !== env.CLERK_WEBHOOK_SECRET) {
       return res.status(401).send("unauthorized");
     }
     const v = validation.safeParse(req.body);
