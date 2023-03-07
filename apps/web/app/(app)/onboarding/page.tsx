@@ -17,8 +17,14 @@ export default async function OnboardingPage() {
     : newAnimalId();
 
   console.log({ clerkUser });
-  const user = await db.user.create({
-    data: {
+  const user = await db.user.upsert({
+    where: { id: clerkUser.id },
+    update: {
+      name: slug,
+      email: clerkUser.emailAddresses[0]?.emailAddress,
+      image: clerkUser.profileImageUrl,
+    },
+    create: {
       id: clerkUser.id,
       name: slug,
       email: clerkUser.emailAddresses[0]?.emailAddress ?? "",
