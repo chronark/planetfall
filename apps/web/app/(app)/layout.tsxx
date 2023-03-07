@@ -1,0 +1,14 @@
+import { SignedIn, SignedOut, SignIn } from "@clerk/nextjs/app-beta";
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <SignedIn>{children}</SignedIn>
+      <SignedOut>
+        <div className="flex items-center justify-center w-screen min-h-screen">
+          <SignIn signUpUrl="/auth/sign-up" />
+        </div>
+      </SignedOut>
+    </>
+  );
+}

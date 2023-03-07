@@ -8,13 +8,15 @@ type Props = {
   teamId: string;
 };
 
-export const PortalButton: React.FC<Props> = (props): JSX.Element => {
+export const BillingButton: React.FC<Props> = (props): JSX.Element => {
   const [loading, setLoading] = useState(false);
+
   return (
     <Button
       onClick={async () => {
         try {
           setLoading(true);
+
           const res = await trpc.billing.portal.query({
             teamId: props.teamId,
           });
@@ -31,8 +33,9 @@ export const PortalButton: React.FC<Props> = (props): JSX.Element => {
         }
       }}
       disabled={loading}
+      variant="link"
     >
-      {loading ? <Loading /> : "Manage your Subscription"}
+      {loading ? <Loading /> : "Manage Billing and past Invoices"}
     </Button>
   );
 };

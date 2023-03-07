@@ -1,4 +1,4 @@
-import { db } from "@planetfall/db";
+import { db, Platform } from "@planetfall/db";
 import { Row } from "./chart";
 
 import React from "react";
@@ -33,21 +33,29 @@ export default async function Page(props: { params: { slug: string } }) {
       stats: await getStats(endpoint),
     })),
   );
+  // Object.entries(endpoint.stats).reduce(
+  //   (acc, [regionId, value]) => {
+  //     const regionName = regions.find((r) => r.id === regionId)?.name ?? regionId;
+  //     acc[regionName] = value;
+  //     return acc;
+  //   },
 
+  //   {} as any,
+  // )
   /**
    * Translate region ids to names for display
    */
-  endpoints = endpoints.map((endpoint) => ({
+  const enrichedEndpoints = endpoints.map((endpoint) => ({
     ...endpoint,
-    stats: Object.entries(endpoint.stats).reduce(
-      (acc, [regionId, value]) => {
-        const regionName = regions.find((r) => r.id === regionId)?.name ?? regionId;
-        acc[regionName] = value;
-        return acc;
-      },
+    stats: endpoint.stats.map((s) => ({
+      ...s,
 
-      {} as any,
-    ),
+      region: {
+        id: s.regionId,
+        platform: regions.find((r) => r.id === s.regionId)?.platform as Platform,
+        name: regions.find((r) => r.id === s.regionId)?.name ?? s.regionId,
+      },
+    })),
   }));
 
   return (
@@ -72,7 +80,7 @@ export default async function Page(props: { params: { slug: string } }) {
           //   },
           // }}
         >
-          {Object.entries(endpoints).map(([regionId, endpoint]) => (
+          {Object.entries(enrichedEndpoints).map(([regionId, endpoint]) => (
             <li
               key={regionId}
               // variants={{

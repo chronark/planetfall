@@ -1,21 +1,16 @@
 import React from "react";
-import { Client as Tinybird } from "@planetfall/tinybird";
 import { db } from "@planetfall/db";
 import { notFound, redirect } from "next/navigation";
-import { PageHeader } from "@/components/page/header";
-import { BillingCard } from "./BillingCard";
 import { TeamCard } from "./TeamCard";
 import { Divider } from "@/components/divider";
-import { getSession } from "@/lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 import { DeleteCard } from "./DeleteCard";
-
-export const revalidate = 60; // 1 minute
 
 export default async function SettingsPage(props: {
   params: { teamSlug: string };
 }) {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 
@@ -32,7 +27,7 @@ export default async function SettingsPage(props: {
   if (!team) {
     return notFound();
   }
-  const user = team.members.find((m) => m.userId === session.user.id);
+  const user = team.members.find((m) => m.userId === userId);
   if (!user) {
     return notFound();
   }
@@ -53,40 +48,9 @@ export default async function SettingsPage(props: {
   //     }
   // }
 
-  const now = new Date();
-  const year = now.getUTCFullYear();
-  const month = now.getUTCMonth() + 1;
-
-  const usage = await new Tinybird().getUsage(team.id, {
-    year,
-    month,
-  });
-  const totalUsage = usage.reduce((total, curr) => total + curr.usage, 0);
-
   return (
     <div>
-      <PageHeader
-        sticky={true}
-        title="Settings"
-        // description=""
-      />
       <main className="container mx-auto">
-        <BillingCard
-          team={{
-            id: team.id,
-            name: team.name,
-            plan: team.plan,
-            maxMonthlyRequests: team.maxMonthlyRequests,
-            trialExpires: team.trialExpires,
-            stripeCustomerId: team.stripeCustomerId,
-          }}
-          usage={totalUsage}
-          usagePercentage={(totalUsage / team.maxMonthlyRequests) * 100}
-          year={year}
-          month={month}
-        />
-
-        <Divider />
         <TeamCard
           teamId={team.id}
           currentUser={{ userId: user.userId, role: user.role }}

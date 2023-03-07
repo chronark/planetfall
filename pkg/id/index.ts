@@ -1,5 +1,5 @@
-import { randomBytes, randomUUID } from "node:crypto";
-
+import { randomBytes, randomInt, randomUUID } from "node:crypto";
+import { animals, adjectives } from "./constants";
 import baseX from "base-x";
 
 function encodeBase58(buf: Buffer): string {
@@ -47,3 +47,8 @@ export const newId = new IdGenerator({
 }).id;
 
 export const newShortId = () => encodeBase58(randomBytes(8));
+
+export const newAnimalId = () =>
+  [adjectives[randomInt(0, adjectives.length - 1)], animals[randomInt(0, animals.length - 1)]].join(
+    "-",
+  );

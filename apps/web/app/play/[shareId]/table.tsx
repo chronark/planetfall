@@ -1,5 +1,7 @@
 "use client";
 
+import { AwsLambda } from "@/components/icons/AwsLambda";
+import { VercelEdge } from "@/components/icons/VercelEdge";
 import {
   createColumnHelper,
   flexRender,
@@ -36,7 +38,10 @@ export const Table: React.FC<Props> = ({ regions, urls }) => {
   };
 
   const data = regions.map((r) => ({
-    name: r.name,
+    region: {
+      id: r.id,
+      name: r.name,
+    },
     latency: r.checks.map((c) => fmt(c?.latency)),
     status: r.checks.map((c) => c.status),
     dns: r.checks.map((c) => (c.timing ? fmt(c.timing.dnsDone - c.timing.dnsStart) : undefined)),
@@ -54,9 +59,21 @@ export const Table: React.FC<Props> = ({ regions, urls }) => {
   const { accessor } = createColumnHelper<typeof data[0]>();
 
   let columns = [
-    accessor("name", {
+    accessor("region", {
       header: "Region",
-      cell: (info) => info.getValue(),
+      cell: (info) => {
+        const { id, name } = info.getValue();
+        return (
+          <div className="flex items-center gap-2">
+            {id.startsWith("aws:") ? (
+              <AwsLambda className="w-4 h-4" />
+            ) : (
+              <VercelEdge className="w-4 h-4" />
+            )}
+            <span>{name}</span>
+          </div>
+        );
+      },
     }),
 
     accessor("status", {

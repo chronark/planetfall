@@ -5,7 +5,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { Endpoint, Region } from "@planetfall/db";
 import { Button } from "@/components/button";
 import { trpc } from "lib/utils/trpc";
-import { ToastProvider, useToast } from "@/components/toast";
+import { useToast } from "@/components/toast";
 import { useRouter } from "next/navigation";
 import * as Slider from "@radix-ui/react-slider";
 import {
@@ -19,6 +19,8 @@ import { z } from "zod";
 import classNames from "classnames";
 import Link from "next/link";
 import { Minus, Plus } from "lucide-react";
+import { AwsLambda } from "@/components/icons/AwsLambda";
+import { VercelEdge } from "@/components/icons/VercelEdge";
 type Props = {
   teamSlug: string;
   endpoint: Omit<Endpoint, "createdAt" | "updatedAt"> & { regions: Region[] };
@@ -26,14 +28,6 @@ type Props = {
 };
 
 export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
-  return (
-    <ToastProvider>
-      <Inner regions={regions} teamSlug={teamSlug} endpoint={endpoint} />
-    </ToastProvider>
-  );
-};
-
-export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
   const { addToast } = useToast();
   const [selectedRegions, setSelectedRegions] = useState(endpoint.regions);
   const router = useRouter();
@@ -108,7 +102,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form>
                 <div className="border sm:overflow-hidden sm:rounded">
-                  <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                  <div className="px-4 py-5 space-y-6 bg-white sm:p-6">
                     <div className="">
                       <label
                         htmlFor="company-website"
@@ -182,7 +176,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form>
                 <div className="border sm:overflow-hidden sm:rounded">
-                  <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                  <div className="px-4 py-5 space-y-6 bg-white sm:p-6">
                     <div className="">
                       <label
                         htmlFor="company-website"
@@ -192,7 +186,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       </label>
                       <select
                         {...urlForm.register("method", { required: true })}
-                        className="w-full px-4 py-3 border rounded transition-all duration-300 ease-in-out focus:bg-zinc-50 border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:shadow"
+                        className="w-full px-4 py-3 transition-all duration-300 ease-in-out border rounded focus:bg-zinc-50 border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:shadow"
                         defaultValue={endpoint.method}
                       >
                         <option value="POST">POST</option>
@@ -279,7 +273,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form>
                 <div className="border sm:overflow-hidden sm:rounded">
-                  <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                  <div className="px-4 py-5 space-y-6 bg-white sm:p-6">
                     <div className="">
                       <label
                         htmlFor="company-website"
@@ -380,7 +374,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form>
                 <div className="border sm:overflow-hidden sm:rounded">
-                  <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                  <div className="px-4 py-5 space-y-6 bg-white sm:p-6">
                     <div className="">
                       <label htmlFor="timeout" className="block text-sm font-medium text-zinc-700">
                         Timeout
@@ -396,10 +390,10 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                             })}
                             min={0}
                             defaultValue={endpoint.timeout ?? undefined}
-                            className="block w-full px-4 py-3 border border-r-0 rounded-none rounded-l transition-all duration-300 ease-in-out group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
+                            className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
                           />
                         </div>
-                        <div className="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium border border-l-0 rounded-r space-x-2 border-zinc-900 bg-zinc-50 text-zinc-700 ">
+                        <div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
                           <span>ms</span>
                         </div>
                       </div>
@@ -425,10 +419,10 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                             })}
                             min={0}
                             defaultValue={endpoint.degradedAfter ?? undefined}
-                            className="block w-full px-4 py-3 border border-r-0 rounded-none rounded-l transition-all duration-300 ease-in-out group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
+                            className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
                           />
                         </div>
-                        <div className="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium border border-l-0 rounded-r space-x-2 border-zinc-900 bg-zinc-50 text-zinc-700 ">
+                        <div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
                           <span>ms</span>
                         </div>
                       </div>
@@ -489,7 +483,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
             <div className="mt-5 space-y-10 md:col-span-2 md:mt-0">
               <form>
                 <div className="border sm:overflow-hidden sm:rounded">
-                  <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                  <div className="px-4 py-5 space-y-6 bg-white sm:p-6">
                     <label className="block text-sm font-medium text-zinc-700">Status</label>
                     {statusAssertions.fields.map((f, i) => (
                       <div key={f.id} className="flex items-center gap-4">
@@ -570,7 +564,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
               </form>
               <form>
                 <div className="border sm:overflow-hidden sm:rounded">
-                  <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                  <div className="px-4 py-5 space-y-6 bg-white sm:p-6">
                     <label className="block text-sm font-medium text-zinc-700">Headers</label>
                     {headerAssertions.fields.map((f, i) => (
                       <div key={f.id} className="flex items-center gap-4">
@@ -677,14 +671,14 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form>
                 <div className="border sm:overflow-hidden sm:rounded">
-                  <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                  <div className="px-4 py-5 space-y-6 bg-white sm:p-6">
                     <div className="">
-                      <fieldset className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                      <fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                         {regions.map((r) => (
                           <button
                             type="button"
                             key={r.id}
-                            className={`text-left border rounded px-2 lg:px-4 py-1 hover:border-zinc-700 ${
+                            className={`flex items-center justify-between border rounded px-2 lg:px-4 py-1 hover:border-zinc-700 ${
                               selectedRegions.find((region) => region.id === r.id)
                                 ? "border-zinc-900 bg-zinc-50"
                                 : "border-zinc-300"
@@ -700,6 +694,11 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                             }}
                           >
                             {r.name}
+                            {r.platform === "aws" ? (
+                              <AwsLambda className="w-4 h-4" />
+                            ) : (
+                              <VercelEdge className="w-4 h-4" />
+                            )}
                           </button>
                         ))}
                       </fieldset>
@@ -755,7 +754,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form>
                 <div className="border sm:overflow-hidden sm:rounded">
-                  <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                  <div className="px-4 py-5 space-y-6 bg-white sm:p-6">
                     <div className="">
                       <label
                         htmlFor="company-website"
@@ -773,10 +772,10 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                               min: 1,
                             })}
                             defaultValue={endpoint.interval / 1000}
-                            className="block w-full px-4 py-3 border border-r-0 rounded-none rounded-l transition-all duration-300 ease-in-out group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
+                            className="block w-full px-4 py-3 transition-all duration-300 ease-in-out border border-r-0 rounded-none rounded-l group-focus:bg-zinc-50 border-zinc-900 hover:bg-zinc-50 focus:outline-none "
                           />
                         </div>
-                        <div className="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium border border-l-0 rounded-r space-x-2 border-zinc-900 bg-zinc-50 text-zinc-700 ">
+                        <div className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium border border-l-0 rounded-r border-zinc-900 bg-zinc-50 text-zinc-700 ">
                           <span>s</span>
                         </div>
                       </div>
@@ -797,7 +796,7 @@ export const Inner: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       <select
                         {...intervalForm.register("distribution")}
                         defaultValue={endpoint.distribution}
-                        className="w-full px-4 py-3 border rounded transition-all duration-300 ease-in-out focus:bg-zinc-50 border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:shadow"
+                        className="w-full px-4 py-3 transition-all duration-300 ease-in-out border rounded focus:bg-zinc-50 border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:shadow"
                       >
                         <option value="ALL">All</option>
                         <option value="RANDOM">Round Robin</option>

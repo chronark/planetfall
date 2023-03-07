@@ -6,6 +6,7 @@ import { db } from "@planetfall/db";
 import Stripe from "stripe";
 import { Redis } from "@upstash/redis";
 import { createInvoice } from "@/lib/billing/stripe";
+import { DEFAULT_QUOTA } from "plans";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2022-11-15",
@@ -15,69 +16,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const redis = Redis.fromEnv();
 
 export const billingRouter = t.router({
-  setup: t.procedure
-    .input(
-      z.object({
-        teamId: z.string(),
-      }),
-    )
-    .query(async ({ input, ctx }) => {
-      if (!ctx.session) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
-      let team = await db.team.findUnique({
-        where: { id: input.teamId },
-        include: {
-          members: {
-            where: {
-              userId: ctx.session.user.id,
-            },
-          },
-        },
-      });
-
-      if (!team) {
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
-
-      if (!team.stripeCustomerId) {
-        const user = await db.user.findUnique({
-          where: { id: ctx.session.user.id },
-        });
-        if (!user) {
-          throw new TRPCError({ code: "NOT_FOUND" });
-        }
-        const customer = await stripe.customers.create({
-          email: user.email,
-          name: team.name,
-        });
-
-        team = await db.team.update({
-          where: { id: team.id },
-          data: {
-            trialExpires: null,
-            stripeCustomerId: customer.id,
-          },
-          include: {
-            members: {
-              where: {
-                userId: ctx.session.user.id,
-              },
-            },
-          },
-        });
-      }
-      const checkoutSession = await stripe.checkout.sessions.create({
-        customer: team.stripeCustomerId!, // we just created it, so we know it exists
-        mode: "setup",
-        payment_method_types: ["card"],
-        success_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
-        cancel_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
-      });
-
-      return { url: checkoutSession.url };
-    }),
   changePlan: t.procedure
     .input(
       z.object({
@@ -86,7 +24,7 @@ export const billingRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
@@ -95,7 +33,7 @@ export const billingRouter = t.router({
         include: {
           members: {
             where: {
-              userId: ctx.session.user.id,
+              userId: ctx.user.id,
             },
           },
         },
@@ -110,7 +48,8 @@ export const billingRouter = t.router({
       if (locked) {
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",
-          message: "You can only change your plan once a day",
+          message:
+            "You can only change your plan once a day. If this is an emergency, please contact support@planetfall.io",
         });
       }
 
@@ -138,6 +77,10 @@ export const billingRouter = t.router({
         where: { id: team.id },
         data: {
           plan: input.plan,
+          maxEndpoints: DEFAULT_QUOTA[input.plan].maxEndpoints,
+          maxMonthlyRequests: DEFAULT_QUOTA[input.plan].maxMonthlyRequests,
+          maxTimeout: DEFAULT_QUOTA[input.plan].maxTimeout,
+          maxPages: DEFAULT_QUOTA[input.plan].maxStatusPages,
         },
       });
       await redis.set(redisLockKey, true, { ex: 60 * 60 * 24 });
@@ -149,7 +92,7 @@ export const billingRouter = t.router({
       }),
     )
     .query(async ({ input, ctx }) => {
-      if (!ctx.session) {
+      if (!ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
@@ -157,8 +100,11 @@ export const billingRouter = t.router({
         where: { id: input.teamId },
         include: {
           members: {
+            include: {
+              user: true,
+            },
             where: {
-              userId: ctx.session.user.id,
+              userId: ctx.user.id,
             },
           },
         },
@@ -167,9 +113,26 @@ export const billingRouter = t.router({
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
+      if (!team.stripeCustomerId) {
+        const customer = await stripe.customers.create({
+          email: team.members[0].user.email,
+          name: team.name,
+        });
+
+        // @ts-ignore We don't return all the fields, but we don't need them anyways
+        // Fixing the type would require useless db lookups
+        team = await db.team.update({
+          where: {
+            id: team.id,
+          },
+          data: {
+            stripeCustomerId: customer.id,
+          },
+        });
+      }
 
       const portal = await stripe.billingPortal.sessions.create({
-        customer: team.stripeCustomerId!,
+        customer: team!.stripeCustomerId!,
         return_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
       });
 

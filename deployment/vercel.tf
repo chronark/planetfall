@@ -110,6 +110,41 @@ resource "vercel_project" "web" {
       value  = var.resend_api_key,
       target = ["production", "preview", "development"]
 
+    },
+    {
+      key = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+      value = var.clerk_publishable_key.production,
+      target = ["production"]
+    },
+    {
+      key = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+      value = var.clerk_publishable_key.preview,
+      target = ["preview"]
+    },
+    {
+      key = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+      value = var.clerk_publishable_key.development,
+      target = ["development"]
+    },
+    {
+      key = "CLERK_SECRET_KEY",
+      value = var.clerk_secret_key.production,
+      target = ["production"]
+    },
+    {
+      key = "CLERK_SECRET_KEY",
+      value = var.clerk_secret_key.preview,
+      target = ["preview"]
+    },
+    {
+      key = "CLERK_SECRET_KEY",
+      value = var.clerk_secret_key.development,
+      target = ["development"]
+    },
+    {
+      key="CLERK_WEBHOOK_SECRET",
+      value=var.clerk_webhook_secret,
+      target=["production", "preview", "development"]
     }
 
 

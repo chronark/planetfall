@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Logo } from "../components/logo";
-import { Session } from "next-auth";
 import classNames from "classnames";
 
-type Props = {
-  session: Session | null;
-};
-export const Header: React.FC<Props> = (props: Props) => {
-  const isSignedIn = !!props.session;
+import { useAuth } from "@clerk/nextjs";
+
+export const Header: React.FC = () => {
+  const { userId } = useAuth();
+  console.log({ userId });
+  const isSignedIn = !!userId;
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {

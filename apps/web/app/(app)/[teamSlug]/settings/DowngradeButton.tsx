@@ -58,26 +58,3 @@ export const DowngradeButton: React.FC<Props> = ({ team }): JSX.Element => {
     </Dialog>
   );
 };
-// <Button
-//   onClick={async () => {
-//     try {
-//       setLoading(true);
-//       const res = await trpc.billing.setup.query({
-//         teamId: props.teamId,
-//       });
-//       if (res.url) {
-//         /**
-//          * router.push was causing cors errors
-//          */
-//         window.location.href = res.url;
-//       }
-//     } catch (err) {
-//       alert((err as Error).message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   }}
-//   disabled={loading}
-// >
-//   {loading ? <Loading /> : "Upgrade"}
-// </Button>

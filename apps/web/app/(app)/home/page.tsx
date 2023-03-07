@@ -1,10 +1,10 @@
+import { auth } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
-import { getSession } from "lib/auth";
 import { notFound, redirect } from "next/navigation";
 
 export default async function Home() {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 
@@ -12,14 +12,14 @@ export default async function Home() {
     where: {
       members: {
         some: {
-          userId: session.user.id,
+          userId,
         },
       },
     },
   });
 
   if (!team) {
-    notFound();
+    return notFound();
   }
   redirect(`/${team.slug}`);
 }

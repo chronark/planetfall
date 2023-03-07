@@ -7,6 +7,8 @@ import { Trace } from "@/components/trace";
 import { Select, SelectTrigger, SelectItem, SelectContent, SelectValue } from "@/components/select";
 import { PlayChecks } from "lib/server/routers/play";
 import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { AwsLambda } from "@/components/icons/AwsLambda";
+import { VercelEdge } from "@/components/icons/VercelEdge";
 
 type Props = {
   urls: PlayChecks["urls"];
@@ -28,14 +30,21 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
           defaultValue={selectedRegion?.id}
           onValueChange={(id) => setSelectedRegion(regions.find((r) => r.id === id)!)}
         >
-          <SelectTrigger>
+          <SelectTrigger className="flex ">
             <SelectValue defaultValue={selectedRegion?.id} />
           </SelectTrigger>
 
           <SelectContent>
             {regions.map((r) => (
               <SelectItem key={r.id} value={r.id}>
-                {r.name}
+                <div className="flex items-center gap-1">
+                  {r.id.startsWith("aws:") ? (
+                    <AwsLambda className="w-4 h-4" />
+                  ) : (
+                    <VercelEdge className="w-4 h-4" />
+                  )}
+                  {r.name}
+                </div>
               </SelectItem>
             ))}
           </SelectContent>

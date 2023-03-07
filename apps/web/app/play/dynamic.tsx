@@ -8,11 +8,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
-import { Logo } from "@/components/logo";
 import { trpc } from "lib/utils/trpc";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
-import { ToastProvider, useToast } from "@/components/toast";
+import { useToast } from "@/components/toast";
 
 type FormData = {
   url1: string;
@@ -26,16 +25,7 @@ type Props = {
   defaultValues: Partial<FormData>;
   signedIn: boolean;
 };
-
-export const Form: React.FC<Props> = (props): JSX.Element => {
-  return (
-    <ToastProvider>
-      <Inner {...props} />
-    </ToastProvider>
-  );
-};
-
-export const Inner: React.FC<Props> = ({
+export const Form: React.FC<Props> = ({
   defaultValues,
   regions: allRegions,
   signedIn,

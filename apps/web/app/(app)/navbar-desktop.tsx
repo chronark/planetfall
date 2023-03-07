@@ -6,16 +6,16 @@ import { TeamSwitcher } from "./team-switcher";
 import { Breadcrumbs } from "./breadcrumbs";
 
 import { db } from "@planetfall/db";
-import { getSession } from "lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 
 export type NavbarProps = {
   teamSlug: string;
 };
 
 export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
-  const { session } = await getSession();
+  const { userId } = auth();
 
-  if (!session) {
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 
@@ -25,7 +25,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
     { name: "Playground", href: "/play" },
     { name: "Settings", href: `/${props.teamSlug}/settings` },
   ];
-  const user = await db.user.findUnique({ where: { id: session.user.id } });
+  const user = await db.user.findUnique({ where: { id: userId } });
   if (!user) {
     console.warn(__filename, "User not found");
     notFound();
@@ -33,7 +33,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
 
   const teams = await db.team.findMany({
     where: {
-      members: { some: { userId: session.user.id } },
+      members: { some: { userId } },
     },
   });
 

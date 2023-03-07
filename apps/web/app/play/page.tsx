@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/auth";
+import { auth } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
 import { Form } from "./dynamic";
 
@@ -16,15 +16,15 @@ export default async function PlayPage(props: {
     where: { visible: true },
   });
 
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     regions = regions.filter((r) => r.platform === "vercelEdge");
   }
 
   return (
     <Form
       regions={regions}
-      signedIn={Boolean(session)}
+      signedIn={Boolean(userId)}
       defaultValues={{
         url1: props.searchParams?.url,
         method: props.searchParams?.method?.toUpperCase(),

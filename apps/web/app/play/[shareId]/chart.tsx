@@ -3,6 +3,7 @@
 import React from "react";
 import { Column } from "@ant-design/plots";
 import { PlayChecks } from "lib/server/routers/play";
+import { VercelEdge } from "@/components/icons/VercelEdge";
 
 type Props = {
   regions: PlayChecks["regions"];
@@ -15,18 +16,22 @@ const defaultStyle = {
   },
 };
 export const Chart: React.FC<Props> = ({ regions, urls }) => {
+  const regionMap: Record<string, string> = {};
+  for (const region of regions) {
+    regionMap[region.id] = region.name;
+  }
   if (regions[0].checks.length > 1) {
     const data = regions
 
     .flatMap((r) => [
       {
         url: urls[0],
-        region: r.name,
+        regionId: r.id,
         latency: r.checks[0]?.latency ?? -1,
       },
       {
         url: urls[1],
-        region: r.name,
+        regionId: r.id,
         latency: r.checks[1]?.latency ?? -1,
       },
     ]);
@@ -36,13 +41,17 @@ export const Chart: React.FC<Props> = ({ regions, urls }) => {
         data={data}
         isGroup={true}
         isStack={false}
-        xField="region"
+        xField="regionId"
         yField="latency"
         seriesField="url"
         xAxis={{
           title: { text: "Regions" },
           label: {
             autoRotate: true,
+            formatter: (regionId, _item, _index) => {
+              const name = regionMap[regionId] ?? regionId;
+              return `${regionId.startsWith("aws:") ? "λ" : "ε"} ${name}`;
+            },
           },
         }}
         yAxis={{
@@ -52,7 +61,7 @@ export const Chart: React.FC<Props> = ({ regions, urls }) => {
         color={["#3b82f6", "#ef4444"]}
         tooltip={{
           formatter: (datum) => ({
-            name: datum.url,
+            name: regionMap[datum.regionId] ?? datum.regionId,
             value: `${datum.latency} ms`,
           }),
         }}
@@ -63,18 +72,22 @@ export const Chart: React.FC<Props> = ({ regions, urls }) => {
       <Column
         {...defaultStyle}
         data={regions.map((r) => ({
-          region: r.name,
+          regionId: r.id,
           Latency: r.checks[0].latency!,
         }))}
-        xField="region"
+        xField="regionId"
         yField="Latency"
         color={["#3366FF"]}
-        seriesField="region"
+        seriesField="regionId"
         legend={false}
         xAxis={{
           title: { text: "Regions" },
           label: {
             autoRotate: true,
+            formatter: (regionId, _item, _index) => {
+              const name = regionMap[regionId] ?? regionId;
+              return `${regionId.startsWith("aws:") ? "ε" : "λ"} ${name}`;
+            },
           },
         }}
         yAxis={{
@@ -84,7 +97,7 @@ export const Chart: React.FC<Props> = ({ regions, urls }) => {
         }}
         tooltip={{
           formatter: (datum) => ({
-            name: datum.region,
+            name: regionMap[datum.regionId] ?? datum.regionId,
             value: `${datum.Latency} ms`,
           }),
         }}

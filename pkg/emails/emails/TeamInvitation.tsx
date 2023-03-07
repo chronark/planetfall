@@ -22,13 +22,18 @@ export type Props = {
   inviteLink: string;
 };
 
-export function TeamInvitation({ invitedFrom, team, username, inviteLink }: Props) {
+export function TeamInvitation({
+  invitedFrom = "chronark",
+  team = "Vercel",
+  username = "user_abc",
+  inviteLink = "https://planetfall.io/invite/abc",
+}: Props) {
   return (
     <Tailwind>
       <Html className="font-sans text-zinc-800">
         <Head />
         <Preview>{`Join ${team} on Planetfall`}</Preview>
-        <Body>
+        <Body className="bg-white">
           <Container className="container mx-auto">
             <Section className="mt-8">
               <Img
@@ -55,7 +60,11 @@ export function TeamInvitation({ invitedFrom, team, username, inviteLink }: Prop
               }}
             >
               <Button
-                className="px-4 py-2 font-medium text-white rounded bg-zinc-900"
+                style={{
+                  // tailwind p- classes didn't work
+                  padding: "8px 16px",
+                }}
+                className="font-medium text-white rounded bg-zinc-900"
                 href={inviteLink}
               >
                 Join the team

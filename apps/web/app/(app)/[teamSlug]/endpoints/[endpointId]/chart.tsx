@@ -6,7 +6,7 @@ import { Metric } from "@planetfall/tinybird";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
 import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
 type Props = {
-  regions: Metric[];
+  regions: (Metric & { regionName: string })[];
   endpoint: {
     timeout?: number;
     degradedAfter?: number;
@@ -24,6 +24,11 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
   // @ts-ignore
   const sorted = regions.sort((a, b) => a[selected] - b[selected]);
   const data = showTopBottom ? sorted.slice(0, 5).concat(sorted.slice(-5)) : sorted;
+
+  const regionMap: Record<string, string> = {};
+  for (const r of regions) {
+    regionMap[r.regionId] = r.regionName;
+  }
 
   return (
     <Card>
@@ -56,7 +61,7 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
       <CardContent>
         <Bar
           data={data}
-          yField="region"
+          yField="regionId"
           xField={selected}
           legend={{
             position: "top",
@@ -74,6 +79,16 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
             maxTickCount: 3,
 
             title: { text: "Latency (ms)" },
+          }}
+          yAxis={{
+            label: {
+              formatter: (regionId, _item, _index) => {
+                const name = regionMap[regionId] ?? regionId;
+                return `${
+                  regionId.startsWith("aws:") ? "λ" : regionId.startsWith("vercelEdge:") ? "ε" : ""
+                } ${name}`;
+              },
+            },
           }}
           tooltip={{
             formatter: (datum) => {

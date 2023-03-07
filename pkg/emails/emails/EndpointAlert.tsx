@@ -46,13 +46,24 @@ export function EndpointAlert({
             <code className="inline-block w-full p-4 my-4 font-mono border rounded border-zinc-300 bg-zinc-100">
               {error}
             </code>
-
-            <Button
-              href={checkLink}
-              className="px-8 py-4 mx-auto font-medium rounded bg-zinc-900 text-zinc-50"
+            <Section
+              style={{
+                textAlign: "center",
+                marginTop: "26px",
+                marginBottom: "26px",
+              }}
             >
-              See More Details
-            </Button>
+              <Button
+                href={checkLink}
+                style={{
+                  // tailwind p- classes didn't work
+                  padding: "8px 16px",
+                }}
+                className="px-8 py-4 mx-auto font-medium rounded bg-zinc-900 text-zinc-50"
+              >
+                See More Details
+              </Button>
+            </Section>
 
             <Text className="text-zinc-600">
               You can manage your endpoint configuration in the app:{" "}
