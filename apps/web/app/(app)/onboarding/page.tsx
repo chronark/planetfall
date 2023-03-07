@@ -16,8 +16,7 @@ export default async function OnboardingPage() {
     ? slugify(clerkUser.username, { lower: true, trim: true })
     : newAnimalId();
 
-
-    console.log({clerkUser})
+  console.log({ clerkUser });
   const user = await db.user.create({
     data: {
       id: clerkUser.id,
@@ -36,18 +35,18 @@ export default async function OnboardingPage() {
               maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
               maxPages: DEFAULT_QUOTA.FREE.maxStatusPages,
               plan: "FREE",
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     },
     include: {
       teams: {
         include: {
-          team: true
-        }
-      }
-    }
+          team: true,
+        },
+      },
+    },
   });
 
   return redirect(`/${user.teams[0].team.slug}`);
