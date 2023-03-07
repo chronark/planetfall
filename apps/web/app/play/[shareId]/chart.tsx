@@ -86,7 +86,7 @@ export const Chart: React.FC<Props> = ({ regions, urls }) => {
             autoRotate: true,
             formatter: (regionId, _item, _index) => {
               const name = regionMap[regionId] ?? regionId;
-              return `${regionId.startsWith("aws:") ? "ε" : "λ"} ${name}`;
+              return `${regionId.startsWith("aws:") ? "λ" : "ε"} ${name}`;
             },
           },
         }}
