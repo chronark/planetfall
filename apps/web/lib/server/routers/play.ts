@@ -64,7 +64,7 @@ export const playRouter = t.router({
     )
     .output(z.object({ shareId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      tb.publish("play.checks", input);
+      tb.publish("play.checks",input);
 
       const { success, remaining, reset, limit } = await ratelimit.limit("global");
       if (!success) {

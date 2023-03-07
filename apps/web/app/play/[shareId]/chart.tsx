@@ -23,18 +23,18 @@ export const Chart: React.FC<Props> = ({ regions, urls }) => {
   if (regions[0].checks.length > 1) {
     const data = regions
 
-    .flatMap((r) => [
-      {
-        url: urls[0],
-        regionId: r.id,
-        latency: r.checks[0]?.latency ?? -1,
-      },
-      {
-        url: urls[1],
-        regionId: r.id,
-        latency: r.checks[1]?.latency ?? -1,
-      },
-    ]);
+      .flatMap((r) => [
+        {
+          url: urls[0],
+          regionId: r.id,
+          latency: r.checks[0]?.latency ?? -1,
+        },
+        {
+          url: urls[1],
+          regionId: r.id,
+          latency: r.checks[1]?.latency ?? -1,
+        },
+      ]);
     return (
       <Column
         {...defaultStyle}
@@ -50,7 +50,7 @@ export const Chart: React.FC<Props> = ({ regions, urls }) => {
             autoRotate: true,
             formatter: (regionId, _item, _index) => {
               const name = regionMap[regionId] ?? regionId;
-              return `${regionId.startsWith("aws:") ? "λ" : "ε"} ${name}`;
+              return `${regionId.startsWith("aws:") ? "λ" : regionId.startsWith("vercelEdge:") ? "ε" : ""} ${name}`;
             },
           },
         }}
