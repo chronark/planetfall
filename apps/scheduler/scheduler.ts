@@ -1,4 +1,4 @@
-import { Endpoint, PrismaClient, Region } from "@planetfall/db";
+import { Endpoint, PrismaClient, Region, Team } from "@planetfall/db";
 import * as tb from "@planetfall/tinybird";
 import { newId } from "@planetfall/id";
 import { Logger } from "./logger";

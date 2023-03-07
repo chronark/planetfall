@@ -42,9 +42,12 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
         timeout: req.timeout,
       };
       // 1 retry if the request fails
-      const res = await check(checkRequest).catch(() => {
+      let res = await check(checkRequest).catch(() => {
         return check(checkRequest);
       });
+      if (res.error) {
+        res = await check(checkRequest);
+      }
       responses.push(res);
     } catch (e) {
       const err = e as Error;
