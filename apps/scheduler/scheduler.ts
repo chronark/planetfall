@@ -293,6 +293,19 @@ export class Scheduler {
             this.logger.debug("storing check", { checkId: d.id });
           }
 
+          for (const d of data) {
+            const responseHeaders = new Headers(d.header);
+            this.tinybird.publish("cache_headers__v1", {
+              time: d.time.getTime(),
+              checkId: d.id,
+              endpointId: d.endpointId,
+              "Cache-Control": responseHeaders.get("Cache-Control"),
+              "X-Vercel-Cache": responseHeaders.get("X-Vercel-Cache"),
+              "Server": responseHeaders.get("Server"),
+
+            })
+          }
+
           await this.db.check.createMany({ data }).catch((err) => {
             this.logger.error("error publishing checks to planetscale", {
               endpointId: endpoint.id,
