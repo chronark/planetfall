@@ -1,19 +1,12 @@
 import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
-import { date, z } from "zod";
+import { z } from "zod";
 import { t } from "../trpc";
 import { db } from "@planetfall/db";
 import slugify from "slugify";
-import { maxHeaderSize } from "http";
 import { DEFAULT_QUOTA } from "plans";
-import { env } from "@/lib/env";
-import Stripe from "stripe";
-import { Client as Tinybird } from "@planetfall/tinybird";
 import { createInvoice } from "@/lib/billing/stripe";
-
-const _stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2022-11-15",
-});
+// import { Email } from "@planetfall/emails";
 
 export const teamRouter = t.router({
   create: t.procedure
@@ -79,18 +72,34 @@ export const teamRouter = t.router({
           id: input.teamId,
         },
         include: {
-          members: true,
+          members: {
+            include: {
+              user: true,
+            },
+          },
         },
       });
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      if (team.plan === "FREE") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Upgrade to PRO to invite members to this team",
+        });
+      }
+      if (team.plan === "DISABLED") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "This team has been disabled" });
       }
       const currentUser = team.members.find((m) => m.userId === ctx.user!.id);
       if (!currentUser) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       if (currentUser.role !== "OWNER" && currentUser.role !== "ADMIN") {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You need to be an admin or owner of this team.",
+        });
       }
 
       const invitedUser = await db.user.findUnique({
@@ -101,18 +110,21 @@ export const teamRouter = t.router({
       if (!invitedUser) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: `No user found: ${input.email}`,
+          message: `No user found: ${input.email}. Please ask them to sign up first.`,
         });
       }
 
-      await db.teamInvitation.upsert({
+      const invitation = await db.teamInvitation.upsert({
         where: {
           teamId_userId: {
             teamId: input.teamId,
             userId: invitedUser.id,
           },
         },
-        update: {},
+        update: {
+          // extend the invitation
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        },
         create: {
           id: newId("invitation"),
           team: {
@@ -128,6 +140,16 @@ export const teamRouter = t.router({
           expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
         },
       });
+      return invitation;
+
+      // await new Email().sendTeamInvitation({
+      //   to: invitedUser.email,
+      //   username: invitedUser.name,
+      //   team: team.name,
+      //   invitedFrom: currentUser.user.name,
+
+      //   inviteLink: `https://planetfall/invite/${invitation.id}`,
+      // });
     }),
   updateMember: t.procedure
     .input(
