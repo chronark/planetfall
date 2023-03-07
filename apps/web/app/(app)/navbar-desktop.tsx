@@ -53,6 +53,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
                   id: t.id,
                   name: t.name,
                   slug: t.slug,
+                  plan: t.plan,
                 }))}
                 currentTeamId={currentTeam.id}
               />

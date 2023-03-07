@@ -20,12 +20,15 @@ import { Input } from "@/components/input";
 import { Label } from "@/components/label";
 import { useForm } from "react-hook-form";
 import { Loading } from "@/components/loading";
+import { Plan } from "@prisma/client";
+import classNames from "classnames";
 
 type Props = {
   teams: {
     id: string;
     name: string;
     slug: string;
+    plan: Plan;
   }[];
   currentTeamId: string;
 };
@@ -57,13 +60,14 @@ export const TeamSwitcher: React.FC<Props> = ({ teams, currentTeamId }): JSX.Ele
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center justify-between px-2 py-1 mx-2 rounded gap-4 hover:bg-zinc-100">
+      <DropdownMenuTrigger className="flex items-center justify-between gap-4 px-2 py-1 mx-2 rounded hover:bg-zinc-100">
         <span>{currentTeam?.name}</span>
+        <PlanBadge plan={currentTeam?.plan ?? "DISABLED"} />
         <ChevronsUpDown className="w-4 h-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         sideOffset={5}
-        className="z-30 p-4 bg-white border rounded shadow-lg divide-y divide-zinc-200"
+        className="z-30 p-4 bg-white border divide-y rounded shadow-lg divide-zinc-200"
       >
         <div className="py-2">
           <h3 className="px-3 text-xs font-medium text-zinc-500" id="projects-headline">
@@ -84,7 +88,7 @@ export const TeamSwitcher: React.FC<Props> = ({ teams, currentTeamId }): JSX.Ele
             ))}
 
             <Dialog>
-              <DialogTrigger className="flex items-center justify-between px-3 py-2 text-sm font-medium gap-4 rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-90">
+              <DialogTrigger className="flex items-center justify-between gap-4 px-3 py-2 text-sm font-medium rounded-md lg:gap-8 xl:gap-16 group text-zinc-600 hover:bg-zinc-100 hover:text-zinc-90">
                 <span className="truncate">Create New Team</span>
 
                 <Plus className="w-4 h-4" />
@@ -122,5 +126,23 @@ export const TeamSwitcher: React.FC<Props> = ({ teams, currentTeamId }): JSX.Ele
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+};
+
+const PlanBadge: React.FC<{ plan: Plan }> = ({ plan }) => {
+  return (
+    <span
+      className={classNames(
+        " inline-flex items-center px-2 font-medium py-0.5 text-xs uppercase border rounded-md",
+        {
+          "text-zinc-800 bg-zinc-100 border-zinc-500": plan === "FREE",
+          "text-primary-500  bg-primary-100 border-primary-500": plan === "PRO",
+          "text-white bg-black border-black": plan === "ENTERPRISE",
+          "text-red-600 bg-red-100 border-red-500": plan === "DISABLED",
+        },
+      )}
+    >
+      {plan}
+    </span>
   );
 };
