@@ -28,6 +28,7 @@ export default async function OnboardingPage() {
       id: clerkUser.id,
       name: slug,
       email: clerkUser.emailAddresses[0]?.emailAddress ?? "",
+      image: clerkUser.profileImageUrl,
       teams: {
         create: {
           role: "OWNER",
