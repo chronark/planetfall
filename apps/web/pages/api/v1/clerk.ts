@@ -36,7 +36,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return;
     }
 
-
     await db.user.upsert({
       where: {
         id: v.data.data.id,

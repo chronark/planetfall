@@ -55,47 +55,58 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
         <div className="flex flex-col justify-between w-full divide-y md:flex-row md:divide-y-0 ">
           {selectedRegion?.checks
             .sort((a, b) => a.time - b.time)
-            .map((c, i) => (
-              <div
-                key={i}
-                className={`${
-                  selectedRegion.checks.length > 1 ? "lg:w-1/2" : "w-full"
-                } p-4 flex flex-col divide-y divide-zinc-200`}
-              >
-                <div className="flex flex-col items-center justify-between">
-                  {selectedRegion.checks.length > 1 ? (
-                    <>
-                      <Heading h3={true}>{urls[i]}</Heading>
-                      <span className="text-sm text-zinc-500">
-                        {new Date(c.time).toISOString()}
-                      </span>
-                    </>
+            .map((c, i) => {
+              /**
+               * using `Headers` because checks from edge or from lambdas have different casing
+               */
+              const headers = new Headers(c.headers);
+              const vercelCache = headers.get("x-vercel-cache");
+
+              return (
+                <div
+                  key={c.id}
+                  className={`${
+                    selectedRegion.checks.length > 1 ? "lg:w-1/2" : "w-full"
+                  } p-4 flex flex-col divide-y divide-zinc-200`}
+                >
+                  <div className="flex flex-col items-center justify-between">
+                    {selectedRegion.checks.length > 1 ? (
+                      <>
+                        <Heading h3={true}>{urls[i]}</Heading>
+                        <span className="text-sm text-zinc-500">
+                          {new Date(c.time).toISOString()}
+                        </span>
+                      </>
+                    ) : null}
+                    <div className="flex">
+                      <Stats label="Latency" value={c.latency?.toLocaleString()} suffix="ms" />
+
+                      <Stats label="Status" value={c.status} />
+                      {vercelCache ? <Stats label="Vercel Cache" value={vercelCache} /> : null}
+                    </div>
+                  </div>
+                  {c.timing ? (
+                    <div className="py-4 md:py-8">
+                      <Heading h4={true}>Trace</Heading>
+
+                      <Trace timings={c.timing} />
+                    </div>
                   ) : null}
-                  <div className="flex">
-                    <Stats label="Latency" value={c.latency?.toLocaleString()} suffix="ms" />
-
-                    <Stats label="Status" value={c.status} />
-                  </div>
-                </div>
-                {c.timing ? (
                   <div className="py-4 md:py-8">
-                    <Heading h4={true}>Trace</Heading>
-
-                    <Trace timings={c.timing} />
+                    <Heading h4={true}>Response Header</Heading>
+                    <pre className="p-2 overflow-x-auto rounded bg-zinc-50">
+                      {JSON.stringify(c.headers, null, 2)}
+                    </pre>
                   </div>
-                ) : null}
-                <div className="py-4 md:py-8">
-                  <Heading h4={true}>Response Header</Heading>
-                  <pre className="p-2 overflow-x-auto rounded bg-zinc-50">
-                    {JSON.stringify(c.headers, null, 2)}
-                  </pre>
+                  <div className="py-4 md:py-8">
+                    <Heading h4={true}>Response Body</Heading>
+                    <pre className="p-2 overflow-x-auto rounded bg-zinc-50">
+                      {atob(c.body ?? "")}
+                    </pre>
+                  </div>
                 </div>
-                <div className="py-4 md:py-8">
-                  <Heading h4={true}>Response Body</Heading>
-                  <pre className="p-2 overflow-x-auto rounded bg-zinc-50">{atob(c.body ?? "")}</pre>
-                </div>
-              </div>
-            ))}
+              );
+            })}
         </div>
       </CardContent>
     </Card>
