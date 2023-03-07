@@ -72,7 +72,7 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                     </>
                   ) : null}
                   <div className="flex">
-                    <Stats label="Latency" value={c.latency!.toLocaleString()} suffix="ms" />
+                    <Stats label="Latency" value={c.latency?.toLocaleString()} suffix="ms" />
 
                     <Stats label="Status" value={c.status} />
                   </div>

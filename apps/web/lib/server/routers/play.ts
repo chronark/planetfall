@@ -6,6 +6,8 @@ import { db } from "@planetfall/db";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
+import { Client as Tinybird } from "@planetfall/tinybird";
+const tb = new Tinybird();
 const redis = Redis.fromEnv();
 const ratelimit = new Ratelimit({
   redis,
@@ -62,6 +64,8 @@ export const playRouter = t.router({
     )
     .output(z.object({ shareId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      tb.publish("play.checks", input);
+
       const { success, remaining, reset, limit } = await ratelimit.limit("global");
       if (!success) {
         throw new TRPCError({
@@ -72,8 +76,6 @@ export const playRouter = t.router({
       ctx.res.setHeader("X-RateLimit-Limit", limit);
       ctx.res.setHeader("X-RateLimit-Remaining", remaining);
       ctx.res.setHeader("X-RateLimit-Reset", reset);
-
-      let _counter = 0;
 
       const ps = await Promise.allSettled(
         input.regionIds.map(async (regionId) => {
