@@ -36,7 +36,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return;
     }
 
-    console.log(JSON.stringify(v.data, null, 2));
 
     await db.user.upsert({
       where: {

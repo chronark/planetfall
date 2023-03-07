@@ -301,9 +301,9 @@ export class Scheduler {
               endpointId: d.endpointId,
               "Cache-Control": responseHeaders.get("Cache-Control"),
               "X-Vercel-Cache": responseHeaders.get("X-Vercel-Cache"),
-              "Server": responseHeaders.get("Server"),
-
-            })
+              Server: responseHeaders.get("Server"),
+              "CF-Cache-Status": responseHeaders.get("CF-Cache-Status"),
+            });
           }
 
           await this.db.check.createMany({ data }).catch((err) => {
