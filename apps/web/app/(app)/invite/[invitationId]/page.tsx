@@ -1,5 +1,5 @@
+import { auth } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
-import { getSession } from "lib/auth";
 import { notFound, redirect } from "next/navigation";
 
 type Props = {
@@ -9,8 +9,8 @@ type Props = {
 };
 
 export default async function Home(props: Props) {
-  const { session } = await getSession();
-  if (!session) {
+  const { userId } = auth();
+  if (!userId) {
     return redirect("/auth/sign-in");
   }
 
@@ -33,14 +33,14 @@ export default async function Home(props: Props) {
     });
     return notFound();
   }
-  if (invitation.userId !== session.user.id) {
+  if (invitation.userId !== userId) {
     return notFound();
   }
 
   await db.membership.create({
     data: {
       teamId: invitation.team.id,
-      userId: session.user.id,
+      userId,
       role: "MEMBER",
     },
   });

@@ -6,7 +6,7 @@ import { db } from "@planetfall/db";
 import slugify from "slugify";
 import { DEFAULT_QUOTA } from "plans";
 import { createInvoice } from "@/lib/billing/stripe";
-import { Email } from "@planetfall/emails";
+// import { Email } from "@planetfall/emails";
 
 export const teamRouter = t.router({
   create: t.procedure
@@ -82,12 +82,24 @@ export const teamRouter = t.router({
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
+      if (team.plan === "FREE") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Upgrade to PRO to invite members to this team",
+        });
+      }
+      if (team.plan === "DISABLED") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "This team has been disabled" });
+      }
       const currentUser = team.members.find((m) => m.userId === ctx.user!.id);
       if (!currentUser) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       if (currentUser.role !== "OWNER" && currentUser.role !== "ADMIN") {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You need to be an admin or owner of this team.",
+        });
       }
 
       const invitedUser = await db.user.findUnique({
@@ -98,7 +110,7 @@ export const teamRouter = t.router({
       if (!invitedUser) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: `No user found: ${input.email}`,
+          message: `No user found: ${input.email}. Please ask them to sign up first.`,
         });
       }
 
@@ -128,15 +140,16 @@ export const teamRouter = t.router({
           expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
         },
       });
+      return invitation;
 
-      await new Email().sendTeamInvitation({
-        to: invitedUser.email,
-        username: invitedUser.name,
-        team: team.name,
-        invitedFrom: currentUser.user.name,
+      // await new Email().sendTeamInvitation({
+      //   to: invitedUser.email,
+      //   username: invitedUser.name,
+      //   team: team.name,
+      //   invitedFrom: currentUser.user.name,
 
-        inviteLink: `https://planetfall/invite/${invitation.id}`,
-      });
+      //   inviteLink: `https://planetfall/invite/${invitation.id}`,
+      // });
     }),
   updateMember: t.procedure
     .input(

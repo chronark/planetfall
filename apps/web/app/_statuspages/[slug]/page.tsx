@@ -8,6 +8,8 @@ import { getStats } from "./get-stats";
 import { RelativeTime } from "./RelativeTime";
 
 export const revalidate = 60;
+export const dynamic = "force-static";
+
 
 export default async function Page(props: { params: { slug: string } }) {
   const now = Date.now();
