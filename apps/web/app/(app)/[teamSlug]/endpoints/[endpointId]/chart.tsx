@@ -85,7 +85,7 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
               formatter: (regionId, _item, _index) => {
                 const name = regionMap[regionId] ?? regionId;
                 return `${
-                  regionId.startsWith("aws:") ? "λ" : regionId.startsWith("vercelEdge:") ? "ε" : ""
+                  regionId.startsWith("aws:") ? "λ" : regionId.startsWith("vercelEdge:") ? "▲" : ""
                 } ${name}`;
               },
             },
