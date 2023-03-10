@@ -43,8 +43,8 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
   }
 
   return (
-    <nav className="bg-white border-b border-zinc-300">
-      <div className="container px-4 pt-2 mx-auto sm:px-0">
+    <nav className="bg-white border-b border-zinc-300 w-full">
+      <div className="container w-full pt-2 mx-auto">
         <div className="flex items-center justify-between">
           <Breadcrumbs
             teamSwitcher={
