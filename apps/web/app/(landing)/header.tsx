@@ -8,7 +8,6 @@ import { useAuth } from "@clerk/nextjs";
 
 export const Header: React.FC = () => {
   const { userId } = useAuth();
-  console.log({ userId });
   const isSignedIn = !!userId;
   const [isScrolled, setIsScrolled] = useState(false);
 

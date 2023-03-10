@@ -1,6 +1,5 @@
 import { Header } from "./header";
 import { Footer } from "./footer";
-import { auth } from "@clerk/nextjs/app-beta";
 
 export const dynamic = "force-static";
 export const revalidate = 3600;

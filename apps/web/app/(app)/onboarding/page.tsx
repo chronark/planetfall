@@ -16,7 +16,6 @@ export default async function OnboardingPage() {
     ? slugify(clerkUser.username, { lower: true, trim: true })
     : newAnimalId();
 
-  console.log({ clerkUser });
   const user = await db.user.upsert({
     where: { id: clerkUser.id },
     update: {

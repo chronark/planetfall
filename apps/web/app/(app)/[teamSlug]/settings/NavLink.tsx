@@ -13,7 +13,6 @@ type Props = {
 export const NavLink: React.FC<Props> = ({ slug, href, label }) => {
   const segment = useSelectedLayoutSegment();
   const isActive = slug === segment;
-  console.log({ segment, slug, isActive });
 
   return (
     <Link

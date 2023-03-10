@@ -32,6 +32,6 @@
     "javascriptreact": "(?:\\bclassName\\s*=\\s*[\\\"\\'](https://github.com/heybourn/headwind/blob/master/[_a-zA-Z0-9\\s\\-\\:\\/]+)[\\\"\\'])|(?:\\btw\\s*`([_a-zA-Z0-9\\s\\-\\:\\/]*)`)"
   },
   "dependencies": {
-    "next": "13.2.3"
+    "next": "13.2.4"
   }
 }
