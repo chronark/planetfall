@@ -29,6 +29,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
       href: "/support",
     },
   ];
+
   const user = await db.user.findUnique({ where: { id: userId } });
   if (!user) {
     console.warn(__filename, "User not found");
@@ -40,6 +41,10 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
       members: { some: { userId } },
     },
   });
+
+  if (teams.some(t=>t.id==="team_NszcknrCNzjFgnLvqUCXGR")){
+    navigation.push({ name: "Internal", href: `/${props.teamSlug}/internal/stats/teams` });
+  }
 
   const currentTeam = teams.find((team) => team.slug === props.teamSlug);
   if (!currentTeam) {
