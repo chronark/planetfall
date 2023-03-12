@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { JSONPath } from "jsonpath-plus";
-import { Assertion, AssertionRequest } from "./types";
+import { Assertion, AssertionRequest, AssertionResult } from "./types";
 
 export const stringCompare = z.enum([
   "contains",
@@ -20,50 +20,112 @@ function evaluateNumber(
   value: number,
   compare: z.infer<typeof numberCompare>,
   target: number,
-): boolean {
+): AssertionResult {
   switch (compare) {
     case "eq":
-      return value === target;
+      if (value !== target) {
+        return { success: false, message: `Expected ${value} to be equal to ${target}` };
+      }
+      break;
     case "not_eq":
-      return value !== target;
+      if (value === target) {
+        return { success: false, message: `Expected ${value} to not be equal to ${target}` };
+      }
+      break;
     case "gt":
-      return value > target;
+      if (value <= target) {
+        return { success: false, message: `Expected ${value} to be greater than ${target}` };
+      }
+      break;
     case "gte":
-      return value >= target;
+      if (value < target) {
+        return {
+          success: false,
+          message: `Expected ${value} to be greater than or equal to ${target}`,
+        };
+      }
+      break;
     case "lt":
-      return value < target;
+      if (value >= target) {
+        return { success: false, message: `Expected ${value} to be less than ${target}` };
+      }
+      break;
     case "lte":
-      return value <= target;
+      if (value > target) {
+        return {
+          success: false,
+          message: `Expected ${value} to be less than or equal to ${target}`,
+        };
+      }
+      break;
   }
+  return { success: true };
 }
 
 function evaluateString(
   value: string,
   compare: z.infer<typeof stringCompare>,
   target: string,
-): boolean {
+): AssertionResult {
   switch (compare) {
     case "contains":
-      return value.includes(target);
+      if (!value.includes(target)) {
+        return { success: false, message: `Expected ${value} to contain ${target}` };
+      }
+      break;
     case "not_contains":
-      return !value.includes(target);
+      if (value.includes(target)) {
+        return { success: false, message: `Expected ${value} to not contain ${target}` };
+      }
+      break;
     case "empty":
-      return value === "";
+      if (value !== "") {
+        return { success: false, message: `Expected ${value} to be empty` };
+      }
+      break;
     case "not_empty":
-      return value !== "";
+      if (value === "") {
+        return { success: false, message: `Expected ${value} to not be empty` };
+      }
+      break;
     case "eq":
-      return value === target;
+      if (value !== target) {
+        return { success: false, message: `Expected ${value} to be equal to ${target}` };
+      }
+      break;
     case "not_eq":
-      return value !== target;
+      if (value === target) {
+        return { success: false, message: `Expected ${value} to not be equal to ${target}` };
+      }
+      break;
     case "gt":
-      return value > target;
+      if (value <= target) {
+        return { success: false, message: `Expected ${value} to be greater than ${target}` };
+      }
+      break;
     case "gte":
-      return value >= target;
+      if (value < target) {
+        return {
+          success: false,
+          message: `Expected ${value} to be greater than or equal to ${target}`,
+        };
+      }
+      break;
     case "lt":
-      return value < target;
+      if (value >= target) {
+        return { success: false, message: `Expected ${value} to be less than ${target}` };
+      }
+      break;
     case "lte":
-      return value <= target;
+      if (value > target) {
+        return {
+          success: false,
+          message: `Expected ${value} to be less than or equal to ${target}`,
+        };
+      }
+      break;
   }
+  return { success: true };
 }
 
 export const base = z
@@ -120,8 +182,16 @@ export class StatusAssertion implements Assertion {
     this.schema = schema;
   }
 
-  public assert(req: AssertionRequest): boolean {
-    return evaluateNumber(req.status, this.schema.compare, this.schema.target);
+  public assert(req: AssertionRequest): AssertionResult {
+    const { success, message } = evaluateNumber(
+      req.status,
+      this.schema.compare,
+      this.schema.target,
+    );
+    if (success) {
+      return { success };
+    }
+    return { success, message: `Status: ${message}` };
   }
 }
 
@@ -132,8 +202,16 @@ export class HeaderAssertion {
     this.schema = schema;
   }
 
-  public assert(req: AssertionRequest): boolean {
-    return evaluateString(req.header[this.schema.key], this.schema.compare, this.schema.target);
+  public assert(req: AssertionRequest): AssertionResult {
+    const { success, message } = evaluateString(
+      req.header[this.schema.key],
+      this.schema.compare,
+      this.schema.target,
+    );
+    if (success) {
+      return { success };
+    }
+    return { success, message: `Header ${this.schema.key}: ${message}` };
   }
 }
 
@@ -144,8 +222,12 @@ export class TextBodyAssertion {
     this.schema = schema;
   }
 
-  public assert(req: AssertionRequest): boolean {
-    return evaluateString(req.body, this.schema.compare, this.schema.target);
+  public assert(req: AssertionRequest): AssertionResult {
+    const { success, message } = evaluateString(req.body, this.schema.compare, this.schema.target);
+    if (success) {
+      return { success };
+    }
+    return { success, message: `Body: ${message}` };
   }
 }
 export class JsonBodyAssertion implements Assertion {
@@ -155,14 +237,18 @@ export class JsonBodyAssertion implements Assertion {
     this.schema = schema;
   }
 
-  public assert(req: AssertionRequest): boolean {
+  public assert(req: AssertionRequest): AssertionResult {
     try {
       const json = JSON.parse(req.body);
       const value = JSONPath({ path: this.schema.path, json });
-      return evaluateString(value, this.schema.compare, this.schema.target);
+      const { success, message } = evaluateString(value, this.schema.compare, this.schema.target);
+      if (success) {
+        return { success };
+      }
+      return { success, message: `Body: ${message}` };
     } catch (_e) {
       console.error("Unable to parse json");
-      return false;
+      return { success: false, message: "Unable to parse json" };
     }
   }
 }

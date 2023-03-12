@@ -24,6 +24,10 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
     { name: "Pages", href: `/${props.teamSlug}/pages` },
     { name: "Playground", href: "/play" },
     { name: "Settings", href: `/${props.teamSlug}/settings` },
+    {
+      name: "Support",
+      href: "/support",
+    },
   ];
   const user = await db.user.findUnique({ where: { id: userId } });
   if (!user) {
@@ -67,7 +71,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
             }}
           />
         </div>
-        <div className="mt-2 lg:mt-4">
+        <div className="mt-2 lg:mt-4 md:space-x-4 ">
           {navigation.map((item) => (
             <NavLink key={item.name} href={item.href} label={item.name} />
           ))}

@@ -262,13 +262,13 @@ export class Scheduler {
               if (endpoint.assertions) {
                 const as = assertions.deserialize(endpoint.assertions);
                 for (const a of as) {
-                  const success = a.assert({
+                  const { success, message } = a.assert({
                     body: c.body,
                     header: c.headers,
                     status: c.status,
                   });
                   if (!success) {
-                    c.error = `Assertion error: ${JSON.stringify(a.schema)}`;
+                    c.error = `Assertion error: ${message}`;
                     break;
                   }
                 }

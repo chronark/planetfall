@@ -10,6 +10,10 @@ const navigation = [
     name: "Dashboard",
     href: "/home",
   },
+  {
+    name: "Support",
+    href: "/support",
+  },
 ];
 
 export default async function PlayLayout(props: {

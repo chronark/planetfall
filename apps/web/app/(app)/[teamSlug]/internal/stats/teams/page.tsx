@@ -1,0 +1,65 @@
+import { db } from "@planetfall/db";
+import { Card, Title, Text, Tab, TabList, ColGrid, Block, Metric } from "@tremor/react";
+import { BarChart } from "./bar-chart";
+import { Client as Tinybird } from "@planetfall/tinybird";
+
+import "@tremor/react/dist/esm/tremor.css";
+
+const tb = new Tinybird();
+
+export default async function AppLayout() {
+  const users = await db.user.count();
+  const endpoints = await db.endpoint.count();
+  const teams = await db.team.findMany();
+
+  const now = new Date();
+  const usage = await Promise.all(
+    teams.map(async (team) => {
+      return {
+        team: {
+          id: team.id,
+          name: team.name,
+        },
+        usage: await tb.getUsage(team.id, {
+          year: now.getUTCFullYear(),
+          month: now.getUTCMonth() + 1,
+        }),
+      };
+    }),
+  );
+
+  return (
+    <>
+      <ColGrid numColsMd={2} numColsLg={3} gapX="gap-x-6" gapY="gap-y-6" marginTop="mt-6">
+        <Card>
+          <Text>Total Teams</Text>
+          <Metric>{teams.length}</Metric>
+        </Card>
+        <Card>
+          <Text>Total Users</Text>
+          <Metric>{users}</Metric>
+        </Card>
+        <Card>
+          <Text>Total Endpoint</Text>
+          <Metric>{endpoints}</Metric>
+        </Card>
+      </ColGrid>
+
+      <Block marginTop="mt-6">
+        <Card>
+          <BarChart
+            data={usage
+              .map((u) => ({
+                team: u.team,
+                "Total Usage": u.usage.reduce((total, day) => total + day.usage, 0),
+              }))
+              .sort((a, b) => b["Total Usage"] - a["Total Usage"])
+              .slice(0, 20)}
+            dataKey="team.name"
+            categories={["Total Usage"]}
+          />
+        </Card>
+      </Block>
+    </>
+  );
+}

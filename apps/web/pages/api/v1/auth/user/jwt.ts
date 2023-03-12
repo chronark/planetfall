@@ -34,7 +34,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   return res.end();
 }
 
-const privateKey = `-----BEGIN RSA PRIVATE KEY-----
+export const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpQIBAAKCAQEAsjtBgjvao1ozju7Ng7eHNm3FtNVQPwUJbDswck0GYw51BfV6
 1IrR1el+8pzJ8Al4pOhw3nBcGTpUJX5NU6qJvtQ5EenQ1cYuq/CtbyUB0bC3d125
 A+pTe+9T5Oz3C7yyxx4qaVNpGzT6NMHOh39xyu7garyQcL0WBoBwkGN/XYmdl946

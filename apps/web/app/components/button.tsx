@@ -2,6 +2,7 @@ import * as React from "react";
 import { VariantProps, cva } from "class-variance-authority";
 
 import cn from "classnames";
+import { Loading } from "./loading";
 
 const buttonVariants = cva(
   "inline-flex items-center duration-150 justify-center whitespace-nowrap   rounded text-sm font-medium transition-colors focus:outline-none  dark:hover:bg-zinc-800 dark:hover:text-zinc-100 disabled:opacity-50  disabled:pointer-events-none data-[state=open]:bg-zinc-100 dark:data-[state=open]:bg-zinc-800",
@@ -36,12 +37,16 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  isLoading?: boolean;
+}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+  ({ className, variant, size, isLoading, children, ...props }, ref) => {
     return (
-      <button className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+      <button className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
+        {isLoading ? <Loading /> : children}
+      </button>
     );
   },
 );

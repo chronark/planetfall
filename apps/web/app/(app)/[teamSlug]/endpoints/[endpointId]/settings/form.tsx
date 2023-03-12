@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { PageHeader } from "@/components/page";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Endpoint, Region } from "@planetfall/db";
@@ -77,6 +77,8 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
     name: "assertions",
   });
 
+  const [loading, setLoading] = useState<Record<string, boolean>>({});
+
   return (
     <>
       <PageHeader
@@ -131,7 +133,9 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                   </div>
                   <div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
                     <Button
+                      isLoading={loading.name}
                       onClick={nameForm.handleSubmit(async ({ name }) => {
+                        setLoading({ ...loading, name: true });
                         await trpc.endpoint.update
                           .mutate({
                             endpointId: endpoint.id,
@@ -148,6 +152,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                               content: (err as Error).message,
                             });
                           });
+                        setLoading({ ...loading, name: false });
                       })}
                     >
                       Save
@@ -229,7 +234,9 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                   </div>
                   <div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
                     <Button
+                      isLoading={loading.url}
                       onClick={urlForm.handleSubmit(async ({ url, method }) => {
+                        setLoading({ ...loading, url: true });
                         await trpc.endpoint.update
                           .mutate({
                             endpointId: endpoint.id,
@@ -247,6 +254,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                               content: (err as Error).message,
                             });
                           });
+                        setLoading({ ...loading, url: false });
                       })}
                     >
                       Save
@@ -326,7 +334,9 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                   </div>
                   <div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
                     <Button
+                      isLoading={loading.headers}
                       onClick={requestForm.handleSubmit(async ({ headers, body }) => {
+                        setLoading({ ...loading, headers: true });
                         await trpc.endpoint.update
                           .mutate({
                             endpointId: endpoint.id,
@@ -345,6 +355,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                               content: (err as Error).message,
                             });
                           });
+                        setLoading({ ...loading, headers: false });
                       })}
                     >
                       Save
@@ -437,7 +448,9 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                   </div>
                   <div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
                     <Button
+                      isLoading={loading.latency}
                       onClick={latencyForm.handleSubmit(async ({ timeout, degradedAfter }) => {
+                        setLoading({ ...loading, latency: true });
                         await trpc.endpoint.update
                           .mutate({
                             endpointId: endpoint.id,
@@ -455,6 +468,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                               content: (err as Error).message,
                             });
                           });
+                        setLoading({ ...loading, latency: false });
                       })}
                     >
                       Save
@@ -513,7 +527,11 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                           }
                         />
                         <div>
-                          <Button onClick={() => statusAssertions.remove(i)} size="lg">
+                          <Button
+                            type="button"
+                            onClick={() => statusAssertions.remove(i)}
+                            size="lg"
+                          >
                             <Minus className="w-6 h-6" />
                           </Button>
                         </div>
@@ -522,6 +540,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 
                     <div className="w-full">
                       <Button
+                        type="button"
                         onClick={() =>
                           statusAssertions.append({
                             version: "v1",
@@ -538,7 +557,9 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                   </div>
                   <div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
                     <Button
+                      isLoading={loading.status}
                       onClick={nameForm.handleSubmit(async ({ name }) => {
+                        setLoading({ ...loading, status: true });
                         await trpc.endpoint.update
                           .mutate({
                             endpointId: endpoint.id,
@@ -555,6 +576,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                               content: (err as Error).message,
                             });
                           });
+                        setLoading({ ...loading, status: false });
                       })}
                     >
                       Save
@@ -609,6 +631,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 
                     <div className="w-full">
                       <Button
+                        type="button"
                         onClick={() =>
                           headerAssertions.append({
                             version: "v1",
@@ -626,7 +649,9 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                   </div>
                   <div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
                     <Button
-                      onClick={nameForm.handleSubmit(async ({ name }) => {
+                      isLoading={loading.header}
+                      onClick={headerAssertionsForm.handleSubmit(async () => {
+                        setLoading({ ...loading, header: true });
                         await trpc.endpoint.update
                           .mutate({
                             endpointId: endpoint.id,
@@ -643,6 +668,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                               content: (err as Error).message,
                             });
                           });
+                        setLoading({ ...loading, header: false });
                       })}
                     >
                       Save
@@ -710,7 +736,10 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                   </div>
                   <div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
                     <Button
+                      type="button"
+                      isLoading={loading.regions}
                       onClick={async () => {
+                        setLoading({ ...loading, regions: true });
                         await trpc.endpoint.update
                           .mutate({
                             endpointId: endpoint.id,
@@ -727,6 +756,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                               content: (err as Error).message,
                             });
                           });
+                        setLoading({ ...loading, regions: false });
                       }}
                     >
                       Save
@@ -811,7 +841,9 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                   </div>
                   <div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
                     <Button
+                      isLoading={loading.interval}
                       onClick={intervalForm.handleSubmit(async ({ interval, distribution }) => {
+                        setLoading({ ...loading, interval: true });
                         await trpc.endpoint.update
                           .mutate({
                             endpointId: endpoint.id,
@@ -829,6 +861,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                               content: (err as Error).message,
                             });
                           });
+                        setLoading({ ...loading, interval: false });
                       })}
                     >
                       Save
