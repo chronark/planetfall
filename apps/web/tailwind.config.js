@@ -7,6 +7,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx,md,mdx}",
     "./components/**/*.{js,ts,jsx,tsx}",
     "./docs-components/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/alpha-trm-v2/**/*."
   ],
   darkMode: "class",
   theme: {
