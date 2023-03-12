@@ -7,7 +7,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx,md,mdx}",
     "./components/**/*.{js,ts,jsx,tsx}",
     "./docs-components/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/alpha-trm-v2/**/*."
+    "./node_modules/@termor/react/**/*.{js,jsx,ts,tsx}"
   ],
   darkMode: "class",
   theme: {
