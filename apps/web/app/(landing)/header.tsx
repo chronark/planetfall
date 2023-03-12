@@ -46,6 +46,15 @@ export const Header: React.FC = () => {
               <li className="hidden md:block">
                 <Link
                   className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-600 hover:text-zinc-800 lg:px-5"
+                  href="https://discord.gg/438dArF6pJ"
+                  target="_blank"
+                >
+                  Discord
+                </Link>
+              </li>
+              <li className="hidden md:block">
+                <Link
+                  className="flex items-center px-3 py-2 font-medium transition duration-150 ease-in-out text-zinc-600 hover:text-zinc-800 lg:px-5"
                   href="/play"
                 >
                   Play
