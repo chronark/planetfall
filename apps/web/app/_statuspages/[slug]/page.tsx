@@ -1,5 +1,6 @@
 import { db, Platform } from "@planetfall/db";
 import { Row } from "./chart";
+import Head from "next/head";
 
 import React from "react";
 import Link from "next/link";
@@ -59,8 +60,41 @@ export default async function Page(props: { params: { slug: string } }) {
     })),
   }));
 
+  const endpoint = statusPage.endpoints.at(0);
+
   return (
     <div className="flex flex-col min-h-screen px-4 overflow-hidden md:px-0 ">
+      <Head>
+        <title>{statusPage.name}</title>
+        <meta name="description" content={`${statusPage.name} - hosted on planetfall.io`} />
+
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff" />
+
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          itemProp="image"
+          content={`https://planetfall.io/api/v1/og/statusapge?endpointId=${endpoint?.id}&endpointName=${endpoint?.name}`}
+        />
+        <meta property="og:logo" content="https://planetfall.io/img/logo.png" />
+        <meta property="og:title" content={statusPage.name} />
+        <meta property="og:description" content={`${statusPage.name} - hosted on planetfall.io`} />
+        <meta
+          property="og:image"
+          content={`https://planetfall.io/api/v1/og/statusapge?endpointId=${endpoint?.id}&endpointName=${endpoint?.name}`}
+        />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@chronark_" />
+        <meta name="twitter:creator" content="@chronark_" />
+        <meta name="twitter:title" content={`${statusPage.name} - hosted on planetfall.io`} />
+        <meta name="twitter:description" content={`${statusPage.name} - hosted on planetfall.io`} />
+        <meta
+          name="twitter:image"
+          content={`https://planetfall.io/api/v1/og/statusapge?endpointId=${endpoint?.id}&endpointName=${endpoint?.name}`}
+        />
+      </Head>
       <header className="container flex items-center justify-between w-full mx-auto mt-4 lg:mt-8 ">
         <h2 className="mb-4 text-5xl font-bold text-zinc-900">{statusPage.name}</h2>
 

@@ -54,6 +54,7 @@
     "@upstash/ratelimit": "^0.4.0",
     "@upstash/redis": "^1.20.1",
     "@vercel/analytics": "^0.1.11",
+    "@vercel/og": "^0.4.0",
     "alpha-trm-v2": "^1.0.26",
     "base-x": "^4.0.0",
     "class-variance-authority": "^0.4.0",

@@ -16,6 +16,10 @@ export default async function OnboardingPage() {
     ? slugify(clerkUser.username, { lower: true, trim: true })
     : newAnimalId();
 
+  let _user = await db.user.findUnique({
+    where: { id: clerkUser.id },
+  });
+
   const user = await db.user.upsert({
     where: { id: clerkUser.id },
     update: {
