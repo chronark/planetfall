@@ -9,7 +9,6 @@ import { notFound, redirect } from "next/navigation";
 
 export default async function Layout(props: {
   children: React.ReactNode;
-  params: { teamSlug: string };
 }) {
   const user = await currentUser();
   if (!user) {
@@ -17,7 +16,7 @@ export default async function Layout(props: {
   }
   const team = await db.team.findFirst({
     where: {
-      slug: props.params.teamSlug,
+      id: "team_NszcknrCNzjFgnLvqUCXGR",
       members: {
         some: {
           userId: user.id,
@@ -28,11 +27,7 @@ export default async function Layout(props: {
   if (!team) {
     return notFound();
   }
-  // Planetfall team
-  if (team.id !== "team_NszcknrCNzjFgnLvqUCXGR") {
-    return notFound();
-  }
-
+  
   return (
     <main className="min-h-screen pb-8 bg-zinc-50 lg:pb-16 container mx-auto mt-16">
       {props.children}
