@@ -1,0 +1,92 @@
+"use client";
+import React, { useState } from "react";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardHeaderTitle,
+} from "@/components/index";
+import { Tag } from "@/components/tag";
+import { Input } from "@/components/input";
+import { trpc } from "@/lib/utils/trpc";
+import { useToast } from "@/components/toast";
+import { Loading } from "@/components/loading";
+import { useForm } from "react-hook-form";
+import { Label } from "@/components/label";
+import { useRouter } from "next/navigation";
+
+type Props = {
+  teamId: string;
+  slug: string;
+};
+
+export const ChangeSlugCard: React.FC<Props> = ({ teamId, slug }): JSX.Element => {
+  const { addToast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const { handleSubmit, register, formState } = useForm<{
+    slug: string;
+  }>({ defaultValues: { slug } });
+
+  async function submit(data: { slug: string }): Promise<void> {
+    try {
+      setLoading(true);
+      await trpc.team.updateSlug.mutate({
+        teamId,
+        slug: data.slug,
+      });
+      addToast({
+        title: "Success",
+        content: `Your team slug has been changed to ${data.slug}`,
+      });
+      router.refresh();
+    } catch (err) {
+      addToast({
+        title: "Error",
+        variant: "error",
+        content: (err as Error).message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit(submit)} className="">
+      <Card>
+        <CardHeader>
+          <CardHeaderTitle
+            title="Slug"
+            subtitle="The slug is used in the URL to identify your team. Slugs must only contain alphanumeric characters and - or _"
+          />
+        </CardHeader>
+        <CardContent>
+          <Label htmlFor="slug">Slug</Label>
+          <div className="mt-1 ">
+            <Input
+              className="max-w-sm"
+              type="text"
+              {...register("slug", {
+                required: true,
+              })}
+            />
+            {formState.errors.slug ? (
+              <p className="mt-2 text-sm text-red-500">
+                {formState.errors.slug.message || "A slug is required"}
+              </p>
+            ) : null}
+          </div>
+        </CardContent>
+        <CardFooter>
+          <div />
+          <Button isLoading={loading} type="submit">
+            Save
+          </Button>
+        </CardFooter>
+      </Card>
+    </form>
+  );
+};

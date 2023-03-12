@@ -5,6 +5,8 @@ import { TeamCard } from "./TeamCard";
 import { Divider } from "@/components/divider";
 import { auth } from "@clerk/nextjs/app-beta";
 import { DeleteCard } from "./DeleteCard";
+import { ChangeNameCard } from "./change-name";
+import { ChangeSlugCard } from "./change-slug";
 
 export default async function SettingsPage(props: {
   params: { teamSlug: string };
@@ -49,24 +51,26 @@ export default async function SettingsPage(props: {
   // }
 
   return (
-    <div>
-      <main className="container mx-auto">
-        <TeamCard
-          teamId={team.id}
-          currentUser={{ userId: user.userId, role: user.role }}
-          members={team.members.map((m) => ({
-            user: { id: m.userId, name: m.user.name, image: m.user.image },
-            role: m.role,
-          }))}
-        />
+    <main className="container mx-auto">
+      <ChangeNameCard teamId={team.id} name={team.name} />
+      <Divider />
+      <ChangeSlugCard teamId={team.id} slug={team.slug} />
+      <Divider />
+      <TeamCard
+        teamId={team.id}
+        currentUser={{ userId: user.userId, role: user.role }}
+        members={team.members.map((m) => ({
+          user: { id: m.userId, name: m.user.name, image: m.user.image },
+          role: m.role,
+        }))}
+      />
 
-        {user.role === "OWNER" ? (
-          <>
-            <Divider />
-            <DeleteCard teamId={team.id} teamSlug={team.slug} />
-          </>
-        ) : null}
-      </main>
-    </div>
+      {user.role === "OWNER" ? (
+        <>
+          <Divider />
+          <DeleteCard teamId={team.id} teamSlug={team.slug} />
+        </>
+      ) : null}
+    </main>
   );
 }

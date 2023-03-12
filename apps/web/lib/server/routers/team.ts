@@ -6,6 +6,7 @@ import { db } from "@planetfall/db";
 import slugify from "slugify";
 import { DEFAULT_QUOTA } from "plans";
 import { createInvoice } from "@/lib/billing/stripe";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 // import { Email } from "@planetfall/emails";
 
 export const teamRouter = t.router({
@@ -298,5 +299,91 @@ export const teamRouter = t.router({
       await db.team.delete({
         where: { id: input.teamId },
       });
+    }),
+  updateName: t.procedure
+    .input(
+      z.object({
+        teamId: z.string(),
+        name: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.user.id) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+      const team = await db.team.findFirst({
+        where: {
+          id: input.teamId,
+          members: {
+            some: {
+              userId: ctx.user.id,
+              role: {
+                in: ["OWNER", "ADMIN"],
+              },
+            },
+          },
+        },
+      });
+      if (!team) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      await db.team
+        .update({
+          where: {
+            id: input.teamId,
+          },
+          data: {
+            name: input.name,
+          },
+        })
+        .catch((e) => {
+          if (e instanceof PrismaClientKnownRequestError && e.code === "P2002") {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Team name already taken" });
+          }
+        });
+    }),
+  updateSlug: t.procedure
+    .input(
+      z.object({
+        teamId: z.string(),
+        slug: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.user.id) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+      const team = await db.team.findFirst({
+        where: {
+          id: input.teamId,
+          members: {
+            some: {
+              userId: ctx.user.id,
+              role: {
+                in: ["OWNER", "ADMIN"],
+              },
+            },
+          },
+        },
+      });
+      if (!team) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      await db.team
+        .update({
+          where: {
+            id: input.teamId,
+          },
+          data: {
+            slug: input.slug,
+          },
+        })
+        .catch((e) => {
+          if (e instanceof PrismaClientKnownRequestError && e.code === "P2002") {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Team slug already taken" });
+          }
+        });
     }),
 });

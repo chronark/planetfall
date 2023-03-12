@@ -27,7 +27,7 @@ export default async function Layout(props: {
   if (!team) {
     return notFound();
   }
-  
+
   return (
     <main className="min-h-screen pb-8 bg-zinc-50 lg:pb-16 container mx-auto mt-16">
       {props.children}

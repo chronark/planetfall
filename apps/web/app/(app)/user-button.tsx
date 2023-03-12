@@ -7,6 +7,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 import { Settings, LogOut } from "lucide-react";
+import Link from "next/link";
 type Props = {
   user: {
     name: string;
@@ -41,6 +42,18 @@ export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
 
 					<BookOpen className="w-4 h-4" />
 				</Link> */}
+        {auth.userId === "user_2MV9I3Gi5gOpzOU6zJgrWZxVBJu" ? (
+          <>
+            <Link
+              href="/internal/stats/teams"
+              className="flex items-center justify-between w-full gap-4 px-3 py-2 text-sm font-medium rounded-md lg:gap-8 xl:gap-16 group text-zinc-400 "
+            >
+              Internal
+            </Link>
+            <div className="w-full h-px border-t border-zinc-200" />
+          </>
+        ) : null}
+
         <button
           disabled={true}
           // href={`/${personalTeam?.slug}`}
