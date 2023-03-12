@@ -147,3 +147,7 @@ variable "clerk_webhook_secret"{
   sensitive = true
 }
 
+variable "plain_app_key"{
+  type = string
+  sensitive = true
+}

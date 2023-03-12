@@ -145,6 +145,11 @@ resource "vercel_project" "web" {
       key="CLERK_WEBHOOK_SECRET",
       value=var.clerk_webhook_secret,
       target=["production", "preview", "development"]
+    },
+    {
+      key="NEXT_PUBLIC_PLAIN_APP_KEY",
+      value=var.plain_app_key,
+      target=["production", "preview", "development"]
     }
 
 

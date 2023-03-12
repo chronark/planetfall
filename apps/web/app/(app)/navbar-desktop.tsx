@@ -42,6 +42,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
     },
   });
 
+  // if the user is a member of the Planetfall team, add the internal link
   if (teams.some(t=>t.id==="team_NszcknrCNzjFgnLvqUCXGR")){
     navigation.push({ name: "Internal", href: `/${props.teamSlug}/internal/stats/teams` });
   }

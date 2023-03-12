@@ -10,16 +10,6 @@ module.exports = {
   ],
   darkMode: "class",
   theme: {
-    container: {
-      center: true,
-      padding: {
-        DEFAULT: "1rem",
-        sm: "1rem",
-        lg: "4rem",
-        xl: "5rem",
-        "2xl": "6rem",
-      },
-    },
     fontSize: {
       xs: ["0.75rem", { lineHeight: "1rem" }],
       sm: ["0.875rem", { lineHeight: "1.5rem" }],
