@@ -1,9 +1,7 @@
 import { db } from "@planetfall/db";
-import { Card, Title, Text, Tab, TabList, ColGrid, Block, Metric } from "@tremor/react";
+import { Card, Text, Grid, Metric } from "@tremor/react";
 import { BarChart } from "./bar-chart";
 import { Client as Tinybird } from "@planetfall/tinybird";
-
-import "@tremor/react/dist/esm/tremor.css";
 
 const tb = new Tinybird();
 
@@ -30,7 +28,7 @@ export default async function AppLayout() {
 
   return (
     <>
-      <ColGrid numColsMd={2} numColsLg={3} gapX="gap-x-6" gapY="gap-y-6" marginTop="mt-6">
+      <Grid numColsMd={2} numColsLg={3} className="gap-x-6 gap-y-6 mt-6">
         <Card>
           <Text>Total Teams</Text>
           <Metric>{teams.length}</Metric>
@@ -43,23 +41,24 @@ export default async function AppLayout() {
           <Text>Total Endpoint</Text>
           <Metric>{endpoints}</Metric>
         </Card>
-      </ColGrid>
+      </Grid>
 
-      <Block marginTop="mt-6">
+      <div className="mt-6">
         <Card>
           <BarChart
-          colors={["blue"]}
+            colors={["blue"]}
             data={usage
               .map((u) => ({
                 team: u.team,
                 "Total Usage": u.usage.reduce((total, day) => total + day.usage, 0),
               }))
-              .sort((a, b) => b["Total Usage"] - a["Total Usage"]).filter((u) => u["Total Usage"] > 0)}
-            dataKey="team.name"
+              .sort((a, b) => b["Total Usage"] - a["Total Usage"])
+              .filter((u) => u["Total Usage"] > 0)}
+            index="team.name"
             categories={["Total Usage"]}
           />
         </Card>
-      </Block>
+      </div>
     </>
   );
 }
