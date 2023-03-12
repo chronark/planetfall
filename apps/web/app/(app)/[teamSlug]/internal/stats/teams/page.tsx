@@ -48,13 +48,13 @@ export default async function AppLayout() {
       <Block marginTop="mt-6">
         <Card>
           <BarChart
+          colors={["blue"]}
             data={usage
               .map((u) => ({
                 team: u.team,
                 "Total Usage": u.usage.reduce((total, day) => total + day.usage, 0),
               }))
-              .sort((a, b) => b["Total Usage"] - a["Total Usage"])
-              .slice(0, 20)}
+              .sort((a, b) => b["Total Usage"] - a["Total Usage"]).filter((u) => u["Total Usage"] > 0)}
             dataKey="team.name"
             categories={["Total Usage"]}
           />
