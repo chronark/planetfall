@@ -188,9 +188,8 @@ export class Scheduler {
         endpoint.distribution === "ALL"
           ? endpoint.regions
           : [endpoint.regions[Math.floor(Math.random() * endpoint.regions.length)]];
-      this.logger.debug("testing endpoint", {
+      this.logger.info("testing endpoint", {
         endpointId: endpoint.id,
-        regions: regions.map((r) => r.id),
       });
 
       await Promise.all(
