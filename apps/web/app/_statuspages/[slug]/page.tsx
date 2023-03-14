@@ -12,7 +12,6 @@ export const revalidate = 60;
 // export const dynamic = "force-static";
 
 
-const getRegions = cache(async () => await db.region.findMany());
 
 export default async function Page(props: { params: { slug: string } }) {
   const statusPage = await db.statusPage.findUnique({
@@ -28,7 +27,7 @@ export default async function Page(props: { params: { slug: string } }) {
   if (!statusPage) {
     return null;
   }
-  const regions = await getRegions();
+  const regions = await db.region.findMany();
 
   let endpoints = await Promise.all(
     statusPage.endpoints.map(async (endpoint) => ({
