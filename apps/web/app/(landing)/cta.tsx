@@ -10,7 +10,7 @@ export const Cta: React.FC = (): JSX.Element => {
           Get started with Planetfall
         </h2>
         <p className="max-w-xl mx-auto mt-6 text-lg leading-8 text-zinc-600">
-          The first 100k checks per month are free! No credit card required.
+          The free tier includes 100k checks per month! No credit card required.
         </p>
 
         <Link
