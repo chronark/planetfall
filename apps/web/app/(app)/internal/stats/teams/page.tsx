@@ -1,39 +1,57 @@
 import { db } from "@planetfall/db";
 import { Card, Text, Grid, Metric } from "@tremor/react";
-import { BarChart, SelectBox, SelectBoxItem } from "./tremor-client";
-import { Client as Tinybird } from "@planetfall/tinybird";
-import { IndividualUsage } from "./individual-usage";
+import { getUsage } from "@planetfall/tinybird";
+import { AreaChart } from "./tremor-client";
 
-const tb = new Tinybird();
-
-export default async function AppLayout() {
+export default async function Page() {
   const users = await db.user.count();
   const endpoints = await db.endpoint.count();
   const teams = await db.team.findMany();
 
   const now = new Date();
-  const usage = await Promise.all(
-    teams.map(async (team) => {
-      return {
-        team: {
-          id: team.id,
-          name: team.name,
-        },
-        usage: await tb.getUsage(team.id, {
-          year: now.getUTCFullYear(),
-          month: now.getUTCMonth() + 1,
-        }),
-      };
-    }),
-  );
+  const usage = await getUsage({
+    year: now.getUTCFullYear(),
+    month: now.getUTCMonth() + 1,
+  });
 
-  const totalUsage = usage
-    .map((u) => ({
-      team: u.team,
-      "Total Usage": u.usage.reduce((total, day) => total + day.usage, 0),
-    }))
-    .sort((a, b) => b["Total Usage"] - a["Total Usage"])
-    .filter((u) => u["Total Usage"] > 0);
+  const usageOverTime: Record<string, number | string>[] = [];
+
+  const day = now;
+  day.setDate(1);
+
+  const activeTeams = teams.filter((t) => usage.data.some((u) => u.teamId === t.id));
+
+  const sums: Record<string, number> = activeTeams.reduce(
+    (acc, cur) => ({ ...acc, [cur.slug]: 0 }),
+    {},
+  );
+  while (day.getTime() <= Date.now()) {
+    for (const team of activeTeams) {
+      const teamUsage = usage.data.find(
+        (u) =>
+          u.teamId === team.id &&
+          u.year === day.getUTCFullYear() &&
+          u.month === day.getUTCMonth() + 1 &&
+          u.day === day.getDate(),
+      );
+      sums[team.slug] += teamUsage?.usage ?? 0;
+      usageOverTime.push({
+        time: day.toDateString(),
+        ...sums,
+      });
+
+      day.setDate(day.getDate() + 1);
+    }
+  }
+  // const usageOverTime = usage.data.map(({ teamId, year, month, day, usage }) => {
+  //   const team = teams.find((t) => t.id === teamId)?.slug ?? teamId;
+  //   return {
+  //     time: new Date(year, month - 1, day).toISOString(),
+  //     [team]: usage,
+  //   };
+  // });
+
+  console.log(usageOverTime);
 
   return (
     <>
@@ -47,27 +65,27 @@ export default async function AppLayout() {
           <Metric>{users}</Metric>
         </Card>
         <Card>
-          <Text>Total Endpoint</Text>
+          <Text>Total Endpoints</Text>
           <Metric>{endpoints}</Metric>
         </Card>
       </Grid>
 
       <div className="mt-6">
         <Card>
-          <BarChart
-            colors={["blue"]}
-            data={totalUsage}
-            index="team.name"
-            categories={["Total Usage"]}
+          <AreaChart
+            data={usageOverTime}
+            index="time"
+            // colors={["amber","blue"]}
+            categories={teams.map((t) => t.slug)}
           />
         </Card>
       </div>
       <div className="mt-6">
-        <Card>
-          <IndividualUsage
-            usage={usage.filter(({ team }) => totalUsage.find((t) => t.team.id === team.id))}
-          />
-        </Card>
+        {/* <Card>
+           <IndividualUsage
+            usage={usage.data.filter(({ teamId }) => totalUsage.find((t) => t.team.id === teamId))}
+          /> 
+        </Card> */}
       </div>
     </>
   );

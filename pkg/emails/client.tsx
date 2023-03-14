@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { EndpointAlert } from "./emails/EndpointAlert";
 import { DebugEvent } from "./emails/DebugEvent";
 import TeamInvitation from "./emails/TeamInvitation";
+import { UsageExceeded } from "./emails/UsageExceeded";
 export class Email {
   private client: Resend;
 
@@ -74,6 +75,29 @@ export class Email {
       from: "andreas@planetfall.io",
       to: opts.to,
       subject: "Planetfall Team Invitation",
+      html,
+    });
+  }
+
+  public async sendUsageExceeded(opts: {
+    to: string;
+    teamName: string;
+    teamSlug: string;
+    currentUsage: number;
+    maxMonthlyRequests: number;
+  }) {
+    const html = render(
+      <UsageExceeded
+        teamName={opts.teamName}
+        teamSlug={opts.teamSlug}
+        currentUsage={opts.currentUsage}
+        maxMonthlyRequests={opts.maxMonthlyRequests}
+      />,
+    );
+    return await this.client.sendEmail({
+      from: "alerts@planetfall.io",
+      to: opts.to,
+      subject: "Planetfall Endpoint Alert",
       html,
     });
   }

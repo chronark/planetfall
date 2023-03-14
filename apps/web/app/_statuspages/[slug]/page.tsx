@@ -103,8 +103,6 @@ export default async function Page(props: { params: { slug: string } }) {
       </Head>
       <header className="container flex items-center justify-between w-full mx-auto mt-4 lg:mt-8 ">
         <h2 className="mb-4 text-5xl font-bold text-zinc-900">{statusPage.name}</h2>
-
-       
       </header>
       <main className="container min-h-screen mx-auto md:py-16 ">
         <ul

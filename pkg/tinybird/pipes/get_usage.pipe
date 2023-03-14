@@ -7,11 +7,12 @@ NODE filter
 SQL >
     %
     SELECT teamId,countMerge(usage) as usage, year, month, day
-    FROM daily_usage
+    FROM daily_usage__v1
     WHERE
-        teamId = {{ String(teamId, required=True) }}
-        AND year = {{ UInt16(year, required=True) }}
+        {% if defined(teamId) %}
+          teamId = {{ String(teamId) }}
+          AND
+        {% end %}
+         year = {{ UInt16(year, required=True) }}
         AND month = {{ UInt8(month, required=True) }}
     GROUP BY teamId, year, month,day
-
-

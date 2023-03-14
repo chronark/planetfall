@@ -72,40 +72,6 @@ export class Client {
     return data.map((d) => ({ ...d, time: new Date(d.time).getTime() }));
   }
 
-  /**
-   *
-   * @param teamId
-   * @param interval - [start, end] in unix timestamp with millisecond precision
-   * @returns
-   */
-  public async getUsage(
-    teamId: string,
-    time: {
-      year: number;
-      month: number;
-    },
-  ): Promise<
-    {
-      teamId: string;
-      usage: number;
-      year: number;
-      month: number;
-      day: number;
-    }[]
-  > {
-    const data = await this.fetch<
-      {
-        teamId: string;
-        usage: number;
-        year: number;
-        month: number;
-        day: number;
-      }[]
-    >("get_usage__v1", { teamId, year: time.year, month: time.month });
-
-    return data;
-  }
-
   public async getLatestChecksByEndpoint(
     endpointId: string,
     opts?: {

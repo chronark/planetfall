@@ -2,7 +2,7 @@ import { db } from "@planetfall/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardFooter, CardHeader, CardHeaderTitle } from "@/components/card";
-import { Client as Tinybird } from "@planetfall/tinybird";
+import { getUsage } from "@planetfall/tinybird";
 import { Text } from "@/components/text";
 import { Button } from "@/components/button";
 import Link from "next/link";
@@ -24,12 +24,13 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
   const now = new Date();
   const year = now.getUTCFullYear();
   const month = now.getUTCMonth() + 1;
-  const usage = await new Tinybird().getUsage(team.id, {
+  const usage = await getUsage({
+    teamId: team.id,
     year,
     month,
   });
 
-  const totalUsage = usage.reduce((acc, cur) => acc + cur.usage, 0);
+  const totalUsage = usage.data.reduce((acc, cur) => acc + cur.usage, 0);
   const usagePercentage = totalUsage / team.maxMonthlyRequests / 100;
 
   return (
@@ -87,7 +88,7 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
           </div>
           <div className="p-8">
             <div className="h-48">
-              <UsageChart usage={usage} />
+              <UsageChart usage={usage.data} />
             </div>
           </div>
         </CardContent>

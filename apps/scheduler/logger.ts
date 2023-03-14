@@ -7,7 +7,7 @@ export class Logger {
   constructor() {
     this.logger = new tslog.Logger({
       type: process.env.NODE_ENV === "production" ? "json" : "pretty",
-      //minLevel: 3, // info and above
+      minLevel: 3, // info and above
     });
 
     const axiomToken = process.env.AXIOM_TOKEN;

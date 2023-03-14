@@ -9,14 +9,14 @@ import { db } from "@planetfall/db";
 import { Email } from "@planetfall/emails/dist/client";
 
 const logger = new Logger();
-
+const email = new Email();
 const notifications = new Notifications({
   logger,
   db: db,
-  email: new Email(),
+  email,
 });
 
-const s = new Scheduler({ logger, notifications });
+const s = new Scheduler({ logger, notifications, email });
 // const e = new Events({ scheduler: s, logger });
 
 // e.run();

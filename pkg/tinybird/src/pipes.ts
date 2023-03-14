@@ -56,3 +56,19 @@ export const getEndpointStatsGlobally = tb.buildPipe({
     errors: nullableNumberWithDefault,
   }),
 });
+
+export const getUsage = tb.buildPipe({
+  pipe: "get_usage__v1",
+  parameters: z.object({
+    teamId: z.string().optional(),
+    year: z.number(),
+    month: z.number(),
+  }),
+  data: z.object({
+    teamId: z.string(),
+    usage: z.number(),
+    year: z.number(),
+    month: z.number(),
+    day: z.number(),
+  }),
+});

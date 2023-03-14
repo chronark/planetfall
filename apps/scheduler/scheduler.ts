@@ -5,25 +5,32 @@ import { Logger } from "./logger";
 import * as assertions from "@planetfall/assertions";
 import { Notifications } from "./notifications";
 import { Stripe } from "stripe";
+import { getUsage } from "@planetfall/tinybird";
+import { Email } from "@planetfall/emails";
 
 export class Scheduler {
   // key: endpointId
-  private endpoints: Map<string, { updatedAt: number; intervalId: NodeJS.Timeout }>;
+  private endpoints: Map<string, { intervalId: NodeJS.Timeout; updatedAt: number }>;
   private db: PrismaClient;
-  private updatedAt = 0;
   private logger: Logger;
   private tinybird: tb.Client;
   private notifications: Notifications;
   regions: Record<string, Region>;
   private readonly stripe: Stripe;
+  private readonly email: Email;
 
-  constructor({ logger, notifications }: { logger: Logger; notifications: Notifications }) {
+  constructor({
+    logger,
+    notifications,
+    email,
+  }: { logger: Logger; notifications: Notifications; email: Email }) {
     this.db = new PrismaClient();
     this.tinybird = new tb.Client();
     this.endpoints = new Map();
     this.logger = logger;
     this.regions = {};
     this.notifications = notifications;
+    this.email = email;
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: "2022-11-15",
       typescript: true,
@@ -41,7 +48,7 @@ export class Scheduler {
   public async syncEndpoints(): Promise<void> {
     this.logger.warn("Syncing endpoints");
 
-    const want: Record<string, Endpoint> = {};
+    const want = new Map<string, Endpoint>();
 
     const teams = await this.db.team.findMany({
       where: {
@@ -54,32 +61,30 @@ export class Scheduler {
       },
     });
 
+    const now = new Date();
+    const usage = await getUsage({
+      year: now.getUTCFullYear(),
+      month: now.getUTCMonth() + 1,
+    });
+
     for (const t of teams) {
       if (t.plan === "DISABLED") {
-        this.logger.info("Skipping team with DISABLED plan", {
+        this.logger.debug("Skipping team with DISABLED plan", {
           teamId: t.id,
         });
         continue;
       }
       if (t.endpoints.length === 0) {
-        this.logger.info("Skipping team with no endpoints", {
+        this.logger.debug("Skipping team with no endpoints", {
           teamId: t.id,
         });
+
         continue;
       }
 
-      const now = new Date();
-
-      const usage = await this.tinybird.getUsage(t.id, {
-        year: now.getUTCFullYear(),
-        month: now.getUTCMonth() + 1,
-      });
-      const totalUsage = usage.reduce((sum, u) => sum + u.usage, 0);
-
-      this.logger.debug("evaluating team usage", {
-        teamId: t.id,
-        totalUsage,
-      });
+      const totalUsage = usage.data
+        .filter((u) => u.teamId === t.id)
+        .reduce((sum, u) => sum + u.usage, 0);
 
       if (totalUsage > t.maxMonthlyRequests) {
         this.logger.info("team has exceeded monthly requests", {
@@ -94,42 +99,44 @@ export class Scheduler {
       } else {
         for (const e of t.endpoints) {
           if (e.active) {
-            want[e.id] = e;
+            want.set(e.id, e);
           }
         }
       }
     }
 
-    for (const endpointId of Object.keys(this.endpoints)) {
-      if (!want[endpointId]) {
+    /**
+     * Deleting endpoints that are no longer wanted or need to be updated
+     */
+    for (const [endpointId, { updatedAt }] of this.endpoints.entries()) {
+      const wantEndpoint = want.get(endpointId);
+      if (wantEndpoint) {
+        this.logger.debug("endpoint is still wanted", { endpointId });
+        if (wantEndpoint.updatedAt.getTime() > updatedAt) {
+          this.logger.info("endpoint needs to be updated", {
+            endpointId,
+          });
+          this.removeEndpoint(endpointId);
+        }
+      } else {
         this.logger.info("endpoint needs to be removed", { endpointId });
         this.removeEndpoint(endpointId);
         this.logger.info("endpoint removed", { endpointId });
       }
     }
-
-    for (const endpoint of Object.values(want)) {
-      const active = this.endpoints.get(endpoint.id);
-      if (!active) {
+    /**
+     * Adding endpoints that are wanted but not present
+     */
+    for (const endpoint of want.values()) {
+      const found = this.endpoints.get(endpoint.id);
+      if (!found) {
         this.logger.info("endpoint needs to be added", { endpointId: endpoint.id });
         await this.addEndpoint(endpoint.id);
         this.logger.info("endpoint added", { endpointId: endpoint.id });
-        continue;
-      }
-
-      if (endpoint.updatedAt.getTime() > active.updatedAt) {
-        this.logger.info("endpoint needs to be updated", {
-          endpointId: endpoint.id,
-          updatedAt: endpoint.updatedAt,
-          activeUpdatedAt: active.updatedAt,
-        });
-        this.removeEndpoint(endpoint.id);
-        await this.addEndpoint(endpoint.id);
-        this.logger.info("endpoint updated", { endpointId: endpoint.id });
       }
     }
 
-    this.logger.warn("Synced endpoints", {
+    this.logger.info("Synced endpoints", {
       totalEndpoints: this.endpoints.size,
     });
   }

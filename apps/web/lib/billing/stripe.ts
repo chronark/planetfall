@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import type { Team } from "@planetfall/db";
-import { Client as Tinybird } from "@planetfall/tinybird";
+import { Client as Tinybird, getUsage } from "@planetfall/tinybird";
 import { env } from "../env";
 
 type Req = {
@@ -18,11 +18,12 @@ export async function createInvoice({ team, year, month }: Req): Promise<void> {
   const start = new Date(year, month, 1, 0, 0, 0, 0);
   const end = new Date(year, month + 1, 1, 0, 0, 0, 0);
 
-  const usage = await new Tinybird().getUsage(team.id, {
+  const usage = await getUsage({
+    teamId: team.id,
     year,
     month,
   });
-  const billableUsage = usage.reduce((total, day) => total + day.usage, 0);
+  const billableUsage = usage.data.reduce((total, day) => total + day.usage, 0);
 
   if (billableUsage > 0) {
     const invoice = await stripe.invoices.create({

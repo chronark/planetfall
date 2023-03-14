@@ -2,13 +2,13 @@ import { env } from "@/lib/env";
 import { db } from "@planetfall/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
-import { Client as Tinybird } from "@planetfall/tinybird";
+import { Client as Tinybird, getUsage } from "@planetfall/tinybird";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-11-15",
 });
 
-const tinybird = new Tinybird();
+const _tinybird = new Tinybird();
 
 const key = "480a32723978b74dae12dd2508033952861256ae63698e18a3f031eabdc45e38";
 
@@ -32,11 +32,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   for (const team of teams) {
     console.log("creating invoice", { teamId: team.id });
 
-    const usage = await tinybird.getUsage(team.id, {
+    const usage = await getUsage({
+      teamId: team.id,
       year: now.getUTCFullYear(),
       month: now.getUTCMonth() + 1,
     });
-    const totalUsage = usage.reduce((total, day) => total + day.usage, 0);
+    const totalUsage = usage.data.reduce((total, day) => total + day.usage, 0);
 
     const billableUsage = totalUsage; //- team.includedRequests ?? 0;
 
