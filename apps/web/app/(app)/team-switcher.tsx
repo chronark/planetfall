@@ -49,7 +49,7 @@ export const TeamSwitcher: React.FC<Props> = ({ teams, currentTeamId }): JSX.Ele
 
     try {
       const team = await trpc.team.create.mutate({
-        teamName: data.name,
+        name: data.name,
       });
 
       router.push(`/${team.slug}`);

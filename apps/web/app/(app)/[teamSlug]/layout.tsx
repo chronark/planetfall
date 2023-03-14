@@ -38,7 +38,7 @@ export default async function AppLayout(props: {
         <Banner>
           Your trial expires in {ms(team.trialExpires.getTime() - Date.now(), { long: true })}.{" "}
           <Link href={`/${team.slug}/settings/billing`} className="underline">
-            Upgrade
+            Add a payment method
           </Link>{" "}
           to keep using Planetfall.
         </Banner>

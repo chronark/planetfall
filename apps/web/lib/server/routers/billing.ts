@@ -1,4 +1,3 @@
-import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { t } from "../trpc";
@@ -81,6 +80,7 @@ export const billingRouter = t.router({
           maxMonthlyRequests: DEFAULT_QUOTA[input.plan].maxMonthlyRequests,
           maxTimeout: DEFAULT_QUOTA[input.plan].maxTimeout,
           maxPages: DEFAULT_QUOTA[input.plan].maxStatusPages,
+          trialExpires: null,
         },
       });
       await redis.set(redisLockKey, true, { ex: 60 * 60 * 24 });

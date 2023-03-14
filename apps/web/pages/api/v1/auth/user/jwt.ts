@@ -2,8 +2,8 @@ import { getAuth } from "@clerk/nextjs/server";
 import jwt from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
-  const { userId, ...rest } = getAuth(req);
+export default async function getJwt(req: NextApiRequest, res: NextApiResponse) {
+  const { userId } = getAuth(req);
   if (!userId) {
     res.status(401).json({ error: "Not logged in" });
     return res.end();

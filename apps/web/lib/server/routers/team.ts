@@ -6,14 +6,15 @@ import { db } from "@planetfall/db";
 import slugify from "slugify";
 import { DEFAULT_QUOTA } from "plans";
 import { createInvoice } from "@/lib/billing/stripe";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 // import { Email } from "@planetfall/emails";
 
 export const teamRouter = t.router({
   create: t.procedure
     .input(
       z.object({
-        teamName: z.string(),
+        name: z.string(),
+        slug: z.string().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -25,35 +26,56 @@ export const teamRouter = t.router({
         where: {
           id: ctx.user.id,
         },
+        include: {
+          teams: true,
+        },
       });
       if (!user) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
+      if (user.teams.filter((t) => t.role === "OWNER").length >= 3) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can only own 3 teams, please contact support@planetfall.io",
+        });
+      }
       const teamId = newId("team");
 
-      const team = await db.team.create({
-        data: {
-          id: teamId,
-          name: input.teamName,
-          slug: slugify(input.teamName, { lower: true }),
-          trialExpires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-          members: {
-            create: {
-              user: {
-                connect: {
-                  id: ctx.user.id,
+      const team = await db.team
+        .create({
+          data: {
+            id: teamId,
+            name: input.name,
+            slug: input.slug ?? slugify(input.name, { lower: true }),
+            trialExpires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+            members: {
+              create: {
+                user: {
+                  connect: {
+                    id: ctx.user.id,
+                  },
                 },
+                role: "OWNER",
               },
-              role: "OWNER",
             },
+            maxEndpoints: DEFAULT_QUOTA.FREE.maxEndpoints,
+            maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
+            maxPages: DEFAULT_QUOTA.FREE.maxStatusPages,
+            maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
+            plan: "FREE",
           },
-          maxEndpoints: DEFAULT_QUOTA.PRO.maxEndpoints,
-          maxMonthlyRequests: DEFAULT_QUOTA.PRO.maxMonthlyRequests,
-          maxPages: DEFAULT_QUOTA.PRO.maxStatusPages,
-          maxTimeout: DEFAULT_QUOTA.PRO.maxTimeout,
-          plan: "PRO",
-        },
-      });
+        })
+        .catch((err) => {
+          if (err instanceof PrismaClientKnownRequestError) {
+            if (err.code === "P2002") {
+              throw new TRPCError({
+                code: "CONFLICT",
+                message: `Team with slug "${input.slug}" already exists`,
+              });
+            }
+          }
+          throw err;
+        });
 
       return team;
     }),
