@@ -113,6 +113,11 @@ export const billingRouter = t.router({
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
+
+      const role = team.members.find((m) => m.userId === ctx.user.id)?.role;
+      if (role !== "OWNER" && role !== "ADMIN") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You need to be an owner or admin to do this" });
+      }
       if (!team.stripeCustomerId) {
         const customer = await stripe.customers.create({
           email: team.members[0].user.email,
