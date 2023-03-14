@@ -62,8 +62,8 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
                 {totalUsage.toLocaleString()} / {team.maxMonthlyRequests?.toLocaleString() ?? "∞"}{" "}
                 {usagePercentage !== null
                   ? `(${usagePercentage.toLocaleString(undefined, {
-                    maximumFractionDigits: 2,
-                  })}%)`
+                      maximumFractionDigits: 2,
+                    })}%)`
                   : null}
               </Text>
               {usagePercentage !== null ? (

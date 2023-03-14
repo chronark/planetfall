@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/card";
-import {  currentUser } from "@clerk/nextjs/app-beta";
-import {  Mail, Twitter } from "lucide-react";
+import { currentUser } from "@clerk/nextjs/app-beta";
+import { Mail, Twitter } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Breadcrumbs } from "../breadcrumbs";
@@ -58,7 +58,11 @@ export default async function AppLayout() {
                 <span className="sr-only">Twitter</span>
                 <Twitter className="h-7 w-6 text-zink-400" aria-hidden="true" />
               </dt>
-              <Link target="_blank" className="hover:text-zink-900" href="https://twitter.com/chronark_">
+              <Link
+                target="_blank"
+                className="hover:text-zink-900"
+                href="https://twitter.com/chronark_"
+              >
                 @chronark_
               </Link>
             </div>
@@ -79,7 +83,11 @@ export default async function AppLayout() {
                 <Discord className="h-7 w-6 text-zink-400" />
               </dt>
               <dd>
-                <Link target="_blank" className="hover:text-zink-900" href="https://discord.gg/438dArF6pJ">
+                <Link
+                  target="_blank"
+                  className="hover:text-zink-900"
+                  href="https://discord.gg/438dArF6pJ"
+                >
                   discord.gg/438dArF6pJ
                 </Link>
               </dd>

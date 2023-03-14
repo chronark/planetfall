@@ -1,17 +1,12 @@
-import { db, Platform } from "@planetfall/db";
+import { db, Platform, Region } from "@planetfall/db";
 import { Row } from "./chart";
 import Head from "next/head";
-import { cache } from "react";
 import React from "react";
 import Link from "next/link";
-import { Text } from "@/components/text";
 import { getStats } from "./get-stats";
-import { RelativeTime } from "./RelativeTime";
 
 export const revalidate = 60;
 // export const dynamic = "force-static";
-
-
 
 export default async function Page(props: { params: { slug: string } }) {
   const statusPage = await db.statusPage.findUnique({
@@ -23,11 +18,17 @@ export default async function Page(props: { params: { slug: string } }) {
         },
       },
     },
-  })
+  });
   if (!statusPage) {
     return null;
   }
-  const regions = await db.region.findMany();
+
+  const regions = new Map<string, Region>();
+  for (const e of statusPage.endpoints) {
+    for (const r of e.regions) {
+      regions.set(r.id, r);
+    }
+  }
 
   let endpoints = await Promise.all(
     statusPage.endpoints.map(async (endpoint) => ({
@@ -52,11 +53,10 @@ export default async function Page(props: { params: { slug: string } }) {
     ...endpoint,
     stats: endpoint.stats.map((s) => ({
       ...s,
-
       region: {
         id: s.regionId,
-        platform: regions.find((r) => r.id === s.regionId)?.platform as Platform,
-        name: regions.find((r) => r.id === s.regionId)?.name ?? s.regionId,
+        platform: regions.get(s.regionId)?.platform as Platform,
+        name: regions.get(s.regionId)?.name ?? s.regionId,
       },
     })),
   }));
@@ -102,23 +102,23 @@ export default async function Page(props: { params: { slug: string } }) {
       <main className="container min-h-screen mx-auto md:py-16 ">
         <ul
           className="flex flex-col gap-4 lg:gap-8" // initial="hidden"
-        // animate="show"
-        // variants={{
-        //   hidden: {},
-        //   show: {
-        //     transition: {
-        //       staggerChildren: 0.1,
-        //     },
-        //   },
-        // }}
+          // animate="show"
+          // variants={{
+          //   hidden: {},
+          //   show: {
+          //     transition: {
+          //       staggerChildren: 0.1,
+          //     },
+          //   },
+          // }}
         >
           {Object.entries(enrichedEndpoints).map(([regionId, endpoint]) => (
             <li
               key={regionId}
-            // variants={{
-            //   hidden: { scale: 0.9, opacity: 0 },
-            //   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
-            // }}
+              // variants={{
+              //   hidden: { scale: 0.9, opacity: 0 },
+              //   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
+              // }}
             >
               <Row endpoint={endpoint} />
             </li>
