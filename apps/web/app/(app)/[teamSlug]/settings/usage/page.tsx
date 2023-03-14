@@ -62,8 +62,8 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
                 {totalUsage.toLocaleString()} / {team.maxMonthlyRequests?.toLocaleString() ?? "∞"}{" "}
                 {usagePercentage !== null
                   ? `(${usagePercentage.toLocaleString(undefined, {
-                      maximumFractionDigits: 2,
-                    })}%)`
+                    maximumFractionDigits: 2,
+                  })}%)`
                   : null}
               </Text>
               {usagePercentage !== null ? (
@@ -80,7 +80,7 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
               <Text size="xl">Cost</Text>
               <Text>
                 $
-                {Math.max(0, (totalUsage - 100000) * 0.0001).toLocaleString(undefined, {
+                {Math.max(0, totalUsage * 0.0001).toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                 })}
               </Text>

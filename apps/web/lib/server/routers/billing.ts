@@ -121,7 +121,7 @@ export const billingRouter = t.router({
       if (!team.stripeCustomerId) {
         const customer = await stripe.customers.create({
           email: team.members[0].user.email,
-          name: team.name,
+          name: team.name, 
         });
 
         // @ts-ignore We don't return all the fields, but we don't need them anyways

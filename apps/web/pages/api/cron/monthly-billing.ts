@@ -39,27 +39,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     const totalUsage = usage.data.reduce((total, day) => total + day.usage, 0);
 
-    const billableUsage = totalUsage; //- team.includedRequests ?? 0;
-
-    if (billableUsage > 0) {
+    if (totalUsage > 0) {
       const invoice = await stripe.invoices.create({
         customer: team.stripeCustomerId!,
         auto_advance: false,
+
         metadata: {
           teamId: team.id,
           plan: team.plan,
+          period: `${start.getDate()} - ${end.getDate()}`,
         },
       });
       const invoiceItem = await stripe.invoiceItems.create({
         customer: team.stripeCustomerId!,
         invoice: invoice.id,
-        quantity: billableUsage,
+        quantity: totalUsage,
         price: env.STRIPE_PRICE_ID_CHECKS,
         period: {
           start: Math.floor(start.getTime() / 1000),
           end: Math.floor(end.getTime() / 1000),
         },
-        description: `Usage for ${team.name} (${team.plan})`,
+        description: `Usage for ${team.name}(${team.plan})`,
       });
       console.log("created invoice item", { id: invoiceItem.id });
     }
