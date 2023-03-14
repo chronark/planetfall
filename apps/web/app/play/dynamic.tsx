@@ -40,6 +40,7 @@ export const Form: React.FC<Props> = ({
 
   const vercelRegions = allRegions.filter((r) => r.platform === "vercelEdge");
   const awsRegions = allRegions.filter((r) => r.platform === "aws");
+  const flyRegions = allRegions.filter((r) => r.platform === "fly");
 
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -200,12 +201,12 @@ export const Form: React.FC<Props> = ({
           <div className="space-y-6 sm:space-y-5">
             <div role="group">
               <div className="sm:grid sm:items-baseline sm:gap-4">
-                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                <div className="flex flex-col space-y-4">
                   <div>
                     <h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
                       Vercel Edge
                     </h4>
-                    <fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 ">
+                    <fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
                       {vercelRegions.map((r) => (
                         <button
                           type="button"
@@ -231,11 +232,39 @@ export const Form: React.FC<Props> = ({
 
                   <div className="h-full">
                     <h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
+                      Fly.io
+                    </h4>
+
+                    <fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
+                      {flyRegions.map((r) => (
+                        <button
+                          type="button"
+                          key={r.id}
+                          className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+                            selectedRegions.includes(r.id)
+                              ? "border-zinc-900 bg-zinc-50"
+                              : "border-zinc-300"
+                          }`}
+                          onClick={() => {
+                            if (selectedRegions.includes(r.id)) {
+                              setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
+                            } else {
+                              setSelectedRegions([...selectedRegions, r.id]);
+                            }
+                          }}
+                        >
+                          <span className="px-2 py-1 lg:px-4">{r.name}</span>
+                        </button>
+                      ))}
+                    </fieldset>
+                  </div>
+                  <div className="h-full">
+                    <h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
                       AWS Lambda
                     </h4>
 
                     {awsRegions.length > 0 ? (
-                      <fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 ">
+                      <fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
                         {awsRegions.map((r) => (
                           <button
                             type="button"

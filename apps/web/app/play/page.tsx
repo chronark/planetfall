@@ -18,7 +18,7 @@ export default async function PlayPage(props: {
 
   const { userId } = auth();
   if (!userId) {
-    regions = regions.filter((r) => r.platform === "vercelEdge");
+    regions = regions.filter((r) => r.platform !== "aws");
   }
 
   return (

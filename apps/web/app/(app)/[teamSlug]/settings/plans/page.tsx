@@ -129,6 +129,14 @@ export default async function PlanPage(props: { params: { teamSlug: string } }) 
           },
         },
         {
+          name: "26 Fly.io Regions",
+          tiers: {
+            Free: true,
+            Pro: true,
+            Enterprise: true,
+          },
+        },
+        {
           name: "22 AWS Regions",
           tiers: {
             Free: false,

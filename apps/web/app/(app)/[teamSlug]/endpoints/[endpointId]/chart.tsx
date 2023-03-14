@@ -53,7 +53,8 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
               <SelectValue placeholder={selected} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="p50">P50</SelectItem>
+              <SelectItem value="p75">P75</SelectItem>
+              <SelectItem value="p90">P90</SelectItem>
               <SelectItem value="p95">P95</SelectItem>
               <SelectItem value="p99">P99</SelectItem>
             </SelectContent>
@@ -87,7 +88,13 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
               formatter: (regionId, _item, _index) => {
                 const name = regionMap[regionId] ?? regionId;
                 return `${
-                  regionId.startsWith("aws:") ? "λ" : regionId.startsWith("vercelEdge:") ? "▲" : ""
+                  regionId.startsWith("aws:")
+                    ? "λ"
+                    : regionId.startsWith("vercelEdge:")
+                    ? "▲"
+                    : regionId.startsWith("fly:")
+                    ? "fly"
+                    : ""
                 } ${name}`;
               },
             },

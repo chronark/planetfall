@@ -90,7 +90,7 @@ const sections: {
     name: "Regions",
     features: [
       {
-        name: "All Vercel Edge",
+        name: "18 Vercel Edge Regions",
         tiers: {
           Free: true,
           Pro: true,
@@ -106,7 +106,7 @@ const sections: {
         },
       },
       {
-        name: "All AWS Lambda",
+        name: "22 AWS Regions",
         tiers: {
           Free: false,
           Pro: true,

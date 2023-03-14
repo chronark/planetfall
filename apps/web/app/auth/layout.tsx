@@ -7,9 +7,5 @@ export default async function Layout({ children }: { children: React.ReactNode }
     redirect("/home");
   }
 
-  return {
-    children,
-  };
+  return <>{children}</>;
 }
-
-// 517008

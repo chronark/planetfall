@@ -16,6 +16,9 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Time } from "@/components/time";
 import { ChevronRight, Minus } from "lucide-react";
 import { Tag } from "@/components/tag";
+import { AwsLambda } from "@/components/icons/AwsLambda";
+import { Fly } from "@/components/icons/Fly";
+import { VercelEdge } from "@/components/icons/VercelEdge";
 export type Props = {
   endpointId: string;
   checks: Check[];
@@ -89,7 +92,24 @@ export const LatestTable: React.FC<Props> = ({
 
     accessor("regionId", {
       header: "Region",
-      cell: (info) => regions.find((r) => r.id === info.getValue())?.name ?? info.getValue(),
+      cell: (info) => {
+        const region = regions.find((r) => r.id === info.getValue());
+        if (!region) {
+          return info.getValue();
+        }
+        return (
+          <div className="flex items-center gap-2">
+            {region.platform === "aws" ? (
+              <AwsLambda className="w-4 h-4" />
+            ) : region.platform === "fly" ? (
+              <Fly className="w-4 h-4" />
+            ) : region.platform === "vercelEdge" ? (
+              <VercelEdge className="w-4 h-4" />
+            ) : null}
+            {region.name}
+          </div>
+        );
+      },
     }),
     accessor("id", {
       header: "",

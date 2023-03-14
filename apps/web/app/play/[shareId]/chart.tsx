@@ -50,7 +50,13 @@ export const Chart: React.FC<Props> = ({ regions, urls }) => {
             formatter: (regionId, _item, _index) => {
               const name = regionMap[regionId] ?? regionId;
               return `${
-                regionId.startsWith("aws:") ? "λ" : regionId.startsWith("vercelEdge:") ? "▲" : ""
+                regionId.startsWith("aws:")
+                  ? "λ"
+                  : regionId.startsWith("vercelEdge:")
+                  ? "▲"
+                  : regionId.startsWith("fly:")
+                  ? "fly"
+                  : ""
               } ${name}`;
             },
           },
@@ -87,7 +93,13 @@ export const Chart: React.FC<Props> = ({ regions, urls }) => {
             autoRotate: true,
             formatter: (regionId, _item, _index) => {
               const name = regionMap[regionId] ?? regionId;
-              return `${regionId.startsWith("aws:") ? "λ" : "▲"} ${name}`;
+              return `${
+                regionId.startsWith("aws:")
+                  ? "λ"
+                  : regionId.startsWith("vercelEdge:")
+                  ? "▲"
+                  : regionId.startsWith("fly:" ? "fly" : "")
+              } ${name}`;
             },
           },
         }}
