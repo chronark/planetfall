@@ -328,7 +328,7 @@ const Chart: React.FC<{
                             {/* {bucket.region} */}
                           </dt>
                           <div>
-                            <dl className="grid grid-cols-1 gap-2 mt-5 md:grid-cols-5 ">
+                            <dl className="grid grid-cols-1 gap-2 mt-5 md:grid-cols-3 lg:grid-cols-6 ">
                               <Stats label="Checks" value={format(bucket.count)} />
                               <Stats label="P75" value={format(bucket.p75)} suffix="ms" />
                               <Stats label="P90" value={format(bucket.p90)} suffix="ms" />
