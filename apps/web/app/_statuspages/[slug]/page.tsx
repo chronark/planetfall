@@ -1,24 +1,27 @@
 import { db, Platform, Region } from "@planetfall/db";
 import { Row } from "./chart";
 import Head from "next/head";
-import React from "react";
+import React, { cache } from "react";
 import Link from "next/link";
 import { getStats } from "./get-stats";
 
 export const revalidate = 60;
-// export const dynamic = "force-static";
+export const dynamic = "force-static";
 
-export default async function Page(props: { params: { slug: string } }) {
-  const statusPage = await db.statusPage.findUnique({
-    where: { slug: props.params.slug },
-    include: {
-      endpoints: {
-        include: {
-          regions: true,
-        },
+
+const getStatusPage = cache(async (slug: string) => await db.statusPage.findUnique({
+  where: { slug },
+  include: {
+    endpoints: {
+      include: {
+        regions: true,
       },
     },
-  });
+  },
+}))
+
+export default async function Page(props: { params: { slug: string } }) {
+  const statusPage = await getStatusPage(props.params.slug);
   if (!statusPage) {
     return null;
   }
@@ -102,23 +105,23 @@ export default async function Page(props: { params: { slug: string } }) {
       <main className="container min-h-screen mx-auto md:py-16 ">
         <ul
           className="flex flex-col gap-4 lg:gap-8" // initial="hidden"
-          // animate="show"
-          // variants={{
-          //   hidden: {},
-          //   show: {
-          //     transition: {
-          //       staggerChildren: 0.1,
-          //     },
-          //   },
-          // }}
+        // animate="show"
+        // variants={{
+        //   hidden: {},
+        //   show: {
+        //     transition: {
+        //       staggerChildren: 0.1,
+        //     },
+        //   },
+        // }}
         >
           {Object.entries(enrichedEndpoints).map(([regionId, endpoint]) => (
             <li
               key={regionId}
-              // variants={{
-              //   hidden: { scale: 0.9, opacity: 0 },
-              //   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
-              // }}
+            // variants={{
+            //   hidden: { scale: 0.9, opacity: 0 },
+            //   show: { scale: 1, opacity: 1, transition: { type: "spring" } },
+            // }}
             >
               <Row endpoint={endpoint} />
             </li>
