@@ -4,7 +4,7 @@ const { withAxiom } = require("next-axiom");
 const nextConfig = {
   pageExtensions: ["tsx", "ts", "jsx", "mdx", "md"],
   images: {
-    domains: ["www.gravatar.com", "avatars.githubusercontent.com"],
+    domains: ["www.gravatar.com", "avatars.githubusercontent.com", "images.clerk.dev"],
   },
   transpilePackages: ["@planetfall/emails"],
   experimental: {
