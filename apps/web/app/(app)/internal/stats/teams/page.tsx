@@ -1,7 +1,8 @@
 import { db } from "@planetfall/db";
 import { Card, Text, Grid, Metric } from "@tremor/react";
-import { BarChart } from "./bar-chart";
+import { BarChart, SelectBox, SelectBoxItem } from "./tremor-client";
 import { Client as Tinybird } from "@planetfall/tinybird";
+import { IndividualUsage } from "./individual-usage";
 
 const tb = new Tinybird();
 
@@ -26,6 +27,14 @@ export default async function AppLayout() {
     }),
   );
 
+  const totalUsage = usage
+    .map((u) => ({
+      team: u.team,
+      "Total Usage": u.usage.reduce((total, day) => total + day.usage, 0),
+    }))
+    .sort((a, b) => b["Total Usage"] - a["Total Usage"])
+    .filter((u) => u["Total Usage"] > 0);
+
   return (
     <>
       <Grid numColsMd={2} numColsLg={3} className="gap-x-6 gap-y-6 mt-6">
@@ -47,15 +56,16 @@ export default async function AppLayout() {
         <Card>
           <BarChart
             colors={["blue"]}
-            data={usage
-              .map((u) => ({
-                team: u.team,
-                "Total Usage": u.usage.reduce((total, day) => total + day.usage, 0),
-              }))
-              .sort((a, b) => b["Total Usage"] - a["Total Usage"])
-              .filter((u) => u["Total Usage"] > 0)}
+            data={totalUsage}
             index="team.name"
             categories={["Total Usage"]}
+          />
+        </Card>
+      </div>
+      <div className="mt-6">
+        <Card>
+          <IndividualUsage
+            usage={usage.filter(({ team }) => totalUsage.find((t) => t.team.id === team.id))}
           />
         </Card>
       </div>

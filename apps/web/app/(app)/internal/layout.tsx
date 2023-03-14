@@ -16,7 +16,12 @@ export default async function Layout(props: {
   }
   const team = await db.team.findFirst({
     where: {
-      id: "team_NszcknrCNzjFgnLvqUCXGR",
+      id: {
+        in: [
+          "team_NszcknrCNzjFgnLvqUCXGR", // planetfall in production
+          "planetfall", // planetfall in development
+        ],
+      },
       members: {
         some: {
           userId: user.id,
