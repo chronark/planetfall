@@ -25,7 +25,7 @@ export default async function Page() {
     (acc, cur) => ({ ...acc, [cur.slug]: 0 }),
     {},
   );
-  while (day.getTime() <= Date.now()) {
+  while (day.getTime() <= now.getTime()) {
     for (const team of activeTeams) {
       const teamUsage = usage.data.find(
         (u) =>
