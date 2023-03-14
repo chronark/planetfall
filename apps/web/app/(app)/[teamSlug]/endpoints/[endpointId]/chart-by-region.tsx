@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
 import { Heading } from "@/components/heading";
 import { AwsLambda } from "@/components/icons/AwsLambda";
+import { Fly } from "@/components/icons/Fly";
 import { VercelEdge } from "@/components/icons/VercelEdge";
 import { MultiSelect } from "@/components/multiselect";
 import { SelectItem, SelectTrigger, Select, SelectContent, SelectValue } from "@/components/select";
@@ -48,9 +49,9 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks }) => {
                   <div className="flex items-center gap-1">
                     {r.id.startsWith("aws:") ? (
                       <AwsLambda className="w-4 h-4" />
-                    ) : (
+                    ) : r.id.startsWith("vercelEdge:") ? (
                       <VercelEdge className="w-4 h-4" />
-                    )}
+                    ) : r.id.startsWith("fly:") ? <Fly className="w-4 h-4" /> : null}
                     {r.name}
                   </div>
                 </SelectItem>
