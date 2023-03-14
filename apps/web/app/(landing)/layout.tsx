@@ -20,7 +20,6 @@ fetch('/api/v1/auth/user').then(res => res.json()).then(res=>{
         const jwt= await fetch('/api/v1/auth/user/jwt', {method: 'POST'})
         .then(res => res.json())
         .then(res => res.token);
-        console.log({jwt})
         return jwt
       }
     });

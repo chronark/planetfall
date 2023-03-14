@@ -8,7 +8,6 @@ import { ChevronDown } from "lucide-react";
 import { CardContent, CardHeader, Card } from "@/components/card";
 import cn from "classnames";
 import { Text } from "@/components/text";
-import { Metric, MetricOverTime } from "@planetfall/tinybird";
 import { Platform } from "@planetfall/db";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { VercelEdge } from "@/components/icons/VercelEdge";
@@ -28,7 +27,20 @@ const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
 /**
  * Trims the series to the last nBuckets and fills in the gaps with 0s
  */
-function resizeSeries(series: MetricOverTime[], nBuckets: number, regionId: string) {
+function resizeSeries(
+  series: {
+    time: number;
+    regionId: string;
+    count: number;
+    errors: number;
+    p75: number;
+    p90: number;
+    p95: number;
+    p99: number;
+  }[],
+  nBuckets: number,
+  regionId: string,
+) {
   series = series
     .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
     .slice(-nBuckets);
@@ -37,7 +49,8 @@ function resizeSeries(series: MetricOverTime[], nBuckets: number, regionId: stri
       regionId,
       time: -1,
       count: 0,
-      p50: 0,
+      p75: 0,
+      p90: 0,
       p95: 0,
       p99: 0,
       errors: 0,
@@ -61,8 +74,25 @@ export const Row: React.FC<{
         name: string;
         platform: Platform;
       };
-      series: MetricOverTime[];
-      metrics: Metric;
+      series: {
+        time: number;
+        regionId: string;
+        count: number;
+        errors: number;
+        p75: number;
+        p90: number;
+        p95: number;
+        p99: number;
+      }[];
+      metrics: {
+        regionId: string;
+        count: number;
+        errors: number;
+        p75: number;
+        p90: number;
+        p95: number;
+        p99: number;
+      };
     }[];
   };
 }> = ({ endpoint, nBuckets = 90 }): JSX.Element => {
@@ -97,7 +127,8 @@ export const Row: React.FC<{
           <div className="flex flex-col items-start justify-between w-full gap-2 md:items-center md:flex-row">
             <Heading h3>{endpoint.name}</Heading>
             <div className="flex items-center justify-start gap-2 md:gap-4">
-              <Stat label="p50" value={globalStats?.metrics.p50 ?? 0} />
+              <Stat label="p75" value={globalStats?.metrics.p75 ?? 0} />
+              <Stat label="p90" value={globalStats?.metrics.p90 ?? 0} />
               <Stat label="p95" value={globalStats?.metrics.p95 ?? 0} />
               <Stat label="p99" value={globalStats?.metrics.p99 ?? 0} />
             </div>
@@ -172,7 +203,7 @@ export const Row: React.FC<{
                   key={r.region.id}
                   className="flex flex-col items-center justify-between w-full gap-4 p-2 md:flex-row "
                 >
-                  <div className="flex flex-col items-center justify-between space-y-2 md:items-start md:w-2/5 lg:w-1/4">
+                  <div className="flex flex-col items-center justify-between space-y-2 md:items-start md:w-2/5">
                     <h4 className="flex items-center gap-2 text-lg text-bold text-zinc-600 whitespace-nowrap">
                       {r.region.platform === "aws" ? (
                         <AwsLambda className="w-4 h-4" />
@@ -182,12 +213,13 @@ export const Row: React.FC<{
                       {r.region.name}
                     </h4>
                     <div className="flex items-center justify-center w-full gap-2 md:justify-start sm:gap-4 ">
-                      <Stat label="p50" value={r.metrics.p50} />
+                      <Stat label="p75" value={r.metrics.p75} />
+                      <Stat label="p90" value={r.metrics.p90} />
                       <Stat label="p95" value={r.metrics.p95} />
                       <Stat label="p99" value={r.metrics.p99} />
                     </div>
                   </div>
-                  <div className="w-full md:w-3/5 lg:w-3/4">
+                  <div className="w-full md:w-3/5">
                     <div className="sm:hidden">
                       <Chart
                         height="h-12"
@@ -224,7 +256,16 @@ export const Row: React.FC<{
 
 const Chart: React.FC<{
   height?: string;
-  series: MetricOverTime[];
+  series: {
+    time: number;
+    regionId: string;
+    count: number;
+    errors: number;
+    p75: number;
+    p90: number;
+    p95: number;
+    p99: number;
+  }[];
   degradedAfter?: number;
   timeout?: number;
   withXAxis?: boolean;
@@ -289,7 +330,8 @@ const Chart: React.FC<{
                           <div>
                             <dl className="grid grid-cols-1 gap-2 mt-5 md:grid-cols-5 ">
                               <Stats label="Checks" value={format(bucket.count)} />
-                              <Stats label="P50" value={format(bucket.p50)} suffix="ms" />
+                              <Stats label="P75" value={format(bucket.p75)} suffix="ms" />
+                              <Stats label="P90" value={format(bucket.p90)} suffix="ms" />
                               <Stats label="P95" value={format(bucket.p95)} suffix="ms" />
                               <Stats label="P99" value={format(bucket.p99)} suffix="ms" />
                               <Stats label="Errors" value={format(bucket.errors)} />

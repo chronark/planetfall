@@ -1,0 +1,23 @@
+VERSION 2
+
+DESCRIPTION >
+    Aggregates the metrics across all regions within the last 24h
+
+NODE aggregate_globally
+SQL >
+
+    %
+    SELECT
+        count() AS count,
+        count(error) AS errors,
+        quantileTiming(0.75)(latency) AS p75,
+        quantileTiming(0.90)(latency) AS p90,
+        quantileTiming(0.95)(latency) AS p95,
+        quantileTiming(0.99)(latency) AS p99
+    FROM checks__v1
+    WHERE
+        endpointId ={{ String(endpointId, required=True) }}
+    AND 
+        time >= now() - INTERVAL 1 DAY
+
+

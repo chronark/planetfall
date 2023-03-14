@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: "Plantfall",
+    title: "Planetfall",
     card: "summary_large_image",
   },
   icons: {

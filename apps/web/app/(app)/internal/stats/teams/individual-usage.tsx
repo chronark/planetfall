@@ -22,14 +22,11 @@ type Props = {
 export const IndividualUsage: React.FC<Props> = (props) => {
   const [selected, setSelected] = useState(props.usage.at(0)?.team?.id);
 
-  console.log({ selected });
   const data: { time: string; usage: number }[] = [];
   const month = new Date().getUTCMonth();
   const day = new Date();
   day.setUTCDate(1);
-  console.log(props.usage);
   while (day.getUTCMonth() === month) {
-    console.log(props.usage, selected);
     const usage = props.usage
       .find(({ team }) => team.id === selected)
       ?.usage.find(

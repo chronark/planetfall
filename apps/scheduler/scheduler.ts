@@ -88,12 +88,14 @@ export class Scheduler {
           totalUsage,
         });
 
-        continue;
-      }
-
-      for (const e of t.endpoints) {
-        if (e.active) {
-          want[e.id] = e;
+        for (const e of t.endpoints) {
+          this.removeEndpoint(e.id);
+        }
+      } else {
+        for (const e of t.endpoints) {
+          if (e.active) {
+            want[e.id] = e;
+          }
         }
       }
     }
@@ -205,7 +207,7 @@ export class Scheduler {
           const headers = new Headers({
             "Content-Type": "application/json",
           });
-          if (region.platform === "flyRedis") {
+          if (region.platform === "fly") {
             headers.set("Fly-Prefer-Region", region.region);
           }
 

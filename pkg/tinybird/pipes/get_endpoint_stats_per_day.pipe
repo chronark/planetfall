@@ -1,4 +1,4 @@
-VERSION 1
+VERSION 2
 TOKEN "live" READ
 
 NODE filter
@@ -9,10 +9,11 @@ SELECT
     time,
     countMerge(errors) AS errors,
     countMerge(count) AS count,
-    quantileTimingMerge(0.5)(p50) AS p50,
+    quantileTimingMerge(0.75)(p75) AS p75,
+    quantileTimingMerge(0.90)(p90) AS p90,
     quantileTimingMerge(0.95)(p95) AS p95,
     quantileTimingMerge(0.99)(p99) AS p99
-FROM endpoint_stats_per_day__v1
+FROM endpoint_stats_per_day__v2
 WHERE
-    endpointId ={{ String(endpointId, required=True) }} AND time >= now() - INTERVAL {{ Int32(days, 7) }} DAY
+    endpointId = {{ String(endpointId, required=True) }} AND time >= now() - INTERVAL {{ Int32(days, 7) }} DAY
 GROUP BY regionId, time

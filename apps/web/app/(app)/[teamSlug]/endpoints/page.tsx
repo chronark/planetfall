@@ -1,6 +1,6 @@
 import PageHeader from "@/components/page/header";
 import { redirect } from "next/navigation";
-import { Client as Tinybird } from "@planetfall/tinybird";
+import { getEndpointStatsGlobally } from "@planetfall/tinybird";
 
 import { Text } from "@/components/text";
 import { Button } from "@/components/button";
@@ -9,7 +9,7 @@ import { db } from "@planetfall/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/card";
-import { Plus, PlusCircle, Settings } from "lucide-react";
+import { Plus } from "lucide-react";
 
 export default async function Page(props: { params: { teamSlug: string } }) {
   const { userId } = auth();
@@ -29,16 +29,15 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 
   const endpointStats = await Promise.all(
     team?.endpoints.map(async (endpoint) => {
-      const stats = await new Tinybird().getEndpointStats(endpoint.id);
-
+      const stats = await getEndpointStatsGlobally({ endpointId: endpoint.id });
       return {
         id: endpoint.id,
         name: endpoint.name,
         url: endpoint.url,
-        stats: stats.find((s) => s.regionId === "global") ?? {
-          regionId: "global",
+        stats: stats.data.at(0) ?? {
           count: 0,
-          p50: 0,
+          p75: 0,
+          p90: 0,
           p95: 0,
           p99: 0,
           errors: 0,

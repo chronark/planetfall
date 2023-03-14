@@ -1,4 +1,4 @@
-VERSION 1
+VERSION 2
 TOKEN "live" READ
 
 
@@ -10,9 +10,10 @@ SQL >
         COUNT(*) as count,
         min(latency) as min,
         max(latency) as max,
-        quantile(0.5)(latency) as p50,
-        quantile(0.95)(latency) as p95,
-        quantile(0.99)(latency) as p99,
+        quantileTimingState(0.75)(latency) AS p75,
+        quantileTimingState(0.90)(latency) AS p90,
+        quantileTimingState(0.95)(latency) AS p95,
+        quantileTimingState(0.99)(latency) AS p99,
         COUNT(error) as errors
 
     FROM checks__v1

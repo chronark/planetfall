@@ -7,6 +7,9 @@ import { auth } from "@clerk/nextjs/app-beta";
 import { DeleteCard } from "./DeleteCard";
 import { ChangeNameCard } from "./change-name";
 import { ChangeSlugCard } from "./change-slug";
+import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { Tag } from "@/components/tag";
+import { Input } from "@/components/input";
 
 export default async function SettingsPage(props: {
   params: { teamSlug: string };
@@ -64,7 +67,16 @@ export default async function SettingsPage(props: {
           role: m.role,
         }))}
       />
+      <Divider />
 
+      <Card>
+        <CardHeader>
+          <CardHeaderTitle title="Team ID" />
+        </CardHeader>
+        <CardContent>
+          <Input className="max-w-sm" value={team.id} readOnly />
+        </CardContent>
+      </Card>
       {user.role === "OWNER" ? (
         <>
           <Divider />

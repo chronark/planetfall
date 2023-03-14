@@ -140,6 +140,7 @@ enum Platform {
   vercelEdge
   aws
   flyRedis
+  fly
 }
 
 model Region {

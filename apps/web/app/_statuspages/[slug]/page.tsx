@@ -41,7 +41,6 @@ export default async function Page(props: { params: { slug: string } }) {
   //     acc[regionName] = value;
   //     return acc;
   //   },
-
   //   {} as any,
   // )
   /**

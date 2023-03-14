@@ -1,6 +1,6 @@
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
-import { Client as Tinybird } from "@planetfall/tinybird";
+import { Client as Tinybird, getEndpointStatsGlobally } from "@planetfall/tinybird";
 
 export const config = {
   runtime: "edge",
@@ -24,8 +24,8 @@ export default async function handler(req: NextRequest) {
     throw new Error("Missing endpointId");
   }
 
-  const stats = await (await tb.getEndpointStats(endpointId)).find((s) => s.regionId === "global");
-  if (!stats) {
+  const stats = await await getEndpointStatsGlobally({ endpointId });
+  if (stats.data.length === 0) {
     throw new Error("No stats found");
   }
 
@@ -82,9 +82,10 @@ export default async function handler(req: NextRequest) {
           marginTop: "20px",
         }}
       >
-        <Metric name="P50" value={stats.p50.toFixed()} unit="ms" />
-        <Metric name="P95" value={stats.p95.toFixed()} unit="ms" />
-        <Metric name="P99" value={stats.p99.toFixed()} unit="ms" />
+        <Metric name="P75" value={stats.data.at(0)?.p75.toFixed() ?? "0"} unit="ms" />
+        <Metric name="P90" value={stats.data.at(0)?.p90.toFixed() ?? "0"} unit="ms" />
+        <Metric name="P95" value={stats.data.at(0)?.p95.toFixed() ?? "0"} unit="ms" />
+        <Metric name="P99" value={stats.data.at(0)?.p99.toFixed() ?? "0"} unit="ms" />
       </div>
 
       <div

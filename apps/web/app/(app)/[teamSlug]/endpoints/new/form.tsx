@@ -14,6 +14,7 @@ import { Minus } from "lucide-react";
 import { Toaster, useToast } from "@/components/toast";
 import { VercelEdge } from "@/components/icons/VercelEdge";
 import { AwsLambda } from "@/components/icons/AwsLambda";
+import { Fly } from "@/components/icons/Fly";
 type Props = {
   teamId: string;
   teamSlug: string;
@@ -569,6 +570,35 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                           >
                             <span>{r.name}</span>
                             <VercelEdge className="w-4 h-4" />
+                          </button>
+                        ))}
+                    </fieldset>
+                    <h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
+                      Fly.io Regions
+                    </h4>
+
+                    <fieldset className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+                      {regions
+                        .filter((r) => r.platform === "fly")
+                        .map((r) => (
+                          <button
+                            type="button"
+                            key={r.id}
+                            className={`flex justify-between items-center px-2 py-1 lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+                              selectedRegions.includes(r.id)
+                                ? "border-zinc-900 bg-zinc-50"
+                                : "border-zinc-300"
+                            }`}
+                            onClick={() => {
+                              if (selectedRegions.includes(r.id)) {
+                                setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
+                              } else {
+                                setSelectedRegions([...selectedRegions, r.id]);
+                              }
+                            }}
+                          >
+                            <span>{r.name}</span>
+                            <Fly className="w-4 h-4" />
                           </button>
                         ))}
                     </fieldset>

@@ -1,4 +1,4 @@
-VERSION 1
+VERSION 2
 NODE aggregate_globally
 SQL >
 
@@ -7,10 +7,11 @@ SQL >
         'global' as regionId,
         count() AS count,
         count(error) AS errors,
-        quantileTiming(0.5)(latency) AS p50,
+        quantileTiming(0.75)(latency) AS p75,
+        quantileTiming(0.90)(latency) AS p90,
         quantileTiming(0.95)(latency) AS p95,
         quantileTiming(0.99)(latency) AS p99
-    FROM checks_metrics__v1
+    FROM checks__v1
     WHERE
         endpointId ={{ String(endpointId, required=True) }}
     AND 
@@ -27,10 +28,11 @@ SQL >
         regionId,
         count() AS count,
         count(error) AS errors,
-        quantileTiming(0.5)(latency) AS p50,
+        quantileTiming(0.75)(latency) AS p75,
+        quantileTiming(0.90)(latency) AS p90,
         quantileTiming(0.95)(latency) AS p95,
         quantileTiming(0.99)(latency) AS p99
-    FROM checks_metrics__v1
+    FROM checks__v1
     WHERE
         endpointId ={{ String(endpointId, required=True) }}
     AND 

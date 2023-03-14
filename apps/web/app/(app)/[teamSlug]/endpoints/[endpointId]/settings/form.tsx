@@ -21,6 +21,7 @@ import Link from "next/link";
 import { Minus, Plus } from "lucide-react";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { VercelEdge } from "@/components/icons/VercelEdge";
+import { Fly } from "@/components/icons/Fly";
 type Props = {
   teamSlug: string;
   endpoint: Omit<Endpoint, "createdAt" | "updatedAt"> & { regions: Region[] };
@@ -722,9 +723,11 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                             {r.name}
                             {r.platform === "aws" ? (
                               <AwsLambda className="w-4 h-4" />
-                            ) : (
+                            ) : r.platform === "vercelEdge" ? (
                               <VercelEdge className="w-4 h-4" />
-                            )}
+                            ) : r.platform === "fly" ? (
+                              <Fly className="w-4 h-4" />
+                            ) : null}
                           </button>
                         ))}
                       </fieldset>

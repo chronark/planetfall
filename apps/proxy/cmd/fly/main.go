@@ -91,7 +91,6 @@ func main() {
 		return c.Next()
 	})
 
-
 	app.Get("/health", func(c *fiber.Ctx) error {
 		log.Println("received health check")
 		return c.SendString("OK")
@@ -112,7 +111,7 @@ func main() {
 			return handleError(c, 400, "BAD_REQUEST", err.Error())
 		}
 
-		res, err := ping.RedisPing(c.UserContext(), req)
+		res, err := ping.Ping(c.UserContext(), req)
 		if err != nil {
 			log.Printf("Error pinging: %s", err.Error())
 			return handleError(c, 500, "INTERNAL_SERVER_ERROR", err.Error())
@@ -122,24 +121,24 @@ func main() {
 	})
 
 	go func() {
-		for {
-			select {
-			case <-close:
-			case <-idle.Close:
-				log.Println("Shutting down server")
-				err := app.Shutdown()
-				if err != nil {
-					log.Printf("Error shutting down: %s\n", err.Error())
-					os.Exit(1)
-				}
-				os.Exit(0)
-			}
+		err := app.Listen(fmt.Sprintf(":%s", port))
+		if err != nil {
+			log.Fatalf("Error listening: %s", err.Error())
 		}
+
 	}()
 
-	err := app.Listen(fmt.Sprintf(":%s", port))
-	if err != nil {
-		log.Fatalf("Error listening: %s", err.Error())
+	for {
+		select {
+		case <-close:
+		case <-idle.Close:
+			log.Println("Shutting down server")
+			err := app.Shutdown()
+			if err != nil {
+				log.Printf("Error shutting down: %s\n", err.Error())
+				os.Exit(1)
+			}
+			os.Exit(0)
+		}
 	}
-
 }

@@ -98,6 +98,14 @@ const sections: {
         },
       },
       {
+        name: "26 Fly.io Regions",
+        tiers: {
+          Free: true,
+          Pro: true,
+          Enterprise: true,
+        },
+      },
+      {
         name: "All AWS Lambda",
         tiers: {
           Free: false,

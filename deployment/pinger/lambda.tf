@@ -39,7 +39,7 @@ resource "aws_lambda_function" "check_runner" {
 
   handler     = "main"
   runtime     = "go1.x"
-  timeout     = 30
+  timeout     = 15
   memory_size = "1024"
 
 

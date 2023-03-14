@@ -1,4 +1,4 @@
-VERSION 1
+VERSION 2
 
 DESCRIPTION >
     Aggregate endpoint stats per region per day
@@ -11,7 +11,8 @@ SQL >
         endpointId,
         toStartOfDay(time) AS time,
         COUNTState() AS count,
-        quantileTimingState(0.5)(latency) AS p50,
+        quantileTimingState(0.75)(latency) AS p75,
+        quantileTimingState(0.90)(latency) AS p90,
         quantileTimingState(0.95)(latency) AS p95,
         quantileTimingState(0.99)(latency) AS p99,
         COUNTState(error) AS errors,
@@ -20,6 +21,6 @@ SQL >
     GROUP BY time, endpointId, regionId
 
 TYPE MATERIALIZED
-DATASOURCE endpoint_stats_per_day__v1
+DATASOURCE endpoint_stats_per_day__v2
 ENGINE "AggregatingMergeTree"
 ENGINE_SORTING_KEY "endpointId,regionId,time"

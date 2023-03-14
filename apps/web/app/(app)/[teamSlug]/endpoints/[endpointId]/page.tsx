@@ -1,6 +1,6 @@
 import PageHeader from "@/components/page/header";
 import { redirect } from "next/navigation";
-import { Client as Tinybird } from "@planetfall/tinybird";
+import { Client as Tinybird, getEndpointStats } from "@planetfall/tinybird";
 
 import { db } from "@planetfall/db";
 import { Stats } from "@/components/stats";
@@ -63,14 +63,15 @@ export default async function Page(props: {
   const tb = new Tinybird();
 
   const [stats, checks] = await Promise.all([
-    tb.getEndpointStats(endpoint.id),
+    getEndpointStats({ endpointId: endpoint.id }),
     tb.getLatestChecksByEndpoint(endpoint.id, { limit: 10000 }),
   ]);
 
-  const globalStats = stats.find((s) => s.regionId === "global") ?? {
+  const globalStats = stats.data.find((s) => s.regionId === "global") ?? {
     count: 0,
     latency: 0,
-    p50: 0,
+    p75: 0,
+    p90: 0,
     p95: 0,
     p99: 0,
   };
@@ -137,13 +138,25 @@ export default async function Page(props: {
               ) : null}
               <Stats label="Errors" value={errors.length.toLocaleString()} />
               <Stats
-                label="P50"
-                value={globalStats.p50.toLocaleString()}
+                label="P75"
+                value={globalStats.p75.toLocaleString()}
                 suffix="ms"
                 status={
-                  endpoint.timeout && globalStats.p50 > endpoint.timeout
+                  endpoint.timeout && globalStats.p75 > endpoint.timeout
                     ? "error"
-                    : endpoint.degradedAfter && globalStats.p50 > endpoint.degradedAfter
+                    : endpoint.degradedAfter && globalStats.p75 > endpoint.degradedAfter
+                    ? "warn"
+                    : undefined
+                }
+              />
+              <Stats
+                label="P90"
+                value={globalStats.p90.toLocaleString()}
+                suffix="ms"
+                status={
+                  endpoint.timeout && globalStats.p90 > endpoint.timeout
+                    ? "error"
+                    : endpoint.degradedAfter && globalStats.p90 > endpoint.degradedAfter
                     ? "warn"
                     : undefined
                 }
@@ -200,7 +213,7 @@ export default async function Page(props: {
         {checks.length > 0 ? (
           <>
             <Chart
-              regions={stats.map((region) => ({
+              regions={stats.data.map((region) => ({
                 ...region,
                 regionName:
                   endpoint.regions.find((r) => r.id === region.regionId)?.name ?? region.regionId,
