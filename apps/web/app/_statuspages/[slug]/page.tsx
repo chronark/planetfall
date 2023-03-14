@@ -1,7 +1,7 @@
 import { db, Platform } from "@planetfall/db";
 import { Row } from "./chart";
 import Head from "next/head";
-
+import { cache } from "react";
 import React from "react";
 import Link from "next/link";
 import { Text } from "@/components/text";
@@ -9,23 +9,30 @@ import { getStats } from "./get-stats";
 import { RelativeTime } from "./RelativeTime";
 
 export const revalidate = 60;
-// export const dynamic = "force-static";
+export const dynamic = "force-static";
+
+const getStatusPage = cache(
+  async (slug: string) =>
+    await db.statusPage.findUnique({
+      where: { slug },
+      include: {
+        endpoints: {
+          include: {
+            regions: true,
+          },
+        },
+      },
+    }),
+);
+
+const getRegions = cache(async () => await db.region.findMany());
 
 export default async function Page(props: { params: { slug: string } }) {
-  const now = Date.now();
-  const statusPage = await db.statusPage.findUnique({
-    where: { slug: props.params.slug },
-    include: {
-      endpoints: {
-        include: { regions: true },
-      },
-      team: true,
-    },
-  });
+  const statusPage = await getStatusPage(props.params.slug);
   if (!statusPage) {
     return null;
   }
-  const regions = await db.region.findMany({});
+  const regions = await getRegions();
 
   let endpoints = await Promise.all(
     statusPage.endpoints.map(async (endpoint) => ({
@@ -97,9 +104,7 @@ export default async function Page(props: { params: { slug: string } }) {
       <header className="container flex items-center justify-between w-full mx-auto mt-4 lg:mt-8 ">
         <h2 className="mb-4 text-5xl font-bold text-zinc-900">{statusPage.name}</h2>
 
-        <Text>
-          Last updated <RelativeTime time={now} />
-        </Text>
+       
       </header>
       <main className="container min-h-screen mx-auto md:py-16 ">
         <ul
