@@ -46,14 +46,15 @@ export class Tinybird {
     for (const [key, value] of Object.entries(parameters)) {
       url.searchParams.set(key, value.toString());
     }
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${this.token}` },
-    });
+    url.searchParams.set("token", this.token);
+    const res = await fetch(url);
     if (!res.ok) {
       const error = (await res.json()) as PipeErrorResponse;
       throw new Error(error.error);
     }
-    return await res.json();
+    const body = await res.json();
+
+    return body;
   }
 
   public buildPipe<

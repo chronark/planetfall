@@ -90,6 +90,7 @@ export class Scheduler {
         .filter((u) => u.teamId === t.id)
         .reduce((sum, u) => sum + u.usage, 0);
 
+      // report usage, to power some charts in axiom.
       this.logger.info("report.usage.requests", {
         teamId: t.id,
         teamSlug: t.slug,
