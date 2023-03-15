@@ -62,9 +62,11 @@ export class Scheduler {
     });
 
     const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = now.getUTCMonth() + 1;
     const usage = await getUsage({
-      year: now.getUTCFullYear(),
-      month: now.getUTCMonth() + 1,
+      year,
+      month,
     });
 
     for (const t of teams) {
@@ -87,6 +89,14 @@ export class Scheduler {
       const totalUsage = usage.data
         .filter((u) => u.teamId === t.id)
         .reduce((sum, u) => sum + u.usage, 0);
+
+      this.logger.info("report.usage.requests", {
+        teamId: t.id,
+        teamSlug: t.slug,
+        month,
+        year,
+        requests: totalUsage,
+      });
 
       if (totalUsage > t.maxMonthlyRequests) {
         this.logger.info("team has exceeded monthly requests", {
@@ -306,21 +316,23 @@ export class Scheduler {
 
           for (const d of data) {
             const responseHeaders = new Headers(d.header);
-            this.tinybird.publish("cache_headers__v1", {
-              time: d.time.getTime(),
-              checkId: d.id,
-              endpointId: d.endpointId,
-              "Cache-Control": responseHeaders.get("Cache-Control"),
-              "X-Vercel-Cache": responseHeaders.get("X-Vercel-Cache"),
-              Server: responseHeaders.get("Server"),
-              "CF-Cache-Status": responseHeaders.get("CF-Cache-Status"),
-            }).catch((err) => {
-              this.logger.error("error publishing cache headers to tinybird", {
-                endpointId: endpoint.id,
-                regionId: region.id,
-                error: (err as Error).message,
+            this.tinybird
+              .publish("cache_headers__v1", {
+                time: d.time.getTime(),
+                checkId: d.id,
+                endpointId: d.endpointId,
+                "Cache-Control": responseHeaders.get("Cache-Control"),
+                "X-Vercel-Cache": responseHeaders.get("X-Vercel-Cache"),
+                Server: responseHeaders.get("Server"),
+                "CF-Cache-Status": responseHeaders.get("CF-Cache-Status"),
+              })
+              .catch((err) => {
+                this.logger.error("error publishing cache headers to tinybird", {
+                  endpointId: endpoint.id,
+                  regionId: region.id,
+                  error: (err as Error).message,
+                });
               });
-            })
           }
 
           await this.db.check.createMany({ data }).catch((err) => {

@@ -16,7 +16,8 @@ export default async function Page() {
 
   const usageOverTime: Record<string, number | string>[] = [];
 
-  const day = now;
+  // make a copy instead of referencing the same object
+  const day = new Date(now);
   day.setDate(1);
 
   const activeTeams = teams.filter((t) => usage.data.some((u) => u.teamId === t.id));
@@ -27,6 +28,7 @@ export default async function Page() {
   );
   while (day.getTime() <= now.getTime()) {
     for (const team of activeTeams) {
+      console.log(team.id, day.toDateString());
       const teamUsage = usage.data.find(
         (u) =>
           u.teamId === team.id &&
@@ -39,9 +41,8 @@ export default async function Page() {
         time: day.toDateString(),
         ...sums,
       });
-
-      day.setDate(day.getDate() + 1);
     }
+    day.setDate(day.getDate() + 1);
   }
   // const usageOverTime = usage.data.map(({ teamId, year, month, day, usage }) => {
   //   const team = teams.find((t) => t.id === teamId)?.slug ?? teamId;
