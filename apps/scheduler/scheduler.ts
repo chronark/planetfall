@@ -71,12 +71,14 @@ export class Scheduler {
       if (t.plan === "DISABLED") {
         this.logger.debug("Skipping team with DISABLED plan", {
           teamId: t.id,
+          teamSlug: t.slug,
         });
         continue;
       }
       if (t.endpoints.length === 0) {
         this.logger.debug("Skipping team with no endpoints", {
           teamId: t.id,
+          teamSlug: t.slug,
         });
 
         continue;
@@ -89,6 +91,7 @@ export class Scheduler {
       if (totalUsage > t.maxMonthlyRequests) {
         this.logger.info("team has exceeded monthly requests", {
           teamId: t.id,
+          teamSlug: t.slug,
           maxMonthlyRequests: t.maxMonthlyRequests,
           totalUsage,
         });
