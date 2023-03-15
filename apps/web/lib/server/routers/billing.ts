@@ -6,7 +6,7 @@ import Stripe from "stripe";
 import { Redis } from "@upstash/redis";
 import { createInvoice } from "@/lib/billing/stripe";
 import { DEFAULT_QUOTA } from "plans";
-
+import { audit } from "@planetfall/audit";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2022-11-15",
   typescript: true,
@@ -72,7 +72,7 @@ export const billingRouter = t.router({
         await createInvoice({ team, year, month });
       }
 
-      await db.team.update({
+      const updated = await db.team.update({
         where: { id: team.id },
         data: {
           plan: input.plan,
@@ -82,6 +82,14 @@ export const billingRouter = t.router({
           maxPages: DEFAULT_QUOTA[input.plan].maxStatusPages,
           trialExpires: null,
         },
+      });
+
+      audit.log({
+        actorId: ctx.user.id,
+        event: "team.plan.change",
+        resourceId: team.id,
+        source: "trpc",
+        tags: { from: team.plan, to: updated.plan },
       });
       await redis.set(redisLockKey, true, { ex: 60 * 60 * 24 });
     }),
@@ -121,6 +129,12 @@ export const billingRouter = t.router({
           message: "You need to be an owner or admin to do this",
         });
       }
+      audit.log({
+        actorId: ctx.user.id,
+        event: "team.billing_portal_opened",
+        resourceId: team.id,
+        source: "trpc",
+      });
       if (!team.stripeCustomerId) {
         const customer = await stripe.customers.create({
           email: team.members[0].user.email,

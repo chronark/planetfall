@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { t } from "../trpc";
 import { db } from "@planetfall/db";
+import { audit } from "@planetfall/audit";
 
 export const pageRouter = t.router({
   create: t.procedure
@@ -68,6 +69,12 @@ export const pageRouter = t.router({
           },
         },
       });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "page.create",
+        resourceId: page.id,
+        source: "trpc",
+      });
       return page;
     }),
   update: t.procedure
@@ -100,7 +107,7 @@ export const pageRouter = t.router({
         });
       }
 
-      return await db.statusPage.update({
+      const updated = await db.statusPage.update({
         where: { id: input.pageId },
         data: {
           name: input.name,
@@ -112,6 +119,13 @@ export const pageRouter = t.router({
           },
         },
       });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "page.update",
+        resourceId: updated.id,
+        source: "trpc",
+      });
+      return updated;
     }),
 
   delete: t.procedure
@@ -141,8 +155,16 @@ export const pageRouter = t.router({
         });
       }
 
-      return await db.statusPage.delete({
+      const deleted = await db.statusPage.delete({
         where: { id: input.pageId },
       });
+
+      audit.log({
+        actorId: ctx.user.id,
+        event: "page.delete",
+        resourceId: deleted.id,
+        source: "trpc",
+      });
+      return deleted;
     }),
 });

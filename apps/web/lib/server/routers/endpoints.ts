@@ -12,6 +12,7 @@ import {
   HeaderAssertion,
   deserialize,
 } from "@planetfall/assertions";
+import { audit } from "@planetfall/audit";
 
 export const endpointRouter = t.router({
   create: t.procedure
@@ -105,6 +106,12 @@ export const endpointRouter = t.router({
           body: input.body,
         },
       });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "endpoint.create",
+        resourceId: created.id,
+        source: "trpc",
+      });
 
       return created;
     }),
@@ -183,7 +190,12 @@ export const endpointRouter = t.router({
           body: input.body,
         },
       });
-
+      audit.log({
+        actorId: ctx.user.id,
+        event: "endpoint.update",
+        resourceId: updatedEndpoint.id,
+        source: "trpc",
+      });
       return updatedEndpoint;
     }),
 
@@ -219,13 +231,20 @@ export const endpointRouter = t.router({
         });
       }
 
-      return await db.endpoint.update({
+      const updated = await db.endpoint.update({
         where: { id: input.endpointId },
         data: {
           active: !endpoint.active,
           updatedAt: new Date(),
         },
       });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "endpoint.update",
+        resourceId: updated.id,
+        source: "trpc",
+      });
+      return updated;
     }),
   delete: t.procedure
     .input(
@@ -254,8 +273,15 @@ export const endpointRouter = t.router({
         });
       }
 
-      return await db.endpoint.delete({
+      const deleted = await db.endpoint.delete({
         where: { id: input.endpointId },
       });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "endpoint.delete",
+        resourceId: deleted.id,
+        source: "trpc",
+      });
+      return deleted;
     }),
 });

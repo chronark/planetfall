@@ -1,7 +1,7 @@
 import { Tinybird } from "./base";
 import { z } from "zod";
 
-const tb = new Tinybird();
+export const tb = new Tinybird();
 
 const nullableNumberWithDefault = z
   .number()

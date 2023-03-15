@@ -64,13 +64,6 @@ export const playRouter = t.router({
     )
     .output(z.object({ shareId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      tb.publish("play.checks", {
-        urls: input.urls,
-        regionIds: input.regionIds,
-        method: input.method,
-        userId: ctx.user.id,
-      });
-
       const { success, remaining, reset, limit } = await ratelimit.limit("global");
       if (!success) {
         throw new TRPCError({
@@ -82,6 +75,7 @@ export const playRouter = t.router({
       ctx.res.setHeader("X-RateLimit-Remaining", remaining);
       ctx.res.setHeader("X-RateLimit-Reset", reset);
 
+      const start = Date.now();
       const ps = await Promise.allSettled(
         input.regionIds.map(async (regionId) => {
           const region = await db.region.findUnique({
@@ -177,6 +171,15 @@ export const playRouter = t.router({
           console.error(p.reason);
         }
       }
+
+      tb.publish("play.checks", {
+        time: Date.now(),
+        latency: Date.now() - start,
+        urls: input.urls,
+        regionIds: input.regionIds,
+        method: input.method,
+        userId: ctx.user.id,
+      });
 
       for (let i = 0; i < 100; i++) {
         const id = newShortId();

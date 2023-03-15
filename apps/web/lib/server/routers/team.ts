@@ -7,6 +7,7 @@ import slugify from "slugify";
 import { DEFAULT_QUOTA } from "plans";
 import { createInvoice } from "@/lib/billing/stripe";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { audit } from "@planetfall/audit";
 // import { Email } from "@planetfall/emails";
 
 export const teamRouter = t.router({
@@ -76,6 +77,12 @@ export const teamRouter = t.router({
           }
           throw err;
         });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "team.create",
+        resourceId: team.id,
+        source: "trpc",
+      });
 
       return team;
     }),
@@ -163,6 +170,12 @@ export const teamRouter = t.router({
           expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
         },
       });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "invitation.create",
+        resourceId: invitation.id,
+        source: "trpc",
+      });
       return invitation;
 
       // await new Email().sendTeamInvitation({
@@ -219,6 +232,15 @@ export const teamRouter = t.router({
           teamId: input.teamId,
           userId: input.userId,
           role: input.role,
+        },
+      });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "team.update",
+        resourceId: team.id,
+        source: "trpc",
+        tags: {
+          invited: input.userId,
         },
       });
     }),
@@ -284,6 +306,15 @@ export const teamRouter = t.router({
         default:
           throw new TRPCError({ code: "UNAUTHORIZED" });
       }
+      audit.log({
+        actorId: ctx.user.id,
+        event: "team.update",
+        resourceId: team.id,
+        source: "trpc",
+        tags: {
+          removed: input.userId,
+        },
+      });
     }),
   delete: t.procedure
     .input(
@@ -320,6 +351,12 @@ export const teamRouter = t.router({
       }
       await db.team.delete({
         where: { id: input.teamId },
+      });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "team.delete",
+        resourceId: team.id,
+        source: "trpc",
       });
     }),
   updateName: t.procedure
@@ -364,6 +401,12 @@ export const teamRouter = t.router({
             throw new TRPCError({ code: "BAD_REQUEST", message: "Team name already taken" });
           }
         });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "team.update",
+        resourceId: team.id,
+        source: "trpc",
+      });
     }),
   updateSlug: t.procedure
     .input(
@@ -407,5 +450,11 @@ export const teamRouter = t.router({
             throw new TRPCError({ code: "BAD_REQUEST", message: "Team slug already taken" });
           }
         });
+      audit.log({
+        actorId: ctx.user.id,
+        event: "team.update",
+        resourceId: team.id,
+        source: "trpc",
+      });
     }),
 });

@@ -1,0 +1,15 @@
+VERSION 1
+# TOKEN "live" READWRITE
+
+SCHEMA >
+    `time` Int64 `json:$.time`,
+    `event` String `json:$.event`,
+    `resourceId` String `json:$.resourceId`,
+    `actorId` String `json:$.actorId`,
+    `tags` Nullable(String) `json:$.tags`
+   
+
+ENGINE "MergeTree"
+ENGINE_SORTING_KEY "resourceId,actorId,time"
+
+
