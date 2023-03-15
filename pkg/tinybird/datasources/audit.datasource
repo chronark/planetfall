@@ -10,6 +10,6 @@ SCHEMA >
    
 
 ENGINE "MergeTree"
-ENGINE_SORTING_KEY "resourceId,actorId,time"
+ENGINE_SORTING_KEY "event,resourceId,actorId,time"
 
 
