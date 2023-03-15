@@ -38,7 +38,7 @@ export class Tinybird {
     this.token = token;
   }
 
-  public async fetch(
+  private async fetch(
     pipe: string,
     parameters: Record<string, string | number | boolean> = {},
   ): Promise<unknown> {
@@ -47,14 +47,16 @@ export class Tinybird {
       url.searchParams.set(key, value.toString());
     }
     url.searchParams.set("token", this.token);
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      // headers: {
+      //   Authorization: `Bearer ${this.token}`,
+      // },
+    });
     if (!res.ok) {
       const error = (await res.json()) as PipeErrorResponse;
       throw new Error(error.error);
     }
-    const body = await res.json();
-
-    return body;
+    return await res.json();
   }
 
   public buildPipe<
