@@ -314,7 +314,13 @@ export class Scheduler {
               "X-Vercel-Cache": responseHeaders.get("X-Vercel-Cache"),
               Server: responseHeaders.get("Server"),
               "CF-Cache-Status": responseHeaders.get("CF-Cache-Status"),
-            });
+            }).catch((err) => {
+              this.logger.error("error publishing cache headers to tinybird", {
+                endpointId: endpoint.id,
+                regionId: region.id,
+                error: (err as Error).message,
+              });
+            })
           }
 
           await this.db.check.createMany({ data }).catch((err) => {

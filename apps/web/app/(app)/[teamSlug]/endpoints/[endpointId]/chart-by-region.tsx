@@ -51,7 +51,9 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks }) => {
                       <AwsLambda className="w-4 h-4" />
                     ) : r.id.startsWith("vercelEdge:") ? (
                       <VercelEdge className="w-4 h-4" />
-                    ) : r.id.startsWith("fly:") ? <Fly className="w-4 h-4" /> : null}
+                    ) : r.id.startsWith("fly:") ? (
+                      <Fly className="w-4 h-4" />
+                    ) : null}
                     {r.name}
                   </div>
                 </SelectItem>

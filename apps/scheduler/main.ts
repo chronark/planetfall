@@ -7,7 +7,7 @@ import { Notifications } from "./notifications";
 import { Redis } from "@upstash/redis";
 import { db } from "@planetfall/db";
 import { Email } from "@planetfall/emails/dist/client";
-import "isomorphic-fetch"
+import "isomorphic-fetch";
 
 const logger = new Logger();
 const email = new Email();
