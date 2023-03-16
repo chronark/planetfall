@@ -5,11 +5,23 @@ import { getEndpointStatsGlobally } from "@planetfall/tinybird";
 import { Text } from "@/components/text";
 import { Button } from "@/components/button";
 import { EndpointsTable } from "./table";
-import { db } from "@planetfall/db";
+import { db, Endpoint } from "@planetfall/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/card";
-import { Plus } from "lucide-react";
+import { Calendar, ChevronRight, Hash, Plus } from "lucide-react";
+import { Heading } from "@/components/heading";
+import { HoverCard, HoverCardTrigger } from "@/components/hover-card";
+import { HoverCardContent } from "@radix-ui/react-hover-card";
+import classNames from "classnames";
+
+const countFormat = (n: number) =>
+  Intl.NumberFormat(undefined, {
+    maximumFractionDigits: 1,
+    notation: "compact",
+  }).format(n);
+const latencyFormat = (n: number) =>
+  Intl.NumberFormat(undefined, { maximumFractionDigits: 1 }).format(n);
 
 export default async function Page(props: { params: { teamSlug: string } }) {
   const { userId } = auth();
@@ -46,6 +58,33 @@ export default async function Page(props: { params: { teamSlug: string } }) {
     }),
   );
 
+  const endpointsByHost = endpointStats.reduce(
+    (acc, endpoint) => {
+      const host = new URL(endpoint.url).host;
+      if (!acc[host]) {
+        acc[host] = [];
+      }
+      acc[host].push(endpoint);
+      return acc;
+    },
+    {} as Record<
+      string,
+      {
+        id: string;
+        name: string;
+        url: string;
+        stats: {
+          count: number;
+          p75: number;
+          p90: number;
+          p95: number;
+          p99: number;
+          errors: number;
+        };
+      }[]
+    >,
+  );
+
   return (
     <div>
       <PageHeader
@@ -71,13 +110,73 @@ export default async function Page(props: { params: { teamSlug: string } }) {
             </Button>
           </div>
         ) : (
-          <Card>
-            <CardContent>
-              <EndpointsTable endpoints={endpointStats} />
-            </CardContent>
-          </Card>
+          <div className="flex flex-col gap-4 lg:gap-8 ">
+            {Object.entries(endpointsByHost).map(([host, endpoints]) => (
+              <Card key={host}>
+                <div className="divide-y divide-zinc-200">
+                  {endpoints.map((endpoint) => (
+                    <Link
+                      key={endpoint.id}
+                      href={`/${team.slug}/endpoints/${endpoint.id}`}
+                      className=" hover:bg-zinc-50 flex items-center px-4 py-4 md:px-6"
+                    >
+                      <div className="flex flex-1 flex-col md:flex-row md:items-center md:justify-between">
+                        <div className="flex flex-col items-start w-full md:w-1/2 ">
+                          <span className="text-sm font-medium text-zinc-900">{endpoint.name}</span>
+                          <span className="text-sm text-zinc-500">{endpoint.url}</span>
+                          <span className="text-xs text-zinc-400">
+                            <span className="font-medium">{countFormat(endpoint.stats.count)}</span>{" "}
+                            Checks in the last 24h
+                          </span>
+                        </div>
+                        <div className="w-full md:w-1/2  grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 lg:gap-8">
+                          <Metric
+                            label="Errors"
+                            value={countFormat(endpoint.stats.errors)}
+                            alert={endpoint.stats.errors > 0}
+                          />
+                          <Metric label="P70" value={latencyFormat(endpoint.stats.p75)} unit="ms" />
+                          <Metric label="P90" value={latencyFormat(endpoint.stats.p90)} unit="ms" />
+                          <Metric label="P95" value={latencyFormat(endpoint.stats.p95)} unit="ms" />
+                          <Metric label="P99" value={latencyFormat(endpoint.stats.p99)} unit="ms" />
+                        </div>
+                      </div>
+                      <div className="ml-5 flex-shrink-0">
+                        <ChevronRight className="h-5 w-5 text-zinc-400" aria-hidden="true" />
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </Card>
+            ))}
+          </div>
         )}
       </main>
     </div>
   );
 }
+
+const Metric: React.FC<{ label?: string; value: string; unit?: string; alert?: boolean }> = ({
+  label,
+  value,
+  unit,
+  alert,
+}) => (
+  <div>
+    <div
+      className={classNames(
+        "justify-start gap-1   text-sm flex grow-0 border items-baseline  whitespace-nowrap  rounded px-2 py-1",
+        {
+          "text-zinc-700 bg-zinc-50 border-zinc-100  lg:bg-transparent lg:border-transparent":
+            !alert,
+          "text-red-500 bg-red-50 border-red-500": alert,
+        },
+      )}
+    >
+      {label ? <span className="font-medium">{label}</span> : null}
+
+      <span className="text-sm grow  text-right">{value}</span>
+      <span className="text-xs">{unit}</span>
+    </div>
+  </div>
+);
