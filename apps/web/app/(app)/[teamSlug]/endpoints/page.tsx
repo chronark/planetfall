@@ -129,20 +129,20 @@ export default async function Page(props: { params: { teamSlug: string } }) {
                                     ? "error"
                                     : endpointConfig?.timeout &&
                                       endpoint.stats.p99 > endpointConfig?.timeout
-                                    ? "degraded"
-                                    : endpointConfig?.active
-                                    ? "healthy"
-                                    : "stopped"
+                                      ? "degraded"
+                                      : endpointConfig?.active
+                                        ? "healthy"
+                                        : "stopped"
                                 }
                                 tooltip={
                                   endpoint.stats.errors > 0
                                     ? `There have been ${countFormat(endpoint.stats.errors)} errors`
                                     : endpointConfig?.timeout &&
                                       endpoint.stats.p99 > endpointConfig?.timeout
-                                    ? "The performance of this endpoint has degraded"
-                                    : endpointConfig?.active
-                                    ? "This endpoint is healthy"
-                                    : "This endpoint is stopped"
+                                      ? "The performance of this endpoint has degraded"
+                                      : endpointConfig?.active
+                                        ? "This endpoint is healthy"
+                                        : "This endpoint is stopped"
                                 }
                               />
 
@@ -158,7 +158,7 @@ export default async function Page(props: { params: { teamSlug: string } }) {
                               Checks in the last 24h
                             </span>
                           </div>
-                          <div className="w-full md:w-1/2  grid grid-cols-2  lg:grid-cols-4 gap-2 lg:gap-8">
+                          <div className="w-full md:w-1/2  grid grid-cols-2  sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-8 ">
                             <Metric
                               label="P70"
                               value={latencyFormat(endpoint.stats.p75)}
@@ -202,12 +202,11 @@ const Metric: React.FC<{ label: string; value: string; unit: string }> = ({
   value,
   unit,
 }) => (
-  <div>
-    <div className="justify-start gap-1   text-sm flex grow-0 border items-baseline  whitespace-nowrap  rounded px-2 py-1 text-zinc-700 bg-zinc-50 border-zinc-100  lg:bg-transparent lg:border-transparent">
-      <span className="font-medium">{label}</span>
 
-      <span className="text-sm grow  text-right">{value}</span>
-      <span className="text-xs">{unit}</span>
-    </div>
+  <div className="justify-start gap-1 max-w-[7rem]   text-sm flex grow-0 border items-baseline  whitespace-nowrap  rounded px-2 py-1 text-zinc-700 bg-zinc-50 border-zinc-100  lg:bg-transparent lg:border-transparent">
+    <span className="font-medium">{label}</span>
+
+    <span className="text-sm grow  text-right">{value}</span>
+    <span className="text-xs">{unit}</span>
   </div>
 );
