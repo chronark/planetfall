@@ -4,15 +4,11 @@ import { getEndpointStatsGlobally } from "@planetfall/tinybird";
 
 import { Text } from "@/components/text";
 import { Button } from "@/components/button";
-import { EndpointsTable } from "./table";
-import { db, Endpoint } from "@planetfall/db";
+import { db } from "@planetfall/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/card";
-import { Calendar, ChevronRight, Hash, Plus } from "lucide-react";
-import { Heading } from "@/components/heading";
-import { HoverCard, HoverCardTrigger } from "@/components/hover-card";
-import { HoverCardContent } from "@radix-ui/react-hover-card";
+import { Card } from "@/components/card";
+import {  ChevronRight, Plus } from "lucide-react";
 import classNames from "classnames";
 
 const countFormat = (n: number) =>
