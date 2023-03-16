@@ -14,9 +14,7 @@ const Divider = React.forwardRef<
     orientation={orientation}
     className={cn(
       "bg-zinc-200 dark:bg-zinc-700",
-      orientation === "horizontal"
-        ? "h-[1px] w-full my-4 md:my-8 lg:my-16"
-        : "h-full w-[1px]  mx-4 md:mx-8 lg:mx-16",
+      orientation === "horizontal" ? "h-[1px] w-full my-4 md:my-8" : "h-full w-[1px]  mx-4 md:mx-8",
       className,
     )}
     {...props}
