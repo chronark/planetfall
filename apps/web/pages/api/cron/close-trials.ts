@@ -21,8 +21,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     include: {
       members: {
         include: {
-          user: true
-        }
+          user: true,
+        },
       },
     },
   });
@@ -38,16 +38,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       actorId: "cron",
       resourceId: team.id,
       source: "cron",
-      tags: { newPlan: "DISABLED" }
-    })
-    const email = new Email()
-    await Promise.all(team.members.map(m => email.sendEndofTrial({
-      to: m.user.email,
-      username: m.user.name,
-      teamName: team.name,
-      teamSlug: team.slug
-    })
-    ))
+      tags: { newPlan: "DISABLED" },
+    });
+    const email = new Email();
+    await Promise.all(
+      team.members.map((m) =>
+        email.sendEndofTrial({
+          to: m.user.email,
+          username: m.user.name,
+          teamName: team.name,
+          teamSlug: team.slug,
+        }),
+      ),
+    );
   }
   console.log("Deactivated", teams.length, "teams");
   res.status(200).end();

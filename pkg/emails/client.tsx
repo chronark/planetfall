@@ -114,11 +114,7 @@ export class Email {
     teamSlug: string;
   }) {
     const html = render(
-      <TrialEnded
-        teamName={opts.teamName}
-        teamSlug={opts.teamSlug}
-        username={opts.username}
-      />,
+      <TrialEnded teamName={opts.teamName} teamSlug={opts.teamSlug} username={opts.username} />,
     );
     return await this.client.sendEmail({
       from: "support@planetfall.io",

@@ -44,21 +44,23 @@ export default async function AppLayout(props: {
 /**
  * Shows a banner if necessary
  */
-const ShowBanner: React.FC<{ team: Team, usage: number }> = ({ team, usage }) => {
+const ShowBanner: React.FC<{ team: Team; usage: number }> = ({ team, usage }) => {
   const fmt = new Intl.NumberFormat("en-US").format;
 
   if (team.plan === "DISABLED") {
     return (
       <Banner variant="alert">
-        Your team has been disabled. This is likely due to a billing issue. Please {" "}
+        Your team has been disabled. This is likely due to a billing issue. Please{" "}
         <Link href={`/${team.slug}/settings/usage`} className="underline">
           check your billing
-        </Link>{" "} or {" "}
+        </Link>{" "}
+        or{" "}
         <Link href={`/${team.slug}/support`} className="underline">
           contact us
-        </Link>.
+        </Link>
+        .
       </Banner>
-    )
+    );
   }
 
   if (team.trialExpires) {
@@ -70,19 +72,16 @@ const ShowBanner: React.FC<{ team: Team, usage: number }> = ({ team, usage }) =>
         </Link>{" "}
         to keep using Planetfall.
       </Banner>
-    )
+    );
   }
-
 
   if (usage >= team.maxMonthlyRequests) {
     return (
-
-
       <Banner variant="alert">
         <div className="text-center">
           <div>
-            You have exceeded your plan&apos;s monthly usage limit:{" "}
-            <strong>{fmt(usage)}</strong> / <strong>{fmt(team.maxMonthlyRequests)}</strong>
+            You have exceeded your plan&apos;s monthly usage limit: <strong>{fmt(usage)}</strong> /{" "}
+            <strong>{fmt(team.maxMonthlyRequests)}</strong>
           </div>
           <div>
             <Link href={`/${team.slug}/settings/plans`} className="underline">
@@ -96,7 +95,7 @@ const ShowBanner: React.FC<{ team: Team, usage: number }> = ({ team, usage }) =>
           </div>
         </div>
       </Banner>
-    )
+    );
   }
 
   if (usage >= team.maxMonthlyRequests * 0.8) {
@@ -109,9 +108,8 @@ const ShowBanner: React.FC<{ team: Team, usage: number }> = ({ team, usage }) =>
         </Link>{" "}
         to keep using Planetfall.
       </Banner>
-    )
+    );
   }
 
-
-  return null
-}
+  return null;
+};

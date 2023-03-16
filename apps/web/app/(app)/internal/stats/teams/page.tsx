@@ -51,7 +51,6 @@ export default async function Page() {
   //   };
   // });
 
-
   return (
     <>
       <Grid numColsMd={2} numColsLg={3} className="gap-x-6 gap-y-6 mt-6">

@@ -17,7 +17,6 @@ export type Props = {
   teamName: string;
 };
 
-
 export function TrialEnded({
   teamSlug = "teamSlug",
   teamName = "teamName",
@@ -36,9 +35,13 @@ export function TrialEnded({
             <Text>
               The trial of your team <strong>{teamName}</strong> has ended.
             </Text>
-            <Text>To keep using Planetfall, please <Link href={`https://planetfall.io/${teamSlug}/settings/usage`}>add a billing method</Link> or <Link href="mailto:support@planetfall.io">contact us</Link> for an extended trial.</Text>
-
-        
+            <Text>
+              To keep using Planetfall, please{" "}
+              <Link href={`https://planetfall.io/${teamSlug}/settings/usage`}>
+                add a billing method
+              </Link>{" "}
+              or <Link href="mailto:support@planetfall.io">contact us</Link> for an extended trial.
+            </Text>
 
             <Hr />
 

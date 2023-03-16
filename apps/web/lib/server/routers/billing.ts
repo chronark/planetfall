@@ -70,6 +70,17 @@ export const billingRouter = t.router({
         const year = now.getUTCFullYear();
         const month = now.getUTCMonth();
         await createInvoice({ team, year, month });
+      } else {
+        /**
+         * Moving to a payed plan can only be done when a payment method exists
+         */
+        const paymentMethods = await stripe.customers.listPaymentMethods(team.stripeCustomerId);
+        if (!paymentMethods || paymentMethods.data.length === 0) {
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Please add a payment method first.",
+          });
+        }
       }
 
       const updated = await db.team.update({
