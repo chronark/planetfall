@@ -1,80 +1,50 @@
-import { Size } from "../types";
-import React, { PropsWithChildren, ReactComponentElement } from "react";
-import classNames from "classnames";
+import * as React from "react";
+import { VariantProps, cva } from "class-variance-authority";
 
-export interface TextProps<As extends React.ElementType> {
-  size?: Size | "2xl" | "3xl";
-  /**
-   * Override default default colors.
-   * You can even use gradients here.
-   */
-  color?: string;
+import cn from "classnames";
 
-  /**
-   * If enabled this will render the text semibold
-   */
-  bold?: boolean;
-  /**
-   * Enable line break on words
-   */
-  lineBreak?: boolean;
+const textVariants = cva("", {
+  variants: {
+    variant: {
+      default: "leading-7 text-zinc-900",
+      code: "relative rounded bg-zinc-100 py-[0.2rem] px-[0.3rem] font-mono text-sm font-semibold text-zinc-900",
+      lead: "text-zinc-700",
 
-  /**
-   * Available options: "text-left" | "text-center" | "text-right"
-   * Can be combined with breakpoint prefixes
-   */
-  align?: string;
-  /**
-   * Use a monospace font
-   */
-  mono?: boolean;
+      subtle: "text-zinc-500",
+    },
+    size: {
+      xs: "text-xs font-medium leading-none",
+      sm: "text-sm font-medium leading-none",
+      lg: "text-lg font-semibold",
+      xl: "text-xl font-semibold",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
 
-  /**
-   * Truncate the text to prevent overflows
-   */
-  truncate?: boolean;
+export interface TextProps
+  extends React.HTMLAttributes<HTMLElement>,
+    VariantProps<typeof textVariants> {}
 
-  /**
-   * The HTML element to render
-   *
-   * @default "p"
-   */
-  as?: As;
-}
+const Text = React.forwardRef<HTMLElement, TextProps>(({ variant, children, ...props }, ref) => {
+  switch (variant) {
+    case "code":
+      return (
+        <code className={cn(textVariants({ variant }))} ref={ref} {...props}>
+          {children}
+        </code>
+      );
 
-export function Text<As extends React.ElementType>({
-  bold,
-  color,
-  children,
-  size = "md",
-  lineBreak = true,
-  align,
-  mono,
-  as,
-  truncate,
-}: TextProps<As> & Omit<React.ComponentPropsWithoutRef<As>, keyof TextProps<As>>): JSX.Element {
-  const Component = as || "p";
-  return (
-    <Component
-      className={classNames(
-        "leading-7",
-        {
-          "text-xs": size === "xs",
-          "text-sm": size === "sm",
-          "text-md": size === "md",
-          "text-lg": size === "lg",
-          "text-xl": size === "xl",
-          "text-2xl": size === "2xl",
-          "font-semibold": bold,
-          "whitespace-nowrap": !lineBreak,
-          "font-mono": mono,
-          "truncate text-ellipsis whitespace-nowrap": truncate,
-        },
-        align,
-        color ?? "text-zinc-700",
-      )}
-    >
-      {children}
-    </Component>
-  );
-}
+    default:
+      return (
+        <p className={cn(textVariants({ variant }))} {...props}>
+          {children}
+        </p>
+      );
+  }
+});
+Text.displayName = "Text";
+
+export { Text, textVariants };

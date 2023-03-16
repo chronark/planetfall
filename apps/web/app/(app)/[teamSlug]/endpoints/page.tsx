@@ -8,8 +8,9 @@ import { db } from "@planetfall/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
 import { Card } from "@/components/card";
-import {  ChevronRight, Plus } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
 import classNames from "classnames";
+import { Status } from "./status";
 
 const countFormat = (n: number) =>
   Intl.NumberFormat(undefined, {
@@ -110,38 +111,82 @@ export default async function Page(props: { params: { teamSlug: string } }) {
             {Object.entries(endpointsByHost).map(([host, endpoints]) => (
               <Card key={host}>
                 <div className="divide-y divide-zinc-200">
-                  {endpoints.map((endpoint) => (
-                    <Link
-                      key={endpoint.id}
-                      href={`/${team.slug}/endpoints/${endpoint.id}`}
-                      className=" hover:bg-zinc-50 flex items-center px-4 py-4 md:px-6"
-                    >
-                      <div className="flex flex-1 flex-col md:flex-row md:items-center md:justify-between">
-                        <div className="flex flex-col items-start w-full md:w-1/2 ">
-                          <span className="text-sm font-medium text-zinc-900">{endpoint.name}</span>
-                          <span className="text-sm text-zinc-500">{endpoint.url}</span>
-                          <span className="text-xs text-zinc-400">
-                            <span className="font-medium">{countFormat(endpoint.stats.count)}</span>{" "}
-                            Checks in the last 24h
-                          </span>
+                  {endpoints.map((endpoint) => {
+                    const endpointConfig = team.endpoints.find((e) => e.id === endpoint.id);
+
+                    return (
+                      <Link
+                        key={endpoint.id}
+                        href={`/${team.slug}/endpoints/${endpoint.id}`}
+                        className=" hover:bg-zinc-50 flex items-center px-4 py-4 md:px-6"
+                      >
+                        <div className="flex flex-1 flex-col md:flex-row md:items-center md:justify-between">
+                          <div className="flex flex-col items-start w-full md:w-1/2 ">
+                            <div className="flex items-center gap-1 ">
+                              <Status
+                                status={
+                                  endpoint.stats.errors > 0
+                                    ? "error"
+                                    : endpointConfig?.timeout &&
+                                      endpoint.stats.p99 > endpointConfig?.timeout
+                                    ? "degraded"
+                                    : endpointConfig?.active
+                                    ? "healthy"
+                                    : "stopped"
+                                }
+                                tooltip={
+                                  endpoint.stats.errors > 0
+                                    ? `There have been ${countFormat(endpoint.stats.errors)} errors`
+                                    : endpointConfig?.timeout &&
+                                      endpoint.stats.p99 > endpointConfig?.timeout
+                                    ? "The performance of this endpoint has degraded"
+                                    : endpointConfig?.active
+                                    ? "This endpoint is healthy"
+                                    : "This endpoint is stopped"
+                                }
+                              />
+
+                              <span className="text-sm font-medium text-zinc-900">
+                                {endpoint.name}
+                              </span>
+                            </div>
+                            <span className="text-sm text-zinc-500">{endpoint.url}</span>
+                            <span className="text-xs text-zinc-400">
+                              <span className="font-medium">
+                                {countFormat(endpoint.stats.count)}
+                              </span>{" "}
+                              Checks in the last 24h
+                            </span>
+                          </div>
+                          <div className="w-full md:w-1/2  grid grid-cols-2  lg:grid-cols-4 gap-2 lg:gap-8">
+                            <Metric
+                              label="P70"
+                              value={latencyFormat(endpoint.stats.p75)}
+                              unit="ms"
+                            />
+                            <Metric
+                              label="P90"
+                              value={latencyFormat(endpoint.stats.p90)}
+                              unit="ms"
+                            />
+                            <Metric
+                              label="P95"
+                              value={latencyFormat(endpoint.stats.p95)}
+                              unit="ms"
+                            />
+                            <Metric
+                              label="P99"
+                              value={latencyFormat(endpoint.stats.p99)}
+                              unit="ms"
+                            />
+                          </div>
                         </div>
-                        <div className="w-full md:w-1/2  grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 lg:gap-8">
-                          <Metric
-                            label="Errors"
-                            value={countFormat(endpoint.stats.errors)}
-                            alert={endpoint.stats.errors > 0}
-                          />
-                          <Metric label="P70" value={latencyFormat(endpoint.stats.p75)} unit="ms" />
-                          <Metric label="P90" value={latencyFormat(endpoint.stats.p90)} unit="ms" />
-                          <Metric label="P95" value={latencyFormat(endpoint.stats.p95)} unit="ms" />
-                          <Metric label="P99" value={latencyFormat(endpoint.stats.p99)} unit="ms" />
+                        <div className="ml-5 flex-shrink-0">
+                          <ChevronRight className="h-5 w-5 text-zinc-400" aria-hidden="true" />
                         </div>
-                      </div>
-                      <div className="ml-5 flex-shrink-0">
-                        <ChevronRight className="h-5 w-5 text-zinc-400" aria-hidden="true" />
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    );
+                  })}
                 </div>
               </Card>
             ))}
@@ -152,24 +197,14 @@ export default async function Page(props: { params: { teamSlug: string } }) {
   );
 }
 
-const Metric: React.FC<{ label?: string; value: string; unit?: string; alert?: boolean }> = ({
+const Metric: React.FC<{ label: string; value: string; unit: string }> = ({
   label,
   value,
   unit,
-  alert,
 }) => (
   <div>
-    <div
-      className={classNames(
-        "justify-start gap-1   text-sm flex grow-0 border items-baseline  whitespace-nowrap  rounded px-2 py-1",
-        {
-          "text-zinc-700 bg-zinc-50 border-zinc-100  lg:bg-transparent lg:border-transparent":
-            !alert,
-          "text-red-500 bg-red-50 border-red-500": alert,
-        },
-      )}
-    >
-      {label ? <span className="font-medium">{label}</span> : null}
+    <div className="justify-start gap-1   text-sm flex grow-0 border items-baseline  whitespace-nowrap  rounded px-2 py-1 text-zinc-700 bg-zinc-50 border-zinc-100  lg:bg-transparent lg:border-transparent">
+      <span className="font-medium">{label}</span>
 
       <span className="text-sm grow  text-right">{value}</span>
       <span className="text-xs">{unit}</span>
