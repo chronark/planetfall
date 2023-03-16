@@ -4,6 +4,7 @@ import { EndpointAlert } from "./emails/EndpointAlert";
 import { DebugEvent } from "./emails/DebugEvent";
 import TeamInvitation from "./emails/TeamInvitation";
 import { UsageExceeded } from "./emails/UsageExceeded";
+import TrialEnded from "./emails/TrialEnded";
 export class Email {
   private client: Resend;
 
@@ -97,7 +98,28 @@ export class Email {
     return await this.client.sendEmail({
       from: "alerts@planetfall.io",
       to: opts.to,
-      subject: "Planetfall Endpoint Alert",
+      subject: "Your Planetfall Team Has Exceeded Its Monthly Usage",
+      html,
+    });
+  }
+
+  public async sendEndofTrial(opts: {
+    to: string;
+    username: string;
+    teamName: string;
+    teamSlug: string;
+  }) {
+    const html = render(
+      <TrialEnded
+        teamName={opts.teamName}
+        teamSlug={opts.teamSlug}
+        username={opts.username}
+      />,
+    );
+    return await this.client.sendEmail({
+      from: "alerts@planetfall.io",
+      to: opts.to,
+      subject: "Your Planetfall Trial Has Ended",
       html,
     });
   }

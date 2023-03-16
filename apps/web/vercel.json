@@ -10,7 +10,7 @@
         },
         {
             "path":"/api/cron/close-trials?key=aed0b3469e6a7185c0ef0bd1647ee58e760143adba5858e916baf1ead4c0adb9",
-            "schedule":"0 1 * * *"
+            "schedule":"0 * * * *"
         }
     ]
 }

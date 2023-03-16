@@ -25,7 +25,7 @@ const event = z.object({
   ]),
   resourceId: z.string(),
   actorId: z.string(),
-  source: z.enum(["ui", "api", "cli", "trpc"]),
+  source: z.enum(["ui", "api", "cli", "trpc","cron"]),
   tags: z.record(z.union([z.string(), z.number(), z.boolean()])).optional(),
 });
 
