@@ -50,7 +50,7 @@ const ShowBanner: React.FC<{ team: Team, usage: number }> = ({ team, usage }) =>
   if (team.plan === "DISABLED") {
     return (
       <Banner variant="alert">
-        Your team has been disaled. This is likely due to a billing issue. Please {" "}
+        Your team has been disabled. This is likely due to a billing issue. Please {" "}
         <Link href={`/${team.slug}/settings/usage`} className="underline">
           check your billing
         </Link>{" "} or {" "}

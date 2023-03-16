@@ -28,7 +28,6 @@ export default async function Page() {
   );
   while (day.getTime() <= now.getTime()) {
     for (const team of activeTeams) {
-      console.log(team.id, day.toDateString());
       const teamUsage = usage.data.find(
         (u) =>
           u.teamId === team.id &&
@@ -52,7 +51,6 @@ export default async function Page() {
   //   };
   // });
 
-  console.log(usageOverTime);
 
   return (
     <>

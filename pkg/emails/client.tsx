@@ -41,6 +41,7 @@ export class Email {
     return await this.client.sendEmail({
       from: "alerts@planetfall.io",
       to: opts.to,
+      reply_to: "support@planetfall.io",
       subject: "Planetfall Endpoint Alert",
       html,
     });
@@ -51,8 +52,9 @@ export class Email {
   }) {
     const html = render(<DebugEvent time={opts.time} data={opts.data} />);
     return await this.client.sendEmail({
-      from: "alerts@planetfall.io",
+      from: "support@planetfall.io",
       to: "debug@planetfall.io",
+      reply_to: "support@planetfall.io",
       subject: "Planetfall Debug Event",
       html,
     });
@@ -75,6 +77,7 @@ export class Email {
     return await this.client.sendEmail({
       from: "andreas@planetfall.io",
       to: opts.to,
+      reply_to: "support@planetfall.io",
       subject: "Planetfall Team Invitation",
       html,
     });
@@ -96,8 +99,9 @@ export class Email {
       />,
     );
     return await this.client.sendEmail({
-      from: "alerts@planetfall.io",
+      from: "andreas@planetfall.io",
       to: opts.to,
+      reply_to: "support@planetfall.io",
       subject: "Your Planetfall Team Has Exceeded Its Monthly Usage",
       html,
     });
@@ -117,8 +121,9 @@ export class Email {
       />,
     );
     return await this.client.sendEmail({
-      from: "alerts@planetfall.io",
+      from: "support@planetfall.io",
       to: opts.to,
+      reply_to: "support@planetfall.io",
       subject: "Your Planetfall Trial Has Ended",
       html,
     });
