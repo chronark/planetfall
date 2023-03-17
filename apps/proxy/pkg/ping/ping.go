@@ -22,7 +22,8 @@ type PingRequest struct {
 	Body    string            `json:"body"`
 	Headers map[string]string `json:"headers"`
 	//Timeout in milliseconds
-	Timeout int `json:"timeout"`
+	Timeout         int  `json:"timeout"`
+	FollowRedirects bool `json:"followRedirects"`
 }
 type checkRequest struct {
 	Url     string            `json:"url"`
@@ -63,9 +64,13 @@ func Ping(ctx context.Context, req PingRequest) ([]Response, error) {
 	client := &http.Client{
 		Transport: t,
 		Timeout:   time.Duration(req.Timeout) * time.Millisecond,
-		CheckRedirect: func(req *http.Request, via []*http.Request) error {
-			// Do not follow redirects
-			return http.ErrUseLastResponse
+		CheckRedirect: func(_ *http.Request, _ []*http.Request) error {
+			if !req.FollowRedirects {
+				// Do not follow redirects
+				return http.ErrUseLastResponse
+			}
+			return nil
+
 		},
 	}
 	defer t.CloseIdleConnections()

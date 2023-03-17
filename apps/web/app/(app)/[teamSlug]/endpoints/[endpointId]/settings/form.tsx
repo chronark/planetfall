@@ -38,11 +38,15 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
     url: string;
     method: "POST" | "GET" | "PUT" | "DELETE";
   }>();
+  const redirectForm = useForm<{
+    followRedirects: "true" | "false";
+  }>();
   const requestForm = useForm<{ body: string; headers: string }>();
   const latencyForm = useForm<{
     timeout: number;
     degradedAfter: number;
   }>();
+
   const intervalForm = useForm<{
     interval: number;
     distribution: "ALL" | "RANDOM";
@@ -266,6 +270,84 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
             </div>
           </div>
         </div>
+
+        <div className="hidden sm:block" aria-hidden="true">
+          <div className="py-5 md:py-8">
+            <div className="border-t border-zinc-200" />
+          </div>
+        </div>
+        <div>
+          <div className="md:grid md:grid-cols-3 md:gap-6">
+            <div className="md:col-span-1">
+              <div className="px-4 sm:px-0">
+                <h3 className="text-lg font-medium leading-6 text-zinc-900">Follow Redirects</h3>
+
+                <p className="mt-1 text-sm text-zinc-600">
+                  Whether we should follow redirects. If followed the latency of all of the
+                  individual requests adds up.
+                </p>
+              </div>
+            </div>
+            <div className="mt-5 md:col-span-2 md:mt-0">
+              <form>
+                <div className="border sm:overflow-hidden sm:rounded">
+                  <div className="px-4 py-5 space-y-6 bg-white sm:p-6">
+                    <div className="">
+                      <label
+                        htmlFor="company-website"
+                        className="block text-sm font-medium text-zinc-700"
+                      >
+                        Follow Redirects
+                      </label>
+                      <select
+                        {...redirectForm.register("followRedirects")}
+                        defaultValue={endpoint.followRedirects ? "true" : "false"}
+                        className="w-full px-4 py-3 transition-all duration-300 ease-in-out border rounded focus:bg-zinc-50 border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:shadow"
+                      >
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
+
+                      {redirectForm.formState.errors.followRedirects ? (
+                        <p className="mt-2 text-sm text-red-500">
+                          {redirectForm.formState.errors.followRedirects.message || "Invalid"}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="px-4 py-3 text-right border-t border-zinc-200 sm:px-6">
+                    <Button
+                      isLoading={loading.redirect}
+                      onClick={redirectForm.handleSubmit(async ({ followRedirects }) => {
+                        setLoading({ ...loading, redirect: true });
+                        await trpc.endpoint.update
+                          .mutate({
+                            endpointId: endpoint.id,
+                            followRedirects: followRedirects === "true",
+                          })
+                          .then(() => {
+                            router.refresh();
+                            addToast({ title: "Endpoint updated" });
+                          })
+                          .catch((err) => {
+                            addToast({
+                              variant: "error",
+                              title: "Error",
+                              content: (err as Error).message,
+                            });
+                          });
+                        setLoading({ ...loading, redirect: false });
+                      })}
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
         <div className="hidden sm:block" aria-hidden="true">
           <div className="py-5 md:py-8">
             <div className="border-t border-zinc-200" />

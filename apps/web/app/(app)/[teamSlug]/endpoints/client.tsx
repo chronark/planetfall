@@ -153,7 +153,7 @@ export const ClientPage: React.FC<Props> = ({ endpoints, team, user }) => {
                           </div>
                           <div className="w-full md:w-1/2  grid grid-cols-2  sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-8 ">
                             <Metric
-                              label="P70"
+                              label="P75"
                               value={latencyFormat(endpoint.stats.p75)}
                               unit="ms"
                             />

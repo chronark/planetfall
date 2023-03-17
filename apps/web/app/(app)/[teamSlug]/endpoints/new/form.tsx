@@ -35,6 +35,7 @@ type FormData = {
   headerAssertions: z.infer<typeof assertions.headerAssertion>[];
   timeout: number;
   degradedAfter?: number;
+  followRedirects: "true" | "false";
 };
 
 export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeout }) => {
@@ -50,6 +51,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
     reValidateMode: "onSubmit",
     defaultValues: {
       timeout: defaultTimeout,
+      followRedirects: "true",
     },
   });
 
@@ -97,6 +99,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
         distribution: data.distribution,
         teamId,
         statusAssertions: data.statusAssertions,
+        followRedirects: data.followRedirects === "true",
       });
 
       const { id } = await res;
@@ -223,7 +226,39 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
             </div>
           </div>
         </div>
+        <div className="space-y-6 sm:space-y-5">
+          <div>
+            <h3 className="text-lg font-medium leading-6 text-zinc-900">Redirects</h3>
+            <p className="mt-1 text-sm text-zinc-500">
+              You can choose to follow redirects or not. Sometimes it&apos;s useful to only see the
+              first response or you want to specifically test a redirect service.
+            </p>
+          </div>
 
+          <div className="space-y-6 sm:space-y-5">
+            <div className="sm:grid sm:grid-cols-6 sm:items-start sm:gap-4 sm:border-t sm:border-zinc-200 sm:pt-5">
+              <label
+                htmlFor="method"
+                className="block text-sm font-medium sm:col-span-2 text-zinc-700 sm:mt-px sm:pt-2"
+              >
+                Follow Redirects
+              </label>
+              <div className="mt-1 sm:col-span-4 sm:mt-0">
+                <div className="">
+                  <select
+                    {...register("followRedirects", { required: true })}
+                    className={
+                      "transition-all  focus:bg-zinc-50 md:px-4 md:h-12 w-full border-zinc-900 border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow"
+                    }
+                  >
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="pt-8 space-y-6 sm:space-y-5 sm:pt-10">
           <div>
             <h3 className="text-lg font-medium leading-6 text-zinc-900">Request</h3>

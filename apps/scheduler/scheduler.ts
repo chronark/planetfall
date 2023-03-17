@@ -240,6 +240,7 @@ export class Scheduler {
               headers: endpoint.headers,
               body: endpoint.body ?? undefined,
               timeout: endpoint.timeout ?? undefined,
+              followRedirects: endpoint.followRedirects ?? false,
             }),
           });
           if (res.status !== 200) {
@@ -293,6 +294,14 @@ export class Scheduler {
                     c.error = `Assertion error: ${message}`;
                     break;
                   }
+                }
+              } else if (!c.error) {
+                /**
+                 * In case no assertions have been created yet, we will apply some defaults
+                 * but only if there is no error, we don't want to overwrite anything
+                 */
+                if (c.status < 200 || c.status >= 300) {
+                  c.error = `Default assertion error: The response status was not 2XX: ${c.status}.`;
                 }
               }
             }

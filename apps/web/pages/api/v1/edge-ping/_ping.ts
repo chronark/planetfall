@@ -5,6 +5,7 @@ export type PingRequest = {
   headers: Record<string, string>;
   //Timeout in milliseconds
   timeout: number;
+  followRedirects?: boolean;
 };
 
 type CheckRequest = {
@@ -14,6 +15,7 @@ type CheckRequest = {
   headers: Record<string, string>;
   //Timeout in milliseconds
   timeout: number;
+  followRedirects?: boolean;
 };
 
 type PingResponse = {
@@ -74,7 +76,7 @@ async function check(req: CheckRequest): Promise<PingResponse> {
     body: req.body,
     headers: req.headers,
     signal: controller.signal,
-    redirect: "manual",
+    redirect: req.followRedirects ? "follow" : "manual",
   });
   const latency = Date.now() - now;
   clearTimeout(timeout);

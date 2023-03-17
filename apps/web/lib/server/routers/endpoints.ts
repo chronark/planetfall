@@ -29,6 +29,7 @@ export const endpointRouter = t.router({
         regionIds: z.array(z.string()).min(1),
         distribution: z.enum(["ALL", "RANDOM"]),
         teamId: z.string(),
+        followRedirects: z.boolean(),
         statusAssertions: z.array(statusAssertion).optional(),
         headerAssertions: z.array(headerAssertion).optional(),
       }),
@@ -93,6 +94,7 @@ export const endpointRouter = t.router({
           degradedAfter: input.degradedAfter,
           timeout: input.timeout,
           distribution: input.distribution,
+          followRedirects: input.followRedirects,
           regions: {
             connect: input.regionIds.map((id) => ({ id })),
           },
@@ -137,6 +139,7 @@ export const endpointRouter = t.router({
         body: z.string().nullish().optional(),
         headers: z.record(z.string()).optional(),
         degradedAfter: z.number().int().optional(),
+        followRedirects: z.boolean().optional(),
         timeout: z.number().int().optional(),
         interval: z.number().int().positive().optional(),
         regionIds: z.array(z.string()).min(1).optional(),
@@ -189,6 +192,7 @@ export const endpointRouter = t.router({
           url: input.url,
           interval: input.interval,
           degradedAfter: input.degradedAfter,
+          followRedirects: input.followRedirects,
           timeout: input.timeout,
           distribution: input.distribution,
           regions: {

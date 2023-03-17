@@ -184,7 +184,7 @@ export const playRouter = t.router({
       for (let i = 0; i < 100; i++) {
         const id = newShortId();
         const r = await redis.set(["play", id].join(":"), out, {
-          ex: 7 * 24 * 60 * 60,
+          ex: ctx.user ? 90 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 90 days for authenticated, 7 for anonymous
           nx: true,
         });
 
