@@ -275,8 +275,8 @@ export class Scheduler {
 
           const data = parsed.map((c) => {
             if (!c.error) {
-              if (endpoint.assertions) {
-                const as = assertions.deserialize(endpoint.assertions);
+              const as = endpoint.assertions ? assertions.deserialize(endpoint.assertions) : [];
+              if (as.length > 0) {
                 for (const a of as) {
                   const { success, message } = a.assert({
                     body: c.body ?? "",
@@ -289,7 +289,7 @@ export class Scheduler {
                   }
                 }
               } else {
-                this.logger.info("Running default assertion for 2XX")
+                this.logger.info("Running default assertion for 2XX");
                 /**
                  * In case no assertions have been created yet, we will apply some defaults
                  * but only if there is no error, we don't want to overwrite anything

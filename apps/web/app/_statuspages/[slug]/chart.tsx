@@ -282,7 +282,8 @@ const Chart: React.FC<{
         .map((bucket, _i) => {
           const start = new Date(bucket.time);
 
-          const percentageHeight = bucket.time >= 0 ? Math.max(5, (bucket.p75 / p75Max) * 100) : 100;
+          const percentageHeight =
+            bucket.time >= 0 ? Math.max(5, (bucket.p75 / p75Max) * 100) : 100;
           const bucketError = bucket.errors > 0;
           const bucketDegraded = degradedAfter && bucket.p99 > degradedAfter;
           // ? p99 > endpoint.degradedAfter

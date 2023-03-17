@@ -29,7 +29,7 @@ type PingResponse = {
 };
 
 export async function ping(req: PingRequest): Promise<PingResponse[]> {
-  console.log(JSON.stringify({ req }))
+  console.log(JSON.stringify({ req }));
   const responses: PingResponse[] = [];
 
   for (let i = 0; i < req.urls.length; i++) {
@@ -43,7 +43,7 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
           ...req.headers,
         },
         timeout: req.timeout,
-        followRedirects:req.followRedirects
+        followRedirects: req.followRedirects,
       };
       // 1 retry if the request fails
       let res = await check(checkRequest).catch(() => {

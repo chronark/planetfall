@@ -10,7 +10,8 @@ export default function NotFoundPage() {
           Page not found
         </h1>
         <p className="mt-6 text-base leading-7 text-zinc-600">
-          Playground checks are only stored for 7 days for. Or 90 days if you are signed-in when running the check.
+          Playground checks are only stored for 7 days for. Or 90 days if you are signed-in when
+          running the check.
         </p>
         <div className="flex items-center justify-center mt-10 gap-x-6">
           <Link href="mailto:support@planetfall.io">
