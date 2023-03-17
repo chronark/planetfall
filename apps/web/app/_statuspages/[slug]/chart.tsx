@@ -108,7 +108,7 @@ export const Row: React.FC<{
       ? "Error"
       : endpoint.degradedAfter &&
         globalStats?.series.at(-1) &&
-        globalStats?.series.at(-1)!.p99 > endpoint.degradedAfter
+        globalStats?.series.at(-1)!.p75 > endpoint.degradedAfter
       ? "Degraded"
       : "Operational";
 
@@ -268,7 +268,7 @@ const Chart: React.FC<{
   timeout?: number;
   withXAxis?: boolean;
 }> = ({ series, height, degradedAfter, withXAxis }): JSX.Element => {
-  const p99 = Math.max(...series.map((m) => m.p99));
+  const p75Max = Math.max(...series.map((m) => m.p75));
   let t = new Date();
   t.setMinutes(0);
   t.setSeconds(0);
@@ -282,7 +282,7 @@ const Chart: React.FC<{
         .map((bucket, _i) => {
           const start = new Date(bucket.time);
 
-          const percentageHeight = bucket.time >= 0 ? Math.max(5, (bucket.p99 / p99) * 100) : 100;
+          const percentageHeight = bucket.time >= 0 ? Math.max(5, (bucket.p75 / p75Max) * 100) : 100;
           const bucketError = bucket.errors > 0;
           const bucketDegraded = degradedAfter && bucket.p99 > degradedAfter;
           // ? p99 > endpoint.degradedAfter

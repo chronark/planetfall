@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
-  const [selected, setSelected] = useState("p99");
+  const [selected, setSelected] = useState("p75");
   const [showTopBottom, setShowTopBottom] = useState(regions.length > 10);
   const lookup = regions.reduce((acc, r) => {
     // @ts-ignore
