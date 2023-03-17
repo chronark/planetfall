@@ -17,13 +17,13 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 whitespace-nowrap  items-center justify-between gap-1 rounded-md border border-zinc-300 bg-transparent py-2 px-3 text-sm placeholder:text-zinc-400 focus:outline-none  disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-50 ",
+      "flex h-10 whitespace-nowrap  items-center justify-between gap-1 rounded border    border-zinc-500 hover:bg-zinc-900 duration-150 text-zinc-800 hover:text-zinc-50  bg-transparent py-2 px-3 text-sm placeholder:text-zinc-400 focus:outline-none  disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-50 ",
       className,
     )}
     {...props}
   >
     {children}
-    <ChevronDown className="w-4 h-4 opacity-50" />
+    <ChevronDown className="w-4 h-4 opacity-75" />
   </SelectPrimitive.Trigger>
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
@@ -36,7 +36,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-zinc-100 bg-white text-zinc-700 shadow-md animate-in fade-in-80 dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-400",
+        "relative z-50 min-w-[8rem] overflow-hidden rounded border border-zinc-100 bg-white text-zinc-700 shadow-md animate-in fade-in-80 dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-400",
         className,
       )}
       {...props}
