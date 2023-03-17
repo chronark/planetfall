@@ -19,7 +19,10 @@ model User {
   teams         Membership[]
   createdAt     DateTime     @default(now())
 
-  teamInvitations TeamInvitation[]
+  teamInvitations  TeamInvitation[]
+  // what endpoints this user is responsible for
+  ownedEndpoints   Endpoint[]
+  endpointAuditLog EndpointAuditLog[]
 }
 
 model Account {
@@ -187,6 +190,24 @@ enum Distribution {
   ALL
 }
 
+// AuditLog for endpoints
+// who changed what when
+model EndpointAuditLog {
+  id String @id
+
+  endpoint   Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  endpointId String
+  // The user who changed anything
+  user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId     String?
+  message    String
+
+  time DateTime @default(now())
+
+  @@index([endpointId])
+  @@index([userId])
+}
+
 model Endpoint {
   id        String   @id
   method    Method
@@ -196,6 +217,13 @@ model Endpoint {
   url       String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Mark a user as responsible for this endpoint
+  // This is useful when you want to delete endpoints but don't know who still needs them
+  owner   User?   @relation(fields: [ownerId], references: [id])
+  ownerId String?
+
+  auditLog EndpointAuditLog[]
 
   // Interval in milliseconds
   interval      Int
@@ -218,6 +246,7 @@ model Endpoint {
   pages StatusPage[]
 
   @@index([teamId])
+  @@index([ownerId])
 }
 
 model Check {

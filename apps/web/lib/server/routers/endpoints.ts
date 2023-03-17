@@ -104,6 +104,18 @@ export const endpointRouter = t.router({
           },
           headers: input.headers,
           body: input.body,
+          owner: {
+            connect: {
+              id: ctx.user.id,
+            },
+          },
+          auditLog: {
+            create: {
+              id: newId("audit"),
+              userId: ctx.user.id,
+              message: "Endpoint created",
+            },
+          },
         },
       });
       audit.log({
@@ -188,6 +200,13 @@ export const endpointRouter = t.router({
 
           headers: input.headers,
           body: input.body,
+          auditLog: {
+            create: {
+              id: newId("audit"),
+              userId: ctx.user.id,
+              message: "Endpoint updated",
+            },
+          },
         },
       });
       audit.log({
@@ -236,6 +255,13 @@ export const endpointRouter = t.router({
         data: {
           active: !endpoint.active,
           updatedAt: new Date(),
+          auditLog: {
+            create: {
+              id: newId("audit"),
+              userId: ctx.user.id,
+              message: endpoint.active ? "Endpoint enabled" : "Endpoint disabled",
+            },
+          },
         },
       });
       audit.log({
