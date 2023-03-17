@@ -115,53 +115,46 @@ export class Notifications {
       where: {
         id: event.check.endpointId,
       },
+      include: {
+        emailAlerts: {
+          include: {
+            team: true,
+
+          }
+        }
+      }
     });
     if (!endpoint) {
       throw new Error("endpoint not found");
     }
 
-    const team = await this.db.team.findUnique({
-      where: {
-        id: event.check.teamId,
-      },
-      include: {
-        members: {
-          include: {
-            user: true,
-          },
-        },
-      },
-    });
-    if (!team) {
-      throw new Error("team not found");
-    }
+
 
     await Promise.all(
-      team.members.map(async (member) => {
+      endpoint.emailAlerts.map(async (alert) => {
         this.logger.info("Sending email", {
-          to: member.user.email,
+          to: alert.email,
           time: event.check.time,
           error: event.check.error,
-          teamSlug: team.slug,
+          teamSlug: alert.team.slug,
           endpointName: endpoint.name,
           endpointId: endpoint.id,
         });
         await this.email
           .sendEndpointAlert({
-            to: member.user.email,
+            to: alert.email,
             time: event.check.time,
             error: event.check.error,
-            teamSlug: team.slug,
+            teamSlug: alert.team.slug,
             endpointName: endpoint.name,
             endpointId: endpoint.id,
-            checkLink: `https://planetfall.io/${team.slug}/checks/${event.check.id}`,
+            checkLink: `https://planetfall.io/${alert.team.slug}/checks/${event.check.id}`,
           })
           .catch((err: Error) => {
             this.logger.error("Error sending email", {
-              email: member.user.email,
+              to: alert.email,
               error: err.message,
-              teamId: team.id,
-              userId: member.userId,
+              teamSlug: alert.team.slug,
               endpointId: endpoint.id,
             });
           });
