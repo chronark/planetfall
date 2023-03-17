@@ -43,6 +43,7 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
           ...req.headers,
         },
         timeout: req.timeout,
+        followRedirects:req.followRedirects
       };
       // 1 retry if the request fails
       let res = await check(checkRequest).catch(() => {
