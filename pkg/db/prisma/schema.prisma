@@ -218,6 +218,7 @@ model Endpoint {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+
   followRedirects Boolean
 
   // Mark a user as responsible for this endpoint
