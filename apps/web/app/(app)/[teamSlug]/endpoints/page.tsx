@@ -9,6 +9,7 @@ import { auth } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
 import { ClientPage } from "./client";
 import { Plus } from "lucide-react";
+export const revalidate = 10;
 
 export default async function Page(props: { params: { teamSlug: string } }) {
   const { userId } = auth();
