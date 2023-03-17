@@ -11,6 +11,7 @@
   "author": "Andreas Thomas",
   "license": "ISC",
   "dependencies": {
+    "@planetfall/id": "workspace:^1.0.0",
     "@prisma/client": "^4.11.0"
   },
   "devDependencies": {

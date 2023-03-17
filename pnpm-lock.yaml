@@ -326,12 +326,14 @@ importers:
 
   pkg/db:
     specifiers:
+      '@planetfall/id': workspace:^1.0.0
       '@planetfall/tsconfig': workspace:*
       '@prisma/client': ^4.11.0
       '@types/node': ^18.15.3
       prisma: ^4.11.0
       typescript: ^4.9.5
     dependencies:
+      '@planetfall/id': link:../id
       '@prisma/client': 4.11.0_prisma@4.11.0
     devDependencies:
       '@planetfall/tsconfig': link:../tsconfig
