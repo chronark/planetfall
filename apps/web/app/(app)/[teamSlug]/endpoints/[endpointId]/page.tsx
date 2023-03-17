@@ -25,6 +25,7 @@ import {
   CardHeaderTitle,
 } from "@/components/card";
 import { Divider } from "@/components/divider";
+import classNames from "classnames";
 
 export const revalidate = 10;
 
@@ -89,8 +90,8 @@ export default async function Page(props: {
   const degraded =
     checks && checks.length > 0
       ? (endpoint.degradedAfter
-          ? checks.filter((d) => d.latency && d.latency >= endpoint.degradedAfter!).length
-          : 0) / checks.length
+        ? checks.filter((d) => d.latency && d.latency >= endpoint.degradedAfter!).length
+        : 0) / checks.length
       : 1;
 
   return (
@@ -118,7 +119,10 @@ export default async function Page(props: {
       <main className="container mx-auto">
         <div className="pt-2 mb-4 md:pt-4 lg:pt-8 md:mb-8 lg:mb-16">
           <div>
-            <div className="grid w-full grid-cols-3 gap-2 lg:grid-cols-7 md:gap-4 lg:gap-8">
+            <div className={classNames("grid w-full grid-cols-3 gap-2  md:gap-4 lg:gap-8", {
+              "lg:grid-cols-7": endpoint.degradedAfter,
+              "lg:grid-cols-6": !endpoint.degradedAfter,
+            })}>
               <Stats
                 label="Availability"
                 value={(availability * 100).toLocaleString(undefined, {
@@ -145,8 +149,8 @@ export default async function Page(props: {
                   endpoint.timeout && globalStats.p75 > endpoint.timeout
                     ? "error"
                     : endpoint.degradedAfter && globalStats.p75 > endpoint.degradedAfter
-                    ? "warn"
-                    : undefined
+                      ? "warn"
+                      : undefined
                 }
               />
               <Stats
@@ -157,8 +161,8 @@ export default async function Page(props: {
                   endpoint.timeout && globalStats.p90 > endpoint.timeout
                     ? "error"
                     : endpoint.degradedAfter && globalStats.p90 > endpoint.degradedAfter
-                    ? "warn"
-                    : undefined
+                      ? "warn"
+                      : undefined
                 }
               />
               <Stats
@@ -169,8 +173,8 @@ export default async function Page(props: {
                   endpoint.timeout && globalStats.p95 > endpoint.timeout
                     ? "error"
                     : endpoint.degradedAfter && globalStats.p95 > endpoint.degradedAfter
-                    ? "warn"
-                    : undefined
+                      ? "warn"
+                      : undefined
                 }
               />
               <Stats
@@ -181,8 +185,8 @@ export default async function Page(props: {
                   endpoint.timeout && globalStats.p99 > endpoint.timeout
                     ? "error"
                     : endpoint.degradedAfter && globalStats.p99 > endpoint.degradedAfter
-                    ? "warn"
-                    : undefined
+                      ? "warn"
+                      : undefined
                 }
               />
             </div>
