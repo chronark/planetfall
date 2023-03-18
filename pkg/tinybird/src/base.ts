@@ -51,10 +51,11 @@ export class Tinybird {
       // headers: {
       //   Authorization: `Bearer ${this.token}`,
       // },
+      cache:"no-store",
       // @ts-ignore
-      next: {
-        revalidate: 10
-      }
+      // next: {
+      //   revalidate: 10
+      // }
     });
     if (!res.ok) {
       const error = (await res.json()) as PipeErrorResponse;
