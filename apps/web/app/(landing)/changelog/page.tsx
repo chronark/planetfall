@@ -22,18 +22,18 @@ export default function Example() {
                             <article
                                 id={log.id ?? slugify(log.title, { lower: true })}
                                 key={log.title}
-                                className="flex max-w-xl flex-col items-start justify-between"
+                                className="flex  flex-col items-start justify-between"
                             >
-                                <div className="flex items-center gap-x-4 text-xs">
+                                <div className="flex items-center gap-x-4 text-xs w-full">
                                     <time dateTime={log.date.toISOString()} className="text-zinc-500">
                                         {log.date.toDateString()}
                                     </time>
                                 </div>
-                                <div className="group relative">
+                                <div className="w-full">
                                     <h3 className="mt-3 text-lg font-semibold leading-6 text-zinc-900 group-hover:text-zinc-600">
                                         {log.title}
                                     </h3>
-                                    <div className="mt-5 prose">{log.body}</div>
+                                    <div className=" mt-5 prose sm:prose-sm md:prose-md lg:prose-lg">{log.body}</div>
                                 </div>
                             </article>
                         ))}
@@ -62,7 +62,7 @@ const changelogs: Log[] = [
                     height={950}
                 />
                 <p>
-                    You can find this explanation by clicking the <strong>Cache-Control</strong> button on the <strong>Play</strong> results page or on individual checks from your endpoints. 
+                    You can find this explanation by clicking the <strong>Cache-Control</strong> button on the <strong>Play</strong> results page or on individual checks from your endpoints.
                 </p>
             </div>
         ),
