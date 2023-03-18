@@ -46,7 +46,7 @@ export class Tinybird {
     for (const [key, value] of Object.entries(parameters)) {
       url.searchParams.set(key, value.toString());
     }
-    // url.searchParams.set("cache_buster", Math.random().toString())
+    // url.searchParams.set("cache_buster", Math.random().toString());
     url.searchParams.set("token", this.token);
     const res = await fetch(url, {
       // headers: {
@@ -62,14 +62,11 @@ export class Tinybird {
       const error = (await res.json()) as PipeErrorResponse;
       throw new Error(error.error);
     }
-    const body = await res.json()
-    const headers: Record<string, string> = {}
-    res.headers.forEach((v, k) => {
-      headers[k] = v
-    })
-    console.log({ headers })
+    const body = await res.json();
 
-    return body
+    console.log({ now: new Date().toISOString(), responseDate: res.headers.get("date"), url: url.toString() });
+
+    return body;
   }
 
   public buildPipe<
@@ -98,7 +95,6 @@ export class Tinybird {
       if (!validatedResponse.success) {
         throw new Error(validatedResponse.error.message);
       }
-
 
       return validatedResponse.data;
     };

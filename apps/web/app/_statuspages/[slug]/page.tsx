@@ -6,7 +6,6 @@ import Link from "next/link";
 import { getStats } from "./get-stats";
 
 export const revalidate = 60;
-export const dynamic = "force-static";
 
 const getStatusPage = cache(
   async (slug: string) =>

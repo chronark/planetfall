@@ -9,7 +9,7 @@ import Link from "next/link";
 import { UsageChart } from "./chart";
 import { BillingButton } from "./button";
 
-export const revalidate = 10
+export const revalidate = 10;
 
 export default async function UsagePage(props: { params: { teamSlug: string } }) {
   const { userId } = auth();
@@ -64,8 +64,8 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
                 {totalUsage.toLocaleString()} / {team.maxMonthlyRequests?.toLocaleString() ?? "∞"}{" "}
                 {usagePercentage !== null
                   ? `(${usagePercentage.toLocaleString(undefined, {
-                    maximumFractionDigits: 2,
-                  })}%)`
+                      maximumFractionDigits: 2,
+                    })}%)`
                   : null}
               </Text>
               {usagePercentage !== null ? (

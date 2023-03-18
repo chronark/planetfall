@@ -42,7 +42,6 @@ export const UserButton: React.FC<Props> = ({ user }): JSX.Element => {
 					<BookOpen className="w-4 h-4" />
 				</Link> */}
 
-
         <button
           disabled={true}
           // href={`/${personalTeam?.slug}`}
