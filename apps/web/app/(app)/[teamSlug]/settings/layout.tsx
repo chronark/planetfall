@@ -51,13 +51,13 @@ export default async function SettingsLayout(props: {
   ];
 
   return (
-    <div className="container flex flex-col items-center justify-center mx-auto mt-16 lg:flex-row lg:items-start md:mt-24">
-      <aside className="flex flex-col justify-start gap-4  min-w-[12rem]">
+    <div className="container flex flex-col items-center justify-center mx-auto mt-8 lg:flex-row lg:items-start lg:mt-24">
+      <aside className="flex flex-row lg:flex-col lg:justify-start justify-between gap-4 min-w-[12rem]">
         {links.map((link) => (
           <NavLink key={link.label} {...link} />
         ))}
       </aside>
-      <main className="flex-grow">{props.children}</main>
+      <main className="flex-grow mt-8 lg:mt-0">{props.children}</main>
     </div>
   );
 }

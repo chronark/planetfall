@@ -289,7 +289,6 @@ export class Scheduler {
                   }
                 }
               } else {
-               
                 /**
                  * In case no assertions have been created yet, we will apply some defaults
                  * but only if there is no error, we don't want to overwrite anything

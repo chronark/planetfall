@@ -307,7 +307,6 @@ model EmailAlert {
   email  String
   active Boolean
 
-  @@unique([endpointId, email])
   @@index([teamId])
   @@index([endpointId])
 }
