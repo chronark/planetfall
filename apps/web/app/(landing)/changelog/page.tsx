@@ -53,7 +53,7 @@ const changelogs: Log[] = [
             <div>
                 <p>
                     Understanding the Cache-Control header can be difficult. We&apos;ve added a helper to explain
-                    what each directive means
+                    what each directive means.
                 </p>
                 <Image
                     src="/changelog/cache-control-explanation.png"
