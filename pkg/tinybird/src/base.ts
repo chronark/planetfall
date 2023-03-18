@@ -51,6 +51,10 @@ export class Tinybird {
       // headers: {
       //   Authorization: `Bearer ${this.token}`,
       // },
+      // @ts-ignore
+      next: {
+        revalidate: 10
+      }
     });
     if (!res.ok) {
       const error = (await res.json()) as PipeErrorResponse;
