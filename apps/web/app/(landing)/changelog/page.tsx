@@ -73,7 +73,7 @@ const changelogs: Log[] = [
         body: (
             <div>
                 <p>
-                    Notifications are now available for all users. You can now receive notifications when an
+                    Notifications are now available for all users. You can now receive email alerts when an
                     endpoint is down or an assertion fails. You can add one or more emails to your account and
                     receive notifications for all endpoints or for specific endpoints.
                 </p>
