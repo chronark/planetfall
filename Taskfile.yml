@@ -8,8 +8,9 @@ vars:
 
 tasks:
   clear:
+    run: "always"
     cmds:
-      - rm -rf ./**/node_modules
+      - rm -rf  ./**/node_modules
       - rm -rf ./**/dist
       - rm -rf ./**/.next
       - rm -rf ./**/.turbo

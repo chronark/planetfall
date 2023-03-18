@@ -3,7 +3,6 @@
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { Label } from "@/components/label";
-import { useToast } from "@/components/toast";
 import { trpc } from "@/lib/utils/trpc";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -49,7 +48,7 @@ export const CreateTeam: React.FC<Props> = ({ user }) => {
       return;
     }
     router.push(`/${team.slug}/endpoints`);
-  }, [team]);
+  }, [team, router]);
 
   const teamForm = useForm<FormParams>({
     defaultValues: {

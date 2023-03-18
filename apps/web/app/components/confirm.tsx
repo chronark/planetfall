@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "./dialog";
 import React, { Fragment, useEffect, useState } from "react";
-import { Button } from "./button";
+import { Button, buttonVariants } from "./button";
 import { Loading } from "./loading";
 // import { Button } from "components";
 
@@ -18,6 +18,7 @@ export type ConfirmProps = {
   description?: string;
   trigger: React.ReactNode;
   onConfirm: () => void | Promise<void>;
+  variant?: "danger";
 };
 
 export const Confirm: React.FC<ConfirmProps> = (props): JSX.Element => {
@@ -48,7 +49,7 @@ export const Confirm: React.FC<ConfirmProps> = (props): JSX.Element => {
         </DialogHeader>
 
         <DialogFooter>
-          <Button type="submit" onClick={onConfirm}>
+          <Button type="submit" variant={props.variant} onClick={onConfirm}>
             {loading ? <Loading /> : "Confirm"}
           </Button>
         </DialogFooter>

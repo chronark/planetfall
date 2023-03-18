@@ -1,0 +1,290 @@
+"use client";
+
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardFooterActions,
+  CardHeader,
+  CardHeaderTitle,
+} from "@/components/card";
+import { ChevronRight, Mail, Plus, Trash } from "lucide-react";
+import Link from "next/link";
+import { PageHeader } from "@/components/page";
+import { Button } from "@/components/button";
+import { Text } from "@/components/text";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/dialog";
+import Confirm from "@/components/confirm";
+import { trpc } from "@/lib/utils/trpc";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { Label } from "@/components/label";
+import { Input } from "@/components/input";
+import { Heading } from "@/components/heading";
+import { useToast } from "@/components/toast";
+import { Checkbox } from "@/components/check";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/select";
+import { SelectValue } from "@radix-ui/react-select";
+
+type Props = {
+  user: {
+    id: string;
+  };
+  team: {
+    id: string;
+    slug: string;
+  };
+  alerts: {
+    id: string;
+    endpoints: {
+      id: string;
+      name: string;
+      url: string;
+    }[];
+
+    emailChannels: {
+      id: string;
+      email: string;
+    }[];
+  }[];
+
+  endpoints: {
+    id: string;
+    name: string;
+  }[];
+};
+
+type CreateForm = {
+  email: string;
+};
+
+export const ClientPage: React.FC<Props> = ({ endpoints, team, alerts }) => {
+  const [showNewAlertModal, setShowNewAlertModal] = useState(false);
+  const [selectedEndpointIds, setSelectedEndpointIds] = useState<string[]>([]);
+  const [_addEndpointId, _setAddEndpointId] = useState<string | null>(null);
+  const [_addEndpointIdLoading, _setAddEndpointIdLoading] = useState(false);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const { addToast } = useToast();
+  const createForm = useForm<CreateForm>({});
+
+  async function submit(data: CreateForm) {
+    try {
+      setLoading(true);
+      if (selectedEndpointIds.length === 0) {
+        setShowNewAlertModal(false);
+        addToast({
+          title: "Error",
+          content: "Please select an endpoint",
+          variant: "error",
+        });
+        return;
+      }
+      await trpc.alerts.create.mutate({
+        email: data.email,
+        teamId: team.id,
+        endpointIds: selectedEndpointIds,
+      });
+      setShowNewAlertModal(false);
+      router.refresh();
+    } catch (e) {
+      addToast({
+        title: "Error",
+        content: (e as Error).message,
+        variant: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div>
+      <PageHeader
+        title="Alerts"
+        description="Configure who gets notified when things go wrong."
+        actions={[
+          <Dialog
+            key="create"
+            open={showNewAlertModal}
+            onOpenChange={(open) => setShowNewAlertModal(open)}
+          >
+            <DialogTrigger>
+              <Button isLoading={loading} variant="primary">
+                Create Alert
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <form onSubmit={createForm.handleSubmit(submit)}>
+                <DialogHeader>
+                  <Heading h3>Create a new alert</Heading>
+                  <Text>
+                    Select the endpoints you want to be notified about and an email address where we
+                    should send alerts.
+                  </Text>
+                </DialogHeader>
+
+                <div className="flex flex-col gap-2 mt-8">
+                  {endpoints.map((e) => (
+                    <div key={e.id} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={e.id}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedEndpointIds([...selectedEndpointIds, e.id]);
+                          } else {
+                            setSelectedEndpointIds(selectedEndpointIds.filter((id) => id !== e.id));
+                          }
+                        }}
+                      />
+                      <label
+                        htmlFor={e.id}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        {e.name}
+                      </label>
+                    </div>
+                  ))}
+
+                  <div>
+                    <Label>Email</Label>
+                    <Input type="email" {...createForm.register("email")} />
+                  </div>
+                </div>
+                <DialogFooter className="mt-8">
+                  <Button variant="primary" type="submit" isLoading={loading}>
+                    Create
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>,
+        ]}
+      />
+      <main className="container mx-auto mt-8">
+        <div className="flex flex-col gap-4 lg:gap-8 ">
+          {alerts.map((alert) => (
+            <Alert key={alert.id} alert={alert} endpoints={endpoints} />
+          ))}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+type AlertProps = {
+  alert: {
+    id: string;
+    endpoints: {
+      id: string;
+      name: string;
+      url: string;
+    }[];
+
+    emailChannels: {
+      id: string;
+      email: string;
+    }[];
+  };
+
+  endpoints: {
+    id: string;
+    name: string;
+  }[];
+};
+
+const Alert: React.FC<AlertProps> = ({ alert, endpoints }) => {
+  const router = useRouter();
+  const [selectedEndpointIds, setSelectedEndpointIds] = useState<string[]>(
+    alert.endpoints.map((e) => e.id),
+  );
+  const [isLoading, setIsLoading] = useState(false);
+  const { addToast } = useToast();
+  return (
+    <Card key={alert.id}>
+      <CardHeader>
+        <CardHeaderTitle
+          title={alert.emailChannels.at(0)?.email}
+          subtitle="The following endpoints will trigger an alert to this email address."
+          actions={[
+            <Confirm
+              variant="danger"
+              key="delete"
+              title="Delete Alert"
+              description={"Do you really want to delete this alert?"}
+              onConfirm={async () => {
+                await trpc.alerts.delete.mutate({ alertId: alert.id });
+                router.refresh();
+              }}
+              trigger={<Button variant="danger">Delete</Button>}
+            />,
+          ]}
+        />
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col gap-2">
+          {endpoints.map((endpoint) => {
+            return (
+              <div key={endpoint.id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={endpoint.id}
+                  checked={selectedEndpointIds.includes(endpoint.id)}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setSelectedEndpointIds([...selectedEndpointIds, endpoint.id]);
+                    } else {
+                      setSelectedEndpointIds(
+                        selectedEndpointIds.filter((id) => id !== endpoint.id),
+                      );
+                    }
+                  }}
+                />
+                <label
+                  htmlFor={endpoint.id}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {endpoint.name}
+                </label>
+              </div>
+            );
+          })}
+        </div>
+      </CardContent>
+
+      <CardFooter>
+        <div />
+
+        <Button
+          isLoading={isLoading}
+          onClick={async () => {
+            setIsLoading(true);
+            await trpc.alerts.update
+              .mutate({
+                alertId: alert.id,
+                endpointIds: selectedEndpointIds,
+              })
+              .catch((err) => {
+                addToast({
+                  title: "Error updating endpoints",
+                  content: err.message,
+                  variant: "error",
+                });
+              });
+            setIsLoading(false);
+            router.refresh();
+          }}
+        >
+          Save
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};

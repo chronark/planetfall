@@ -134,7 +134,10 @@ model Team {
   endpoints          Endpoint[]
   pages              StatusPage[]
   // webhookAlerts WebhookAlert[]
-  emailAlerts         EmailAlert[]
+  emailAlerts        EmailAlert[]
+  alerts              Alert[]
+  emailChannels EmailChannel[]
+
 
   @@index([slug])
 }
@@ -246,8 +249,10 @@ model Endpoint {
 
   assertions String?
 
-  pages      StatusPage[]
+  pages       StatusPage[]
   emailAlerts EmailAlert[]
+
+  alerts Alert[]
 
   @@index([teamId])
   @@index([ownerId])
@@ -291,19 +296,6 @@ model StatusPage {
 
   @@index([teamId])
 }
-
-// model WebhookAlert {
-//   id     String @id
-//   teamId String
-//   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
-
-//   url        String
-//   signingKey String
-//   active     Boolean
-
-//   @@index([teamId])
-// }
-
 model EmailAlert {
   id     String @id
   teamId String
@@ -315,6 +307,52 @@ model EmailAlert {
   email  String
   active Boolean
 
+  @@unique([endpointId, email])
   @@index([teamId])
   @@index([endpointId])
+}
+
+model Alert {
+  id     String @id
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  active Boolean
+  addNewEndpointsAutomatically Boolean 
+
+// this alert is listening to the following endpoints
+  endpoints Endpoint[]
+
+  emailChannels EmailChannel[]
+  webhookChannels WebhookChannel[]
+
+  @@index([teamId])
+}
+
+model EmailChannel {
+  id String @id
+
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
+
+  alerts   Alert[]
+
+  email  String
+  active Boolean
+  @@index([teamId])
+  @@unique([teamId, email])
+}
+
+model WebhookChannel {
+  id String @id
+
+  alert   Alert  @relation(fields: [alertId], references: [id], onDelete: Cascade)
+  alertId String
+
+  url        String
+  method    String
+  headers    Json?
+  active Boolean
+
+  @@index([alertId])
 }

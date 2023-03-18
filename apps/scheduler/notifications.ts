@@ -116,48 +116,50 @@ export class Notifications {
         id: event.check.endpointId,
       },
       include: {
-        emailAlerts: {
+        team: true,
+        alerts: {
           include: {
-            team: true,
-
-          }
-        }
-      }
+            emailChannels: true,
+            webhookChannels: true,
+          },
+        },
+      },
     });
     if (!endpoint) {
       throw new Error("endpoint not found");
     }
 
-
-
     await Promise.all(
-      endpoint.emailAlerts.map(async (alert) => {
-        this.logger.info("Sending email", {
-          to: alert.email,
-          time: event.check.time,
-          error: event.check.error,
-          teamSlug: alert.team.slug,
-          endpointName: endpoint.name,
-          endpointId: endpoint.id,
-        });
-        await this.email
-          .sendEndpointAlert({
-            to: alert.email,
+      endpoint.alerts.flatMap(async (alert) => {
+        return alert.emailChannels.map(async (channel) => {
+          this.logger.info("Sending email", {
+            to: channel.email,
             time: event.check.time,
             error: event.check.error,
-            teamSlug: alert.team.slug,
+            teamSlug: endpoint.team.slug,
             endpointName: endpoint.name,
             endpointId: endpoint.id,
-            checkLink: `https://planetfall.io/${alert.team.slug}/checks/${event.check.id}`,
-          })
-          .catch((err: Error) => {
-            this.logger.error("Error sending email", {
-              to: alert.email,
-              error: err.message,
-              teamSlug: alert.team.slug,
-              endpointId: endpoint.id,
-            });
           });
+          await this.email
+            .sendEndpointAlert({
+              to: channel.email,
+              time: event.check.time,
+              error: event.check.error,
+              teamSlug: endpoint.team.slug,
+              endpointName: endpoint.name,
+              endpointId: endpoint.id,
+              checkLink: `https://planetfall.io/${endpoint.team.slug}/checks/${event.check.id}`,
+            })
+            .catch((err: Error) => {
+              this.logger.error("Error sending email", {
+                to: channel.email,
+                error: err.message,
+                teamId: endpoint.team.id,
+                teamSlug: endpoint.team.slug,
+                endpointId: endpoint.id,
+              });
+            });
+        });
       }),
     );
   }

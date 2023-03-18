@@ -23,6 +23,11 @@ export default async function SettingsLayout(props: {
       href: `/${props.params.teamSlug}/settings`,
     },
     {
+      label: "Alerts",
+      slug: "alerts",
+      href: `/${props.params.teamSlug}/settings/alerts`,
+    },
+    {
       label: "Usage & Billing",
       slug: "usage",
       href: `/${props.params.teamSlug}/settings/usage`,

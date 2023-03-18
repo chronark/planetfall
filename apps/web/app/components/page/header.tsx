@@ -26,8 +26,8 @@ export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
     <div
       className={classNames(" transition-all duration-500 -mx-4 lg:mx-0 px-4 lg:px-0 ", {
         "sticky z-20 top-0 py-2 lg:py-4 my-2 lg:my-4": props.sticky,
-        "bg-white border-b border-zinc-300": scrolled,
-        "bg-zinc-50": !scrolled,
+        "bg-white border-b border-zinc-300": props.sticky && scrolled,
+        "bg-zinc-50": props.sticky && !scrolled,
       })}
     >
       <div className="container justify-between w-full mx-auto sm:flex sm:items-center">
