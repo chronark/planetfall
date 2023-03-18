@@ -289,7 +289,7 @@ export class Scheduler {
                   }
                 }
               } else {
-                this.logger.info("Running default assertion for 2XX");
+               
                 /**
                  * In case no assertions have been created yet, we will apply some defaults
                  * but only if there is no error, we don't want to overwrite anything
