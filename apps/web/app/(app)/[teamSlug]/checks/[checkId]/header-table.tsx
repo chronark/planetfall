@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { Check } from "@planetfall/tinybird";
+import { parseCacheControlHeaders } from "@planetfall/cache-headers";
 
 import {
   createColumnHelper,
@@ -9,7 +9,16 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import classNames from "classnames";
+import { Lightbulb } from "lucide-react";
+import { Text } from "@/components/text";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/dialog";
 export type Props = {
   header: {
     key: string;
@@ -23,12 +32,50 @@ export const HeaderTable: React.FC<Props> = ({ header }): JSX.Element => {
   const columns = [
     accessor("key", {
       header: "Key",
-      cell: (info) => <div>{info.getValue()}</div>,
+      cell: (info) => {
+        const key = info.getValue();
+        const value = info.row.original.value;
+        if (key.toLowerCase() === "cache-control") {
+          const directives = parseCacheControlHeaders(value);
+          if (directives) {
+            return (
+              <div className="flex items-center gap-2">
+                {key}
+                <Dialog>
+                  <DialogTrigger>
+                    <Lightbulb className="w-4 h-4 text-primary-500" />
+                  </DialogTrigger>
+
+                  <DialogContent className="flex flex-col gap-2">
+                    <DialogHeader>
+                      <DialogTitle>Cache-Control</DialogTitle>
+                      <DialogDescription>
+                        Here is a breakdown of the cache-control header:
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex flex-col gap-4">
+                      {directives.map((d) => (
+                        <div key={d.directive} className="flex flex-col items-start gap-1">
+                          <Text variant="code">{d.directive}</Text>
+                          <Text variant="subtle" size="xs">
+                            {d.explanation}
+                          </Text>
+                        </div>
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            );
+          }
+        }
+        return key;
+      },
     }),
 
     accessor("value", {
       header: "Value",
-      cell: (info) => <div>{info.getValue()}</div>,
+      cell: (info) => <span className="break-all">{info.getValue()}</span>,
     }),
   ];
   const table = useReactTable({

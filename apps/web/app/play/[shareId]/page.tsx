@@ -9,6 +9,7 @@ import { Details } from "./details";
 import type { PlayChecks } from "lib/server/routers/play";
 import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
+import { auth } from "@clerk/nextjs/app-beta";
 const redis = Redis.fromEnv();
 
 export const revalidate = 3600;

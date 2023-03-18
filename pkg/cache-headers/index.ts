@@ -1,4 +1,8 @@
 export type CacheControlDirective = {
+  /**
+   * Unparsed directive
+   */
+  directive: string;
   name: string;
   value?: number;
   explanation?: string;
@@ -14,27 +18,26 @@ export function parseCacheControlHeaders(cacheControl: string) {
     switch (name.trim()) {
       case "public":
         explanation =
-          "Indicates that the response may be cached by any cache, even if it would normally be non-cacheable or cacheable only within a non- shared cache.";
+          "The response may be cached by any cache, even if it would normally be non-cacheable or cacheable only within a non-shared cache.";
         break;
       case "private":
         explanation =
-          "Indicates that all or part of the response message is intended for a single user and must not be cached by a shared cache.";
+          "All or part of the response message is intended for a single user and must not be cached by a shared cache.";
         break;
       case "no-cache":
         explanation =
-          "Indicates that the response can be cached, but must be revalidated by the origin server before it can be served from cache.";
+          "The response can be cached, but must be revalidated by the origin server before it can be served from cache.";
         break;
       case "no-store":
-        explanation =
-          "Indicates that a cache must not store any part of either the request or the response.";
+        explanation = "A cache must not store any part of either the request or the response.";
         break;
       case "must-revalidate":
         explanation =
-          "Indicates that once a response becomes stale, a cache must not use the response without revalidating it with the origin server.";
+          "Once a response becomes stale, a cache must not use the response without revalidating it with the origin server.";
         break;
       case "max-age":
         if (!isNaN(Number(value))) {
-          explanation = `Indicates that the response is fresh for the specified number of seconds (${value}).`;
+          explanation = `The response is fresh for the specified number of seconds (${value}).`;
         }
         break;
       case "s-maxage":
@@ -44,19 +47,20 @@ export function parseCacheControlHeaders(cacheControl: string) {
         break;
       case "immutable":
         explanation =
-          "Indicates that the response body will not change over time, making it suitable for caching even by a browser or intermediate cache that doesn't honor other caching directives.";
+          "The response body will not change over time, making it suitable for caching even by a browser or intermediate cache that doesn't honor other caching directives.";
         break;
       case "no-transform":
         explanation =
-          "Indicates that an intermediary cache or proxy must not change the content-coding or media type of the response entity-body.";
+          "An intermediary cache or proxy must not change the content-coding or media type of the response entity-body.";
         break;
     }
 
     directives.push({
+      directive,
       name: name.trim(),
       value: !isNaN(Number(value)) ? Number(value) : undefined,
-      explanation: explanation,
+      explanation,
     });
-    return directives;
   }
+  return directives;
 }

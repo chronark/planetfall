@@ -41,27 +41,45 @@ function resizeSeries(
   nBuckets: number,
   regionId: string,
 ) {
-  series = series
-    .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
-    .slice(-nBuckets);
-  while (series.length < nBuckets) {
-    series.unshift({
-      regionId,
-      time: -1,
-      count: 0,
-      p75: 0,
-      p90: 0,
-      p95: 0,
-      p99: 0,
-      errors: 0,
-    });
+  let time = new Date();
+  time.setHours(0, 0, 0, 0);
+
+  const days: {
+    time: number;
+    regionId: string;
+    count: number;
+    errors: number;
+    p75: number;
+    p90: number;
+    p95: number;
+    p99: number;
+  }[] = [];
+  for (let i = 0; i < nBuckets; i++) {
+    days.unshift(
+      series.find(
+        (s) =>
+          new Date(s.time).getUTCFullYear() === time.getUTCFullYear() &&
+          new Date(s.time).getUTCMonth() === time.getUTCMonth() &&
+          new Date(s.time).getUTCDate() === time.getUTCDate(),
+      ) ?? {
+        regionId,
+        time: -1,
+        count: 0,
+        p75: 0,
+        p90: 0,
+        p95: 0,
+        p99: 0,
+        errors: 0,
+      },
+    );
+
+    time.setDate(time.getDate() - 1);
   }
 
-  return series;
+  return days;
 }
 
 export const Row: React.FC<{
-  nBuckets?: number;
   endpoint: {
     id: string;
     name: string;
@@ -95,30 +113,28 @@ export const Row: React.FC<{
       };
     }[];
   };
-}> = ({ endpoint, nBuckets = 90 }): JSX.Element => {
+}> = ({ endpoint }): JSX.Element => {
   const [expanded, setExpanded] = useState(false);
 
   const globalStats = endpoint.stats.find((s) => s.region.id === "global");
   const totalChecks = globalStats?.metrics.count ?? 0;
   const errors = globalStats?.metrics.errors ?? 0;
   const availability = totalChecks === 0 ? 1 : 1 - errors / totalChecks;
-
+  for (let i = 0; i < endpoint.stats.length; i++) {
+    endpoint.stats[i].series = resizeSeries(
+      endpoint.stats[i].series,
+      90,
+      endpoint.stats[i].region.name,
+    );
+  }
   const current =
-    globalStats?.series.at(-1) && globalStats?.series.at(-1)!.errors > 0
+    globalStats?.series.at(-1) && globalStats!.series.at(-1)!.errors > 0
       ? "Error"
       : endpoint.degradedAfter &&
         globalStats?.series.at(-1) &&
         globalStats?.series.at(-1)!.p75 > endpoint.degradedAfter
       ? "Degraded"
       : "Operational";
-
-  for (let i = 0; i < endpoint.stats.length; i++) {
-    endpoint.stats[i].series = resizeSeries(
-      endpoint.stats[i].series,
-      nBuckets,
-      endpoint.stats[i].region.name,
-    );
-  }
 
   return (
     <Card>
@@ -157,7 +173,7 @@ export const Row: React.FC<{
           <div className="sm:hidden">
             <Chart
               withXAxis
-              series={resizeSeries(globalStats?.series ?? [], 30, "global")}
+              series={globalStats?.series.slice(-30) ?? []}
               degradedAfter={endpoint.degradedAfter}
               timeout={endpoint.timeout}
             />
@@ -165,7 +181,7 @@ export const Row: React.FC<{
           <div className="hidden sm:block md:hidden">
             <Chart
               withXAxis
-              series={resizeSeries(globalStats?.series ?? [], 60, "global")}
+              series={globalStats?.series.slice(-60) ?? []}
               degradedAfter={endpoint.degradedAfter}
               timeout={endpoint.timeout}
             />
@@ -173,7 +189,7 @@ export const Row: React.FC<{
           <div className="hidden md:block">
             <Chart
               withXAxis
-              series={resizeSeries(globalStats?.series ?? [], 90, "global")}
+              series={globalStats?.series.slice(-90) ?? []}
               degradedAfter={endpoint.degradedAfter}
               timeout={endpoint.timeout}
             />
@@ -223,7 +239,7 @@ export const Row: React.FC<{
                     <div className="sm:hidden">
                       <Chart
                         height="h-12"
-                        series={resizeSeries(r.series, 30, r.region.id)}
+                        series={r.series.slice(-30)}
                         degradedAfter={endpoint.degradedAfter}
                         timeout={endpoint.timeout}
                       />
@@ -231,7 +247,7 @@ export const Row: React.FC<{
                     <div className="hidden sm:block md:hidden">
                       <Chart
                         height="h-12"
-                        series={resizeSeries(r.series, 60, r.region.id)}
+                        series={r.series.slice(-60)}
                         degradedAfter={endpoint.degradedAfter}
                         timeout={endpoint.timeout}
                       />
@@ -239,7 +255,7 @@ export const Row: React.FC<{
                     <div className="hidden md:block">
                       <Chart
                         height="h-12"
-                        series={resizeSeries(r.series, 90, r.region.id)}
+                        series={r.series.slice(-90)}
                         degradedAfter={endpoint.degradedAfter}
                         timeout={endpoint.timeout}
                       />

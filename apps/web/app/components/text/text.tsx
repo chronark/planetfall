@@ -13,8 +13,8 @@ const textVariants = cva("", {
       subtle: "text-zinc-500",
     },
     size: {
-      xs: "text-xs font-medium leading-none",
-      sm: "text-sm font-medium leading-none",
+      xs: "text-xs leading-none",
+      sm: "text-sm leading-none",
       lg: "text-lg font-semibold",
       xl: "text-xl font-semibold",
     },

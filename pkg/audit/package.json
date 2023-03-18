@@ -11,10 +11,10 @@
   "author": "Andreas Thomas",
   "license": "ISC",
   "devDependencies": {
-    "@planetfall/tsconfig": "workspace:*",
     "@planetfall/tinybird": "workspace:*",
+    "@planetfall/tsconfig": "workspace:*",
     "@types/node": "18.15.3",
-    "typescript": "^4.9.5"
+    "typescript": "^5.0.2"
   },
   "dependencies": {
     "zod": "^3.21.4"

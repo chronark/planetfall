@@ -49,14 +49,14 @@ export class Tinybird {
     // url.searchParams.set("cache_buster", Math.random().toString());
     url.searchParams.set("token", this.token);
     const res = await fetch(url, {
-      // headers: {
-      //   Authorization: `Bearer ${this.token}`,
-      // },
-      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+      //  cache: "no-store",
       // @ts-ignore
-      // next: {
-      //   revalidate: 10
-      // }
+      next: {
+        revalidate: 10,
+      },
     });
     if (!res.ok) {
       const error = (await res.json()) as PipeErrorResponse;
@@ -64,7 +64,11 @@ export class Tinybird {
     }
     const body = await res.json();
 
-    console.log({ now: new Date().toISOString(), responseDate: res.headers.get("date"), url: url.toString() });
+    console.log({
+      now: new Date().toUTCString(),
+      responseDate: res.headers.get("date"),
+      url: url.toString(),
+    });
 
     return body;
   }

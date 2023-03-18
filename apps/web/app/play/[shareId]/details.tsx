@@ -9,6 +9,17 @@ import { PlayChecks } from "lib/server/routers/play";
 import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { VercelEdge } from "@/components/icons/VercelEdge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/dialog";
+import { Button } from "@/components/button";
+import { parseCacheControlHeaders } from "@planetfall/cache-headers";
+import { Text } from "@/components/text";
 
 type Props = {
   urls: PlayChecks["urls"];
@@ -61,6 +72,9 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                */
               const headers = new Headers(c.headers);
               const vercelCache = headers.get("x-vercel-cache");
+              const cacheControlDirectives = parseCacheControlHeaders(
+                headers.get("cache-control") ?? "",
+              );
 
               return (
                 <div
@@ -93,8 +107,36 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                     </div>
                   ) : null}
                   <div className="py-4 md:py-8">
-                    <Heading h4={true}>Response Header</Heading>
-                    <pre className="p-2 overflow-x-auto rounded bg-zinc-50">
+                    <div className="flex justify-between items-center">
+                      <Heading h4={true}>Response Header</Heading>
+                      {cacheControlDirectives.length > 0 ? (
+                        <Dialog>
+                          <DialogTrigger>
+                            <Button>Cache-Control</Button>
+                          </DialogTrigger>
+
+                          <DialogContent className="flex flex-col gap-2">
+                            <DialogHeader>
+                              <DialogTitle>Cache-Control</DialogTitle>
+                              <DialogDescription>
+                                Here is a breakdown of the cache-control header:
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="flex flex-col gap-4">
+                              {cacheControlDirectives.map((d) => (
+                                <div key={d.directive} className="flex flex-col items-start gap-1">
+                                  <Text variant="code">{d.directive}</Text>
+                                  <Text variant="subtle" size="xs">
+                                    {d.explanation}
+                                  </Text>
+                                </div>
+                              ))}
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      ) : null}
+                    </div>
+                    <pre className="p-2 mt-4 overflow-x-auto rounded bg-zinc-50">
                       {JSON.stringify(c.headers, null, 2)}
                     </pre>
                   </div>
