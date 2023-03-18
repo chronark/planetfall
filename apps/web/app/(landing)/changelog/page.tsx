@@ -61,6 +61,9 @@ const changelogs: Log[] = [
                     width={1164}
                     height={950}
                 />
+                <p>
+                    You can find this explanation by clicking the <strong>Cache-Control</strong> button on the <strong>Play</strong> results page or on individual checks from your endpoints. 
+                </p>
             </div>
         ),
     },
