@@ -31,7 +31,6 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
     year,
     month,
   });
-  console.warn(JSON.stringify({ usage }));
 
   const totalUsage = usage.data.reduce((acc, cur) => acc + cur.usage, 0);
   const usagePercentage = (totalUsage / team.maxMonthlyRequests) * 100;

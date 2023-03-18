@@ -48,9 +48,9 @@ export class Tinybird {
     }
     // url.searchParams.set("token", this.token);
     const res = await fetch(url, {
-       headers: {
-         Authorization: `Bearer ${this.token}`,
-       },
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
       // @ts-ignore
       next: {
         revalidate: 10
@@ -60,7 +60,10 @@ export class Tinybird {
       const error = (await res.json()) as PipeErrorResponse;
       throw new Error(error.error);
     }
-    return await res.json();
+    const body = await res.json()
+    console.log(JSON.stringify({ url: url.toString(), body }))
+
+    return body
   }
 
   public buildPipe<
@@ -89,6 +92,8 @@ export class Tinybird {
       if (!validatedResponse.success) {
         throw new Error(validatedResponse.error.message);
       }
+
+
       return validatedResponse.data;
     };
   }
