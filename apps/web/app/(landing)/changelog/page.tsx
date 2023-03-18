@@ -52,8 +52,8 @@ const changelogs: Log[] = [
         body: (
             <div>
                 <p>
-                    Understanding the Cache-Control header can be difficult. We&apos;ve added a helper to help
-                    you understand the effects of the header.
+                    Understanding the Cache-Control header can be difficult. We&apos;ve added a helper to explain
+                    what each directive means
                 </p>
                 <Image
                     src="/changelog/cache-control-explanation.png"
