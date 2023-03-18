@@ -52,7 +52,7 @@ export class Tinybird {
       // headers: {
       //   Authorization: `Bearer ${this.token}`,
       // },
-      cache:"no-store",
+      cache: "no-store",
       // @ts-ignore
       // next: {
       //   revalidate: 10
@@ -63,7 +63,11 @@ export class Tinybird {
       throw new Error(error.error);
     }
     const body = await res.json()
-    console.log(JSON.stringify({ url: url.toString(), body }))
+    const headers: Record<string, string> = {}
+    res.headers.forEach((v, k) => {
+      headers[k] = v
+    })
+    console.log({ headers })
 
     return body
   }
