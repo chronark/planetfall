@@ -7,7 +7,7 @@ export type StatsProps = {
 };
 export const Stats: React.FC<StatsProps> = ({ label, value, status, suffix }): JSX.Element => {
   return (
-    <div className="flex flex-col p-4 whitespace-nowrap">
+    <div className="flex flex-col p-4">
       <Text color="text-zinc-500">{label}</Text>
       <div className="flex items-baseline gap-2">
         <span

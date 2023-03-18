@@ -135,7 +135,7 @@ export const Row: React.FC<{
           </div>
 
           <div className="flex flex-col-reverse items-end gap-4 md:items-center md:flex-row">
-            <Text size="sm">{(availability * 100).toFixed(2)} % Availability</Text>
+            <span className="whitespace-nowrap leading-7 text-zinc-900 text-sm">{(availability * 100).toFixed(2)} % Availability</span>
 
             <div className="flex items-center gap-2 px-3 py-1 border rounded-full border-zinc-300">
               <div
