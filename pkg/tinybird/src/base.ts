@@ -46,7 +46,7 @@ export class Tinybird {
     for (const [key, value] of Object.entries(parameters)) {
       url.searchParams.set(key, value.toString());
     }
-    url.searchParams.set("cache_buster", Math.random().toString())
+    // url.searchParams.set("cache_buster", Math.random().toString())
     url.searchParams.set("token", this.token);
     const res = await fetch(url, {
       // headers: {
