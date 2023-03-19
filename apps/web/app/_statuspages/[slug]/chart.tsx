@@ -42,7 +42,6 @@ function resizeSeries(
   regionId: string,
 ) {
   let time = new Date();
-  time.setHours(0, 0, 0, 0);
 
   const days: {
     time: number;
@@ -56,12 +55,7 @@ function resizeSeries(
   }[] = [];
   for (let i = 0; i < nBuckets; i++) {
     days.unshift(
-      series.find(
-        (s) =>
-          new Date(s.time).getUTCFullYear() === time.getUTCFullYear() &&
-          new Date(s.time).getUTCMonth() === time.getUTCMonth() &&
-          new Date(s.time).getUTCDate() === time.getUTCDate(),
-      ) ?? {
+      series.find((s) => new Date(s.time).toDateString() === time.toDateString()) ?? {
         regionId,
         time: -1,
         count: 0,
@@ -136,6 +130,15 @@ export const Row: React.FC<{
       ? "Degraded"
       : "Operational";
 
+  let max = 1;
+  for (const region of endpoint.stats) {
+    for (const series of region.series) {
+      if (series.p75 > max) {
+        max = series.p75;
+      }
+    }
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -172,6 +175,7 @@ export const Row: React.FC<{
         <div className="flex flex-col -mt-4 space-y-2">
           <div className="sm:hidden">
             <Chart
+              max={max}
               withXAxis
               series={globalStats?.series.slice(-30) ?? []}
               degradedAfter={endpoint.degradedAfter}
@@ -180,6 +184,7 @@ export const Row: React.FC<{
           </div>
           <div className="hidden sm:block md:hidden">
             <Chart
+              max={max}
               withXAxis
               series={globalStats?.series.slice(-60) ?? []}
               degradedAfter={endpoint.degradedAfter}
@@ -188,6 +193,7 @@ export const Row: React.FC<{
           </div>
           <div className="hidden md:block">
             <Chart
+              max={max}
               withXAxis
               series={globalStats?.series.slice(-90) ?? []}
               degradedAfter={endpoint.degradedAfter}
@@ -238,6 +244,7 @@ export const Row: React.FC<{
                   <div className="w-full md:w-3/5">
                     <div className="sm:hidden">
                       <Chart
+                        max={max}
                         height="h-12"
                         series={r.series.slice(-30)}
                         degradedAfter={endpoint.degradedAfter}
@@ -246,6 +253,7 @@ export const Row: React.FC<{
                     </div>
                     <div className="hidden sm:block md:hidden">
                       <Chart
+                        max={max}
                         height="h-12"
                         series={r.series.slice(-60)}
                         degradedAfter={endpoint.degradedAfter}
@@ -254,6 +262,7 @@ export const Row: React.FC<{
                     </div>
                     <div className="hidden md:block">
                       <Chart
+                        max={max}
                         height="h-12"
                         series={r.series.slice(-90)}
                         degradedAfter={endpoint.degradedAfter}
@@ -271,6 +280,7 @@ export const Row: React.FC<{
 };
 
 const Chart: React.FC<{
+  max: number;
   height?: string;
   series: {
     time: number;
@@ -285,8 +295,7 @@ const Chart: React.FC<{
   degradedAfter?: number;
   timeout?: number;
   withXAxis?: boolean;
-}> = ({ series, height, degradedAfter, withXAxis }): JSX.Element => {
-  const p75Max = Math.max(...series.map((m) => m.p75));
+}> = ({ series, height, degradedAfter, withXAxis, max }): JSX.Element => {
   let t = new Date();
   t.setMinutes(0);
   t.setSeconds(0);
@@ -297,15 +306,13 @@ const Chart: React.FC<{
       <div className={`flex w-full bg-white ${height ?? "h-12"} items-end`}>
         {series
 
-        .map((bucket, _i) => {
+        .map((bucket) => {
           const start = new Date(bucket.time);
 
-          const percentageHeight =
-            bucket.time >= 0 ? Math.max(5, (bucket.p75 / p75Max) * 100) : 100;
+          const percentageHeight = bucket.time >= 0 ? Math.max(5, (bucket.p75 / max) * 100) : 100;
           const bucketError = bucket.errors > 0;
-          const bucketDegraded = degradedAfter && bucket.p99 > degradedAfter;
-          // ? p99 > endpoint.degradedAfter
-          // : 0;
+          const bucketDegraded = degradedAfter && bucket.p75 > degradedAfter;
+
           const cn = [
             "flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
           ];
