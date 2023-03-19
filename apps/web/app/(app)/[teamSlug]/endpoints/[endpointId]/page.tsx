@@ -1,6 +1,6 @@
 import PageHeader from "@/components/page/header";
 import { redirect } from "next/navigation";
-import { Client as Tinybird, getEndpointStats } from "@planetfall/tinybird";
+import { Client as Tinybird, getEndpointStats, getErrors } from "@planetfall/tinybird";
 
 import { db } from "@planetfall/db";
 import { Stats } from "@/components/stats";
@@ -63,9 +63,18 @@ export default async function Page(props: {
 
   const tb = new Tinybird();
 
-  const [stats, checks] = await Promise.all([
+  const [stats, checks, errors] = await Promise.all([
     getEndpointStats({ endpointId: endpoint.id }),
     tb.getLatestChecksByEndpoint(endpoint.id, { limit: 10000 }),
+    (
+      await getErrors({ endpointId: endpoint.id, since: Date.now() - 24 * 60 * 60 * 1000 })
+    ).data.map((e) => ({
+      id: e.id,
+      time: e.time,
+      error: e.error!,
+      latency: e.latency,
+      region: endpoint.regions.find((r) => r.id === e.regionId)?.name ?? e.regionId,
+    })),
   ]);
 
   const globalStats = stats.data.find((s) => s.regionId === "global") ?? {
@@ -76,15 +85,6 @@ export default async function Page(props: {
     p95: 0,
     p99: 0,
   };
-  const errors = checks
-    .filter((c) => Boolean(c.error))
-    .map((e) => ({
-      id: e.id,
-      time: e.time,
-      error: e.error!,
-      latency: e.latency,
-      region: endpoint.regions.find((r) => r.id === e.regionId)?.name ?? e.regionId,
-    }));
 
   const availability = globalStats.count > 0 ? 1 - errors.length / globalStats.count : 1;
   const degraded =

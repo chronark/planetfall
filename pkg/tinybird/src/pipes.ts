@@ -72,3 +72,19 @@ export const getUsage = tb.buildPipe({
     day: z.number(),
   }),
 });
+
+export const getErrors = tb.buildPipe({
+  pipe: "get_errors__v1",
+  parameters: z.object({
+    endpointId: z.string(),
+    since: z.number(),
+  }),
+  data: z.object({
+    id: z.string(),
+    time: z.string().transform((s) => new Date(s).getTime()),
+    status: nullableNumberWithDefault,
+    regionId: z.string(),
+    error: z.string(),
+    latency: nullableNumberWithDefault,
+  }),
+});

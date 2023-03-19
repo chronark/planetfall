@@ -15,7 +15,7 @@ export const Breadcrumbs: React.FC<Props> = ({ teamSwitcher, withWordMark, prefi
 
   return (
     <ul role="list" className="flex items-center">
-      <li key="home" className="pr-2">
+      <li key="home" className="">
         <Link href="/" className="flex items-center gap-2 font-bold group text-zinc-900 ">
           <Logo className="w-8 h-8 group-hover:text-black" />
           {withWordMark ? (
@@ -29,7 +29,7 @@ export const Breadcrumbs: React.FC<Props> = ({ teamSwitcher, withWordMark, prefi
       {teamSwitcher ? (
         <li key="team">
           <div className="flex items-center">
-            <span className="px-2 text-zinc-400">/</span>
+            {/* <span className="px-2 text-zinc-400">/</span> */}
             <div>{teamSwitcher}</div>
           </div>
         </li>

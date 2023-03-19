@@ -8,6 +8,7 @@ import { DEFAULT_QUOTA } from "plans";
 import { createInvoice } from "@/lib/billing/stripe";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { audit } from "@planetfall/audit";
+import { Email } from "@planetfall/emails";
 // import { Email } from "@planetfall/emails";
 
 export const teamRouter = t.router({
@@ -176,16 +177,14 @@ export const teamRouter = t.router({
         resourceId: invitation.id,
         source: "trpc",
       });
-      return invitation;
 
-      // await new Email().sendTeamInvitation({
-      //   to: invitedUser.email,
-      //   username: invitedUser.name,
-      //   team: team.name,
-      //   invitedFrom: currentUser.user.name,
-
-      //   inviteLink: `https://planetfall/invite/${invitation.id}`,
-      // });
+      await new Email().sendTeamInvitation({
+        to: invitedUser.email,
+        username: invitedUser.name,
+        team: team.name,
+        invitedFrom: currentUser.user.name,
+        inviteLink: `https://planetfall/invite/${invitation.id}`,
+      });
     }),
   updateMember: t.procedure
     .input(

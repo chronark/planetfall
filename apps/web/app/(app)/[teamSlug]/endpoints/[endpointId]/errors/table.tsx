@@ -76,9 +76,7 @@ export const ErrorsTable: React.FC<Props> = ({ errors }): JSX.Element => {
     }),
   ];
   const table = useReactTable({
-    data: errors
-      .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
-      .slice(0, 10),
+    data: errors.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()),
     columns,
     getCoreRowModel: getCoreRowModel(),
   });

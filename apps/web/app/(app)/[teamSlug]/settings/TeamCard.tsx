@@ -50,7 +50,7 @@ type Props = {
 
 export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX.Element => {
   const { accessor } = createColumnHelper<Props["members"][0]>();
-  const [invitationId, setInvitationId] = useState<string | null>(null);
+  const [invitationId, _setInvitationId] = useState<string | null>(null);
   const [inviteEmail, setInviteEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -132,21 +132,25 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
               onSubmit={async (e) => {
                 e.preventDefault();
                 setLoading(true);
-                const invitation = await trpc.team.createInvitation.mutate({
-                  teamId: teamId,
-                  email: inviteEmail,
-                });
+                await trpc.team.createInvitation
+                  .mutate({
+                    teamId: teamId,
+                    email: inviteEmail,
+                  })
+                  .then(() => {
+                    toast.addToast({
+                      title: "Invitation sent",
+                      content: <Text>We have sent an invitation to {inviteEmail}</Text>,
+                    });
+                  })
+                  .catch((err) => {
+                    toast.addToast({
+                      title: "Error",
+                      content: err.message,
+                      variant: "error",
+                    });
+                  });
                 setLoading(false);
-                setInvitationId(invitation.id);
-                // toast.addToast({
-                //   title: "Invitation created",
-                //   content: (
-                //     <p>
-                //       Share this link with them to invite them:{" "}
-                //       <pre>{`https://planetfall.io/invite/${invitation.id}`}</pre>
-                //     </p>
-                //   ),
-                // });
               }}
             >
               <Input

@@ -1,30 +1,13 @@
 import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
-import { Client as Tinybird } from "@planetfall/tinybird";
+import { getErrors } from "@planetfall/tinybird";
 
 import { db } from "@planetfall/db";
-import { Stats } from "@/components/stats";
 import { ErrorsTable } from "./table";
-import { Heading } from "@/components/heading";
-import { LatestTable } from "../latest-table";
-import { DeleteButton } from "../delete";
 import { auth } from "@clerk/nextjs/app-beta";
 import { Button } from "@/components/button";
-import { Toggle } from "../toggle";
-import { Text } from "@/components/text";
-import { ChartsSection } from "../chart-by-region";
-import { Edu_NSW_ACT_Foundation } from "@next/font/google";
 import Link from "next/link";
-import { Switch } from "@/components/switch";
-import { Chart } from "../chart";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardFooterStatus,
-  CardHeader,
-  CardHeaderTitle,
-} from "@/components/card";
+import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
 
 export const revalidate = 10;
@@ -61,22 +44,17 @@ export default async function Page(props: {
     return notFound();
   }
 
-  const tb = new Tinybird();
-
-  const checks = await tb.getLatestChecksByEndpoint(endpoint.id, {
-    limit: 10000,
-  });
-
-  const errors = checks
-    .filter((c) => Boolean(c.error))
-    .map((e) => ({
-      id: e.id,
-      time: e.time,
-      error: e.error!,
-      latency: e.latency,
-      region: endpoint.regions.find((r) => r.id === e.regionId)!.name,
-      detailsUrl: `/${props.params.teamSlug}/checks/${e.id}`,
-    }));
+  const errors = (
+    await getErrors({ endpointId: endpoint.id, since: Date.now() - 24 * 60 * 60 * 1000 })
+  ).data.map((e) => ({
+    id: e.id,
+    time: e.time,
+    error: e.error!,
+    status: e.status,
+    latency: e.latency,
+    region: endpoint.regions.find((r) => r.id === e.regionId)!.name,
+    detailsUrl: `/${props.params.teamSlug}/checks/${e.id}`,
+  }));
 
   return (
     <div>
@@ -86,7 +64,7 @@ export default async function Page(props: {
         description={endpoint.name}
         actions={[
           <Button key="endpoint">
-            <Link href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}}`}>
+            <Link href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}`}>
               Endpoint
             </Link>
           </Button>,
