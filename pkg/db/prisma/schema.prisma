@@ -245,7 +245,7 @@ model Endpoint {
   headers      Json?
   body         String? @db.Text
 
-  assertions String?
+  assertions String? @db.Text
 
   pages       StatusPage[]
 
