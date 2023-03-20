@@ -74,48 +74,51 @@ export const HeaderTable: React.FC<Props> = ({ header }): JSX.Element => {
           const hopsAlarm =
             networkHops.length > 1 && [...new Set(networkHops.map((h) => h.continent))].length > 1;
 
-          if (networkHops.length > 0) {
+          if (networkHops.length >= 2) {
             return (
-              <Dialog>
-                <DialogTrigger>
-                  <Button>Vercel Routing</Button>
-                </DialogTrigger>
+              <div className="flex items-center gap-2">
+                {key}
+                <Dialog>
+                  <DialogTrigger>
+                    <Lightbulb className="w-4 h-4 text-primary-500" />
+                  </DialogTrigger>
 
-                <DialogContent className="flex flex-col gap-2 lg:max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Vercel Network Hops</DialogTitle>
-                    <DialogDescription>
-                      {hopsAlarm ? (
-                        <p className="text-sm font-medium text-red-500">
-                          This request was routed through multiple continents. To ensure low
-                          latency, you should try to avoid this.
-                        </p>
-                      ) : (
-                        <p>This request was routed through the following Vercel regions:</p>
-                      )}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="mx-auto grid max-w-2xl grid-cols-1 gap-8 overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4">
-                                {networkHops.map((hop) => (
-                                  <div key={hop.regionId}>
-                                    <div
-                                      className="flex items-center text-xs font-semibold leading-6 text-zinc-400"
-                                    >
-                                      <svg viewBox="0 0 4 4" className="mr-4 h-1 w-1 flex-none" aria-hidden="true">
-                                        <circle cx={2} cy={2} r={2} fill="currentColor" />
-                                      </svg>
-                                      {hop.continent}
-                                      <div
-                                        className="absolute -ml-2 h-px w-screen -translate-x-full bg-zinc-900/10 sm:-ml-4 lg:static lg:ml-8 lg:-mr-6 lg:w-auto lg:flex-auto lg:translate-x-0"
-                                        aria-hidden="true"
-                                      />
-                                    </div>
-                                    <p className="mt-6 text-sm font-semibold leading-8 tracking-tight text-zinc-900">{hop.regionName}</p>
-                                  </div>
-                                ))}
-                              </div>
-                </DialogContent>
-              </Dialog>
+                  <DialogContent className="flex flex-col gap-2 lg:max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Vercel Network Hops</DialogTitle>
+                      <DialogDescription>
+                        {hopsAlarm ? (
+                          <p className="text-sm font-medium text-red-500">
+                            This request was routed through multiple continents. To ensure low
+                            latency, you should try to avoid this.
+                          </p>
+                        ) : (
+                          <p>This request was routed through the following Vercel regions:</p>
+                        )}
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="mx-auto grid max-w-2xl grid-cols-1 gap-8 overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4">
+                      {networkHops.map((hop) => (
+                        <div key={hop.regionId}>
+                          <div
+                            className="flex items-center text-xs font-semibold leading-6 text-zinc-400"
+                          >
+                            <svg viewBox="0 0 4 4" className="mr-4 h-1 w-1 flex-none" aria-hidden="true">
+                              <circle cx={2} cy={2} r={2} fill="currentColor" />
+                            </svg>
+                            {hop.continent}
+                            <div
+                              className="absolute -ml-2 h-px w-screen -translate-x-full bg-zinc-900/10 sm:-ml-4 lg:static lg:ml-8 lg:-mr-6 lg:w-auto lg:flex-auto lg:translate-x-0"
+                              aria-hidden="true"
+                            />
+                          </div>
+                          <p className="mt-6 text-sm font-semibold leading-8 tracking-tight text-zinc-900">{hop.regionName}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
             );
           }
         }
