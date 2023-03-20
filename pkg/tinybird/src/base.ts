@@ -44,6 +44,9 @@ export class Tinybird {
   ): Promise<unknown> {
     const url = new URL(`/v0/pipes/${pipe}.json`, this.baseUrl);
     for (const [key, value] of Object.entries(parameters)) {
+      if (typeof value === "undefined") {
+        continue;
+      }
       url.searchParams.set(key, value.toString());
     }
     // url.searchParams.set("cache_buster", Math.random().toString());

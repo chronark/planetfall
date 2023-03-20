@@ -6,6 +6,7 @@ export const tb = new Tinybird();
 const nullableNumberWithDefault = z
   .number()
   .nullable()
+  .optional()
   .transform((v) => (typeof v === "number" ? v : 0));
 
 export const getEndpointStats = tb.buildPipe({
@@ -86,5 +87,57 @@ export const getErrors = tb.buildPipe({
     regionId: z.string(),
     error: z.string(),
     latency: nullableNumberWithDefault,
+  }),
+});
+
+export const getCustomAnalyticsPerDay = tb.buildPipe({
+  pipe: "get_custom_analytics_per_day__v1",
+  parameters: z.object({
+    endpointId: z.string(),
+    since: z.number(),
+    // comma separated regionIds
+    regionIds: z.string(),
+    getErrors: z.boolean().optional(),
+    getCount: z.boolean().optional(),
+    getP75: z.boolean().optional(),
+    getP90: z.boolean().optional(),
+    getP95: z.boolean().optional(),
+    getP99: z.boolean().optional(),
+  }),
+  data: z.object({
+    time: z.string().transform((s) => new Date(s).getTime()),
+    regionId: z.string(),
+    count: nullableNumberWithDefault,
+    p75: nullableNumberWithDefault,
+    p90: nullableNumberWithDefault,
+    p95: nullableNumberWithDefault,
+    p99: nullableNumberWithDefault,
+    errors: nullableNumberWithDefault,
+  }),
+});
+
+export const getCustomAnalyticsPerHour = tb.buildPipe({
+  pipe: "get_custom_analytics_per_hour__v1",
+  parameters: z.object({
+    endpointId: z.string(),
+    since: z.number(),
+    // comma separated regionIds
+    regionIds: z.string(),
+    getErrors: z.boolean().optional(),
+    getCount: z.boolean().optional(),
+    getP75: z.boolean().optional(),
+    getP90: z.boolean().optional(),
+    getP95: z.boolean().optional(),
+    getP99: z.boolean().optional(),
+  }),
+  data: z.object({
+    time: z.string().transform((s) => new Date(s).getTime()),
+    regionId: z.string(),
+    count: nullableNumberWithDefault,
+    p75: nullableNumberWithDefault,
+    p90: nullableNumberWithDefault,
+    p95: nullableNumberWithDefault,
+    p99: nullableNumberWithDefault,
+    errors: nullableNumberWithDefault,
   }),
 });

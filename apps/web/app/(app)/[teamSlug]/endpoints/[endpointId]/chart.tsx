@@ -40,7 +40,7 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
           {regions.length > 10 ? (
             <Select onValueChange={(v) => setShowTopBottom(v === "true")}>
               <SelectTrigger>
-                <SelectValue defaultValue="true" placeholder="Show Best and Worst"/>
+                <SelectValue defaultValue="true" placeholder="Show Best and Worst" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="true">Show Best and Worst</SelectItem>

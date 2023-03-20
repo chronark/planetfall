@@ -26,6 +26,7 @@ import {
 } from "@/components/card";
 import { Divider } from "@/components/divider";
 import classNames from "classnames";
+import { Analytics } from "./analytics";
 
 export const revalidate = 10;
 
@@ -65,7 +66,7 @@ export default async function Page(props: {
 
   const [stats, checks, errors] = await Promise.all([
     getEndpointStats({ endpointId: endpoint.id }),
-    tb.getLatestChecksByEndpoint(endpoint.id, { limit: 10000 }),
+    tb.getLatestChecksByEndpoint(endpoint.id, { limit: 100000 }),
     (
       await getErrors({ endpointId: endpoint.id, since: Date.now() - 24 * 60 * 60 * 1000 })
     ).data.map((e) => ({
@@ -216,6 +217,16 @@ export default async function Page(props: {
             <Divider />
           </>
         ) : null}
+        <Analytics
+          endpoint={{
+            id: endpoint.id,
+            timeout: endpoint.timeout ?? undefined,
+            degradedAfter: endpoint.degradedAfter ?? undefined,
+            regions: endpoint.regions.map((r) => ({ id: r.id, name: r.name })),
+          }}
+        />
+        <Divider />
+
         {checks.length > 0 ? (
           <>
             <Chart
@@ -240,6 +251,9 @@ export default async function Page(props: {
                 timeout: endpoint.timeout,
                 degradedAfter: endpoint.degradedAfter,
                 regions: endpoint.regions,
+              }}
+              team={{
+                slug: props.params.teamSlug,
               }}
             />
             <Divider />

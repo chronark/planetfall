@@ -6,6 +6,7 @@ import { pageRouter } from "./page";
 import { teamRouter } from "./team";
 import { alertsRouter } from "./alerts";
 import { channelsRouter } from "./channels";
+import { tinybirdRouter } from "./tinybird";
 export const router = t.router({
   play: playRouter,
   endpoint: endpointRouter,
@@ -13,6 +14,7 @@ export const router = t.router({
   page: pageRouter,
   team: teamRouter,
   alerts: alertsRouter,
+  tinybird: tinybirdRouter,
   channels: channelsRouter,
 });
 

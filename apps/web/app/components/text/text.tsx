@@ -28,23 +28,25 @@ export interface TextProps
   extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof textVariants> {}
 
-const Text = React.forwardRef<HTMLElement, TextProps>(({ variant, children, ...props }, ref) => {
-  switch (variant) {
-    case "code":
-      return (
-        <code className={cn(textVariants({ variant }))} ref={ref} {...props}>
-          {children}
-        </code>
-      );
+const Text = React.forwardRef<HTMLElement, TextProps>(
+  ({ variant, size, children, ...props }, ref) => {
+    switch (variant) {
+      case "code":
+        return (
+          <code className={cn(textVariants({ variant, size }))} ref={ref} {...props}>
+            {children}
+          </code>
+        );
 
-    default:
-      return (
-        <p className={cn(textVariants({ variant }))} {...props}>
-          {children}
-        </p>
-      );
-  }
-});
+      default:
+        return (
+          <p className={cn(textVariants({ variant, size }))} {...props}>
+            {children}
+          </p>
+        );
+    }
+  },
+);
 Text.displayName = "Text";
 
 export { Text, textVariants };

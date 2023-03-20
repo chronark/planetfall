@@ -1,0 +1,33 @@
+VERSION 1
+TOKEN "live" READ
+
+NODE aggregate
+SQL >
+%
+SELECT
+    {% if defined(getErrors) %}
+        countMerge(errors) AS errors,
+    {% end %}
+    {% if defined(getCount) %}
+        countMerge(getCount) AS checks,
+    {% end %}
+    {% if defined(getP75)  %}
+        quantileTimingMerge(0.75)(p75) AS p75,
+    {% end %}
+    {% if defined(getP90)  %}
+        quantileTimingMerge(0.90)(p90) AS p90,
+    {% end %}
+    {% if defined(getP95) %}
+        quantileTimingMerge(0.95)(p95) AS p95 ,
+    {% end %}
+    {% if defined(getP99) %}
+        quantileTimingMerge(0.99)(p99) AS p99,
+    {% end %}
+    regionId,
+    time
+FROM endpoint_stats_per_hour__v2
+WHERE
+    endpointId = {{ String(endpointId, required=True) }}
+    AND time >= fromUnixTimestamp64Milli({{ Int64(since, required=True) }})
+    AND regionId IN {{ Array(regionIds, 'String', default='global') }}
+GROUP BY regionId, time

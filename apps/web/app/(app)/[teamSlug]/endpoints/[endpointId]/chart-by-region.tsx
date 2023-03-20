@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/button";
 import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
 import { Heading } from "@/components/heading";
 import { AwsLambda } from "@/components/icons/AwsLambda";
@@ -7,9 +8,11 @@ import { Fly } from "@/components/icons/Fly";
 import { VercelEdge } from "@/components/icons/VercelEdge";
 import { MultiSelect } from "@/components/multiselect";
 import { SelectItem, SelectTrigger, Select, SelectContent, SelectValue } from "@/components/select";
+import { Text } from "@/components/text";
 import { Area, Line } from "@ant-design/plots";
 import { Check } from "@planetfall/tinybird";
 import { Region } from "@prisma/client";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 type Props = {
@@ -19,13 +22,16 @@ type Props = {
     degradedAfter: number | null;
     regions: Region[];
   };
+  team: {
+    slug: string;
+  };
 };
 
 function regionIdToName(regions: Region[], regionId: string) {
   return regions.find((r) => r.id === regionId)?.name ?? regionId;
 }
 
-export const ChartsSection: React.FC<Props> = ({ endpoint, checks }) => {
+export const ChartsSection: React.FC<Props> = ({ endpoint, checks, team }) => {
   const [selectedRegion, setSelectedRegion] = useState(checks[0].regionId);
 
   const checksByRegion = useMemo(() => {
@@ -63,7 +69,7 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks }) => {
         </div>
       </CardHeader>
       <CardContent>
-        <Chart endpoint={endpoint} checks={checksByRegion} />
+        <Chart endpoint={endpoint} checks={checksByRegion} team={team} />
       </CardContent>
     </Card>
   );
@@ -81,7 +87,7 @@ type ChartProps = {
   checks: Check[];
 };
 
-const Chart: React.FC<Props> = ({ endpoint, checks }) => {
+const Chart: React.FC<Props> = ({ endpoint, checks, team }) => {
   const colors = {
     success: [59, 130, 246],
     degraded: [259, 115, 22],
@@ -146,6 +152,7 @@ const Chart: React.FC<Props> = ({ endpoint, checks }) => {
   return (
     <Line
       data={checks.map((c) => ({
+        id: c.id,
         latency: c.latency ?? 0,
         time: new Date(c.time).toUTCString(),
       }))}
@@ -167,11 +174,28 @@ const Chart: React.FC<Props> = ({ endpoint, checks }) => {
         title: { text: "Latency (ms)" },
       }}
       tooltip={{
-        formatter: (datum) => {
-          return {
-            name: "Latency",
-            value: `${Intl.NumberFormat(undefined).format(Math.round(datum.latency))} ms`,
-          };
+        enterable: true,
+        customContent: (time, data) => {
+          return (
+            <div className="p-2">
+              <div>{new Date(time).toUTCString()}</div>
+              <div className="flex items-center justify-between gap-1 mt-2">
+                <Text size="sm" variant="subtle">
+                  Latency:
+                </Text>
+                <Text size="lg" variant="lead">{`${Intl.NumberFormat(undefined).format(
+                  Math.round(data.at(0)?.data.latency),
+                )} ms`}</Text>
+              </div>
+              <div className="flex items-center justify-center w-full mt-2">
+                <Link href={`/${team.slug}/checks/${data.at(0)?.data.id}`}>
+                  <Button variant="ghost" size="sm">
+                    Go to check
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          );
         },
       }}
     />
