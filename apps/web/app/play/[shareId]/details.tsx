@@ -140,15 +140,15 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                                 </DialogDescription>
                               </DialogHeader>
                               <div className="flex flex-col gap-4">
-                                {networkHops.map((h) => (
-                                  <div
-                                    key={h.regionId}
-                                    className="flex w-2/3 mx-auto flex-col rounded items-center px-4 py-2 gap-1 border border-zinc-300 hover:bg-zinc-50 duration-150"
-                                  >
-                                    <Text variant="lead">{h.regionName}</Text>
-                                    <Text variant="subtle" size="xs">
-                                      {h.continent}
-                                    </Text>
+                                {networkHops.map((h, i) => (
+                                  <div key={h.regionId} className="flex space-x-3 py-">
+                                    <div className="text-sm font-medium">
+                                      {i + 1}.
+                                    </div>
+                                    <div className="flex-1 space-y-1">
+                                      <h3 className="text-sm font-medium">{h.regionName}</h3>
+                                      <p className="text-sm text-gray-500">{h.continent}</p>
+                                    </div>
                                   </div>
                                 ))}
                               </div>

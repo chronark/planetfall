@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { parseCacheControlHeaders } from "@planetfall/header-analysis";
+import { parseCacheControlHeaders, parseXVercelId } from "@planetfall/header-analysis";
 
 import {
   createColumnHelper,
@@ -19,6 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/dialog";
+import { Button } from "@/components/button";
 export type Props = {
   header: {
     key: string;
@@ -66,6 +67,49 @@ export const HeaderTable: React.FC<Props> = ({ header }): JSX.Element => {
                   </DialogContent>
                 </Dialog>
               </div>
+            );
+          }
+        } else if (key.toLowerCase() === "x-vercel-id") {
+          const networkHops = parseXVercelId(value);
+          const hopsAlarm =
+            networkHops.length > 1 && [...new Set(networkHops.map((h) => h.continent))].length > 1;
+
+          if (networkHops.length > 0) {
+            return (
+              <Dialog>
+                <DialogTrigger>
+                  <Button>Vercel Routing</Button>
+                </DialogTrigger>
+
+                <DialogContent className="flex flex-col gap-2">
+                  <DialogHeader>
+                    <DialogTitle>Vercel Network Hops</DialogTitle>
+                    <DialogDescription>
+                      {hopsAlarm ? (
+                        <p className="text-sm font-medium text-red-500">
+                          This request was routed through multiple continents. To ensure low
+                          latency, you should try to avoid this.
+                        </p>
+                      ) : (
+                        <p>This request was routed through the following Vercel regions:</p>
+                      )}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex flex-col gap-4">
+                    {networkHops.map((h, i) => (
+                      <div key={h.regionId} className="flex space-x-3 py-">
+                        <div className="text-sm font-medium">
+                          {i + 1}.
+                        </div>
+                        <div className="flex-1 space-y-1">
+                          <h3 className="text-sm font-medium">{h.regionName}</h3>
+                          <p className="text-sm text-gray-500">{h.continent}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
             );
           }
         }
