@@ -84,9 +84,8 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
               return (
                 <div
                   key={c.id}
-                  className={`${
-                    selectedRegion.checks.length > 1 ? "lg:w-1/2" : "w-full"
-                  } p-4 flex flex-col divide-y divide-zinc-200`}
+                  className={`${selectedRegion.checks.length > 1 ? "lg:w-1/2" : "w-full"
+                    } p-4 flex flex-col divide-y divide-zinc-200`}
                 >
                   <div className="flex flex-col items-center justify-between">
                     {selectedRegion.checks.length > 1 ? (
@@ -123,7 +122,7 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                               </Button>
                             </DialogTrigger>
 
-                            <DialogContent className="flex flex-col gap-2">
+                            <DialogContent className="flex flex-col gap-2 lg:max-w-2xl">
                               <DialogHeader>
                                 <DialogTitle>Vercel Network Hops</DialogTitle>
                                 <DialogDescription>
@@ -139,19 +138,27 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                                   )}
                                 </DialogDescription>
                               </DialogHeader>
-                              <div className="flex flex-col gap-4">
-                                {networkHops.map((h, i) => (
-                                  <div key={h.regionId} className="flex space-x-3 py-">
-                                    <div className="text-sm font-medium">
-                                      {i + 1}.
+
+                              <div className="mx-auto grid max-w-2xl grid-cols-1 gap-8 overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4">
+                                {networkHops.map((hop) => (
+                                  <div key={hop.regionId}>
+                                    <div
+                                      className="flex items-center text-xs font-semibold leading-6 text-zinc-400"
+                                    >
+                                      <svg viewBox="0 0 4 4" className="mr-4 h-1 w-1 flex-none" aria-hidden="true">
+                                        <circle cx={2} cy={2} r={2} fill="currentColor" />
+                                      </svg>
+                                      {hop.continent}
+                                      <div
+                                        className="absolute -ml-2 h-px w-screen -translate-x-full bg-zinc-900/10 sm:-ml-4 lg:static lg:ml-8 lg:-mr-6 lg:w-auto lg:flex-auto lg:translate-x-0"
+                                        aria-hidden="true"
+                                      />
                                     </div>
-                                    <div className="flex-1 space-y-1">
-                                      <h3 className="text-sm font-medium">{h.regionName}</h3>
-                                      <p className="text-sm text-gray-500">{h.continent}</p>
-                                    </div>
+                                    <p className="mt-6 text-sm font-semibold leading-8 tracking-tight text-zinc-900">{hop.regionName}</p>
                                   </div>
                                 ))}
                               </div>
+
                             </DialogContent>
                           </Dialog>
                         ) : null}
