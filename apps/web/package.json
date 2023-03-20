@@ -18,7 +18,7 @@
     "@next/font": "^13.2.4",
     "@planetfall/assertions": "workspace:*",
     "@planetfall/audit": "workspace:*",
-    "@planetfall/cache-headers": "workspace:^1.0.0",
+    "@planetfall/header-analysis": "workspace:^1.0.0",
     "@planetfall/db": "workspace:*",
     "@planetfall/emails": "workspace:*",
     "@planetfall/id": "workspace:*",

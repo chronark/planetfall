@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { parseCacheControlHeaders } from "@planetfall/cache-headers";
+import { parseCacheControlHeaders } from "@planetfall/header-analysis";
 
 import {
   createColumnHelper,

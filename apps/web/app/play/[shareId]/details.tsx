@@ -18,7 +18,7 @@ import {
   DialogTrigger,
 } from "@/components/dialog";
 import { Button } from "@/components/button";
-import { parseCacheControlHeaders } from "@planetfall/cache-headers";
+import { parseCacheControlHeaders, parseXVercelId } from "@planetfall/header-analysis";
 import { Text } from "@/components/text";
 
 type Props = {
@@ -30,6 +30,7 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
   const [selectedRegion, setSelectedRegion] = React.useState<PlayChecks["regions"][0] | undefined>(
     regions[0],
   );
+
   return (
     <Card>
       <CardHeader>
@@ -75,6 +76,10 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
               const cacheControlDirectives = parseCacheControlHeaders(
                 headers.get("cache-control") ?? "",
               );
+              const networkHops = parseXVercelId(headers.get("x-vercel-id") ?? "");
+              const hopsAlarm =
+                networkHops.length > 1 &&
+                [...new Set(networkHops.map((h) => h.continent))].length > 1;
 
               return (
                 <div
@@ -107,34 +112,79 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                     </div>
                   ) : null}
                   <div className="py-4 md:py-8">
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center gap-4">
                       <Heading h4={true}>Response Header</Heading>
-                      {cacheControlDirectives.length > 0 ? (
-                        <Dialog>
-                          <DialogTrigger>
-                            <Button>Cache-Control</Button>
-                          </DialogTrigger>
+                      <div className="flex justify-end items-center gap-4">
+                        {networkHops.length > 0 ? (
+                          <Dialog>
+                            <DialogTrigger>
+                              <Button variant={hopsAlarm ? "danger" : undefined}>
+                                Vercel Routing
+                              </Button>
+                            </DialogTrigger>
 
-                          <DialogContent className="flex flex-col gap-2">
-                            <DialogHeader>
-                              <DialogTitle>Cache-Control</DialogTitle>
-                              <DialogDescription>
-                                Here is a breakdown of the cache-control header:
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div className="flex flex-col gap-4">
-                              {cacheControlDirectives.map((d) => (
-                                <div key={d.directive} className="flex flex-col items-start gap-1">
-                                  <Text variant="code">{d.directive}</Text>
-                                  <Text variant="subtle" size="xs">
-                                    {d.explanation}
-                                  </Text>
-                                </div>
-                              ))}
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                      ) : null}
+                            <DialogContent className="flex flex-col gap-2">
+                              <DialogHeader>
+                                <DialogTitle>Vercel Network Hops</DialogTitle>
+                                <DialogDescription>
+                                  {hopsAlarm ? (
+                                    <p className="text-sm font-medium text-red-500">
+                                      This request was routed through multiple continents. To ensure
+                                      low latency, you should try to avoid this.
+                                    </p>
+                                  ) : (
+                                    <p>
+                                      This request was routed through the following Vercel regions:
+                                    </p>
+                                  )}
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="flex flex-col gap-4">
+                                {networkHops.map((h) => (
+                                  <div
+                                    key={h.regionId}
+                                    className="flex w-2/3 mx-auto flex-col rounded items-center px-4 py-2 gap-1 border border-zinc-300 hover:bg-zinc-50 duration-150"
+                                  >
+                                    <Text variant="lead">{h.regionName}</Text>
+                                    <Text variant="subtle" size="xs">
+                                      {h.continent}
+                                    </Text>
+                                  </div>
+                                ))}
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        ) : null}
+                        {cacheControlDirectives.length > 0 ? (
+                          <Dialog>
+                            <DialogTrigger>
+                              <Button>Cache-Control</Button>
+                            </DialogTrigger>
+
+                            <DialogContent className="flex flex-col gap-2">
+                              <DialogHeader>
+                                <DialogTitle>Cache-Control</DialogTitle>
+                                <DialogDescription>
+                                  Here is a breakdown of the cache-control header:
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="flex flex-col gap-4">
+                                {cacheControlDirectives.map((d) => (
+                                  <div
+                                    key={d.directive}
+                                    className="flex flex-col items-start gap-1"
+                                  >
+                                    <Text variant="code">{d.directive}</Text>
+                                    <Text variant="subtle" size="xs">
+                                      {d.explanation}
+                                    </Text>
+                                  </div>
+                                ))}
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        ) : null}
+                      </div>
                     </div>
                     <pre className="p-2 mt-4 overflow-x-auto rounded bg-zinc-50">
                       {JSON.stringify(c.headers, null, 2)}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Bar, Column } from "@ant-design/plots";
+import { Bar, Column, Line } from "@ant-design/plots";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
 import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
 import {
@@ -99,9 +99,13 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
     }
   }, [error]);
 
-  const series = (data?.data ?? []).sort(
-    (a, b) => a.time - b.time,
-  ).map((s) => ({ ...s, regionName: regionOptions[s.regionId] ?? s.regionId, time: new Date(s.time).toUTCString() }))
+  const series = (data?.data ?? [])
+    .sort((a, b) => a.time - b.time)
+    .map((s) => ({
+      ...s,
+      regionName: regionOptions[s.regionId] ?? s.regionId,
+      time: new Date(s.time).toUTCString(),
+    }));
 
   return (
     <Card>
@@ -203,11 +207,12 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
       </CardHeader>
       <CardContent>
         {isLoading ? <Loading /> : null}
-        <Column
+        <Line
           data={series}
           yField={metric}
           xField="time"
-          isGroup={selectedRegionIds.length >= 2}
+          smooth={true}
+          // isGroup={selectedRegionIds.length >= 2}
           seriesField="regionName"
           legend={{
             position: "top",
@@ -218,31 +223,33 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
           yAxis={{
             maxTickCount: 3,
 
-            title: { text: (["p75", "p90", "p95", "p99"].includes(metric)) ? "Latency (ms)" : "Count" },
+            title: {
+              text: ["p75", "p90", "p95", "p99"].includes(metric) ? "Latency (ms)" : "Count",
+            },
           }}
-        // yAxis={{
-        //   label: {
-        //     formatter: (regionId, _item, _index) => {
-        //       const name = regionMap[regionId] ?? regionId;
-        //       return `${regionId.startsWith("aws:")
-        //         ? "λ"
-        //         : regionId.startsWith("vercelEdge:")
-        //           ? "▲"
-        //           : regionId.startsWith("fly:")
-        //             ? "fly"
-        //             : ""
-        //         } ${name}`;
-        //     },
-        //   },
-        // }}
-        // tooltip={{
-        //   formatter: (datum) => {
-        //     return {
-        //       name: selected,
-        //       value: `${Intl.NumberFormat(undefined).format(Math.round(datum[selected]))} ms`,
-        //     };
-        //   },
-        // }}
+          // yAxis={{
+          //   label: {
+          //     formatter: (regionId, _item, _index) => {
+          //       const name = regionMap[regionId] ?? regionId;
+          //       return `${regionId.startsWith("aws:")
+          //         ? "λ"
+          //         : regionId.startsWith("vercelEdge:")
+          //           ? "▲"
+          //           : regionId.startsWith("fly:")
+          //             ? "fly"
+          //             : ""
+          //         } ${name}`;
+          //     },
+          //   },
+          // }}
+          // tooltip={{
+          //   formatter: (datum) => {
+          //     return {
+          //       name: selected,
+          //       value: `${Intl.NumberFormat(undefined).format(Math.round(datum[selected]))} ms`,
+          //     };
+          //   },
+          // }}
         />
       </CardContent>
     </Card>
