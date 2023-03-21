@@ -24,22 +24,7 @@ export const Stats = asyncComponent(async () => {
     },
     {
       label: "Ø Checks Per Day",
-      value: await fetch("https://api.tinybird.co/v0/pipes/average_usage__v1.json", {
-        headers: {
-          Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
-        },
-      })
-        .then(async (res) => (await res.json()) as { data: { average: number }[] })
-        .then((res) => {
-          if (!Array.isArray(res.data)) {
-            return -1;
-          }
-          if (res.data.length === 0) {
-            return -1;
-          }
-
-          return res.data[0].average;
-        }),
+      value: Math.round((await db.check.count()) / 7),
     },
   ]);
   return (
