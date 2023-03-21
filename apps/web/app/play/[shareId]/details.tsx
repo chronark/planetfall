@@ -128,8 +128,8 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                                 <DialogDescription>
                                   {hopsAlarm ? (
                                     <p className="text-sm font-medium text-red-500">
-                                      This request was routed through multiple continents. To ensure
-                                      low latency, you should try to avoid this.
+                                      This request was routed through multiple continents. This can drastically increase the latency.
+
                                     </p>
                                   ) : (
                                     <p>
@@ -142,10 +142,12 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                               <div className="mx-auto grid max-w-2xl grid-cols-1 gap-8 overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4">
                                 {networkHops.map((hop) => (
                                   <div key={hop.regionId}>
-                                    <div
-                                      className="flex items-center text-xs font-semibold leading-6 text-zinc-400"
-                                    >
-                                      <svg viewBox="0 0 4 4" className="mr-4 h-1 w-1 flex-none" aria-hidden="true">
+                                    <div className="flex items-center text-xs font-semibold leading-6 text-zinc-400">
+                                      <svg
+                                        viewBox="0 0 4 4"
+                                        className="mr-4 h-1 w-1 flex-none"
+                                        aria-hidden="true"
+                                      >
                                         <circle cx={2} cy={2} r={2} fill="currentColor" />
                                       </svg>
                                       {hop.continent}
@@ -154,11 +156,12 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                                         aria-hidden="true"
                                       />
                                     </div>
-                                    <p className="mt-6 text-sm font-semibold leading-8 tracking-tight text-zinc-900">{hop.regionName}</p>
+                                    <p className="mt-6 text-sm font-semibold leading-8 tracking-tight text-zinc-900">
+                                      {hop.regionName}
+                                    </p>
                                   </div>
                                 ))}
                               </div>
-
                             </DialogContent>
                           </Dialog>
                         ) : null}

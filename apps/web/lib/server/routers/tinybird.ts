@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { t } from "../trpc";
 import { db } from "@planetfall/db";
-import { getCustomAnalyticsPerDay, getCustomAnalyticsPerHour } from "@planetfall/tinybird";
+import { getCustomAnalytics } from "@planetfall/tinybird";
 
 export const tinybirdRouter = t.router({
   analytics: t.procedure
@@ -45,7 +45,8 @@ export const tinybirdRouter = t.router({
           code: "NOT_FOUND",
         });
       }
-      const opts = {
+
+      return await getCustomAnalytics({
         endpointId: input.endpointId,
         since: input.since,
         regionIds: input.regionIds.join(","),
@@ -55,13 +56,7 @@ export const tinybirdRouter = t.router({
         getP90: input.getP90 || undefined,
         getP95: input.getP95 || undefined,
         getP99: input.getP99 || undefined,
-      };
-
-      switch (input.granularity) {
-        case "1d":
-          return await getCustomAnalyticsPerDay(opts);
-        case "1h":
-          return await getCustomAnalyticsPerHour(opts);
-      }
+        granularity: input.granularity,
+      });
     }),
 });

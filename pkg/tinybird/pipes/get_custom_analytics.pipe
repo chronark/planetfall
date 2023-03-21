@@ -9,7 +9,7 @@ SELECT
         countMerge(errors) AS errors,
     {% end %}
     {% if defined(getCount) %}
-        countMerge(getCount) AS checks,
+        countMerge(count) AS checks,
     {% end %}
     {% if defined(getP75)  %}
         quantileTimingMerge(0.75)(p75) AS p75,
@@ -25,7 +25,13 @@ SELECT
     {% end %}
     regionId,
     time
-FROM endpoint_stats_per_hour__v2
+FROM 
+    {% if defined(granularity) and granularity == "1h" %}
+        endpoint_stats_per_hour__v2
+    {% else %}
+        endpoint_stats_per_day__v2
+    {% end %}
+
 WHERE
     endpointId = {{ String(endpointId, required=True) }}
     AND time >= fromUnixTimestamp64Milli({{ Int64(since, required=True) }})

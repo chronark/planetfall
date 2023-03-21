@@ -68,9 +68,9 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
     } as Record<string, string>,
   );
 
-  const [since, setSince] = useState<keyof typeof sinceOptions>("1d");
+  const [since, setSince] = useState<keyof typeof sinceOptions>("7d");
   const [granularity, setGranularity] = useState<keyof typeof granularityOptions>("1d");
-  const [metric, setMetric] = useState<keyof typeof metricOptions>("count");
+  const [metric, setMetric] = useState<keyof typeof metricOptions>("p75");
   const [selectedRegionIds, setSelectedRegionIds] = useState<string[]>([]);
   const { addToast } = useToast();
 
@@ -242,14 +242,14 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
           //     },
           //   },
           // }}
-          // tooltip={{
-          //   formatter: (datum) => {
-          //     return {
-          //       name: selected,
-          //       value: `${Intl.NumberFormat(undefined).format(Math.round(datum[selected]))} ms`,
-          //     };
-          //   },
-          // }}
+          tooltip={{
+            formatter: (datum) => {
+              return {
+                name: selected,
+                value: `${Intl.NumberFormat(undefined).format(Math.round(datum[selected]))} ${["p75", "p90", "p95", "p99"].includes(metric) ? "ms" : ""}`,
+              };
+            },
+          }}
         />
       </CardContent>
     </Card>

@@ -90,8 +90,8 @@ export const getErrors = tb.buildPipe({
   }),
 });
 
-export const getCustomAnalyticsPerDay = tb.buildPipe({
-  pipe: "get_custom_analytics_per_day__v1",
+export const getCustomAnalytics = tb.buildPipe({
+  pipe: "get_custom_analytics__v1",
   parameters: z.object({
     endpointId: z.string(),
     since: z.number(),
@@ -103,41 +103,16 @@ export const getCustomAnalyticsPerDay = tb.buildPipe({
     getP90: z.boolean().optional(),
     getP95: z.boolean().optional(),
     getP99: z.boolean().optional(),
+    granularity: z.enum(["1d", "1h"]),
   }),
   data: z.object({
     time: z.string().transform((s) => new Date(s).getTime()),
     regionId: z.string(),
-    count: nullableNumberWithDefault,
-    p75: nullableNumberWithDefault,
-    p90: nullableNumberWithDefault,
-    p95: nullableNumberWithDefault,
-    p99: nullableNumberWithDefault,
-    errors: nullableNumberWithDefault,
-  }),
-});
-
-export const getCustomAnalyticsPerHour = tb.buildPipe({
-  pipe: "get_custom_analytics_per_hour__v1",
-  parameters: z.object({
-    endpointId: z.string(),
-    since: z.number(),
-    // comma separated regionIds
-    regionIds: z.string(),
-    getErrors: z.boolean().optional(),
-    getCount: z.boolean().optional(),
-    getP75: z.boolean().optional(),
-    getP90: z.boolean().optional(),
-    getP95: z.boolean().optional(),
-    getP99: z.boolean().optional(),
-  }),
-  data: z.object({
-    time: z.string().transform((s) => new Date(s).getTime()),
-    regionId: z.string(),
-    count: nullableNumberWithDefault,
-    p75: nullableNumberWithDefault,
-    p90: nullableNumberWithDefault,
-    p95: nullableNumberWithDefault,
-    p99: nullableNumberWithDefault,
-    errors: nullableNumberWithDefault,
+    count: z.number().optional(),
+    p75: z.number().optional(),
+    p90: z.number().optional(),
+    p95: z.number().optional(),
+    p99: z.number().optional(),
+    errors: z.number().optional(),
   }),
 });
