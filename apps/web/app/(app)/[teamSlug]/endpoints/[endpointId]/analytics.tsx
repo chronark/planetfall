@@ -222,8 +222,14 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
           // }}
           yAxis={{
             maxTickCount: 3,
+            label: {
+              formatter: (value, _item, _index) => {
+                return Intl.NumberFormat(undefined, { notation: "compact" }).format(Number(value))
 
+              },
+            },
             title: {
+
               text: ["p75", "p90", "p95", "p99"].includes(metric) ? "Latency (ms)" : "Count",
             },
           }}
