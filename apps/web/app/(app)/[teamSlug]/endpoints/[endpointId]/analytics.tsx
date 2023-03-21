@@ -54,7 +54,7 @@ const metricOptions = {
   p95: "P95",
   p99: "P99",
   errors: "Errors",
-  count: "Checks",
+  count: "Count",
 };
 
 export const Analytics: React.FC<Props> = ({ endpoint }) => {
@@ -246,7 +246,7 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
             formatter: (datum) => {
               return {
                 name: metricOptions[metric],
-                value: `${Intl.NumberFormat(undefined).format(Math.round(datum[metric]))} ${["p75", "p90", "p95", "p99"].includes(metric) ? "ms" : ""}`,
+                value: `${Intl.NumberFormat(undefined).format(Math.round(datum[metric]))}${["p75", "p90", "p95", "p99"].includes(metric) ? " ms" : ""}`,
               };
             },
           }}

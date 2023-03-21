@@ -9,7 +9,7 @@ SELECT
         countMerge(errors) AS errors,
     {% end %}
     {% if defined(getCount) %}
-        countMerge(count) AS checks,
+        countMerge(count) AS count,
     {% end %}
     {% if defined(getP75)  %}
         quantileTimingMerge(0.75)(p75) AS p75,
