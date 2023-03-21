@@ -1,0 +1,26 @@
+VERSION 1
+TOKEN "live" READ
+
+
+DESCRIPTION >
+    Collect usage data across all teams, day by day and store it in a materialized view.
+    
+NODE aggreagate_global_usage
+SQL >
+
+    SELECT
+        COUNTState() AS usage,
+        toYear(time) AS year,
+        toMonth(time) AS month,
+        toDayOfMonth(time) AS day
+    FROM checks__v1
+    GROUP BY
+        year,
+        month,
+        day
+
+TYPE materialized
+DATASOURCE global_usage
+ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "year, month, day"
+

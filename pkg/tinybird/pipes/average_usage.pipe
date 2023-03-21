@@ -3,11 +3,14 @@ TOKEN "live" READ
 
 
 
-NODE average_usage
+NODE usage
 
 SQL >
 
     %
-    SELECT COUNT() / {{Int32(days, 7, description="Average over this many days", required=False)}}  as average
-    FROM checks__v1
-    WHERE time > now() - INTERVAL {{Int32(days, 7, description="Average over this many days", required=False)}} DAY
+    SELECT countMerge(usage) as usage, year, month, day
+    FROM global_usage__v1
+    WHERE year >= 2023
+    GROUP BY year, month, day
+
+

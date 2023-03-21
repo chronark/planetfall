@@ -23,24 +23,38 @@ export const Stats = asyncComponent(async () => {
       value: await db.statusPage.count(),
     },
     {
-      label: "Ø Checks Per Day",
-      value: Math.round((await db.check.count()) / 7),
+      label: "Checks",
+      value: await fetch("https://api.tinybird.co/v0/pipes/average_usage__v1.json", {
+        headers: {
+          Authorization: `Bearer ${process.env.TINYBIRD_TOKEN}`,
+        },
+      })
+        .then(async (res) => (await res.json()) as { data: { usage: number }[] })
+        .then((res) => {
+          if (!Array.isArray(res.data)) {
+            return -1;
+          }
+          if (res.data.length === 0) {
+            return -1;
+          }
+
+          return res.data.reduce((acc, { usage }) => acc + usage, 0);
+        }),
     },
   ]);
   return (
-    <Section id="stats">
-      <div className="container mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-        {stats.map(({ label, value }) => (
-          <div
-            key={label}
-            className="flex items-center justify-between px-4 py-3 overflow-hidden rounded gap-2 m sm:flex-col"
-          >
-            <dt className="text-lg text-center leading-6 text-zinc-500">{label}</dt>
-            <dd className="text-2xl font-bold tracking-tight text-center text-zinc-900 sm:text-5xl ">
-              <CountingNumbers value={value} />
-            </dd>
-          </div>
-        ))}
+    <Section id="stats" title="Trusted by">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <dl className="grid grid-cols-1 gap-y-16 gap-x-8 text-center lg:grid-cols-4">
+          {stats.map(({ label, value }) => (
+            <div key={label} className="mx-auto flex max-w-xs flex-col gap-y-4">
+              <dt className="text-base leading-7 text-gray-600">{label}</dt>
+              <dd className="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
+                <CountingNumbers value={value} />
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </Section>
   );

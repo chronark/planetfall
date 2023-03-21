@@ -1,0 +1,11 @@
+VERSION 1
+# TOKEN "live" READWRITE
+
+SCHEMA >
+    `usage` AggregateFunction(count),
+    `year` UInt16,
+    `month` UInt8,
+    `day` UInt8
+
+ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "year, month, day"
