@@ -307,6 +307,13 @@ export const endpointRouter = t.router({
         where: { id: input.endpointId },
         data: {
           deletedAt: new Date(),
+          auditLog: {
+            create: {
+              id: newId("audit"),
+              userId: ctx.user.id,
+              message: "Endpoint deleted",
+            },
+          },
         },
       });
       audit.log({

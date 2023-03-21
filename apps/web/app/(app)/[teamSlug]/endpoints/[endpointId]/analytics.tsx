@@ -71,7 +71,9 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
   const [since, setSince] = useState<keyof typeof sinceOptions>("7d");
   const [granularity, setGranularity] = useState<keyof typeof granularityOptions>("1d");
   const [metric, setMetric] = useState<keyof typeof metricOptions>("p75");
-  const [selectedRegionIds, setSelectedRegionIds] = useState<string[]>([]);
+  const [selectedRegionIds, setSelectedRegionIds] = useState<string[]>(
+    endpoint.regions.map((r) => r.id),
+  );
   const { addToast } = useToast();
 
   const now = new Date().setMinutes(0, 0, 0);
@@ -247,6 +249,9 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
           //   },
           // }}
           tooltip={{
+            customItems: (items) => {
+              return items.sort((a, b) => b.data[metric]-a.data[metric]);
+            },
             formatter: (datum) => {
               return {
                 name: datum.regionName,

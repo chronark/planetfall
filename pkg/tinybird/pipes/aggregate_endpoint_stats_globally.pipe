@@ -24,3 +24,96 @@ TYPE MATERIALIZED
 DATASOURCE endpoint_stats__v2
 ENGINE "AggregatingMergeTree"
 ENGINE_SORTING_KEY "endpointId,regionId"
+
+
+time
+DateTime
+regionId
+String
+p75
+Nullable(Float32)
+2023-03-21 07:00:00
+fly:sin
+320
+2023-03-20 09:00:00
+fly:lhr
+321
+2023-03-19 04:00:00
+aws:ap-south-1
+324
+2023-03-19 13:00:00
+fly:jnb
+336
+2023-03-19 22:00:00
+fly:jnb
+337
+2023-03-20 19:00:00
+fly:syd
+343
+2023-03-18 22:00:00
+fly:jnb
+350
+2023-03-19 13:00:00
+aws:af-south-1
+375
+2023-03-19 14:00:00
+aws:eu-west-2
+396
+2023-03-19 01:00:00
+fly:jnb
+401
+2023-03-18 21:00:00
+aws:ap-southeast-3
+405
+2023-03-21 13:00:00
+fly:jnb
+404
+2023-03-21 19:00:00
+fly:sin
+418
+2023-03-19 09:00:00
+fly:jnb
+424
+2023-03-21 18:00:00
+fly:nrt
+419
+2023-03-19 06:00:00
+fly:jnb
+426
+2023-03-21 04:00:00
+fly:jnb
+447
+2023-03-19 19:00:00
+fly:jnb
+455
+2023-03-21 01:00:00
+fly:jnb
+463
+2023-03-21 13:00:00
+fly:nrt
+469
+2023-03-19 16:00:00
+fly:jnb
+489
+2023-03-19 13:00:00
+aws:ap-southeast-1
+770
+2023-03-18 21:00:00
+aws:ap-south-1
+628
+2023-03-20 06:00:00
+fly:jnb
+588
+2023-03-20 12:00:00
+fly:jnb
+523
+2023-03-21 13:00:00
+aws:ap-southeast-3
+497
+2023-03-20 01:00:00
+fly:jnb
+495
+
+Loaded 100 rows · Load more
+
+New transformation node
