@@ -89,7 +89,8 @@ export const HeaderTable: React.FC<Props> = ({ header }): JSX.Element => {
                       <DialogDescription>
                         {hopsAlarm ? (
                           <p className="text-sm font-medium text-red-500">
-                            This request was routed through multiple continents. This can drastically increase the latency.
+                            This request was routed through multiple continents. This can
+                            drastically increase the latency.
                           </p>
                         ) : (
                           <p>This request was routed through the following Vercel regions:</p>

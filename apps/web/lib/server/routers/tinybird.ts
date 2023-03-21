@@ -29,6 +29,7 @@ export const tinybirdRouter = t.router({
         where: {
           AND: {
             id: input.endpointId,
+            deletedAt: null,
             team: {
               members: {
                 some: {

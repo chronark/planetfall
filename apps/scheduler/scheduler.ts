@@ -57,7 +57,14 @@ export class Scheduler {
         },
       },
       include: {
-        endpoints: true,
+        endpoints: {
+          where: {
+            AND: {
+              active: true,
+              deletedAt: null,
+            },
+          },
+        },
       },
     });
 
@@ -112,7 +119,7 @@ export class Scheduler {
         }
       } else {
         for (const e of t.endpoints) {
-          if (e.active) {
+          if (e.active && !e.deletedAt) {
             want.set(e.id, e);
           }
         }

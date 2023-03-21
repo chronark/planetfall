@@ -51,7 +51,7 @@ export default async function Page(props: {
       },
     },
   });
-  if (!endpoint) {
+  if (!endpoint || endpoint.deletedAt) {
     redirect(`/${props.params.teamSlug}/endpoints`);
   }
 

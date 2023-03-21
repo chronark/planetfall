@@ -156,7 +156,7 @@ export const endpointRouter = t.router({
         where: { id: input.endpointId },
         include: { team: { include: { members: true } } },
       });
-      if (!endpoint) {
+      if (!endpoint || endpoint.deletedAt) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "endpoint not found",
@@ -241,7 +241,7 @@ export const endpointRouter = t.router({
         where: { id: input.endpointId },
         include: { team: { include: { members: true } } },
       });
-      if (!endpoint) {
+      if (!endpoint || endpoint.deletedAt) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "endpoint not found",
@@ -290,7 +290,7 @@ export const endpointRouter = t.router({
         where: { id: input.endpointId },
         include: { team: { include: { members: true } } },
       });
-      if (!endpoint) {
+      if (!endpoint || endpoint.deletedAt) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "endpoint not found",
@@ -303,8 +303,11 @@ export const endpointRouter = t.router({
         });
       }
 
-      const deleted = await db.endpoint.delete({
+      const deleted = await db.endpoint.update({
         where: { id: input.endpointId },
+        data: {
+          deletedAt: new Date(),
+        },
       });
       audit.log({
         actorId: ctx.user.id,

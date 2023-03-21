@@ -84,8 +84,9 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
               return (
                 <div
                   key={c.id}
-                  className={`${selectedRegion.checks.length > 1 ? "lg:w-1/2" : "w-full"
-                    } p-4 flex flex-col divide-y divide-zinc-200`}
+                  className={`${
+                    selectedRegion.checks.length > 1 ? "lg:w-1/2" : "w-full"
+                  } p-4 flex flex-col divide-y divide-zinc-200`}
                 >
                   <div className="flex flex-col items-center justify-between">
                     {selectedRegion.checks.length > 1 ? (
@@ -128,8 +129,8 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                                 <DialogDescription>
                                   {hopsAlarm ? (
                                     <p className="text-sm font-medium text-red-500">
-                                      This request was routed through multiple continents. This can drastically increase the latency.
-
+                                      This request was routed through multiple continents. This can
+                                      drastically increase the latency.
                                     </p>
                                   ) : (
                                     <p>

@@ -9,7 +9,7 @@ export default async function Page(props: {
     where: { id: props.params.endpointId },
     include: { regions: true },
   });
-  if (!endpoint) {
+  if (!endpoint || endpoint.deletedAt) {
     return notFound();
   }
 
