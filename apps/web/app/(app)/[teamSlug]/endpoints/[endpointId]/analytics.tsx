@@ -251,7 +251,7 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
           tooltip={{
             formatter: (datum) => {
               return {
-                name: metricOptions[metric],
+                name: datum.regionName,
                 value: `${Intl.NumberFormat(undefined).format(Math.round(datum[metric]))}${["p75", "p90", "p95", "p99"].includes(metric) ? " ms" : ""}`,
               };
             },

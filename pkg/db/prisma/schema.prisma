@@ -219,6 +219,8 @@ model Endpoint {
   url       String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  // When the user deletes an endpoint it is marked as deleted by setting this field
+  deletedAt DateTime?
 
   followRedirects Boolean
 
