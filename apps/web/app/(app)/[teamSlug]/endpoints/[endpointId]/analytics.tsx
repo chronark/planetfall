@@ -250,7 +250,7 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
           // }}
           tooltip={{
             customItems: (items) => {
-              return items.sort((a, b) => b.data[metric]-a.data[metric]);
+              return items.sort((a, b) => b.data[metric] - a.data[metric]);
             },
             formatter: (datum) => {
               return {

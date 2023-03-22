@@ -390,6 +390,9 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                           {requestForm.formState.errors.headers.message || "Invalid headers"}
                         </p>
                       ) : null}
+                      <p className="mt-2 text-sm text-zinc-500">
+                        Headers can be configured using JSON notation
+                      </p>
                     </div>
 
                     <div className="">

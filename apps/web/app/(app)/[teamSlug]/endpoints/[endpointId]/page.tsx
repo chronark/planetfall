@@ -16,6 +16,8 @@ import { ChartsSection } from "./chart-by-region";
 import Link from "next/link";
 import { Switch } from "@/components/switch";
 import { Chart } from "./chart";
+import type { Metadata } from "next";
+
 import {
   Card,
   CardContent,
@@ -27,6 +29,41 @@ import {
 import { Divider } from "@/components/divider";
 import classNames from "classnames";
 import { Analytics } from "./analytics";
+
+export async function generateMetadata({
+  params,
+}: { params: { teamSlug: string; endpointId: string } }): Promise<Metadata> {
+  const endpoint = await db.endpoint.findUnique({
+    where: {
+      id: params.endpointId,
+    },
+  });
+  if (!endpoint) {
+    return {};
+  }
+  const title = `${endpoint.name} on Planetfall`;
+  const description = "Global Latency Monitoring";
+
+  const imageUrl = new URL(
+    `https://planetfall.io/${params.teamSlug}/endpoints/${params.endpointId}/og`,
+  );
+  imageUrl.searchParams.set("name", endpoint.name);
+  imageUrl.searchParams.set("id", endpoint.id);
+  return {
+    title,
+    openGraph: {
+      title,
+      type: "website",
+      images: [{ url: imageUrl.toString() }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+  };
+}
 
 export const revalidate = 10;
 
