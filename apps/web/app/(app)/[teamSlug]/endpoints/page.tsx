@@ -19,7 +19,13 @@ export default async function Page(props: { params: { teamSlug: string } }) {
 
   const team = await db.team.findUnique({
     where: { slug: props.params.teamSlug },
-    include: { endpoints: true },
+    include: {
+      endpoints: {
+        where: {
+          deletedAt: null,
+        },
+      },
+    },
   });
   if (!team) {
     console.warn(__filename, "Team not found");

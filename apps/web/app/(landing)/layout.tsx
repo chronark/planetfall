@@ -2,7 +2,6 @@ import { Header } from "./header";
 import { Footer } from "./footer";
 import Script from "next/script";
 
-export const dynamic = "force-static";
 export const revalidate = 3600;
 
 const plainScript = `

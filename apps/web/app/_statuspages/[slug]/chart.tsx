@@ -11,6 +11,7 @@ import { Text } from "@/components/text";
 import { Platform } from "@planetfall/db";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { VercelEdge } from "@/components/icons/VercelEdge";
+import { AreaChart } from "./line-chart";
 function format(n: number): string {
   return Intl.NumberFormat(undefined).format(Math.round(n));
 }
@@ -42,6 +43,7 @@ function resizeSeries(
   regionId: string,
 ) {
   let time = new Date();
+  time.setHours(0, 0, 0, 0);
 
   const days: {
     time: number;
@@ -57,13 +59,13 @@ function resizeSeries(
     days.unshift(
       series.find((s) => new Date(s.time).toDateString() === time.toDateString()) ?? {
         regionId,
-        time: -1,
-        count: 0,
-        p75: 0,
-        p90: 0,
-        p95: 0,
-        p99: 0,
-        errors: 0,
+        time: time.getTime(),
+        count: -1,
+        p75: -1,
+        p90: -1,
+        p95: -1,
+        p99: -1,
+        errors: -1,
       },
     );
 
@@ -220,58 +222,42 @@ export const Row: React.FC<{
           <ul className="flex flex-col gap-4 py-8 divide-y divide-zinc-200">
             {endpoint.stats
               .filter(({ region }) => region.id !== "global")
-              .map((r) => (
-                <li
-                  key={r.region.id}
-                  className="flex flex-col items-center justify-between w-full gap-4 p-2 md:flex-row "
-                >
-                  <div className="flex flex-col items-center justify-between space-y-2 md:items-start md:w-2/5">
-                    <h4 className="flex items-center gap-2 text-lg text-bold text-zinc-600 whitespace-nowrap">
-                      {r.region.platform === "aws" ? (
-                        <AwsLambda className="w-4 h-4" />
-                      ) : r.region.platform === "vercelEdge" ? (
-                        <VercelEdge className="w-4 h-4" />
-                      ) : null}
-                      {r.region.name}
-                    </h4>
-                    <div className="flex items-center justify-center w-full gap-2 md:justify-start sm:gap-4 ">
-                      <Stat label="p75" value={r.metrics.p75} />
-                      <Stat label="p90" value={r.metrics.p90} />
-                      <Stat label="p95" value={r.metrics.p95} />
-                      <Stat label="p99" value={r.metrics.p99} />
+              .map((r) => {
+                return (
+                  <li
+                    key={r.region.id}
+                    className="flex flex-col items-center justify-between w-full gap-4 p-2 md:flex-row "
+                  >
+                    <div className="flex flex-col items-center justify-between space-y-2 md:items-start md:w-2/5">
+                      <h4 className="flex items-center gap-2 text-lg text-bold text-zinc-600 whitespace-nowrap">
+                        {r.region.platform === "aws" ? (
+                          <AwsLambda className="w-4 h-4" />
+                        ) : r.region.platform === "vercelEdge" ? (
+                          <VercelEdge className="w-4 h-4" />
+                        ) : null}
+                        {r.region.name}
+                      </h4>
+                      <div className="flex items-center justify-center w-full gap-2 md:justify-start sm:gap-4 ">
+                        <Stat label="p75" value={r.metrics.p75} />
+                        <Stat label="p90" value={r.metrics.p90} />
+                        <Stat label="p95" value={r.metrics.p95} />
+                        <Stat label="p99" value={r.metrics.p99} />
+                      </div>
                     </div>
-                  </div>
-                  <div className="w-full md:w-3/5">
-                    <div className="sm:hidden">
-                      <Chart
-                        max={max}
-                        height="h-12"
-                        series={r.series.slice(-30)}
-                        degradedAfter={endpoint.degradedAfter}
-                        timeout={endpoint.timeout}
-                      />
+                    <div className="w-full md:w-3/5">
+                      <div className="sm:hidden">
+                        <AreaChart series={r.series.slice(-30)} />
+                      </div>
+                      <div className="hidden sm:block md:hidden">
+                        <AreaChart series={r.series.slice(-60)} />
+                      </div>
+                      <div className="hidden md:block">
+                        <AreaChart series={r.series.slice(-90)} />
+                      </div>
                     </div>
-                    <div className="hidden sm:block md:hidden">
-                      <Chart
-                        max={max}
-                        height="h-12"
-                        series={r.series.slice(-60)}
-                        degradedAfter={endpoint.degradedAfter}
-                        timeout={endpoint.timeout}
-                      />
-                    </div>
-                    <div className="hidden md:block">
-                      <Chart
-                        max={max}
-                        height="h-12"
-                        series={r.series.slice(-90)}
-                        degradedAfter={endpoint.degradedAfter}
-                        timeout={endpoint.timeout}
-                      />
-                    </div>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
           </ul>
         ) : null}
       </CardContent>
@@ -309,7 +295,7 @@ const Chart: React.FC<{
         .map((bucket) => {
           const start = new Date(bucket.time);
 
-          const percentageHeight = bucket.time >= 0 ? Math.max(5, (bucket.p75 / max) * 100) : 100;
+          const percentageHeight = bucket.p75 >= 0 ? Math.max(5, (bucket.p75 / max) * 100) : 100;
           const bucketError = bucket.errors > 0;
           const bucketDegraded = degradedAfter && bucket.p75 > degradedAfter;
 
@@ -317,7 +303,7 @@ const Chart: React.FC<{
             "flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
           ];
 
-          if (bucket.time < 0) {
+          if (bucket.p75 < 0) {
             cn.push("  bg-zinc-400/20 hover:bg-zinc-400/50 ");
           } else if (bucketError) {
             cn.push(" bg-red-500  ");
@@ -338,7 +324,7 @@ const Chart: React.FC<{
               <HoverCard.Portal>
                 <HoverCard.Content>
                   <>
-                    {bucket.time >= 0 ? (
+                    {bucket.p75 >= 0 ? (
                       <>
                         <div className="px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
                           <time

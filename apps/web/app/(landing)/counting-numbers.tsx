@@ -36,5 +36,5 @@ export default function CountingNumbers({
     }
   }, [isInView, increment, interval, n, value]);
 
-  return <span ref={ref}>{Intl.NumberFormat(undefined, { notation: "compact" }).format(n)}</span>;
+  return <span ref={ref}>{Intl.NumberFormat("en-US", { notation: "compact" }).format(n)}</span>;
 }

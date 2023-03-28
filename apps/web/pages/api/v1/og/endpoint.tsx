@@ -10,14 +10,14 @@ export const config = {
   runtime: "edge",
 };
 
-export async function GET(req: NextRequest) {
+export default async function endpointOg(req: NextRequest) {
   try {
     const satoshiBlack = await fetch(
-      new URL("../../../../../../public/fonts/Satoshi-Black.ttf", import.meta.url),
+      new URL("../../../../public/fonts/Satoshi-Black.ttf", import.meta.url),
     ).then((res) => res.arrayBuffer());
 
     const satoshiBold = await fetch(
-      new URL("../../../../../../public/fonts/Satoshi-Bold.ttf", import.meta.url),
+      new URL("../../../../public/fonts/Satoshi-Bold.ttf", import.meta.url),
     ).then((res) => res.arrayBuffer());
 
     const { searchParams } = new URL(req.url);
@@ -128,7 +128,7 @@ export async function GET(req: NextRequest) {
             marginTop: "60px",
           }}
         >
-          {series.data.map(({ time, p75, errors }) => (
+          {series.data.slice(-40).map(({ time, p75, errors }) => (
             <div
               key={time}
               style={{
@@ -136,10 +136,12 @@ export async function GET(req: NextRequest) {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                width: "25px",
-                height: `${(p75 / max) * 360}px`, // normalize clicks count to scale of 360px
-                marginRight: "12px",
-                backgroundColor: errors > 0 ? "#ef4444" : "#f4f4f5",
+                width: "24px",
+                height: `${(p75 / max) * 200}px`, // normalize clicks count to scale of 360px
+                marginLeft: "8px",
+                marginRight: "8px",
+                background:
+                  errors > 0 ? "#dc2626" : "linear-gradient(0deg, #d1d5db 50%, #fafafa 100%)",
               }}
             />
           ))}
@@ -162,8 +164,8 @@ export async function GET(req: NextRequest) {
     );
   } catch (e: any) {
     console.log(`${e.message}`);
-    return new Response("Failed to generate the image", {
-      status: 500,
+    return new Response(`Failed to generate the image: ${e.message}`, {
+      status: 200,
     });
   }
 }

@@ -44,9 +44,7 @@ export async function generateMetadata({
   const title = `${endpoint.name} on Planetfall`;
   const description = "Global Latency Monitoring";
 
-  const imageUrl = new URL(
-    `https://planetfall.io/${params.teamSlug}/endpoints/${params.endpointId}/og`,
-  );
+  const imageUrl = new URL("https://planetfall.io/api/v1/og/endpoint");
   imageUrl.searchParams.set("name", endpoint.name);
   imageUrl.searchParams.set("id", endpoint.id);
   return {
@@ -60,7 +58,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [imageUrl],
+      images: [imageUrl.toString()],
     },
   };
 }
