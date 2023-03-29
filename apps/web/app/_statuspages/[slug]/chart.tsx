@@ -42,8 +42,8 @@ function resizeSeries(
   nBuckets: number,
   regionId: string,
 ) {
-  let time = new Date();
-  time.setHours(0, 0, 0, 0);
+  const time = new Date();
+  time.setUTCHours(0, 0, 0, 0);
 
   const days: {
     time: number;
@@ -147,7 +147,7 @@ export const Row: React.FC<{
         <div className="flex items-center justify-between w-full gap-4 md:gap-8">
           <div className="flex flex-col items-start justify-between w-full gap-2 md:items-center md:flex-row">
             <Heading h3>{endpoint.name}</Heading>
-            <div className="flex items-center justify-start gap-2 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-4">
               <Stat label="p75" value={globalStats?.metrics.p75 ?? 0} />
               <Stat label="p90" value={globalStats?.metrics.p90 ?? 0} />
               <Stat label="p95" value={globalStats?.metrics.p95 ?? 0} />
@@ -283,10 +283,7 @@ const Chart: React.FC<{
   withXAxis?: boolean;
 }> = ({ series, height, degradedAfter, withXAxis, max }): JSX.Element => {
   let t = new Date();
-  t.setMinutes(0);
-  t.setSeconds(0);
-  t.setMilliseconds(0);
-
+  t.setUTCHours(0, 0, 0, 0);
   return (
     <div className="w-full">
       <div className={`flex w-full bg-white ${height ?? "h-12"} items-end`}>
