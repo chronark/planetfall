@@ -4,9 +4,7 @@ import { newId } from "@planetfall/id";
 import { Logger } from "./logger";
 import * as assertions from "@planetfall/assertions";
 import { Notifications } from "./notifications";
-import { Stripe } from "stripe";
 import { getUsage } from "@planetfall/tinybird";
-import { Email } from "@planetfall/emails";
 
 export class Scheduler {
   // key: endpointId
@@ -16,29 +14,18 @@ export class Scheduler {
   private tinybird: tb.Client;
   private notifications: Notifications;
   regions: Record<string, Region>;
-  private readonly stripe: Stripe;
-  private readonly email: Email;
 
   constructor({
     logger,
     notifications,
-    email,
-  }: { logger: Logger; notifications: Notifications; email: Email }) {
+  }: { logger: Logger; notifications: Notifications }) {
     this.db = new PrismaClient();
     this.tinybird = new tb.Client();
     this.endpoints = new Map();
     this.logger = logger;
     this.regions = {};
     this.notifications = notifications;
-    this.email = email;
-    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-    if (!stripeSecretKey) {
-      throw new Error("STRIPE_SECRET_KEY was not found");
-    }
-    this.stripe = new Stripe(stripeSecretKey, {
-      apiVersion: "2022-11-15",
-      typescript: true,
-    });
+  
   }
 
   public async run() {
@@ -217,201 +204,188 @@ export class Scheduler {
         endpointId: endpoint.id,
       });
 
-      await Promise.all(
-        regions.map(async ({ id: regionId }) => {
-          let region = this.regions[regionId];
-          if (!region) {
-            const res = await this.db.region.findUnique({
-              where: { id: regionId },
-            });
-            if (!res) {
-              throw new Error(`region not found: ${regionId}`);
-            }
-            region = res;
-            this.regions[regionId] = res;
-          }
-          this.logger.debug("testing endpoint", {
+      for await (const region of regions) {
+        this.logger.debug("testing endpoint", {
+          endpointId: endpoint.id,
+          regionId: region.id,
+        });
+
+        const headers = new Headers({
+          "Content-Type": "application/json",
+        });
+        if (region.platform === "fly") {
+          headers.set("Fly-Prefer-Region", region.region);
+        }
+
+        const res = await fetch(region.url, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            urls: [endpoint.url],
+            method: endpoint.method,
+            headers: endpoint.headers,
+            body: endpoint.body ?? undefined,
+            timeout: endpoint.timeout ?? undefined,
+            followRedirects: endpoint.followRedirects ?? false,
+          }),
+        });
+        if (res.status !== 200) {
+          this.logger.error("endpoint test failed", {
+            status: res.status,
             endpointId: endpoint.id,
             regionId: region.id,
+            error: await res.text(),
           });
+          return;
+        }
 
-          const headers = new Headers({
-            "Content-Type": "application/json",
-          });
-          if (region.platform === "fly") {
-            headers.set("Fly-Prefer-Region", region.region);
-          }
+        const parsed = (await res.json()) as {
+          error?: string;
+          time: number;
+          status: number;
+          latency?: number;
+          body?: string;
+          headers?: Record<string, string>;
+          tags?: string[];
+          timing: {
+            dnsStart: number;
+            dnsDone: number;
+            connectStart: number;
+            connectDone: number;
+            firstByteStart: number;
+            firstByteDone: number;
+            tlsHandshakeStart: number;
+            tlsHandshakeDone: number;
+          };
+        }[];
 
-          const res = await fetch(region.url, {
-            method: "POST",
-            headers,
-            body: JSON.stringify({
-              urls: [endpoint.url],
-              method: endpoint.method,
-              headers: endpoint.headers,
-              body: endpoint.body ?? undefined,
-              timeout: endpoint.timeout ?? undefined,
-              followRedirects: endpoint.followRedirects ?? false,
-            }),
-          });
-          if (res.status !== 200) {
-            this.logger.error("endpoint test failed", {
-              status: res.status,
-              endpointId: endpoint.id,
-              regionId: region.id,
-              error: await res.text(),
-            });
-            return;
-          }
-
-          const parsed = (await res.json()) as {
-            error?: string;
-            time: number;
-            status: number;
-            latency?: number;
-            body?: string;
-            headers?: Record<string, string>;
-            tags?: string[];
-            timing: {
-              dnsStart: number;
-              dnsDone: number;
-              connectStart: number;
-              connectDone: number;
-              firstByteStart: number;
-              firstByteDone: number;
-              tlsHandshakeStart: number;
-              tlsHandshakeDone: number;
-            };
-          }[];
-
-          const data = parsed.map((c) => {
-            if (!c.error) {
-              const as = endpoint.assertions ? assertions.deserialize(endpoint.assertions) : [];
-              if (as.length > 0) {
-                for (const a of as) {
-                  const { success, message } = a.assert({
-                    body: c.body ?? "",
-                    header: c.headers ?? {},
-                    status: c.status,
-                  });
-                  if (!success) {
-                    c.error = `Assertion error: ${message}`;
-                    break;
-                  }
-                }
-              } else {
-                /**
-                 * In case no assertions have been created yet, we will apply some defaults
-                 * but only if there is no error, we don't want to overwrite anything
-                 */
-                if (c.status < 200 || c.status >= 300) {
-                  c.error = `Default assertion error: The response status was not 2XX: ${c.status}.`;
+        const data = parsed.map((c) => {
+          if (!c.error) {
+            const as = endpoint.assertions ? assertions.deserialize(endpoint.assertions) : [];
+            if (as.length > 0) {
+              for (const a of as) {
+                const { success, message } = a.assert({
+                  body: c.body ?? "",
+                  header: c.headers ?? {},
+                  status: c.status,
+                });
+                if (!success) {
+                  c.error = `Assertion error: ${message}`;
+                  break;
                 }
               }
+            } else {
+              /**
+               * In case no assertions have been created yet, we will apply some defaults
+               * but only if there is no error, we don't want to overwrite anything
+               */
+              if (c.status < 200 || c.status >= 300) {
+                c.error = `Default assertion error: The response status was not 2XX: ${c.status}.`;
+              }
             }
-
-            return {
-              id: newId("check"),
-              endpointId: endpoint.id,
-              teamId: endpoint.teamId,
-              latency: c.latency,
-              time: new Date(c.time),
-              status: c.status,
-              regionId,
-              error: c.error,
-              body: c.body,
-              header: c.headers,
-              timing: c.timing,
-            };
-          });
-          for (const d of data) {
-            this.logger.debug("storing check", { checkId: d.id });
           }
 
-          for (const d of data) {
-            const responseHeaders = new Headers(d.header);
-            this.tinybird
-              .publish("cache_headers__v1", {
-                time: d.time.getTime(),
-                checkId: d.id,
-                endpointId: d.endpointId,
-                "Cache-Control": responseHeaders.get("Cache-Control"),
-                "X-Vercel-Cache": responseHeaders.get("X-Vercel-Cache"),
-                Server: responseHeaders.get("Server"),
-                "CF-Cache-Status": responseHeaders.get("CF-Cache-Status"),
-              })
-              .catch((err) => {
-                this.logger.error("error publishing cache headers to tinybird", {
-                  endpointId: endpoint.id,
-                  regionId: region.id,
-                  error: (err as Error).message,
-                });
+          return {
+            id: newId("check"),
+            endpointId: endpoint.id,
+            teamId: endpoint.teamId,
+            latency: c.latency,
+            time: new Date(c.time),
+            status: c.status,
+            regionId: region.id,
+            error: c.error,
+            body: c.body,
+            header: c.headers,
+            timing: c.timing,
+          };
+        });
+        for (const d of data) {
+          this.logger.debug("storing check", { checkId: d.id });
+        }
+
+        for (const d of data) {
+          const responseHeaders = new Headers(d.header);
+          this.tinybird
+            .publish("cache_headers__v1", {
+              time: d.time.getTime(),
+              checkId: d.id,
+              endpointId: d.endpointId,
+              "Cache-Control": responseHeaders.get("Cache-Control"),
+              "X-Vercel-Cache": responseHeaders.get("X-Vercel-Cache"),
+              Server: responseHeaders.get("Server"),
+              "CF-Cache-Status": responseHeaders.get("CF-Cache-Status"),
+            })
+            .catch((err) => {
+              this.logger.error("error publishing cache headers to tinybird", {
+                endpointId: endpoint.id,
+                regionId: region.id,
+                error: (err as Error).message,
               });
-          }
+            });
+        }
 
-          await this.db.check.createMany({ data }).catch((err) => {
-            this.logger.error("error publishing checks to planetscale", {
+        await this.db.check.createMany({ data }).catch((err) => {
+          this.logger.error("error publishing checks to planetscale", {
+            endpointId: endpoint.id,
+            regionId: region.id,
+            error: (err as Error).message,
+          });
+          throw err;
+        });
+        await this.tinybird
+          .publishChecks(
+            data.map((d) => ({
+              id: d.id,
+              endpointId: d.endpointId,
+              teamId: d.teamId,
+              latency: d.latency,
+              time: d.time.getTime(),
+              error: d.error,
+              regionId: d.regionId,
+              status: d.status,
+            })),
+          )
+          .catch((err) => {
+            this.logger.error("error publishing checks to tinybird", {
               endpointId: endpoint.id,
               regionId: region.id,
               error: (err as Error).message,
             });
             throw err;
           });
-          await this.tinybird
-            .publishChecks(
-              data.map((d) => ({
+        for (const d of data) {
+          if (d.error) {
+            this.logger.info("emitting notification event", {
+              check: {
                 id: d.id,
                 endpointId: d.endpointId,
                 teamId: d.teamId,
-                latency: d.latency,
-                time: d.time.getTime(),
+                time: d.time,
                 error: d.error,
-                regionId: d.regionId,
-                status: d.status,
-              })),
-            )
-            .catch((err) => {
-              this.logger.error("error publishing checks to tinybird", {
-                endpointId: endpoint.id,
-                regionId: region.id,
-                error: (err as Error).message,
-              });
-              throw err;
+              },
             });
-          for (const d of data) {
-            if (d.error) {
-              this.logger.info("emitting notification event", {
+            this.notifications
+              .notify({
+                type: "check",
                 check: {
                   id: d.id,
                   endpointId: d.endpointId,
                   teamId: d.teamId,
-                  time: d.time,
+                  time: d.time.getTime(),
                   error: d.error,
                 },
-              });
-              this.notifications
-                .notify({
-                  type: "check",
-                  check: {
-                    id: d.id,
-                    endpointId: d.endpointId,
-                    teamId: d.teamId,
-                    time: d.time.getTime(),
-                    error: d.error,
-                  },
-                })
-                .catch((err) => {
-                  this.logger.error("Unable to send notification", {
-                    endpointId: d.endpointId,
-                    teamId: d.teamId,
-                    error: (err as Error).message,
-                    checkId: d.id,
-                  });
+              })
+              .catch((err) => {
+                this.logger.error("Unable to send notification", {
+                  endpointId: d.endpointId,
+                  teamId: d.teamId,
+                  error: (err as Error).message,
+                  checkId: d.id,
                 });
-            }
+              });
           }
-        }),
-      );
+        }
+      }
     } catch (err) {
       this.logger.error((err as Error).message);
     }
