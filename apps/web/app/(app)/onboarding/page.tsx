@@ -51,7 +51,7 @@ export default async function OnboardingPage() {
 }
 
 const Rings: React.FC = (): JSX.Element => {
-  let id = useId();
+  const id = useId();
 
   return (
     <div className=" absolute left-1/2  h-2/3 scale-150  stroke-zinc-700/70 [mask-image:linear-gradient(to_top,white_20%,transparent_75%)] -translate-x-1/2">

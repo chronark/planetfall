@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Analytics } from "app/components/analytics";
-import { Highlight } from "app/components/highlight";
 import { Inter } from "next/font/google";
 import { Metadata } from "next";
 import { Providers } from "./providers";
@@ -66,12 +65,10 @@ export default function RootLayout({
         <link rel="icon" href="/logo.svg" />
       </head>
       <ClerkProvider>
-        <Highlight>
-          <body className={process.env.NODE_ENV === "development" ? "debug-screens" : undefined}>
-            <Providers>{children}</Providers>
-            <Analytics />
-          </body>
-        </Highlight>
+        <body className={process.env.NODE_ENV === "development" ? "debug-screens" : undefined}>
+          <Providers>{children}</Providers>
+          <Analytics />
+        </body>
       </ClerkProvider>
     </html>
   );

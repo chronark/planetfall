@@ -1,10 +1,6 @@
 import { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
-import {
-  getEndpointStats,
-  getEndpointStatsGlobally,
-  getEndpointStatsPerDay,
-} from "@planetfall/tinybird";
+import { getEndpointStats, getEndpointStatsPerDay } from "@planetfall/tinybird";
 
 export const config = {
   runtime: "edge",
@@ -162,9 +158,10 @@ export default async function endpointOg(req: NextRequest) {
         ],
       },
     );
-  } catch (e: any) {
-    console.log(`${e.message}`);
-    return new Response(`Failed to generate the image: ${e.message}`, {
+  } catch (e) {
+    const err = e as Error;
+    console.log(`${err.message}`);
+    return new Response(`Failed to generate the image: ${err.message}`, {
       status: 200,
     });
   }

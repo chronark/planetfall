@@ -10,7 +10,7 @@ export type PageHeaderProps = {
   sticky?: boolean;
 };
 export const PageHeader: React.FC<PageHeaderProps> = (props): JSX.Element => {
-  let [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     function onScroll() {

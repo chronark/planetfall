@@ -1,5 +1,4 @@
 import { Container } from "@react-email/container";
-import { Button } from "@react-email/button";
 import { Head } from "@react-email/head";
 import { Hr } from "@react-email/hr";
 import { Html } from "@react-email/html";
@@ -8,7 +7,6 @@ import { Link } from "@react-email/link";
 import { Heading } from "@react-email/heading";
 import { Section } from "@react-email/section";
 import { Text } from "@react-email/text";
-import React from "react";
 import { Tailwind } from "@react-email/tailwind";
 
 export type Props = {

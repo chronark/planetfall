@@ -52,7 +52,7 @@ export class Events {
     await c.run({
       autoCommitThreshold: 10,
       eachMessage: async ({ topic, message }) => {
-        const { endpointId } = validation.parse(JSON.parse(message.value!.toString()));
+        const { endpointId } = validation.parse(JSON.parse(message.value?.toString() ?? "{}"));
         this.logger.info("Endpoint changed", { endpointId });
         switch (topic) {
           case "endpoint.created": {

@@ -266,7 +266,7 @@ const stream = createReadStream(SOURCE_FILE).pipe(csv());
 let i = 0;
 
 for await (const { origin, rank } of stream) {
-  let csvRank = i++;
+  const csvRank = i++;
 
   if (csvRank < SKIP) {
     continue;

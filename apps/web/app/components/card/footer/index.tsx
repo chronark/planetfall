@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 
 // eslint-disable-next-line
-export interface CardFooterProps {}
+export type CardFooterProps = {};
 
 export const CardFooter: React.FC<PropsWithChildren<CardFooterProps>> = ({
   children,

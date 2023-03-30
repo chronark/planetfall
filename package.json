@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "fmt": "pnpm rome check . --apply-suggested && pnpm rome format . --write",
+    "fmt": "pnpm rome check . --apply && pnpm rome format . --write",
     "test": "turbo run test",
     "tf-init": "terraform -chdir=deployment init -upgrade",
     "tf": "pnpm tf-init && terraform -chdir=deployment apply -var-file=.tfvars"
@@ -19,9 +19,9 @@
   "author": "Andreas Thomas",
   "license": "ISC",
   "devDependencies": {
-    "prettier": "^2.8.4",
-    "rome": "^11.0.0",
-    "turbo": "^1.8.3",
+    "prettier": "^2.8.7",
+    "rome": "^12.0.0",
+    "turbo": "^1.8.8",
     "typescript": "^5.0.2"
   },
   "prisma": {

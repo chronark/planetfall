@@ -114,7 +114,7 @@ export const playRouter = t.router({
             });
           }
 
-          let checks: {
+          const checks: {
             time: number;
             url: string;
             status: number;

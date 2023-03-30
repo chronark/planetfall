@@ -34,7 +34,7 @@ export default async function Page(props: { params: { slug: string } }) {
     }
   }
 
-  let endpoints = await Promise.all(
+  const endpoints = await Promise.all(
     statusPage.endpoints.map(async (endpoint) => ({
       id: endpoint.id,
       name: endpoint.name,

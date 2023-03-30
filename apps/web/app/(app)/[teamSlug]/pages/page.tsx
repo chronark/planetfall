@@ -1,6 +1,5 @@
 import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
-import { Client as Tinybird } from "@planetfall/tinybird";
 
 import { Button } from "@/components/button";
 import { StatuspagesTable } from "./table";

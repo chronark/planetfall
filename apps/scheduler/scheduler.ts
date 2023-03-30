@@ -31,7 +31,11 @@ export class Scheduler {
     this.regions = {};
     this.notifications = notifications;
     this.email = email;
-    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+    if (!stripeSecretKey) {
+      throw new Error("STRIPE_SECRET_KEY was not found");
+    }
+    this.stripe = new Stripe(stripeSecretKey, {
       apiVersion: "2022-11-15",
       typescript: true,
     });

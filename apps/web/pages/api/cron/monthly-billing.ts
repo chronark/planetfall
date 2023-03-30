@@ -30,6 +30,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     },
   });
   for (const team of teams) {
+    if (!team.stripeCustomerId) {
+      console.error(
+        `Team ${team.id} does not have a stripeCustomerId. This should not be possible`,
+      );
+      continue;
+    }
+
     console.log("creating invoice", { teamId: team.id });
 
     const usage = await getUsage({
@@ -41,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (totalUsage > 0) {
       const invoice = await stripe.invoices.create({
-        customer: team.stripeCustomerId!,
+        customer: team.stripeCustomerId,
         auto_advance: false,
 
         metadata: {
@@ -51,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
       const invoiceItem = await stripe.invoiceItems.create({
-        customer: team.stripeCustomerId!,
+        customer: team.stripeCustomerId,
         invoice: invoice.id,
         quantity: totalUsage,
         price: env.STRIPE_PRICE_ID_CHECKS,

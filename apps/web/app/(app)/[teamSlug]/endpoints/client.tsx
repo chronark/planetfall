@@ -118,14 +118,14 @@ export const ClientPage: React.FC<Props> = ({ endpoints, team, user }) => {
                             <div className="flex items-center gap-1 ">
                               <Status
                                 status={
-                                  endpoint.stats.errors > 0
+                                  !endpoint.active
+                                    ? "stopped"
+                                    : endpoint.stats.errors > 0
                                     ? "error"
                                     : endpoint.degradedAfter &&
                                       endpoint.stats.p99 > endpoint.degradedAfter
                                     ? "degraded"
-                                    : endpoint.active
-                                    ? "healthy"
-                                    : "stopped"
+                                    : "healthy"
                                 }
                                 tooltip={
                                   endpoint.stats.errors > 0

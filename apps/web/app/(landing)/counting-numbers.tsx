@@ -17,7 +17,7 @@ export default function CountingNumbers({
 
   useEffect(() => {
     if (isInView) {
-      let _timer = setInterval(() => {
+      const _timer = setInterval(() => {
         if (n < value) {
           setNumber((num) => {
             let newValue = num + increment;
