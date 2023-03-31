@@ -82,6 +82,8 @@ async function check(req: CheckRequest): Promise<PingResponse> {
     req.timeout,
   );
   const res = await fetch(req.url, {
+    keepalive: true,
+    cache: "no-store",
     method: req.method,
     body: req.body,
     headers: req.headers,
