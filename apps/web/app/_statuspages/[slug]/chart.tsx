@@ -117,8 +117,8 @@ export const Row: React.FC<{
   const errors = globalStats?.metrics.errors ?? 0;
   let availability = totalChecks === 0 ? 1 : 1 - errors / totalChecks;
   // Availability should not be rounded to 100% if there are errors
-  if (errors > 0 && availability > 99.99) {
-    availability = 99.99
+  if (errors > 0 && availability > 0.9999) {
+    availability = 0.9999
   }
   console.log({ availability, totalChecks, errors })
   for (let i = 0; i < endpoint.stats.length; i++) {
