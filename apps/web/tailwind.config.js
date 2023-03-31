@@ -266,6 +266,5 @@ module.exports = {
     require("@tailwindcss/typography"),
     require("tailwindcss-debug-screens"),
     require("tailwindcss-animate"),
-    require("@tailwindcss/line-clamp"),
   ],
 };

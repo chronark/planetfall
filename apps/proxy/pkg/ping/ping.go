@@ -17,13 +17,19 @@ import (
 )
 
 type PingRequest struct {
-	Urls    []string          `json:"urls"`
+	Url     string            `json:"url"`
 	Method  string            `json:"method"`
 	Body    string            `json:"body"`
 	Headers map[string]string `json:"headers"`
 	//Timeout in milliseconds
 	Timeout         int  `json:"timeout"`
 	FollowRedirects bool `json:"followRedirects"`
+
+	// Fires one request ahead of time without measuring the response time
+	Prewarm bool `json:"prewarm"`
+
+	// Runs multiple times and returns all responses
+	Runs int `json:"runs"`
 }
 type checkRequest struct {
 	Url     string            `json:"url"`
@@ -60,6 +66,9 @@ type Response struct {
 }
 
 func Ping(ctx context.Context, req PingRequest) ([]Response, error) {
+	if req.Runs <= 0 {
+		req.Runs = 1
+	}
 	t := &http.Transport{}
 	client := &http.Client{
 		Transport: t,
@@ -75,19 +84,34 @@ func Ping(ctx context.Context, req PingRequest) ([]Response, error) {
 	}
 	defer t.CloseIdleConnections()
 
-	responses := make([]Response, len(req.Urls))
-	for i, url := range req.Urls {
-		checkReq := checkRequest{
-			Url:     url,
+	if req.Prewarm {
+		_, err := check(ctx, client, checkRequest{
+			Url:     req.Url,
 			Method:  req.Method,
 			Body:    req.Body,
 			Headers: req.Headers,
 			Timeout: req.Timeout,
+		})
+		if err != nil {
+			return nil, err
 		}
+	}
+	checkReq := checkRequest{
+		Url:     req.Url,
+		Method:  req.Method,
+		Body:    req.Body,
+		Headers: req.Headers,
+		Timeout: req.Timeout,
+	}
+
+	responses := make([]Response, req.Runs)
+	for i := 0; i < req.Runs; i++ {
+
 		res, err := check(ctx, client, checkReq)
 		if err != nil {
 			return nil, err
 		}
+		// Repeat once
 		if res.Error != "" {
 			res, err = check(ctx, client, checkReq)
 		}
@@ -107,7 +131,7 @@ func check(ctx context.Context, client *http.Client, input checkRequest) (Respon
 
 	req, err := http.NewRequest(input.Method, input.Url, strings.NewReader(input.Body))
 	if err != nil {
-		return Response{}, err
+		return Response{}, fmt.Errorf("Unable to create request: %w", err)
 	}
 	req.Header.Set("User-Agent", "planetfall/1.0")
 
@@ -132,8 +156,6 @@ func check(ctx context.Context, client *http.Client, input checkRequest) (Respon
 
 	req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
 
-	log.Printf("Request: %#v\n", req)
-
 	start := time.Now()
 	res, err := client.Do(req)
 	timing.TransferDone = time.Now().UnixMilli()
@@ -146,14 +168,14 @@ func check(ctx context.Context, client *http.Client, input checkRequest) (Respon
 		}, nil
 	}
 	if err != nil {
-		return Response{}, err
+		return Response{}, fmt.Errorf("Error while checking %s: %w", input.Url, err)
 	}
 
 	defer res.Body.Close()
 	log.Printf("Response from %s: [%d] \n", req.URL, res.StatusCode)
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return Response{}, err
+		return Response{}, fmt.Errorf("Error while reading body from %s: %w", input.Url, err)
 	}
 	headers := make(map[string]string)
 	for key := range res.Header {
@@ -164,7 +186,7 @@ func check(ctx context.Context, client *http.Client, input checkRequest) (Respon
 	if res.Header.Get("Content-Type") == "text/html" {
 		foundTags, err = tags.Parse(string(body), res.Header.Clone())
 		if err != nil {
-			return Response{}, err
+			return Response{}, fmt.Errorf("Error while parsing tags from %s: %w", input.Url, err)
 		}
 	}
 	if len(body) > 1000 {

@@ -59,12 +59,11 @@ export const playRouter = t.router({
         method: z.enum(["GET", "POST", "PUT", "DELETE"]),
         urls: z.array(z.string().url()),
         regionIds: z.array(z.string()).min(1),
-        repeat: z.boolean().optional(),
       }),
     )
     .output(z.object({ shareId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { success, remaining, reset, limit } = await ratelimit.limit("global");
+      const { success, remaining, reset, limit } = await ratelimit.limit(ctx.user.id ?? "global");
       if (!success) {
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",
@@ -95,9 +94,11 @@ export const playRouter = t.router({
             method: "POST",
             headers,
             body: JSON.stringify({
-              urls: input.urls,
+              url: input.urls[0],
               method: input.method,
               timeout: 10000,
+              prewarm: false,
+              runs: 1,
             }),
           }).catch((err) => {
             console.error(err);

@@ -1,12 +1,16 @@
 export type PingRequest = {
-  urls: string[];
+  url: string
   method: string;
   body: string;
   headers: Record<string, string>;
   //Timeout in milliseconds
   timeout: number;
   followRedirects?: boolean;
+
+  prewarm?: boolean
+  runs?: number
 };
+
 
 type CheckRequest = {
   url: string;
@@ -29,28 +33,32 @@ type PingResponse = {
 };
 
 export async function ping(req: PingRequest): Promise<PingResponse[]> {
+
+  const checkRequest: CheckRequest = {
+    url: req.url,
+    method: req.method,
+    body: req.body,
+    headers: {
+      "User-Agent": "planetfall/1.0",
+      ...req.headers,
+    },
+    timeout: req.timeout,
+    followRedirects: req.followRedirects,
+  };
+  if (req.prewarm) {
+    await check(checkRequest)
+  }
+
+  const runs = req.runs ?? 1
   const responses: PingResponse[] = [];
 
-  for (let i = 0; i < req.urls.length; i++) {
+  for (let i = 0; i < runs; i++) {
+
+
     try {
-      const checkRequest: CheckRequest = {
-        url: req.urls[i],
-        method: req.method,
-        body: req.body,
-        headers: {
-          "User-Agent": "planetfall/1.0",
-          ...req.headers,
-        },
-        timeout: req.timeout,
-        followRedirects: req.followRedirects,
-      };
       // 1 retry if the request fails
-      let res = await check(checkRequest).catch(() => {
-        return check(checkRequest);
-      });
-      if (res.error) {
-        res = await check(checkRequest);
-      }
+      const res = await check(checkRequest).catch(() => check(checkRequest))
+
       responses.push(res);
     } catch (e) {
       const err = e as Error;
@@ -62,6 +70,7 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
       });
     }
   }
+
   return responses;
 }
 

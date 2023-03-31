@@ -146,7 +146,8 @@ export const Form: React.FC<Props> = ({
             ) : null}
           </div>
         </div>
-        {signedIn ? (
+       
+        {/* {signedIn ? (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
@@ -175,7 +176,7 @@ export const Form: React.FC<Props> = ({
               {errors.url2 ? <p className="mt-2 text-sm text-red-500">{errors.url2.type}</p> : null}
             </div>
           </div>
-        ) : null}
+        ) : null} */}
 
         <div className="space-y-6">
           <div className="flex items-center justify-between">

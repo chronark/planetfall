@@ -141,7 +141,6 @@ importers:
       '@sindresorhus/slugify': ^2.1.1
       '@stripe/react-stripe-js': ^2.1.0
       '@stripe/stripe-js': ^1.52.0
-      '@tailwindcss/line-clamp': ^0.4.2
       '@tailwindcss/typography': ^0.5.8
       '@tanstack/react-query': ^4.28.0
       '@tanstack/react-table': ^8.8.4
@@ -234,7 +233,6 @@ importers:
       '@sindresorhus/slugify': 2.2.0
       '@stripe/react-stripe-js': 2.1.0_wfk2ilwjwqlluiweqjchts7jtq
       '@stripe/stripe-js': 1.52.0
-      '@tailwindcss/line-clamp': 0.4.2_tailwindcss@3.3.0
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.0
       '@tanstack/react-query': 4.28.0_biqbaboplfbrettd7655fr4n2y
       '@tanstack/react-table': 8.8.4_biqbaboplfbrettd7655fr4n2y
@@ -3609,14 +3607,6 @@ packages:
     dependencies:
       defer-to-connect: 2.0.1
     dev: true
-
-  /@tailwindcss/line-clamp/0.4.2_tailwindcss@3.3.0:
-    resolution: {integrity: sha512-HFzAQuqYCjyy/SX9sLGB1lroPzmcnWv1FHkIpmypte10hptf4oPUfucryMKovZh2u0uiS9U5Ty3GghWfEJGwVw==}
-    peerDependencies:
-      tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
-    dependencies:
-      tailwindcss: 3.3.0_postcss@8.4.21
-    dev: false
 
   /@tailwindcss/typography/0.5.9_tailwindcss@3.3.0:
     resolution: {integrity: sha512-t8Sg3DyynFysV9f4JDOVISGsjazNb48AeIYQwcL+Bsq5uf4RYL75C1giZ43KISjeDGBaTN3Kxh7Xj/vRSMJUUg==}

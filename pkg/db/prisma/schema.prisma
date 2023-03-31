@@ -133,9 +133,8 @@ model Team {
   includedRequests   Int? // How many requests are included in the plan and not charged
   endpoints          Endpoint[]
   pages              StatusPage[]
-  alerts              Alert[]
-  emailChannels EmailChannel[]
-
+  alerts             Alert[]
+  emailChannels      EmailChannel[]
 
   @@index([slug])
 }
@@ -211,18 +210,24 @@ model EndpointAuditLog {
 }
 
 model Endpoint {
-  id        String   @id
+  id        String    @id
   method    Method
   name      String
   teamId    String
-  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team      Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
   url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   // When the user deletes an endpoint it is marked as deleted by setting this field
   deletedAt DateTime?
 
   followRedirects Boolean
+
+  // Should we send one request to warm up the endpoint before starting the checks?
+  prewarm Boolean? @default(false)
+
+  // How many times should we run the check while reusing the connection
+  runs Int? @default(1)
 
   // Mark a user as responsible for this endpoint
   // This is useful when you want to delete endpoints but don't know who still needs them
@@ -245,11 +250,11 @@ model Endpoint {
   // json encoded map
   // { KEY: VALUE}
   headers      Json?
-  body         String? @db.Text
+  body         String?      @db.Text
 
   assertions String? @db.Text
 
-  pages       StatusPage[]
+  pages StatusPage[]
 
   alerts Alert[]
 
@@ -301,13 +306,13 @@ model Alert {
   teamId String
   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
-  active Boolean
-  addNewEndpointsAutomatically Boolean 
+  active                       Boolean
+  addNewEndpointsAutomatically Boolean
 
-// this alert is listening to the following endpoints
+  // this alert is listening to the following endpoints
   endpoints Endpoint[]
 
-  emailChannels EmailChannel[]
+  emailChannels   EmailChannel[]
   webhookChannels WebhookChannel[]
 
   @@index([teamId])
@@ -319,12 +324,13 @@ model EmailChannel {
   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId String
 
-  alerts   Alert[]
+  alerts Alert[]
 
   email  String
   active Boolean
-  @@index([teamId])
+
   @@unique([teamId, email])
+  @@index([teamId])
 }
 
 model WebhookChannel {
@@ -333,10 +339,10 @@ model WebhookChannel {
   alert   Alert  @relation(fields: [alertId], references: [id], onDelete: Cascade)
   alertId String
 
-  url        String
-  method    String
-  headers    Json?
-  active Boolean
+  url     String
+  method  String
+  headers Json?
+  active  Boolean
 
   @@index([alertId])
 }

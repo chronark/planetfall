@@ -200,10 +200,7 @@ export class Scheduler {
         endpoint.distribution === "ALL"
           ? endpoint.regions
           : [endpoint.regions[Math.floor(Math.random() * endpoint.regions.length)]];
-      this.logger.info("testing endpoint", {
-        endpointId: endpoint.id,
-      });
-
+     
       for await (const region of regions) {
         this.logger.debug("testing endpoint", {
           endpointId: endpoint.id,
@@ -221,12 +218,14 @@ export class Scheduler {
           method: "POST",
           headers,
           body: JSON.stringify({
-            urls: [endpoint.url],
+            url: endpoint.url,
             method: endpoint.method,
             headers: endpoint.headers,
             body: endpoint.body ?? undefined,
             timeout: endpoint.timeout ?? undefined,
             followRedirects: endpoint.followRedirects ?? false,
+            prewarm: endpoint.prewarm,
+            runs: endpoint.runs
           }),
         });
         if (res.status !== 200) {

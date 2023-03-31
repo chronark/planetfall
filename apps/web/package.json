@@ -45,7 +45,6 @@
     "@sindresorhus/slugify": "^2.1.1",
     "@stripe/react-stripe-js": "^2.1.0",
     "@stripe/stripe-js": "^1.52.0",
-    "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.8",
     "@tanstack/react-query": "^4.28.0",
     "@tanstack/react-table": "^8.8.4",
