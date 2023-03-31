@@ -115,7 +115,12 @@ export const Row: React.FC<{
   const globalStats = endpoint.stats.find((s) => s.region.id === "global");
   const totalChecks = globalStats?.metrics.count ?? 0;
   const errors = globalStats?.metrics.errors ?? 0;
-  const availability = totalChecks === 0 ? 1 : 1 - errors / totalChecks;
+  let availability = totalChecks === 0 ? 1 : 1 - errors / totalChecks;
+  // Availability should not be rounded to 100% if there are errors
+  if (errors > 0 && availability > 99.99) {
+    availability = 99.99
+  }
+  console.log({ availability, totalChecks, errors })
   for (let i = 0; i < endpoint.stats.length; i++) {
     endpoint.stats[i].series = resizeSeries(
       endpoint.stats[i].series,
@@ -129,8 +134,8 @@ export const Row: React.FC<{
       : endpoint.degradedAfter &&
         globalStats?.series.at(-1) &&
         globalStats?.series.at(-1)!.p75 > endpoint.degradedAfter
-      ? "Degraded"
-      : "Operational";
+        ? "Degraded"
+        : "Operational";
 
   let max = 1;
   for (const region of endpoint.stats) {
@@ -289,71 +294,71 @@ const Chart: React.FC<{
       <div className={`flex w-full bg-white ${height ?? "h-12"} items-end`}>
         {series
 
-        .map((bucket) => {
-          const start = new Date(bucket.time);
+          .map((bucket) => {
+            const start = new Date(bucket.time);
 
-          const percentageHeight = bucket.p75 >= 0 ? Math.max(5, (bucket.p75 / max) * 100) : 100;
-          const bucketError = bucket.errors > 0;
-          const bucketDegraded = degradedAfter && bucket.p75 > degradedAfter;
+            const percentageHeight = bucket.p75 >= 0 ? Math.max(5, (bucket.p75 / max) * 100) : 100;
+            const bucketError = bucket.errors > 0;
+            const bucketDegraded = degradedAfter && bucket.p75 > degradedAfter;
 
-          const cn = [
-            "flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
-          ];
+            const cn = [
+              "flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
+            ];
 
-          if (bucket.p75 < 0) {
-            cn.push("  bg-zinc-400/20 hover:bg-zinc-400/50 ");
-          } else if (bucketError) {
-            cn.push(" bg-red-500  ");
-          } else if (bucketDegraded) {
-            cn.push(" bg-yellow-400  ");
-          } else {
-            cn.push(" bg-emerald-400 ");
-          }
+            if (bucket.p75 < 0) {
+              cn.push("  bg-zinc-400/20 hover:bg-zinc-400/50 ");
+            } else if (bucketError) {
+              cn.push(" bg-red-500  ");
+            } else if (bucketDegraded) {
+              cn.push(" bg-yellow-400  ");
+            } else {
+              cn.push(" bg-emerald-400 ");
+            }
 
-          return (
-            <HoverCard.Root openDelay={50} closeDelay={40} key={bucket.time}>
-              <HoverCard.Trigger
-                className={cn.join(" ")}
-                style={{
-                  height: `${percentageHeight}%`,
-                }}
-              />
-              <HoverCard.Portal>
-                <HoverCard.Content>
-                  <>
-                    {bucket.p75 >= 0 ? (
-                      <>
-                        <div className="px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
-                          <time
-                            dateTime={start.toISOString()}
-                            className="text-xl font-medium text-center truncate text-zinc-900"
-                          >
-                            {start.toLocaleDateString()}
-                          </time>
-                          <dt className="text-sm font-medium truncate text-zinc-500" />
-                          <dt className="text-sm font-medium truncate text-zinc-500">
-                            {/* {bucket.region} */}
-                          </dt>
-                          <div>
-                            <dl className="grid grid-cols-1 gap-2 mt-5 md:grid-cols-3 lg:grid-cols-6 ">
-                              <Stats label="Checks" value={format(bucket.count)} />
-                              <Stats label="P75" value={format(bucket.p75)} suffix="ms" />
-                              <Stats label="P90" value={format(bucket.p90)} suffix="ms" />
-                              <Stats label="P95" value={format(bucket.p95)} suffix="ms" />
-                              <Stats label="P99" value={format(bucket.p99)} suffix="ms" />
-                              <Stats label="Errors" value={format(bucket.errors)} />
-                            </dl>
+            return (
+              <HoverCard.Root openDelay={50} closeDelay={40} key={bucket.time}>
+                <HoverCard.Trigger
+                  className={cn.join(" ")}
+                  style={{
+                    height: `${percentageHeight}%`,
+                  }}
+                />
+                <HoverCard.Portal>
+                  <HoverCard.Content>
+                    <>
+                      {bucket.p75 >= 0 ? (
+                        <>
+                          <div className="px-4 py-5 overflow-hidden bg-white rounded-sm shadow sm:p-6">
+                            <time
+                              dateTime={start.toISOString()}
+                              className="text-xl font-medium text-center truncate text-zinc-900"
+                            >
+                              {start.toLocaleDateString()}
+                            </time>
+                            <dt className="text-sm font-medium truncate text-zinc-500" />
+                            <dt className="text-sm font-medium truncate text-zinc-500">
+                              {/* {bucket.region} */}
+                            </dt>
+                            <div>
+                              <dl className="grid grid-cols-1 gap-2 mt-5 md:grid-cols-3 lg:grid-cols-6 ">
+                                <Stats label="Checks" value={format(bucket.count)} />
+                                <Stats label="P75" value={format(bucket.p75)} suffix="ms" />
+                                <Stats label="P90" value={format(bucket.p90)} suffix="ms" />
+                                <Stats label="P95" value={format(bucket.p95)} suffix="ms" />
+                                <Stats label="P99" value={format(bucket.p99)} suffix="ms" />
+                                <Stats label="Errors" value={format(bucket.errors)} />
+                              </dl>
+                            </div>
                           </div>
-                        </div>
-                        <HoverCard.Arrow />
-                      </>
-                    ) : null}
-                  </>
-                </HoverCard.Content>
-              </HoverCard.Portal>
-            </HoverCard.Root>
-          );
-        })}
+                          <HoverCard.Arrow />
+                        </>
+                      ) : null}
+                    </>
+                  </HoverCard.Content>
+                </HoverCard.Portal>
+              </HoverCard.Root>
+            );
+          })}
       </div>
       {withXAxis ? (
         <div className="flex items-center justify-between mt-1">
