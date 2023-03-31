@@ -15,7 +15,7 @@ SQL >
     WHERE
         endpointId ={{ String(endpointId, required=True) }}
     AND 
-        time >= now() - INTERVAL 1 DAY
+        time >= now() - INTERVAL {{ Int8(days, default=1)}} DAY
     GROUP BY regionId
 
 
@@ -36,7 +36,7 @@ SQL >
     WHERE
         endpointId ={{ String(endpointId, required=True) }}
     AND 
-        time >= now() - INTERVAL 1 DAY
+        time >= now() - INTERVAL {{ Int8(days, default=1)}} DAY
     GROUP BY regionId
 
 

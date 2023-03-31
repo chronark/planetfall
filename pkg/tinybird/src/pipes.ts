@@ -13,6 +13,7 @@ export const getEndpointStats = tb.buildPipe({
   pipe: "get_endpoint_stats__v2",
   parameters: z.object({
     endpointId: z.string(),
+    days: z.number().default(1)
   }),
   data: z.object({
     regionId: z.string(),
@@ -47,6 +48,7 @@ export const getEndpointStatsGlobally = tb.buildPipe({
   pipe: "get_endpoint_stats_globally__v2",
   parameters: z.object({
     endpointId: z.string(),
+    days: z.number().default(1)
   }),
   data: z.object({
     count: nullableNumberWithDefault,

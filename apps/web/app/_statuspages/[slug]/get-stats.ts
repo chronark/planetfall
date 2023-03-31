@@ -29,10 +29,11 @@ export async function getStats(endpoint: Endpoint) {
   > = {};
 
   const [endpointStats, endpointSeries] = await Promise.all([
-    getEndpointStats({ endpointId: endpoint.id }),
+    getEndpointStats({ endpointId: endpoint.id, days: 90 }),
     getEndpointStatsPerDay({ endpointId: endpoint.id }),
   ]);
 
+  console.log(JSON.stringify({ endpointSeries }))
   for (const metrics of endpointStats.data) {
     regions[metrics.regionId] = {
       regionId: metrics.regionId,

@@ -115,10 +115,11 @@ export const Row: React.FC<{
   const globalStats = endpoint.stats.find((s) => s.region.id === "global");
   const totalChecks = globalStats?.metrics.count ?? 0;
   const errors = globalStats?.metrics.errors ?? 0;
-  let availability = totalChecks === 0 ? 1 : 1 - errors / totalChecks;
+  let availability = (totalChecks === 0 ? 1 : 1 - errors / totalChecks) * 100
+  console.log({ globalStats,availability, totalChecks, errors })
   // Availability should not be rounded to 100% if there are errors
-  if (errors > 0 && availability > 0.9999) {
-    availability = 0.9999
+  if (errors > 0) {
+    availability = Math.min(availability, 99.99)
   }
   console.log({ availability, totalChecks, errors })
   for (let i = 0; i < endpoint.stats.length; i++) {
@@ -152,7 +153,7 @@ export const Row: React.FC<{
         <div className="flex items-center justify-between w-full gap-4 md:gap-8">
           <div className="flex flex-col items-start justify-between w-full gap-2 md:items-center md:flex-row">
             <Heading h3>{endpoint.name}</Heading>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4">
               <Stat label="p75" value={globalStats?.metrics.p75 ?? 0} />
               <Stat label="p90" value={globalStats?.metrics.p90 ?? 0} />
               <Stat label="p95" value={globalStats?.metrics.p95 ?? 0} />
@@ -162,7 +163,7 @@ export const Row: React.FC<{
 
           <div className="flex flex-col-reverse items-end gap-4 md:items-center md:flex-row">
             <span className="whitespace-nowrap leading-7 text-zinc-900 text-sm">
-              {(availability * 100).toFixed(2)} % Availability
+              {(availability).toFixed(2)} % Availability
             </span>
 
             <div className="flex items-center gap-2 px-3 py-1 border rounded-full border-zinc-300">
@@ -233,7 +234,7 @@ export const Row: React.FC<{
                     key={r.region.id}
                     className="flex flex-col items-center justify-between w-full gap-4 p-2 md:flex-row "
                   >
-                    <div className="flex flex-col items-center justify-between space-y-2 md:items-start md:w-2/5">
+                    <div className="flex flex-col items-center justify-between space-y-2 md:items-start md:w-1/2 lg:w-2/5">
                       <h4 className="flex items-center gap-2 text-lg text-bold text-zinc-600 whitespace-nowrap">
                         {r.region.platform === "aws" ? (
                           <AwsLambda className="w-4 h-4" />
@@ -242,14 +243,14 @@ export const Row: React.FC<{
                         ) : null}
                         {r.region.name}
                       </h4>
-                      <div className="flex items-center justify-center w-full gap-2 md:justify-start sm:gap-4 ">
+                      <div className="flex items-center justify-center w-full gap-2  sm:gap-2 lg:gap-4 ">
                         <Stat label="p75" value={r.metrics.p75} />
                         <Stat label="p90" value={r.metrics.p90} />
                         <Stat label="p95" value={r.metrics.p95} />
                         <Stat label="p99" value={r.metrics.p99} />
                       </div>
                     </div>
-                    <div className="w-full md:w-3/5">
+                    <div className="w-full md:w-1/2 lg:w-3/5">
                       <div className="sm:hidden">
                         <AreaChart series={r.series.slice(-30)} />
                       </div>

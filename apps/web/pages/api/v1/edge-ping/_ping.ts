@@ -46,6 +46,7 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
     followRedirects: req.followRedirects,
   };
   if (req.prewarm) {
+    console.log("Prewarming", req.url)
     await check(checkRequest)
   }
 
@@ -83,7 +84,6 @@ async function check(req: CheckRequest): Promise<PingResponse> {
   );
   const res = await fetch(req.url, {
     keepalive: true,
-    cache: "no-store",
     method: req.method,
     body: req.body,
     headers: req.headers,
