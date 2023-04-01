@@ -189,7 +189,7 @@ const Expanded: React.FC<{ endpoint: EndpointData }> = ({ endpoint }) => {
 
                 <Line
 
-                    padding={4}
+padding={[4,0, 4, 4]}
                     autoFit={true}
                     data={info.getValue().filter((s) => s.time >= 0).map((s) => ({
                         time: new Date(s.time).toDateString(),
@@ -250,10 +250,10 @@ const Expanded: React.FC<{ endpoint: EndpointData }> = ({ endpoint }) => {
                             <th
                                 key={header.id}
                                 className={classNames(
-                                    "px-4 z-10  py-2  text-sm font-medium text-zinc-700", {
+                                    "z-10  py-2  text-sm font-medium text-zinc-700", {
 
-                                    "text-left": i === 0,
-                                    "text-right": i > 0,
+                                    "text-left pr-4": i === 0,
+                                    "text-right px-4": i > 0,
                                 }
 
                                 )}
@@ -272,7 +272,10 @@ const Expanded: React.FC<{ endpoint: EndpointData }> = ({ endpoint }) => {
                         {row.getVisibleCells().map((cell, j) => (
                             <td
                                 key={cell.id}
-                                className={classNames("px-4 whitespace-nowrap text-zinc-500 text-right", {
+                                className={classNames("whitespace-nowrap text-zinc-500", {
+                                    "text-left pr-4": j === 0,
+                                    "text-right px-4": j > 0 && j < row.getVisibleCells().length - 1,
+                                    "text-right pl-4": j === row.getVisibleCells().length - 1,
                                     "border-t border-zinc-100": i > 0,
                                     "hidden  lg:block min-w-full": cell.column.id === "series",
                                 })}
