@@ -155,19 +155,7 @@ const Expanded: React.FC<{ endpoint: EndpointData }> = ({ endpoint }) => {
     const columns = [
         accessor("region", {
             header: "Region",
-            cell: (info) => {
-                const { id, name } = info.getValue();
-                return (
-                    <div className="flex items-center gap-2">
-                        {id.startsWith("aws:") ? (
-                            <AwsLambda className="w-4 h-4" />
-                        ) : id.startsWith("vercel:") ? (
-                            <VercelEdge className="w-4 h-4" />
-                        ) : <Fly className="w-4 h-4" />}
-                        <span>{name}</span>
-                    </div>
-                );
-            },
+            cell: (info) => info.getValue().name
         }),
 
 
@@ -200,7 +188,7 @@ const Expanded: React.FC<{ endpoint: EndpointData }> = ({ endpoint }) => {
             >
 
                 <Line
-                
+
                     padding={4}
                     autoFit={true}
                     data={info.getValue().filter((s) => s.time >= 0).map((s) => ({
