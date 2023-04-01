@@ -55,14 +55,6 @@ export class Client {
     await Promise.all([this.publish("checks__v1", checks)]);
   }
 
-  public async getEndpointStatsPerHour(endpointId: string): Promise<MetricOverTime[]> {
-    const data = await this.fetch<MetricOverTime[]>("get_endpoint_stats_per_hour__v1", {
-      endpointId,
-      days: 7,
-    });
-
-    return data.map((d) => ({ ...d, time: new Date(d.time).getTime() }));
-  }
   public async getEndpointStatsPerDay(endpointId: string): Promise<MetricOverTime[]> {
     const data = await this.fetch<MetricOverTime[]>("get_endpoint_stats_per_day__v1", {
       endpointId,

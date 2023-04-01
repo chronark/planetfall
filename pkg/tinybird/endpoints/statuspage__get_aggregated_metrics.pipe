@@ -1,0 +1,23 @@
+VERSION 1
+DESCRIPTION >
+    returns the total aggregated metrics over 90 days of multiple endpoints and all of their regions
+    For example for each endpoint and each region there will be a single value for `p75` including `global` as regionId
+
+NODE endpoint
+SQL >
+    %
+    SELECT
+    regionId,
+    endpointId,
+    countMerge(count) as count,
+    countMerge(errors) as errors,
+    quantileTimingMerge(0.75)(p75) AS p75,
+    quantileTimingMerge(0.90)(p90) AS p90,
+    quantileTimingMerge(0.95)(p95) AS p95,
+    quantileTimingMerge(0.99)(p99) AS p99
+
+FROM endpoint_stats_per_day__v2
+WHERE
+    endpointId IN {{ Array(endpointIds, 'String', required=True) }}
+    AND time > now() - INTERVAL 90 DAY 
+GROUP BY endpointId, regionId

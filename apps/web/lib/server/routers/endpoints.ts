@@ -254,16 +254,17 @@ export const endpointRouter = t.router({
         });
       }
 
+      const active = !endpoint.active
       const updated = await db.endpoint.update({
         where: { id: input.endpointId },
         data: {
-          active: !endpoint.active,
+          active,
           updatedAt: new Date(),
           auditLog: {
             create: {
               id: newId("audit"),
               userId: ctx.user.id,
-              message: endpoint.active ? "Endpoint enabled" : "Endpoint disabled",
+              message: active ? "Endpoint enabled" : "Endpoint disabled",
             },
           },
         },

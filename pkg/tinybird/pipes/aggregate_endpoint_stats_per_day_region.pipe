@@ -21,6 +21,6 @@ SQL >
     GROUP BY time, endpointId, regionId
 
 TYPE MATERIALIZED
-DATASOURCE endpoint_stats_per_day__v2
+DATASOURCE endpoint_stats_per_day__v3
 ENGINE "AggregatingMergeTree"
 ENGINE_SORTING_KEY "endpointId,regionId,time"

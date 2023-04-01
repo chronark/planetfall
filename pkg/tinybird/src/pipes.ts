@@ -26,6 +26,44 @@ export const getEndpointStats = tb.buildPipe({
   }),
 });
 
+
+export const getEndpointMetricsOver90Days = tb.buildPipe({
+  pipe: "statuspage__get_aggregated_metrics__v1",
+  parameters: z.object({
+    endpointIds: z.array(z.string()),
+  }),
+  data: z.object({
+    regionId: z.string(),
+    endpointId: z.string(),
+    count: nullableNumberWithDefault,
+    p75: nullableNumberWithDefault,
+    p90: nullableNumberWithDefault,
+    p95: nullableNumberWithDefault,
+    p99: nullableNumberWithDefault,
+    errors: nullableNumberWithDefault,
+  })
+})
+
+export const getEndpointSeriesOver90Days = tb.buildPipe({
+  pipe: "statuspage__get_aggregated_series__v1",
+  parameters: z.object({
+    endpointIds: z.array(z.string()),
+  }),
+  data: z.object({
+    time: z.string().transform((s) => new Date(s).getTime()),
+    regionId: z.string(),
+    endpointId: z.string(),
+    count: nullableNumberWithDefault,
+    p75: nullableNumberWithDefault,
+    p90: nullableNumberWithDefault,
+    p95: nullableNumberWithDefault,
+    p99: nullableNumberWithDefault,
+    errors: nullableNumberWithDefault,
+  })
+})
+
+
+
 export const getEndpointStatsPerDay = tb.buildPipe({
   pipe: "get_endpoint_stats_per_day__v2",
   parameters: z.object({

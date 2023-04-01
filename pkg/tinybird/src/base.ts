@@ -40,7 +40,7 @@ export class Tinybird {
 
   private async fetch(
     pipe: string,
-    parameters: Record<string, string | number | boolean> = {},
+    parameters: Record<string, string | number | boolean | string[]> = {},
   ): Promise<unknown> {
     const url = new URL(`/v0/pipes/${pipe}.json`, this.baseUrl);
     for (const [key, value] of Object.entries(parameters)) {
@@ -77,7 +77,7 @@ export class Tinybird {
   }
 
   public buildPipe<
-    TParameters extends Record<string, string | number | boolean>,
+    TParameters extends Record<string, string | number | boolean | string[]>,
     TData extends Record<string, unknown>,
   >(opts: {
     pipe: string;

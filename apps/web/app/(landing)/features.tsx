@@ -1,7 +1,4 @@
-import { withCache } from "@/lib/cache";
 import { db } from "@planetfall/db";
-import { Row } from "app/_statuspages/[slug]/chart";
-import { getStats } from "app/_statuspages/[slug]/get-stats";
 import { asyncComponent } from "lib/api";
 import {
   BarChart,
