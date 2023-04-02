@@ -68,7 +68,7 @@ export const AvailabilityChart: React.FC<Props> = ({ max, height, days, endpoint
                         } else if (bucketDegraded) {
                             cn.push(" bg-yellow-400  ");
                         } else {
-                            cn.push(" bg-primary-500 ");
+                            cn.push(" bg-emerald-500 ");
                         }
 
                         return (
@@ -189,7 +189,7 @@ const Expanded: React.FC<{ endpoint: EndpointData }> = ({ endpoint }) => {
 
                 <Line
 
-padding={[4,0, 4, 4]}
+                    padding={[4, 0, 4, 4]}
                     autoFit={true}
                     data={info.getValue().filter((s) => s.time >= 0).map((s) => ({
                         time: new Date(s.time).toDateString(),

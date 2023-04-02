@@ -47,7 +47,10 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
   };
   if (req.prewarm) {
     console.log("Prewarming", req.url)
+    console.time(`warming up: ${req.url}`)
     await check(checkRequest)
+    console.timeEnd(`warming up: ${req.url}`)
+    await new Promise(r => setTimeout(r, 2000))
   }
 
   const runs = req.runs ?? 1
@@ -58,7 +61,12 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
 
     try {
       // 1 retry if the request fails
-      const res = await check(checkRequest).catch(() => check(checkRequest))
+      console.time(`${req.url} run ${i}`)
+      const res = await check(checkRequest).catch((err) => {
+        console.error(`Request failed, but we'll retry once: ${err}`)
+        return check(checkRequest)
+      })
+      console.timeEnd(`${req.url} run ${i}`)
 
       responses.push(res);
     } catch (e) {

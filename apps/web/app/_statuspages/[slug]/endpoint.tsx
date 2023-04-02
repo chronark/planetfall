@@ -66,7 +66,7 @@ export const Endpoint: React.FC<{
             <div className="flex items-center gap-2 px-3 py-1 border rounded-full border-zinc-300">
               <div
                 className={cn("w-2.5 h-2.5 rounded-full", {
-                  "bg-primary-500": currentState === "Operational",
+                  "bg-emerald-500": currentState === "Operational",
                   "bg-yellow-500": currentState === "Degraded",
                   "bg-red-500": currentState === "Error",
                 })}
