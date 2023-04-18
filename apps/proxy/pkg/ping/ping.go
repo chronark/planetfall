@@ -16,6 +16,18 @@ import (
 	"github.com/chronark/planetfall/apps/proxy/pkg/tags"
 )
 
+// curl https://proxy-go.vercel.app/api \
+// -H "Content-Type: application/json" \
+// -d '{
+// 	"url": "https://definite-viper-32652.upstash.io/get/key",
+// 	"method": "GET",
+// 	"headers": {  "Authorization": "AX-MASQgZGNjNGFmYjItZmQyMi00OWQ0LTlmOWMtZGE4OWFmOTU0MDUzZjIxOGUwOTk0NWQ5NDMzMDhiYzU0MzJlMjdlMWZhNWE="},
+// 	"timeout": 10000,
+// 	"followRedirects": true,
+// 	"prewarm": true,
+// 	"runs": 1
+// }' 
+
 type PingRequest struct {
 	Url     string            `json:"url"`
 	Method  string            `json:"method"`
@@ -56,7 +68,7 @@ type Timing struct {
 
 type Response struct {
 	Status  int               `json:"status,omitempty"`
-	Latency int64             `json:"latency,omitempty"`
+	Latency int64             `json:"latency"`
 	Body    string            `json:"body,omitempty"`
 	Headers map[string]string `json:"headers,omitempty"`
 	Time    int64             `json:"time"`

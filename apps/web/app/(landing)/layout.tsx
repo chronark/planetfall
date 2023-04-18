@@ -1,6 +1,7 @@
 import { Header } from "./header";
 import { Footer } from "./footer";
 import Script from "next/script";
+import { ClerkProvider } from "@clerk/nextjs/app-beta";
 
 export const revalidate = 3600;
 
@@ -32,14 +33,16 @@ export default async function Landing({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
-      <Script id="chat" async src="https://customer-chat.cdn-plain.com/latest/customerChat.js" />
+    <ClerkProvider>
+      <div className="flex flex-col min-h-screen overflow-hidden">
+        <Script id="chat" async src="https://customer-chat.cdn-plain.com/latest/customerChat.js" />
 
-      <Script id="setup-plain" dangerouslySetInnerHTML={{ __html: plainScript }} />
-      <Header />
+        <Script id="setup-plain" dangerouslySetInnerHTML={{ __html: plainScript }} />
+        <Header />
 
-      <main>{children}</main>
-      <Footer />
-    </div>
+        <main>{children}</main>
+        <Footer />
+      </div>
+    </ClerkProvider>
   );
 }

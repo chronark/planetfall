@@ -1,5 +1,5 @@
 export type PingRequest = {
-  url: string
+  url: string;
   method: string;
   body: string;
   headers: Record<string, string>;
@@ -7,10 +7,9 @@ export type PingRequest = {
   timeout: number;
   followRedirects?: boolean;
 
-  prewarm?: boolean
-  runs?: number
+  prewarm?: boolean;
+  runs?: number;
 };
-
 
 type CheckRequest = {
   url: string;
@@ -33,7 +32,6 @@ type PingResponse = {
 };
 
 export async function ping(req: PingRequest): Promise<PingResponse[]> {
-
   const checkRequest: CheckRequest = {
     url: req.url,
     method: req.method,
@@ -46,27 +44,25 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
     followRedirects: req.followRedirects,
   };
   if (req.prewarm) {
-    console.log("Prewarming", req.url)
-    console.time(`warming up: ${req.url}`)
-    await check(checkRequest)
-    console.timeEnd(`warming up: ${req.url}`)
-    await new Promise(r => setTimeout(r, 2000))
+    console.log("Prewarming", req.url);
+    console.time(`warming up: ${req.url}`);
+    await check(checkRequest);
+    console.timeEnd(`warming up: ${req.url}`);
+    await new Promise((r) => setTimeout(r, 2000));
   }
 
-  const runs = req.runs ?? 1
+  const runs = req.runs ?? 1;
   const responses: PingResponse[] = [];
 
   for (let i = 0; i < runs; i++) {
-
-
     try {
       // 1 retry if the request fails
-      console.time(`${req.url} run ${i}`)
+      console.time(`${req.url} run ${i}`);
       const res = await check(checkRequest).catch((err) => {
-        console.error(`Request failed, but we'll retry once: ${err}`)
-        return check(checkRequest)
-      })
-      console.timeEnd(`${req.url} run ${i}`)
+        console.error(`Request failed, but we'll retry once: ${err}`);
+        return check(checkRequest);
+      });
+      console.timeEnd(`${req.url} run ${i}`);
 
       responses.push(res);
     } catch (e) {

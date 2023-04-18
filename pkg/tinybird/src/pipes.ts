@@ -13,7 +13,7 @@ export const getEndpointStats = tb.buildPipe({
   pipe: "get_endpoint_stats__v2",
   parameters: z.object({
     endpointId: z.string(),
-    days: z.number().default(1)
+    days: z.number().default(1),
   }),
   data: z.object({
     regionId: z.string(),
@@ -25,7 +25,6 @@ export const getEndpointStats = tb.buildPipe({
     errors: nullableNumberWithDefault,
   }),
 });
-
 
 export const getEndpointMetricsOver90Days = tb.buildPipe({
   pipe: "statuspage__get_aggregated_metrics__v1",
@@ -41,8 +40,8 @@ export const getEndpointMetricsOver90Days = tb.buildPipe({
     p95: nullableNumberWithDefault,
     p99: nullableNumberWithDefault,
     errors: nullableNumberWithDefault,
-  })
-})
+  }),
+});
 
 export const getEndpointSeriesOver90Days = tb.buildPipe({
   pipe: "statuspage__get_aggregated_series__v1",
@@ -59,10 +58,8 @@ export const getEndpointSeriesOver90Days = tb.buildPipe({
     p95: nullableNumberWithDefault,
     p99: nullableNumberWithDefault,
     errors: nullableNumberWithDefault,
-  })
-})
-
-
+  }),
+});
 
 export const getEndpointStatsPerDay = tb.buildPipe({
   pipe: "get_endpoint_stats_per_day__v2",
@@ -86,7 +83,7 @@ export const getEndpointStatsGlobally = tb.buildPipe({
   pipe: "get_endpoint_stats_globally__v2",
   parameters: z.object({
     endpointId: z.string(),
-    days: z.number().default(1)
+    days: z.number().default(1),
   }),
   data: z.object({
     count: nullableNumberWithDefault,

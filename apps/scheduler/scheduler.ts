@@ -15,17 +15,13 @@ export class Scheduler {
   private notifications: Notifications;
   regions: Record<string, Region>;
 
-  constructor({
-    logger,
-    notifications,
-  }: { logger: Logger; notifications: Notifications }) {
+  constructor({ logger, notifications }: { logger: Logger; notifications: Notifications }) {
     this.db = new PrismaClient();
     this.tinybird = new tb.Client();
     this.endpoints = new Map();
     this.logger = logger;
     this.regions = {};
     this.notifications = notifications;
-  
   }
 
   public async run() {
@@ -200,7 +196,7 @@ export class Scheduler {
         endpoint.distribution === "ALL"
           ? endpoint.regions
           : [endpoint.regions[Math.floor(Math.random() * endpoint.regions.length)]];
-     
+
       for await (const region of regions) {
         this.logger.debug("testing endpoint", {
           endpointId: endpoint.id,
@@ -225,7 +221,7 @@ export class Scheduler {
             timeout: endpoint.timeout ?? undefined,
             followRedirects: endpoint.followRedirects ?? false,
             prewarm: endpoint.prewarm,
-            runs: endpoint.runs
+            runs: endpoint.runs,
           }),
         });
         if (res.status !== 200) {

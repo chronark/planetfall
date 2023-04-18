@@ -146,7 +146,7 @@ export const Form: React.FC<Props> = ({
             ) : null}
           </div>
         </div>
-       
+
         {/* {signedIn ? (
           <div className="space-y-6">
             <div className="flex items-center justify-between">

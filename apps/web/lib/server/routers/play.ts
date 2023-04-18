@@ -56,7 +56,7 @@ export const playRouter = t.router({
   check: t.procedure
     .input(
       z.object({
-        method: z.enum(["GET", "POST", "PUT", "DELETE"]),
+        method: z.enum(["GET", "POST", "PUT", "DELETE", "PATCH"]),
         urls: z.array(z.string().url()),
         regionIds: z.array(z.string()).min(1),
       }),

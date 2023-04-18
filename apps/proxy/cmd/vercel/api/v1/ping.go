@@ -33,7 +33,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := ping.Request{}
+	
+	req := ping.PingRequest{}
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		handleError(w, err, http.StatusBadRequest)

@@ -18,32 +18,33 @@ const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
   );
 };
 
-
 export const Endpoint: React.FC<{
-  endpoint: EndpointData
-  degradedAfter?: number
+  endpoint: EndpointData;
+  degradedAfter?: number;
 }> = ({ endpoint, degradedAfter }) => {
-
-  const globalStats = endpoint.regions["global"]
+  const globalStats = endpoint.regions["global"];
   const totalChecks = globalStats.count;
-  const errors = globalStats.errors
+  const errors = globalStats.errors;
 
-  let availability = (totalChecks === 0 ? 1 : 1 - errors / totalChecks) * 100
+  let availability = (totalChecks === 0 ? 1 : 1 - errors / totalChecks) * 100;
   // Availability should not be rounded to 100% if there are errors
   if (errors > 0) {
-    availability = Math.min(availability, 99.99)
+    availability = Math.min(availability, 99.99);
   }
 
-  const currentMetrics = globalStats.series.at(-1)
+  const currentMetrics = globalStats.series.at(-1);
   if (!currentMetrics) {
-    console.error("No current metrics", { globalStats, endpoint })
-    return null
+    console.error("No current metrics", { globalStats, endpoint });
+    return null;
   }
-  const currentState = currentMetrics.errors > 0 ? "Error"
-    : degradedAfter && currentMetrics.p75 > degradedAfter ? "Degraded"
+  const currentState =
+    currentMetrics.errors > 0
+      ? "Error"
+      : degradedAfter && currentMetrics.p75 > degradedAfter
+      ? "Degraded"
       : "Operational";
 
-  const max = Math.max(...globalStats.series.map((s) => s.p75))
+  const max = Math.max(...globalStats.series.map((s) => s.p75));
   return (
     <div className="w-full p-2 rounded-lg ring-1 ring-inset ring-zinc-900/10 bg-zinc-900/5 ">
       <div className="bg-white rounded shadow-2xl ring-1 ring-zinc-900/10 p-4">
@@ -60,7 +61,7 @@ export const Endpoint: React.FC<{
 
           <div className="flex flex-col-reverse items-end gap-4 md:items-center md:flex-row">
             <span className="whitespace-nowrap leading-7 text-zinc-900 text-sm">
-              {(availability).toFixed(2)} % Availability
+              {availability.toFixed(2)} % Availability
             </span>
 
             <div className="flex items-center gap-2 px-3 py-1 border rounded-full border-zinc-300">
@@ -102,9 +103,6 @@ export const Endpoint: React.FC<{
             />
           </div>
         </div>
-
-
-
       </div>
     </div>
   );

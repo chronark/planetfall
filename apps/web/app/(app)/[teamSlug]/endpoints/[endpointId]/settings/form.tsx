@@ -36,7 +36,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
   const nameForm = useForm<{ name: string }>();
   const urlForm = useForm<{
     url: string;
-    method: "POST" | "GET" | "PUT" | "DELETE";
+    method: "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
   }>();
   const redirectForm = useForm<{
     followRedirects: "true" | "false";

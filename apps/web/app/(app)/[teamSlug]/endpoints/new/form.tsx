@@ -25,7 +25,7 @@ type Props = {
 type FormData = {
   name: string;
   url: string;
-  method: "POST" | "GET" | "PUT" | "DELETE";
+  method: "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
   headers?: string;
   body?: string;
   interval: number;
@@ -278,18 +278,18 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
               <div className="mt-1 sm:col-span-4 sm:mt-0">
                 <textarea
                   rows={3}
-                  disabled={!["POST", "PUT"].includes(formValues.method)}
+                  disabled={!["POST", "PUT", "PATCH"].includes(formValues.method)}
                   {...register("body")}
                   className={`transition-all  focus:bg-zinc-50 md:px-4 px-2 py-1 md:py-3  w-full ${
                     errors.body ? "border-red-500" : "border-zinc-700"
                   } ${
-                    ["POST", "PUT"].includes(formValues.method) ? "" : "cursor-not-allowed"
+                    ["POST", "PUT", "PATCH"].includes(formValues.method) ? "" : "cursor-not-allowed"
                   } hover:border-zinc-900 focus:border-zinc-900   border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                   defaultValue={""}
                   placeholder={
-                    ["POST", "PUT"].includes(formValues.method)
+                    ["POST", "PUT", "PATCH"].includes(formValues.method)
                       ? undefined
-                      : "Only available in POST or PUT requests"
+                      : "Only available in POST, PUT or PATCH requests"
                   }
                 />
               </div>

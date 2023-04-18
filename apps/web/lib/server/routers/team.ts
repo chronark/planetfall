@@ -183,7 +183,7 @@ export const teamRouter = t.router({
         username: invitedUser.name,
         team: team.name,
         invitedFrom: currentUser.user.name,
-        inviteLink: `https://planetfall/invite/${invitation.id}`,
+        inviteLink: `https://planetfall.io/invite/${invitation.id}`,
       });
     }),
   updateMember: t.procedure

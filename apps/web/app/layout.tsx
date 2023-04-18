@@ -3,7 +3,6 @@ import { Analytics } from "app/components/analytics";
 import { Inter } from "next/font/google";
 import { Metadata } from "next";
 import { Providers } from "./providers";
-import { ClerkProvider } from "@clerk/nextjs/app-beta";
 
 export const metadata: Metadata = {
   title: {
@@ -64,12 +63,10 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/logo.svg" />
       </head>
-      <ClerkProvider>
-        <body className={process.env.NODE_ENV === "development" ? "debug-screens" : undefined}>
-          <Providers>{children}</Providers>
-          <Analytics />
-        </body>
-      </ClerkProvider>
+      <body className={process.env.NODE_ENV === "development" ? "debug-screens" : undefined}>
+        <Providers>{children}</Providers>
+        <Analytics />
+      </body>
     </html>
   );
 }

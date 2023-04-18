@@ -41,6 +41,7 @@ export class Tinybird {
   private async fetch(
     pipe: string,
     parameters: Record<string, string | number | boolean | string[]> = {},
+    opts?: { cache?: RequestCache },
   ): Promise<unknown> {
     const url = new URL(`/v0/pipes/${pipe}.json`, this.baseUrl);
     for (const [key, value] of Object.entries(parameters)) {
@@ -55,11 +56,7 @@ export class Tinybird {
       headers: {
         Authorization: `Bearer ${this.token}`,
       },
-      //  cache: "no-store",
-      // @ts-ignore
-      next: {
-        revalidate: 10,
-      },
+      cache: opts?.cache,
     });
     if (!res.ok) {
       const error = (await res.json()) as PipeErrorResponse;
@@ -79,25 +76,28 @@ export class Tinybird {
   public buildPipe<
     TParameters extends Record<string, string | number | boolean | string[]>,
     TData extends Record<string, unknown>,
-  >(opts: {
+  >(req: {
     pipe: string;
     parameters?: z.ZodSchema<TParameters>;
     data: z.ZodSchema<TData, any, any>;
+    opts?: {
+      cache?: RequestCache;
+    };
   }): (
     params: TParameters,
   ) => Promise<z.infer<typeof pipeResponseWithoutData> & { data: TData[] }> {
-    const outputSchema = pipeResponseWithoutData.setKey("data", z.array(opts.data));
+    const outputSchema = pipeResponseWithoutData.setKey("data", z.array(req.data));
     return async (params: TParameters) => {
       let validatedParams: TParameters | undefined = undefined;
-      if (opts.parameters) {
-        const v = opts.parameters.safeParse(params);
+      if (req.parameters) {
+        const v = req.parameters.safeParse(params);
         if (!v.success) {
           throw new Error(v.error.message);
         }
         validatedParams = v.data;
       }
 
-      const res = await this.fetch(opts.pipe, validatedParams);
+      const res = await this.fetch(req.pipe, validatedParams, req.opts);
       const validatedResponse = outputSchema.safeParse(res);
       if (!validatedResponse.success) {
         throw new Error(validatedResponse.error.message);

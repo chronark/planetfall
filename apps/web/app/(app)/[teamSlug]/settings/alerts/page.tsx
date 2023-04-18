@@ -15,16 +15,16 @@ export default async function AlertsPage(props: { params: { teamSlug: string } }
         include: {
           endpoints: {
             where: {
-              deletedAt: null
-            }
+              deletedAt: null,
+            },
           },
           emailChannels: true,
         },
       },
       endpoints: {
         where: {
-          deletedAt: null
-        }
+          deletedAt: null,
+        },
       },
     },
   });

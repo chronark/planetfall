@@ -19,7 +19,7 @@ export const endpointRouter = t.router({
     .input(
       z.object({
         name: z.string(),
-        method: z.enum(["POST", "GET", "PUT", "DELETE"]),
+        method: z.enum(["POST", "GET", "PUT", "DELETE", "PATCH"]),
         url: z.string().url(),
         body: z.string().optional(),
         headers: z.record(z.string()).optional(),
@@ -134,7 +134,7 @@ export const endpointRouter = t.router({
       z.object({
         endpointId: z.string(),
         name: z.string().optional(),
-        method: z.enum(["POST", "GET", "PUT", "DELETE"]).optional(),
+        method: z.enum(["POST", "GET", "PUT", "DELETE", "PATCH"]).optional(),
         url: z.string().url().optional(),
         body: z.string().nullish().optional(),
         headers: z.record(z.string()).optional(),
@@ -254,7 +254,7 @@ export const endpointRouter = t.router({
         });
       }
 
-      const active = !endpoint.active
+      const active = !endpoint.active;
       const updated = await db.endpoint.update({
         where: { id: input.endpointId },
         data: {
