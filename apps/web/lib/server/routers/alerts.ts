@@ -3,6 +3,7 @@ import { z } from "zod";
 import { t } from "../trpc";
 import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
+import highstorm from "@highstorm/client";
 
 export const alertsRouter = t.router({
   create: t.procedure
@@ -58,7 +59,7 @@ export const alertsRouter = t.router({
       }
       const email = input.email ?? user.user.email;
 
-      return await db.alert.create({
+      const alert = await db.alert.create({
         data: {
           id: newId("alert"),
           teamId: input.teamId,
@@ -85,6 +86,15 @@ export const alertsRouter = t.router({
           },
         },
       });
+      await highstorm("alert.created", {
+        event: `${user.user.name} created an alert in ${team.slug}`,
+        metadata: {
+          userId: user.userId,
+          teamId: user.teamId,
+          teamSlug: team.slug,
+        },
+      });
+      return alert;
     }),
   update: t.procedure
     .input(
@@ -124,7 +134,7 @@ export const alertsRouter = t.router({
         });
       }
 
-      return await db.alert.update({
+      const updated = await db.alert.update({
         where: {
           id: input.alertId,
         },
@@ -137,6 +147,16 @@ export const alertsRouter = t.router({
           },
         },
       });
+
+      highstorm("alert.updated", {
+        event: `Alert ${alert.id} was updated`,
+        metadata: {
+          alertId: alert.id,
+          teamId: alert.team.id,
+          teamSlug: alert.team.slug,
+        },
+      });
+      return updated;
     }),
   delete: t.procedure
     .input(
@@ -171,10 +191,20 @@ export const alertsRouter = t.router({
         });
       }
 
-      return await db.alert.delete({
+      const deleted = await db.alert.delete({
         where: {
           id: input.alertId,
         },
       });
+      highstorm("alert.deleted", {
+        event: `Alert ${deleted.id} was deleted`,
+        metadata: {
+          alertId: alert.id,
+          teamId: alert.team.id,
+          teamSlug: alert.team.slug,
+        },
+      });
+
+      return deleted;
     }),
 });

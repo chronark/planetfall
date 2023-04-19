@@ -112,46 +112,50 @@ resource "vercel_project" "web" {
 
     },
     {
-      key = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
-      value = var.clerk_publishable_key.production,
+      key    = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+      value  = var.clerk_publishable_key.production,
       target = ["production"]
     },
     {
-      key = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
-      value = var.clerk_publishable_key.preview,
+      key    = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+      value  = var.clerk_publishable_key.preview,
       target = ["preview"]
     },
     {
-      key = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
-      value = var.clerk_publishable_key.development,
+      key    = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+      value  = var.clerk_publishable_key.development,
       target = ["development"]
     },
     {
-      key = "CLERK_SECRET_KEY",
-      value = var.clerk_secret_key.production,
+      key    = "CLERK_SECRET_KEY",
+      value  = var.clerk_secret_key.production,
       target = ["production"]
     },
     {
-      key = "CLERK_SECRET_KEY",
-      value = var.clerk_secret_key.preview,
+      key    = "CLERK_SECRET_KEY",
+      value  = var.clerk_secret_key.preview,
       target = ["preview"]
     },
     {
-      key = "CLERK_SECRET_KEY",
-      value = var.clerk_secret_key.development,
+      key    = "CLERK_SECRET_KEY",
+      value  = var.clerk_secret_key.development,
       target = ["development"]
     },
     {
-      key="CLERK_WEBHOOK_SECRET",
-      value=var.clerk_webhook_secret,
-      target=["production", "preview", "development"]
+      key    = "CLERK_WEBHOOK_SECRET",
+      value  = var.clerk_webhook_secret,
+      target = ["production", "preview", "development"]
     },
     {
-      key="NEXT_PUBLIC_PLAIN_APP_KEY",
-      value=var.plain_app_key,
-      target=["production", "preview", "development"]
+      key    = "NEXT_PUBLIC_PLAIN_APP_KEY",
+      value  = var.plain_app_key,
+      target = ["production", "preview", "development"]
+    },
+    {
+      key    = "HIGHSTORM_TOKEN",
+      value  = var.highstorm_token,
+      target = ["production"]
     }
-
 
   ]
 

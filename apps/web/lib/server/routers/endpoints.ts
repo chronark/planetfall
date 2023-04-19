@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { t } from "../trpc";
 import { db } from "@planetfall/db";
+import highstorm from "@highstorm/client";
 import {
   statusAssertion,
   serialize as serializeAssertions,
@@ -51,6 +52,7 @@ export const endpointRouter = t.router({
           id: true,
           maxTimeout: true,
           maxEndpoints: true,
+          slug: true,
           _count: {
             select: {
               endpoints: true,
@@ -120,11 +122,12 @@ export const endpointRouter = t.router({
           },
         },
       });
-      audit.log({
-        actorId: ctx.user.id,
-        event: "endpoint.create",
-        resourceId: created.id,
-        source: "trpc",
+      highstorm("endpoint.created", {
+        event: `${team.slug} created a new endpoint`,
+        metadata: {
+          actorId: ctx.user.id,
+          endpointId: created.id,
+        },
       });
 
       return created;
@@ -213,11 +216,12 @@ export const endpointRouter = t.router({
           },
         },
       });
-      audit.log({
-        actorId: ctx.user.id,
-        event: "endpoint.update",
-        resourceId: updatedEndpoint.id,
-        source: "trpc",
+      highstorm("endpoint.updated", {
+        event: `${endpoint.team.slug} updated a new endpoint`,
+        metadata: {
+          actorId: ctx.user.id,
+          endpointId: updatedEndpoint.id,
+        },
       });
       return updatedEndpoint;
     }),
@@ -269,11 +273,12 @@ export const endpointRouter = t.router({
           },
         },
       });
-      audit.log({
-        actorId: ctx.user.id,
-        event: "endpoint.update",
-        resourceId: updated.id,
-        source: "trpc",
+      highstorm("endpoint.updated", {
+        event: `${endpoint.team.slug} toggled an endpoint ${active ? "on" : "off"}`,
+        metadata: {
+          actorId: ctx.user.id,
+          endpointId: endpoint.id,
+        },
       });
       return updated;
     }),
@@ -317,11 +322,13 @@ export const endpointRouter = t.router({
           },
         },
       });
-      audit.log({
-        actorId: ctx.user.id,
-        event: "endpoint.delete",
-        resourceId: deleted.id,
-        source: "trpc",
+      highstorm("endpoint.deleted", {
+        event: `${endpoint.team.slug} deleted an endpoint`,
+        metadata: {
+          teamSlug: endpoint.team.slug,
+          actorId: ctx.user.id,
+          endpointId: deleted.id,
+        },
       });
       return deleted;
     }),

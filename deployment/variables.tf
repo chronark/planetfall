@@ -151,3 +151,8 @@ variable "plain_app_key"{
   type = string
   sensitive = true
 }
+
+variable "highstorm_token" {
+  type = string
+  sensitive=true
+}

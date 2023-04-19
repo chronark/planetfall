@@ -7,6 +7,7 @@ import { Redis } from "@upstash/redis";
 import { createInvoice } from "@/lib/billing/stripe";
 import { DEFAULT_QUOTA } from "plans";
 import { audit } from "@planetfall/audit";
+import highstorm from "@highstorm/client";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2022-11-15",
   typescript: true,
@@ -95,13 +96,18 @@ export const billingRouter = t.router({
         },
       });
 
-      audit.log({
-        actorId: ctx.user.id,
-        event: "team.plan.change",
-        resourceId: team.id,
-        source: "trpc",
-        tags: { from: team.plan, to: updated.plan },
+      await highstorm("plan.changed", {
+        event: `${updated.slug} changed their plan to ${updated.plan}`,
+        metadata: {
+          actorId: ctx.user.id,
+          event: "team.plan.change",
+          resourceId: team.id,
+          source: "trpc",
+          from: team.plan,
+          to: updated.plan,
+        },
       });
+
       await redis.set(redisLockKey, true, { ex: 60 * 60 * 24 });
     }),
   portal: t.procedure

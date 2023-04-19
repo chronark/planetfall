@@ -13,6 +13,7 @@
     "@chronark/access": "^0.0.16",
     "@clerk/nextjs": "^4.13.0",
     "@docsearch/react": "^3.3.0",
+    "@highstorm/client": "^0.0.1",
     "@markdoc/markdoc": "^0.2.1",
     "@markdoc/next.js": "^0.2.2",
     "@next/font": "^13.2.4",

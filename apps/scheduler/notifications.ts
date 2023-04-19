@@ -120,7 +120,7 @@ export class Notifications {
         alerts: {
           include: {
             emailChannels: true,
-            webhookChannels: true,
+            slackChannels: true,
           },
         },
       },
