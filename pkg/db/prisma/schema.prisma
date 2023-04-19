@@ -314,7 +314,7 @@ model Alert {
   endpoints Endpoint[]
 
   emailChannels   EmailChannel[]
-  webhookChannels WebhookChannel[]
+  slackChannels SlackChannel[]
 
   @@index([teamId])
 }
@@ -334,7 +334,7 @@ model EmailChannel {
   @@index([teamId])
 }
 
-model WebhookChannel {
+model SlackChannel {
   id String @id
 
   alert   Alert  @relation(fields: [alertId], references: [id], onDelete: Cascade)
