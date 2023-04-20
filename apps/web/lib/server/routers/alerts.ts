@@ -6,7 +6,7 @@ import { newId } from "@planetfall/id";
 import highstorm from "@highstorm/client";
 
 export const alertsRouter = t.router({
-  create: t.procedure
+  createEmailAlert: t.procedure
     .input(
       z.object({
         teamId: z.string(),
@@ -77,6 +77,95 @@ export const alertsRouter = t.router({
                 id: newId("channel"),
                 active: true,
                 email,
+                teamId: team.id,
+              },
+            },
+          },
+          endpoints: {
+            connect: input.endpointIds.map((id) => ({ id })),
+          },
+        },
+      });
+      await highstorm("alert.created", {
+        event: `${user.user.name} created an alert in ${team.slug}`,
+        metadata: {
+          userId: user.userId,
+          teamId: user.teamId,
+          teamSlug: team.slug,
+        },
+      });
+      return alert;
+    }),
+  createSlackAlert: t.procedure
+    .input(
+      z.object({
+        teamId: z.string(),
+        endpointIds: z.array(z.string()),
+        channelId: z.string().optional(),
+        slackUrl: z.string().url(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.user.id) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const team = await db.team.findUnique({
+        where: { id: input.teamId },
+        include: {
+          members: {
+            where: {
+              userId: ctx.user.id,
+            },
+            include: {
+              user: true,
+            },
+          },
+          endpoints: true,
+          alerts: {
+            include: {
+              slackChannels: true,
+            },
+          },
+        },
+      });
+
+      if (!team) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      const user = team.members.find((m) => m.userId === ctx.user.id);
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+      for (const endpointId of input.endpointIds) {
+        if (!team.endpoints.find((e) => e.id === endpointId)) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+          });
+        }
+      }
+
+      const alert = await db.alert.create({
+        data: {
+          id: newId("alert"),
+          teamId: input.teamId,
+          active: true,
+          addNewEndpointsAutomatically: false,
+          slackChannels: {
+            connectOrCreate: {
+              where: {
+                teamId_url: {
+                  teamId: input.teamId,
+                  url: input.slackUrl,
+                },
+              },
+              create: {
+                id: newId("channel"),
+                active: true,
+                url: input.slackUrl,
                 teamId: team.id,
               },
             },

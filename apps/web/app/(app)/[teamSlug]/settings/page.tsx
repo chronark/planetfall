@@ -7,7 +7,7 @@ import { auth } from "@clerk/nextjs/app-beta";
 import { DeleteCard } from "./DeleteCard";
 import { ChangeNameCard } from "./change-name";
 import { ChangeSlugCard } from "./change-slug";
-import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
 import { Tag } from "@/components/tag";
 import { Input } from "@/components/input";
 
@@ -54,11 +54,9 @@ export default async function SettingsPage(props: {
   // }
 
   return (
-    <main className="container mx-auto">
+    <main className="container flex flex-col mx-auto space-y-4 lg:space-y-8">
       <ChangeNameCard teamId={team.id} name={team.name} />
-      <Divider />
       <ChangeSlugCard teamId={team.id} slug={team.slug} />
-      <Divider />
       <TeamCard
         teamId={team.id}
         currentUser={{ userId: user.userId, role: user.role }}
@@ -67,11 +65,10 @@ export default async function SettingsPage(props: {
           role: m.role,
         }))}
       />
-      <Divider />
 
       <Card>
         <CardHeader>
-          <CardHeaderTitle title="Team ID" />
+          <CardTitle>Team ID</CardTitle>
         </CardHeader>
         <CardContent>
           <Input className="max-w-sm" value={team.id} readOnly />
@@ -79,7 +76,6 @@ export default async function SettingsPage(props: {
       </Card>
       {user.role === "OWNER" ? (
         <>
-          <Divider />
           <DeleteCard teamId={team.id} teamSlug={team.slug} />
         </>
       ) : null}

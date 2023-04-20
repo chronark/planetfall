@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Bar, Column, Line } from "@ant-design/plots";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
-import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -111,28 +111,28 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
 
   return (
     <Card>
-      <CardHeader border={false}>
-        <CardHeaderTitle
-          title="Analytics"
-          subtitle={
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <div className="flex items-center gap-2 px-2 py-1 rounded-full border bg-primary-100/20 border-primary-500 max-w-min">
-                  <FlaskConical className="w-3 h-3 text-primary-500" />
-                  <span className="text-xs text-primary-500">Experimental</span>
-                </div>
-              </HoverCardTrigger>
-              <HoverCardContent>
-                <Text variant="subtle" size="sm">
-                  Please report bugs to{" "}
-                  <Link href="mailto:support@planetfall.io" className="underline">
-                    support@planetfall.io
-                  </Link>
-                </Text>
-              </HoverCardContent>
-            </HoverCard>
-          }
-        />
+      <CardHeader>
+        <CardTitle>Analytics</CardTitle>
+        <CardDescription>
+          {" "}
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <div className="flex items-center gap-2 px-2 py-1 border rounded-full bg-primary-100/20 border-primary-500 max-w-min">
+                <FlaskConical className="w-3 h-3 text-primary-500" />
+                <span className="text-xs text-primary-500">Experimental</span>
+              </div>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <Text variant="subtle" size="sm">
+                Please report bugs to{" "}
+                <Link href="mailto:support@planetfall.io" className="underline">
+                  support@planetfall.io
+                </Link>
+              </Text>
+            </HoverCardContent>
+          </HoverCard>
+        </CardDescription>
+
         <div className="flex items-center justify-end w-full gap-4">
           <Select onValueChange={(v: keyof typeof sinceOptions) => setSince(v)}>
             <SelectTrigger>

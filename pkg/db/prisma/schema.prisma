@@ -136,6 +136,7 @@ model Team {
   pages              StatusPage[]
   alerts             Alert[]
   emailChannels      EmailChannel[]
+  slackChannels      SlackChannel[]
 
   @@index([slug])
 }
@@ -335,15 +336,17 @@ model EmailChannel {
 }
 
 model SlackChannel {
-  id String @id
+ id String @id
 
-  alert   Alert  @relation(fields: [alertId], references: [id], onDelete: Cascade)
-  alertId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
 
-  url     String
-  method  String
-  headers Json?
-  active  Boolean
+  alerts Alert[]
 
-  @@index([alertId])
+  url  String
+  active Boolean
+
+  @@unique([teamId, url])
+  @@index([teamId])
+
 }

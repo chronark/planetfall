@@ -7,7 +7,7 @@ import { ErrorsTable } from "./table";
 import { auth } from "@clerk/nextjs/app-beta";
 import { Button } from "@/components/button";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
 
 export const revalidate = 10;
@@ -73,7 +73,8 @@ export default async function Page(props: {
       <main className="container mx-auto">
         <Card>
           <CardHeader>
-            <CardHeaderTitle title={`${errors.length} Errors`} subtitle="in the last 24 hours" />
+            <CardTitle>{errors.length} Errors</CardTitle>={`${errors.length} Errors`}
+            <CardDescription>in the last 24 hours</CardDescription>
           </CardHeader>
           <CardContent>
             <ErrorsTable errors={errors} />

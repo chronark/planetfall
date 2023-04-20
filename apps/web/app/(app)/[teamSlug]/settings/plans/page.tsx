@@ -159,6 +159,15 @@ export default async function PlanPage(props: { params: { teamSlug: string } }) 
             Enterprise: true,
           },
         },
+        {
+          name: "Slack",
+          tiers: {
+            Free: true,
+
+            Pro: true,
+            Enterprise: true,
+          },
+        },
       ],
     },
   ];

@@ -4,9 +4,10 @@ import {
   Button,
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
-  CardHeaderTitle,
+  CardTitle,
 } from "@/components/index";
 import { Tag } from "@/components/tag";
 import { Input } from "@/components/input";
@@ -58,10 +59,11 @@ export const ChangeNameCard: React.FC<Props> = ({ teamId, name }): JSX.Element =
     <form onSubmit={handleSubmit(submit)} className="">
       <Card>
         <CardHeader>
-          <CardHeaderTitle
-            title="Name"
-            subtitle="The name of your team, this is what will be displayed on your team page and on your invoices."
-          />
+          <CardTitle>Name</CardTitle>
+          <CardDescription>
+            The name of your team, this is what will be displayed on your team page and on your
+            invoices.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Label htmlFor="name">Name</Label>
@@ -78,8 +80,7 @@ export const ChangeNameCard: React.FC<Props> = ({ teamId, name }): JSX.Element =
             </p>
           ) : null}
         </CardContent>
-        <CardFooter>
-          <div />
+        <CardFooter className="justify-end">
           <Button isLoading={loading} type="submit">
             Save
           </Button>

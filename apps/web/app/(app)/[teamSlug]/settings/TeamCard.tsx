@@ -5,7 +5,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardHeaderTitle,
+  CardTitle,
   Confirm,
   Text,
   ToastAction,
@@ -171,8 +171,8 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
 
   return (
     <Card>
-      <CardHeader>
-        <CardHeaderTitle title="Members" actions={actions} />
+      <CardHeader actions={actions}>
+        <CardTitle>Members</CardTitle>
       </CardHeader>
       <CardContent>
         <table className="min-w-full border-separate" style={{ borderSpacing: 0 }}>

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Bar } from "@ant-design/plots";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
-import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
 type Props = {
   regions: {
     regionId: string;
@@ -34,32 +34,35 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
 
   return (
     <Card>
-      <CardHeader border={false}>
-        <CardHeaderTitle title="Latency by Region" />
-        <div className="flex items-center justify-end w-full gap-4">
-          {regions.length > 10 ? (
-            <Select onValueChange={(v) => setShowTopBottom(v === "true")}>
+      <CardHeader
+        actions={[
+          <div className="flex items-center justify-end w-full gap-4">
+            {regions.length > 10 ? (
+              <Select onValueChange={(v) => setShowTopBottom(v === "true")}>
+                <SelectTrigger>
+                  <SelectValue defaultValue="true" placeholder="Show Best and Worst" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">Show Best and Worst</SelectItem>
+                  <SelectItem value="false">Show All</SelectItem>
+                </SelectContent>
+              </Select>
+            ) : null}
+            <Select onValueChange={(v) => setSelected(v)}>
               <SelectTrigger>
-                <SelectValue defaultValue="true" placeholder="Show Best and Worst" />
+                <SelectValue defaultValue="p75" placeholder="P75" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="true">Show Best and Worst</SelectItem>
-                <SelectItem value="false">Show All</SelectItem>
+                <SelectItem value="p75">P75</SelectItem>
+                <SelectItem value="p90">P90</SelectItem>
+                <SelectItem value="p95">P95</SelectItem>
+                <SelectItem value="p99">P99</SelectItem>
               </SelectContent>
             </Select>
-          ) : null}
-          <Select onValueChange={(v) => setSelected(v)}>
-            <SelectTrigger>
-              <SelectValue defaultValue="p75" placeholder="P75" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="p75">P75</SelectItem>
-              <SelectItem value="p90">P90</SelectItem>
-              <SelectItem value="p95">P95</SelectItem>
-              <SelectItem value="p99">P99</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          </div>,
+        ]}
+      >
+        <CardTitle>Latency by Region</CardTitle>
       </CardHeader>
       <CardContent>
         <Bar

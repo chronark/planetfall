@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card, Text, CardHeader, CardHeaderTitle } from "@/components/index";
+import { Button, Card, Text, CardHeader, CardTitle } from "@/components/index";
 import {
   DialogDescription,
   DialogHeader,
@@ -60,51 +60,50 @@ export const DeleteCard: React.FC<Props> = ({ teamSlug, teamId }): JSX.Element =
   return (
     <Card>
       <Toaster />
-      <CardHeader>
-        <CardHeaderTitle
-          title="Delete Team"
-          actions={[
-            <Dialog key="delete">
-              <DialogTrigger asChild>
-                <Button variant="danger">Delete Team</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Are you sure you want to delete {teamSlug}?</DialogTitle>
-                  <DialogDescription className="px-4 py-2 font-medium text-red-600 bg-red-100 border border-red-500 rounded">
-                    This action cannot be undone. This will permanently delete your account and
-                    remove your data from our servers.
-                  </DialogDescription>
+      <CardHeader
+        actions={[
+          <Dialog key="delete">
+            <DialogTrigger asChild>
+              <Button variant="danger">Delete Team</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you sure you want to delete {teamSlug}?</DialogTitle>
+                <DialogDescription className="px-4 py-2 font-medium text-red-600 bg-red-100 border border-red-500 rounded">
+                  This action cannot be undone. This will permanently delete your account and remove
+                  your data from our servers.
+                </DialogDescription>
 
-                  <form onSubmit={handleSubmit(submit)} className="mt-4 md:mt-8">
-                    <Text>
-                      Enter the team name <span className="font-semibold">{teamSlug}</span> to
-                      continue:
-                    </Text>
-                    <div className="mt-1 ">
-                      <Input
-                        type="text"
-                        {...register("slug", {
-                          required: true,
-                        })}
-                        placeholder={teamSlug}
-                      />
-                      {errors.slug ? (
-                        <p className="mt-2 text-sm text-red-500">{errors.slug.message}</p>
-                      ) : null}
-                    </div>
+                <form onSubmit={handleSubmit(submit)} className="mt-4 md:mt-8">
+                  <Text>
+                    Enter the team name <span className="font-semibold">{teamSlug}</span> to
+                    continue:
+                  </Text>
+                  <div className="mt-1 ">
+                    <Input
+                      type="text"
+                      {...register("slug", {
+                        required: true,
+                      })}
+                      placeholder={teamSlug}
+                    />
+                    {errors.slug ? (
+                      <p className="mt-2 text-sm text-red-500">{errors.slug.message}</p>
+                    ) : null}
+                  </div>
 
-                    <div className="flex justify-end w-full mt-4">
-                      <Button type="submit" variant="danger">
-                        {loading ? <Loading /> : "Delete Permanently"}
-                      </Button>
-                    </div>
-                  </form>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>,
-          ]}
-        />
+                  <div className="flex justify-end w-full mt-4">
+                    <Button type="submit" variant="danger">
+                      {loading ? <Loading /> : "Delete Permanently"}
+                    </Button>
+                  </div>
+                </form>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>,
+        ]}
+      >
+        <CardTitle>Delete Team</CardTitle>
       </CardHeader>
     </Card>
   );

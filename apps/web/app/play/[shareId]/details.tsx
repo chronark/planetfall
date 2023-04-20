@@ -6,7 +6,7 @@ import { Stats } from "@/components/stats";
 import { Trace } from "@/components/trace";
 import { Select, SelectTrigger, SelectItem, SelectContent, SelectValue } from "@/components/select";
 import { PlayChecks } from "lib/server/routers/play";
-import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { VercelEdge } from "@/components/icons/VercelEdge";
 import {
@@ -33,34 +33,37 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardHeaderTitle
-          title="Details"
-          subtitle="A detailed breakdown by region, including the response and a latency trace"
-        />
-        <Select
-          defaultValue={selectedRegion?.id}
-          onValueChange={(id) => setSelectedRegion(regions.find((r) => r.id === id)!)}
-        >
-          <SelectTrigger className="flex ">
-            <SelectValue defaultValue={selectedRegion?.id} />
-          </SelectTrigger>
+      <CardHeader
+        actions={[
+          <Select
+            defaultValue={selectedRegion?.id}
+            onValueChange={(id) => setSelectedRegion(regions.find((r) => r.id === id)!)}
+          >
+            <SelectTrigger className="flex ">
+              <SelectValue defaultValue={selectedRegion?.id} />
+            </SelectTrigger>
 
-          <SelectContent>
-            {regions.map((r) => (
-              <SelectItem key={r.id} value={r.id}>
-                <div className="flex items-center gap-1">
-                  {r.id.startsWith("aws:") ? (
-                    <AwsLambda className="w-4 h-4" />
-                  ) : (
-                    <VercelEdge className="w-4 h-4" />
-                  )}
-                  {r.name}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+            <SelectContent>
+              {regions.map((r) => (
+                <SelectItem key={r.id} value={r.id}>
+                  <div className="flex items-center gap-1">
+                    {r.id.startsWith("aws:") ? (
+                      <AwsLambda className="w-4 h-4" />
+                    ) : (
+                      <VercelEdge className="w-4 h-4" />
+                    )}
+                    {r.name}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>,
+        ]}
+      >
+        <CardTitle>Details</CardTitle>
+        <CardDescription>
+          A detailed breakdown by region, including the response and a latency trace
+        </CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -112,9 +115,9 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                     </div>
                   ) : null}
                   <div className="py-4 md:py-8">
-                    <div className="flex justify-between items-center gap-4">
+                    <div className="flex items-center justify-between gap-4">
                       <Heading h4={true}>Response Header</Heading>
-                      <div className="flex justify-end items-center gap-4">
+                      <div className="flex items-center justify-end gap-4">
                         {networkHops.length > 0 ? (
                           <Dialog>
                             <DialogTrigger>
@@ -140,20 +143,20 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
                                 </DialogDescription>
                               </DialogHeader>
 
-                              <div className="mx-auto grid max-w-2xl grid-cols-1 gap-8 overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4">
+                              <div className="grid max-w-2xl grid-cols-1 gap-8 mx-auto overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4">
                                 {networkHops.map((hop) => (
                                   <div key={hop.regionId}>
                                     <div className="flex items-center text-xs font-semibold leading-6 text-zinc-400">
                                       <svg
                                         viewBox="0 0 4 4"
-                                        className="mr-4 h-1 w-1 flex-none"
+                                        className="flex-none w-1 h-1 mr-4"
                                         aria-hidden="true"
                                       >
                                         <circle cx={2} cy={2} r={2} fill="currentColor" />
                                       </svg>
                                       {hop.continent}
                                       <div
-                                        className="absolute -ml-2 h-px w-screen -translate-x-full bg-zinc-900/10 sm:-ml-4 lg:static lg:ml-8 lg:-mr-6 lg:w-auto lg:flex-auto lg:translate-x-0"
+                                        className="absolute w-screen h-px -ml-2 -translate-x-full bg-zinc-900/10 sm:-ml-4 lg:static lg:ml-8 lg:-mr-6 lg:w-auto lg:flex-auto lg:translate-x-0"
                                         aria-hidden="true"
                                       />
                                     </div>

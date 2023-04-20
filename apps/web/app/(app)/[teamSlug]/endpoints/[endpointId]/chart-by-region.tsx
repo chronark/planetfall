@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/button";
-import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
 import { Heading } from "@/components/heading";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { Fly } from "@/components/icons/Fly";
@@ -42,31 +42,34 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks, team }) => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardHeaderTitle title="Latency" />
-        <div className="flex justify-end w-full">
-          <Select onValueChange={(v) => setSelectedRegion(v)} defaultValue={selectedRegion}>
-            <SelectTrigger>
-              <SelectValue defaultValue={selectedRegion} />
-            </SelectTrigger>
-            <SelectContent>
-              {endpoint.regions.map((r) => (
-                <SelectItem key={r.id} value={r.id}>
-                  <div className="flex items-center gap-1">
-                    {r.id.startsWith("aws:") ? (
-                      <AwsLambda className="w-4 h-4" />
-                    ) : r.id.startsWith("vercelEdge:") ? (
-                      <VercelEdge className="w-4 h-4" />
-                    ) : r.id.startsWith("fly:") ? (
-                      <Fly className="w-4 h-4" />
-                    ) : null}
-                    {r.name}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <CardHeader
+        actions={[
+          <div className="flex justify-end w-full">
+            <Select onValueChange={(v) => setSelectedRegion(v)} defaultValue={selectedRegion}>
+              <SelectTrigger>
+                <SelectValue defaultValue={selectedRegion} />
+              </SelectTrigger>
+              <SelectContent>
+                {endpoint.regions.map((r) => (
+                  <SelectItem key={r.id} value={r.id}>
+                    <div className="flex items-center gap-1">
+                      {r.id.startsWith("aws:") ? (
+                        <AwsLambda className="w-4 h-4" />
+                      ) : r.id.startsWith("vercelEdge:") ? (
+                        <VercelEdge className="w-4 h-4" />
+                      ) : r.id.startsWith("fly:") ? (
+                        <Fly className="w-4 h-4" />
+                      ) : null}
+                      {r.name}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>,
+        ]}
+      >
+        <CardTitle>Latency</CardTitle>
       </CardHeader>
       <CardContent>
         <Chart endpoint={endpoint} checks={checksByRegion} team={team} />

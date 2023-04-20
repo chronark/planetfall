@@ -1,7 +1,14 @@
 import { db } from "@planetfall/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import { redirect } from "next/navigation";
-import { Card, CardContent, CardFooter, CardHeader, CardHeaderTitle } from "@/components/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/card";
 import { getUsage } from "@planetfall/tinybird";
 import { Text } from "@/components/text";
 import { Button } from "@/components/button";
@@ -38,22 +45,19 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
   return (
     <div>
       <Card>
-        <CardHeader>
-          <CardHeaderTitle
-            title="Usage & Billing"
-            subtitle={
-              <Text>
-                Current billing cycle:{" "}
-                <strong>
-                  {new Date(year, month - 1, 1).toLocaleString(undefined, {
-                    month: "long",
-                  })}{" "}
-                  {year}
-                </strong>{" "}
-              </Text>
-            }
-            actions={[<BillingButton key="billing" teamId={team.id} />]}
-          />
+        <CardHeader actions={[<BillingButton key="billing" teamId={team.id} />]}>
+          <CardTitle>Usage & Billing</CardTitle>
+          <CardDescription>
+            <Text>
+              Current billing cycle:{" "}
+              <strong>
+                {new Date(year, month - 1, 1).toLocaleString(undefined, {
+                  month: "long",
+                })}{" "}
+                {year}
+              </strong>{" "}
+            </Text>
+          </CardDescription>
         </CardHeader>
 
         <CardContent>

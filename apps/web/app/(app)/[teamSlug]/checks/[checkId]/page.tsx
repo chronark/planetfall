@@ -13,7 +13,7 @@ import { auth } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
 import { Tag } from "@/components/tag";
 import { AlertCircle, Check } from "lucide-react";
-import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
 
 type Timings = {
@@ -227,7 +227,7 @@ export default async function Page(props: {
           <>
             <Card>
               <CardHeader>
-                <CardHeaderTitle title="Trace" />
+                <CardTitle>Trace</CardTitle>
               </CardHeader>
               <CardContent>
                 <DNS timings={check.timing as Timings} />
@@ -240,7 +240,7 @@ export default async function Page(props: {
             <Divider />
             <Card>
               <CardHeader>
-                <CardHeaderTitle title="Error" />
+                <CardTitle>Error</CardTitle>
               </CardHeader>
               <CardContent>
                 <Text>{check.error}</Text>
@@ -254,7 +254,7 @@ export default async function Page(props: {
             <Divider />
             <Card>
               <CardHeader>
-                <CardHeaderTitle title="Response Headers" />
+                <CardTitle>Response Headers</CardTitle>
               </CardHeader>
               <CardContent>
                 <HeaderTable
@@ -271,7 +271,7 @@ export default async function Page(props: {
             <Divider />
             <Card>
               <CardHeader>
-                <CardHeaderTitle title="Response Body" />
+                <CardTitle>Response Body</CardTitle>
               </CardHeader>
               <CardContent>
                 <code>{atob(check.body)}</code>

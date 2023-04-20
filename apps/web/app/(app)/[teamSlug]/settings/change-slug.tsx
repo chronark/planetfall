@@ -4,9 +4,10 @@ import {
   Button,
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
-  CardHeaderTitle,
+  CardTitle,
 } from "@/components/index";
 import { Tag } from "@/components/tag";
 import { Input } from "@/components/input";
@@ -58,10 +59,11 @@ export const ChangeSlugCard: React.FC<Props> = ({ teamId, slug }): JSX.Element =
     <form onSubmit={handleSubmit(submit)} className="">
       <Card>
         <CardHeader>
-          <CardHeaderTitle
-            title="Slug"
-            subtitle="The slug is used in the URL to identify your team. Slugs must only contain alphanumeric characters and - or _"
-          />
+          <CardTitle>Slug</CardTitle>
+          <CardDescription>
+            The slug is used in the URL to identify your team. Slugs must only contain alphanumeric
+            characters and - or _
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Label htmlFor="slug">Slug</Label>
@@ -80,8 +82,7 @@ export const ChangeSlugCard: React.FC<Props> = ({ teamId, slug }): JSX.Element =
             ) : null}
           </div>
         </CardContent>
-        <CardFooter>
-          <div />
+        <CardFooter className="justify-end">
           <Button isLoading={loading} type="submit">
             Save
           </Button>

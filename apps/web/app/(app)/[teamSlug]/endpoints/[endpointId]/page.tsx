@@ -21,10 +21,10 @@ import type { Metadata } from "next";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
-  CardFooterStatus,
   CardHeader,
-  CardHeaderTitle,
+  CardTitle,
 } from "@/components/card";
 import { Divider } from "@/components/divider";
 import classNames from "classnames";
@@ -234,19 +234,22 @@ export default async function Page(props: {
         {errors.length > 0 ? (
           <>
             <Card>
-              <CardHeader>
-                <CardHeaderTitle
-                  title="Errors"
-                  subtitle={`There have been ${errors.length} errors in the last 24 hours.`}
-                />
-                <Button>
-                  <Link
-                    href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/errors`}
-                    className="whitespace-nowrap"
-                  >
-                    Go to Errors
-                  </Link>
-                </Button>
+              <CardHeader
+                actions={[
+                  <Button>
+                    <Link
+                      href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/errors`}
+                      className="whitespace-nowrap"
+                    >
+                      Go to Errors
+                    </Link>
+                  </Button>,
+                ]}
+              >
+                <CardTitle>Errors</CardTitle>
+                <CardDescription>
+                  There have been {errors.length} errors in the last 24 hours.
+                </CardDescription>
               </CardHeader>
             </Card>
             <Divider />
@@ -299,7 +302,7 @@ export default async function Page(props: {
           <>
             <Card>
               <CardHeader>
-                <CardHeaderTitle title="Latest Checks" />
+                <CardTitle>Latest Checks</CardTitle>
               </CardHeader>
               <CardContent>
                 <LatestTable

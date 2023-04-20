@@ -19,6 +19,7 @@ export default async function AlertsPage(props: { params: { teamSlug: string } }
             },
           },
           emailChannels: true,
+          slackChannels: true,
         },
       },
       endpoints: {
@@ -45,6 +46,10 @@ export default async function AlertsPage(props: { params: { teamSlug: string } }
         emailChannels: alert.emailChannels.map((emailChannel) => ({
           id: emailChannel.id,
           email: emailChannel.email,
+        })),
+        slackChannels: alert.slackChannels.map((emailChannel) => ({
+          id: emailChannel.id,
+          url: emailChannel.url,
         })),
         endpoints: alert.endpoints.map((endpoint) => ({
           id: endpoint.id,

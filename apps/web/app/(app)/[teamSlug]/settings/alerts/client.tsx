@@ -3,10 +3,10 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
-  CardFooterActions,
   CardHeader,
-  CardHeaderTitle,
+  CardTitle,
 } from "@/components/card";
 import { ChevronRight, Mail, Plus, Trash } from "lucide-react";
 import Link from "next/link";
@@ -32,6 +32,7 @@ import { useToast } from "@/components/toast";
 import { Checkbox } from "@/components/check";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/select";
 import { SelectValue } from "@radix-ui/react-select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/tabs/tabs";
 
 type Props = {
   user: {
@@ -53,6 +54,10 @@ type Props = {
       id: string;
       email: string;
     }[];
+    slackChannels: {
+      id: string;
+      url: string;
+    }[];
   }[];
 
   endpoints: {
@@ -61,9 +66,15 @@ type Props = {
   }[];
 };
 
-type CreateForm = {
-  email: string;
-};
+type CreateForm =
+  | {
+      email: string;
+      slackUrl?: never;
+    }
+  | {
+      slackUrl: string;
+      email?: never;
+    };
 
 export const ClientPage: React.FC<Props> = ({ endpoints, team, alerts }) => {
   const [showNewAlertModal, setShowNewAlertModal] = useState(false);
@@ -88,11 +99,19 @@ export const ClientPage: React.FC<Props> = ({ endpoints, team, alerts }) => {
         });
         return;
       }
-      await trpc.alerts.create.mutate({
-        email: data.email,
-        teamId: team.id,
-        endpointIds: selectedEndpointIds,
-      });
+      if (data.email) {
+        await trpc.alerts.createEmailAlert.mutate({
+          email: data.email,
+          teamId: team.id,
+          endpointIds: selectedEndpointIds,
+        });
+      } else if (data.slackUrl) {
+        await trpc.alerts.createSlackAlert.mutate({
+          slackUrl: data.slackUrl,
+          teamId: team.id,
+          endpointIds: selectedEndpointIds,
+        });
+      }
       setShowNewAlertModal(false);
       router.refresh();
     } catch (e) {
@@ -154,10 +173,20 @@ export const ClientPage: React.FC<Props> = ({ endpoints, team, alerts }) => {
                     </div>
                   ))}
 
-                  <div>
-                    <Label>Email</Label>
-                    <Input type="email" {...createForm.register("email")} />
-                  </div>
+                  <Tabs defaultValue="email">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="email">Email</TabsTrigger>
+                      <TabsTrigger value="slack">Slack</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="email">
+                      <Label>Email</Label>
+                      <Input type="email" {...createForm.register("email")} />
+                    </TabsContent>
+                    <TabsContent value="slack">
+                      <Label>Slack Url</Label>
+                      <Input type="slack" {...createForm.register("slackUrl")} />
+                    </TabsContent>
+                  </Tabs>
                 </div>
                 <DialogFooter className="mt-8">
                   <Button variant="primary" type="submit" isLoading={loading}>
@@ -193,6 +222,10 @@ type AlertProps = {
       id: string;
       email: string;
     }[];
+    slackChannels: {
+      id: string;
+      url: string;
+    }[];
   };
 
   endpoints: {
@@ -210,24 +243,25 @@ const Alert: React.FC<AlertProps> = ({ alert, endpoints }) => {
   const { addToast } = useToast();
   return (
     <Card key={alert.id}>
-      <CardHeader>
-        <CardHeaderTitle
-          title={alert.emailChannels.at(0)?.email}
-          subtitle="The following endpoints will trigger an alert to this email address."
-          actions={[
-            <Confirm
-              variant="danger"
-              key="delete"
-              title="Delete Alert"
-              description={"Do you really want to delete this alert?"}
-              onConfirm={async () => {
-                await trpc.alerts.delete.mutate({ alertId: alert.id });
-                router.refresh();
-              }}
-              trigger={<Button variant="danger">Delete</Button>}
-            />,
-          ]}
-        />
+      <CardHeader
+        actions={[
+          <Confirm
+            variant="danger"
+            key="delete"
+            title="Delete Alert"
+            description={"Do you really want to delete this alert?"}
+            onConfirm={async () => {
+              await trpc.alerts.delete.mutate({ alertId: alert.id });
+              router.refresh();
+            }}
+            trigger={<Button variant="danger">Delete</Button>}
+          />,
+        ]}
+      >
+        <CardTitle>{alert.emailChannels.at(0)?.email ?? alert.slackChannels.at(0)?.url}</CardTitle>
+        <CardDescription>
+          The following endpoints will trigger an alert to this email address.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">

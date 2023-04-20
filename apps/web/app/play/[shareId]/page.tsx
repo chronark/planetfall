@@ -7,7 +7,7 @@ import { Chart } from "./chart";
 import { Table } from "./table";
 import { Details } from "./details";
 import type { PlayChecks } from "lib/server/routers/play";
-import { Card, CardContent, CardHeader, CardHeaderTitle } from "@/components/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
 import { auth } from "@clerk/nextjs/app-beta";
 const redis = Redis.fromEnv();
@@ -39,7 +39,7 @@ export default async function Share(props: { params: { shareId: string } }) {
             <>
               <Card>
                 <CardHeader>
-                  <CardHeaderTitle title="Latency per Region" />
+                  <CardTitle>Latency per Region</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-80">
@@ -56,10 +56,8 @@ export default async function Share(props: { params: { shareId: string } }) {
             <>
               <Card>
                 <CardHeader>
-                  <CardHeaderTitle
-                    title="Request Trace"
-                    subtitle="Edge functions do not support tracing yet."
-                  />
+                  <CardTitle>Request Trace</CardTitle>
+                  <CardDescription>Edge functions do not support tracing yet.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Table regions={regions} urls={urls} />
@@ -75,10 +73,10 @@ export default async function Share(props: { params: { shareId: string } }) {
               <Divider />
               <Card>
                 <CardHeader>
-                  <CardHeaderTitle
-                    title="Built Width"
-                    subtitle="This app is built with these frameworks and platforms."
-                  />
+                  <CardTitle>Built With</CardTitle>
+                  <CardDescription>
+                    This app is built with these frameworks and platforms.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="grid w-full grid-cols-2 gap-4 mx-auto mt-4 md:grid-cols-4 xl:grid-cols-6">
