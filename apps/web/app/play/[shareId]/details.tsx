@@ -35,7 +35,7 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
     <Card>
       <CardHeader
         actions={[
-          <Select
+          <Select key="regions"
             defaultValue={selectedRegion?.id}
             onValueChange={(id) => setSelectedRegion(regions.find((r) => r.id === id)!)}
           >

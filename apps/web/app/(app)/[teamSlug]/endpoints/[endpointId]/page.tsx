@@ -236,7 +236,7 @@ export default async function Page(props: {
             <Card>
               <CardHeader
                 actions={[
-                  <Button>
+                  <Button key="errors">
                     <Link
                       href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/errors`}
                       className="whitespace-nowrap"

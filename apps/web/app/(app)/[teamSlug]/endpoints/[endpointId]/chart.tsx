@@ -36,7 +36,7 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
     <Card>
       <CardHeader
         actions={[
-          <div className="flex items-center justify-end w-full gap-4">
+          <div key="regions" className="flex items-center justify-end w-full gap-4">
             {regions.length > 10 ? (
               <Select onValueChange={(v) => setShowTopBottom(v === "true")}>
                 <SelectTrigger>

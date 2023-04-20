@@ -44,7 +44,7 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks, team }) => {
     <Card>
       <CardHeader
         actions={[
-          <div className="flex justify-end w-full">
+          <div key="select" className="flex justify-end w-full">
             <Select onValueChange={(v) => setSelectedRegion(v)} defaultValue={selectedRegion}>
               <SelectTrigger>
                 <SelectValue defaultValue={selectedRegion} />
