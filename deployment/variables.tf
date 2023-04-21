@@ -72,28 +72,6 @@ variable "tinybird_token" {
 }
 
 
-variable "github_oauth_id" {
-  type = string
-}
-
-
-
-variable "github_oauth_secret" {
-  type      = string
-  sensitive = true
-}
-
-
-
-variable "nextauth_secret" {
-  type      = string
-  sensitive = true
-}
-
-variable "nextauth_secret_preview" {
-  type      = string
-  sensitive = true
-}
 
 variable "git_credentials" {
   type      = string
@@ -112,11 +90,6 @@ variable "fly_org" {
   default = "planetfall"
 }
 
-
-variable "preview_user_password" {
-  type      = string
-  sensitive = true
-}
 
 variable "resend_api_key" {
   type      = string
@@ -137,13 +110,17 @@ variable "clerk_publishable_key" {
   type = object({
     production = string
     preview    = string
-        development = string
+    development = string
 
   })
   
 }
 variable "clerk_webhook_secret"{
-  type = string
+ type = object({
+    production = string
+    preview    = string
+    development = string
+  })
   sensitive = true
 }
 
