@@ -48,15 +48,15 @@ export default async function AppLayout() {
         </div>
       </nav>
 
-      <div className="mt-16 container mx-auto flex flex-col md:flex-row justify-between space-y-16 md:space-y-0 md:space-x-16">
-        <div className=" w-full md:w-1/3">
+      <div className="container flex flex-col justify-between mx-auto mt-16 space-y-16 md:flex-row md:space-y-0 md:space-x-16">
+        <div className="w-full mx-4 md:mx-0 md:w-1/3">
           <h2 className="text-3xl font-bold tracking-tight text-zink-900">Get in touch</h2>
 
-          <dl className="mt-10 space-y-4 text-base leading-7 text-zink-400">
+          <dl className="mt-10 space-y-2 text-base leading-7 md:space-y-4 text-zink-400">
             <div className="flex gap-x-4">
               <dt className="flex-none">
                 <span className="sr-only">Twitter</span>
-                <Twitter className="h-7 w-6 text-zink-400" aria-hidden="true" />
+                <Twitter className="w-6 h-7 text-zink-400" aria-hidden="true" />
               </dt>
               <Link
                 target="_blank"
@@ -69,7 +69,7 @@ export default async function AppLayout() {
             <div className="flex gap-x-4">
               <dt className="flex-none">
                 <span className="sr-only">Email</span>
-                <Mail className="h-7 w-6 text-zink-400" aria-hidden="true" />
+                <Mail className="w-6 h-7 text-zink-400" aria-hidden="true" />
               </dt>
               <dd>
                 <Link className="hover:text-zink-900" href="mailto:support@planetfall.io">
@@ -80,7 +80,7 @@ export default async function AppLayout() {
             <div className="flex gap-x-4">
               <dt className="flex-none">
                 <span className="sr-only">Discord</span>
-                <Discord className="h-7 w-6 text-zink-400" />
+                <Discord className="w-6 h-7 text-zink-400" />
               </dt>
               <dd>
                 <Link
@@ -95,7 +95,12 @@ export default async function AppLayout() {
           </dl>
         </div>
 
-        <div className="w-full md:w-2/3">
+        {/* On mobile I don't like the look of a card */}
+        <div className="w-full md:hidden ">
+          <Chat />
+        </div>
+        {/* Use a card on larger screens */}
+        <div className="hidden w-2/3 md:block">
           <Card>
             <CardContent>
               <Chat />

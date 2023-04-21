@@ -24,8 +24,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const teams = await db.team.findMany({
     where: {
-      stripeCustomerId: {
-        not: null,
+      AND: {
+        stripeCustomerId: {
+          not: null,
+        },
+        plan: {
+          not: "FREE",
+        },
+        trialExpires: {
+          gte: new Date(),
+        },
       },
     },
   });

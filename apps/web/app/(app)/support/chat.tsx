@@ -18,7 +18,9 @@ export const Chat: React.FC = () => {
         },
       }}
     >
-      <PlainChat />
+      <div className="lg:h-[70vh]">
+        <PlainChat />
+      </div>
     </PlainProvider>
   );
 };

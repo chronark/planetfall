@@ -140,7 +140,7 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
                   .then(() => {
                     toast.addToast({
                       title: "Invitation sent",
-                      content: <Text>We have sent an invitation to {inviteEmail}</Text>,
+                      content: `We have sent an invitation to ${inviteEmail}`,
                     });
                   })
                   .catch((err) => {

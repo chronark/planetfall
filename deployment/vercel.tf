@@ -72,26 +72,7 @@ resource "vercel_project" "web" {
       value  = var.tinybird_token
       target = ["production", "preview"]
     },
-    {
-      key    = "GITHUB_OAUTH_ID"
-      value  = var.github_oauth_id
-      target = ["production"]
-    },
-    {
-      key    = "GITHUB_OAUTH_SECRET"
-      value  = var.github_oauth_secret
-      target = ["production"]
-    },
-    {
-      key : "NEXTAUTH_SECRET",
-      value : var.nextauth_secret,
-      target : ["production"]
-    },
-    {
-      key    = "NEXTAUTH_SECRET"
-      value  = var.nextauth_secret_preview
-      target = ["preview"]
-      }, {
+     {
       key    = "UPSTASH_REDIS_REST_URL"
       value  = "https:${upstash_redis_database.planetfall.endpoint}"
       target = ["production", "preview", "development"]
@@ -100,11 +81,7 @@ resource "vercel_project" "web" {
       value  = upstash_redis_database.planetfall.rest_token
       target = ["production", "preview", "development"]
     },
-    {
-      key    = "PREVIEW_USER_PASSWORD"
-      value  = var.preview_user_password
-      target = ["preview"]
-    },
+   
     {
       key    = "RESEND_API_KEY"
       value  = var.resend_api_key,
@@ -143,8 +120,18 @@ resource "vercel_project" "web" {
     },
     {
       key    = "CLERK_WEBHOOK_SECRET",
-      value  = var.clerk_webhook_secret,
-      target = ["production", "preview", "development"]
+      value  = var.clerk_webhook_secret.production,
+      target = ["production"]
+    },
+     {
+      key    = "CLERK_WEBHOOK_SECRET",
+      value  = var.clerk_webhook_secret.preview,
+      target = ["preview"]
+    },
+     {
+      key    = "CLERK_WEBHOOK_SECRET",
+      value  = var.clerk_webhook_secret.development,
+      target = ["development"]
     },
     {
       key    = "NEXT_PUBLIC_PLAIN_APP_KEY",
