@@ -22,6 +22,7 @@ import useSWR from "swr";
 import { Loading } from "@/components/loading";
 import { useToast } from "@/components/toast";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/hover-card";
+import { ScrollArea, ScrollBar } from "@/components/scroll-area";
 
 type Props = {
   endpoint: {
@@ -111,10 +112,87 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader
+        actions={[
+          <Select key="since" onValueChange={(v: keyof typeof sinceOptions) => setSince(v)}>
+            <SelectTrigger>
+              <SelectValue defaultValue={"7d"} placeholder={sinceOptions["7d"]} />
+            </SelectTrigger>
+            <SelectContent>
+              <DropdownMenuLabel>Time Range</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {Object.entries(sinceOptions).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>,
+
+          <Select key="metric" onValueChange={(v: keyof typeof metricOptions) => setMetric(v)}>
+            <SelectTrigger>
+              <SelectValue defaultValue="p75" placeholder={metricOptions["p75"]} />
+            </SelectTrigger>
+            <SelectContent>
+              <DropdownMenuLabel>Metric</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {Object.entries(metricOptions).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>,
+
+          <DropdownMenu key="regions">
+            <DropdownMenuTrigger asChild>
+              <Button>
+                {selectedRegionIds.length > 0 ? `Regions (${selectedRegionIds.length})` : "Global"}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <ScrollArea className="max-h-96">
+                <DropdownMenuLabel>Regions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {endpoint.regions.map((r) => (
+                  <DropdownMenuCheckboxItem
+                    key={r.id}
+                    checked={selectedRegionIds.includes(r.id)}
+                    onCheckedChange={(v) => {
+                      if (v) {
+                        setSelectedRegionIds([...selectedRegionIds, r.id]);
+                      } else {
+                        setSelectedRegionIds(selectedRegionIds.filter((id) => id !== r.id));
+                      }
+                    }}
+                  >
+                    {r.name}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </ScrollArea>
+            </DropdownMenuContent>
+          </DropdownMenu>,
+          <Select
+            key="granularity"
+            onValueChange={(v: keyof typeof granularityOptions) => setGranularity(v)}
+          >
+            <SelectTrigger>
+              <SelectValue defaultValue="1d" placeholder={granularityOptions["1d"]} />
+            </SelectTrigger>
+            <SelectContent>
+              <DropdownMenuLabel>Data Granularity</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {Object.entries(granularityOptions).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>,
+        ]}
+      >
         <CardTitle>Analytics</CardTitle>
         <CardDescription>
-          {" "}
           <HoverCard>
             <HoverCardTrigger asChild>
               <div className="flex items-center gap-2 px-2 py-1 border rounded-full bg-primary-100/20 border-primary-500 max-w-min">
@@ -132,80 +210,6 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
             </HoverCardContent>
           </HoverCard>
         </CardDescription>
-
-        <div className="flex items-center justify-end w-full gap-4">
-          <Select onValueChange={(v: keyof typeof sinceOptions) => setSince(v)}>
-            <SelectTrigger>
-              <SelectValue defaultValue={"7d"} placeholder={sinceOptions["7d"]} />
-            </SelectTrigger>
-            <SelectContent>
-              <DropdownMenuLabel>Time Range</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {Object.entries(sinceOptions).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select onValueChange={(v: keyof typeof metricOptions) => setMetric(v)}>
-            <SelectTrigger>
-              <SelectValue defaultValue="p75" placeholder={metricOptions["p75"]} />
-            </SelectTrigger>
-            <SelectContent>
-              <DropdownMenuLabel>Metric</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {Object.entries(metricOptions).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button>
-                {selectedRegionIds.length > 0 ? `Regions (${selectedRegionIds.length})` : "Global"}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Regions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-
-              {endpoint.regions.map((r) => (
-                <DropdownMenuCheckboxItem
-                  key={r.id}
-                  checked={selectedRegionIds.includes(r.id)}
-                  onCheckedChange={(v) => {
-                    if (v) {
-                      setSelectedRegionIds([...selectedRegionIds, r.id]);
-                    } else {
-                      setSelectedRegionIds(selectedRegionIds.filter((id) => id !== r.id));
-                    }
-                  }}
-                >
-                  {r.name}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Select onValueChange={(v: keyof typeof granularityOptions) => setGranularity(v)}>
-            <SelectTrigger>
-              <SelectValue defaultValue="1d" placeholder={granularityOptions["1d"]} />
-            </SelectTrigger>
-            <SelectContent>
-              <DropdownMenuLabel>Data Granularity</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {Object.entries(granularityOptions).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
       </CardHeader>
       <CardContent>
         {isLoading ? <Loading /> : null}
