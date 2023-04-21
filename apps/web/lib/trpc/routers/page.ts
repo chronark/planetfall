@@ -1,12 +1,13 @@
 import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { t } from "../trpc";
+import { auth, t } from "../trpc";
 import { db } from "@planetfall/db";
 import { audit } from "@planetfall/audit";
 
 export const pageRouter = t.router({
   create: t.procedure
+    .use(auth)
     .input(
       z.object({
         name: z.string(),
@@ -16,9 +17,6 @@ export const pageRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const team = await db.team.findUnique({
         where: { id: input.teamId },
         select: {
@@ -78,6 +76,7 @@ export const pageRouter = t.router({
       return page;
     }),
   update: t.procedure
+    .use(auth)
     .input(
       z.object({
         pageId: z.string(),
@@ -87,9 +86,6 @@ export const pageRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const page = await db.statusPage.findUnique({
         where: { id: input.pageId },
         include: { team: { include: { members: true } } },
@@ -129,15 +125,13 @@ export const pageRouter = t.router({
     }),
 
   delete: t.procedure
+    .use(auth)
     .input(
       z.object({
         pageId: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const page = await db.statusPage.findUnique({
         where: { id: input.pageId },
         include: { team: { include: { members: true } } },

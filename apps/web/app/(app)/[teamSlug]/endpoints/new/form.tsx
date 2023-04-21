@@ -9,7 +9,7 @@ import { Button } from "@/components/button";
 import { Loading } from "@/components/loading";
 import { useRouter } from "next/navigation";
 import * as assertions from "@planetfall/assertions";
-import { trpc } from "lib/utils/trpc";
+import { trpc } from "@/lib/trpc/hooks";
 import { Minus } from "lucide-react";
 import { Toaster, useToast } from "@/components/toast";
 import { VercelEdge } from "@/components/icons/VercelEdge";
@@ -77,13 +77,15 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
   //   }
   // }, [])
 
+  const create = trpc.endpoint.create.useMutation();
+
   async function submit(data: FormData) {
     if (selectedRegions.length === 0) {
       setError("regions", { message: "Select at least 1 region" });
     }
     setLoading(true);
     try {
-      const res = trpc.endpoint.create.mutate({
+      const res = await create.mutateAsync({
         name: data.name,
         url: data.url,
         method: data.method,

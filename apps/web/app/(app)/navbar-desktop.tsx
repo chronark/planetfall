@@ -1,4 +1,3 @@
-import { asyncComponent } from "lib/api/component";
 import { UserButton } from "./user-button";
 import { notFound, redirect } from "next/navigation";
 import { NavLink } from "./navlink";
@@ -7,6 +6,7 @@ import { Breadcrumbs } from "./breadcrumbs";
 
 import { db } from "@planetfall/db";
 import { auth } from "@clerk/nextjs/app-beta";
+import { asyncComponent } from "@/components/async-component";
 
 export type NavbarProps = {
   teamSlug: string;
@@ -48,7 +48,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
   }
 
   return (
-    <nav className="bg-white border-b border-zinc-300 w-full">
+    <nav className="w-full bg-white border-b border-zinc-300">
       <div className="container w-full pt-2 mx-auto">
         <div className="flex items-center justify-between">
           <Breadcrumbs

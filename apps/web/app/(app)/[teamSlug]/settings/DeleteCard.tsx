@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card, Text, CardHeader, CardTitle } from "@/components/index";
+import { Button, Card, Text, CardHeader, CardTitle, CardDescription } from "@/components/index";
 import {
   DialogDescription,
   DialogHeader,
@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/dialog";
 import { useForm } from "react-hook-form";
-import { trpc } from "@/lib/utils/trpc";
+import { trpc } from "@/lib/trpc/hooks";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/input";
 import { Loading } from "@/components/loading";
@@ -36,6 +36,7 @@ export const DeleteCard: React.FC<Props> = ({ teamSlug, teamId }): JSX.Element =
   } = useForm<{ slug: string }>({ reValidateMode: "onSubmit" });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const deletion = trpc.team.delete.useMutation();
   const { addToast } = useToast();
   async function submit(data: FormData) {
     if (data.slug !== teamSlug) {
@@ -44,7 +45,7 @@ export const DeleteCard: React.FC<Props> = ({ teamSlug, teamId }): JSX.Element =
     }
     setLoading(true);
     try {
-      await trpc.team.delete.mutate({ teamId });
+      await deletion.mutateAsync({ teamId });
       router.push("/home");
     } catch (err) {
       console.error(err);
@@ -104,6 +105,9 @@ export const DeleteCard: React.FC<Props> = ({ teamSlug, teamId }): JSX.Element =
         ]}
       >
         <CardTitle>Delete Team</CardTitle>
+        <CardDescription>
+          Deleting your team will stop all checks for all endpoints and create a final invoice.
+        </CardDescription>
       </CardHeader>
     </Card>
   );

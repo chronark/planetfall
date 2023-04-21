@@ -131,35 +131,100 @@ export class Notifications {
 
     await Promise.all(
       endpoint.alerts.flatMap(async (alert) => {
-        return alert.emailChannels.map(async (channel) => {
-          this.logger.info("Sending email", {
-            to: channel.email,
-            time: event.check.time,
-            error: event.check.error,
-            teamSlug: endpoint.team.slug,
-            endpointName: endpoint.name,
-            endpointId: endpoint.id,
-          });
-          await this.email
-            .sendEndpointAlert({
-              to: channel.email,
+        await Promise.all(
+          alert.slackChannels.map(async (channel) => {
+            this.logger.info("Sending slack alert", {
+              to: channel.url,
               time: event.check.time,
               error: event.check.error,
               teamSlug: endpoint.team.slug,
               endpointName: endpoint.name,
               endpointId: endpoint.id,
-              checkLink: `https://planetfall.io/${endpoint.team.slug}/checks/${event.check.id}`,
-            })
-            .catch((err: Error) => {
+            });
+
+            fetch(channel.url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                text: `${endpoint.name} - ${event.check.error}`,
+                blocks: [
+                  {
+                    type: "header",
+                    text: {
+                      type: "plain_text",
+                      text: `${endpoint.name} - ${event.check.error}`,
+                      emoji: true,
+                    },
+                  },
+                  {
+                    type: "section",
+                    fields: [
+                      {
+                        type: "mrkdwn",
+                        text: `*Time:*\n${new Date(event.check.time).toISOString()}`,
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*Endpoint:*\n${endpoint.url}`,
+                      },
+                    ],
+                  },
+                  {
+                    type: "section",
+                    fields: [
+                      {
+                        type: "mrkdwn",
+                        text: `<https://planetfall.io/${endpoint.team.slug}/checks/${event.check.id}/reports|Details>`,
+                      },
+                    ],
+                  },
+                ],
+              }),
+            }).catch((err: Error) => {
               this.logger.error("Error sending email", {
-                to: channel.email,
+                to: channel.url,
                 error: err.message,
                 teamId: endpoint.team.id,
                 teamSlug: endpoint.team.slug,
                 endpointId: endpoint.id,
               });
             });
-        });
+          }),
+        );
+
+        await Promise.all(
+          alert.emailChannels.map(async (channel) => {
+            this.logger.info("Sending email", {
+              to: channel.email,
+              time: event.check.time,
+              error: event.check.error,
+              teamSlug: endpoint.team.slug,
+              endpointName: endpoint.name,
+              endpointId: endpoint.id,
+            });
+            await this.email
+              .sendEndpointAlert({
+                to: channel.email,
+                time: event.check.time,
+                error: event.check.error,
+                teamSlug: endpoint.team.slug,
+                endpointName: endpoint.name,
+                endpointId: endpoint.id,
+                checkLink: `https://planetfall.io/${endpoint.team.slug}/checks/${event.check.id}`,
+              })
+              .catch((err: Error) => {
+                this.logger.error("Error sending email", {
+                  to: channel.email,
+                  error: err.message,
+                  teamId: endpoint.team.id,
+                  teamSlug: endpoint.team.slug,
+                  endpointId: endpoint.id,
+                });
+              });
+          }),
+        );
       }),
     );
   }

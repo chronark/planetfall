@@ -1,12 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { t } from "../trpc";
+import { auth, t } from "../trpc";
 import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
 import highstorm from "@highstorm/client";
 
 export const alertsRouter = t.router({
   createEmailAlert: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
@@ -16,10 +17,6 @@ export const alertsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
       const team = await db.team.findUnique({
         where: { id: input.teamId },
         include: {
@@ -97,6 +94,7 @@ export const alertsRouter = t.router({
       return alert;
     }),
   createSlackAlert: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
@@ -106,10 +104,6 @@ export const alertsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
       const team = await db.team.findUnique({
         where: { id: input.teamId },
         include: {
@@ -186,6 +180,7 @@ export const alertsRouter = t.router({
       return alert;
     }),
   update: t.procedure
+    .use(auth)
     .input(
       z.object({
         alertId: z.string(),
@@ -194,10 +189,6 @@ export const alertsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
       const alert = await db.alert.findUnique({
         where: {
           id: input.alertId,
@@ -248,16 +239,13 @@ export const alertsRouter = t.router({
       return updated;
     }),
   delete: t.procedure
+    .use(auth)
     .input(
       z.object({
         alertId: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
       const alert = await db.alert.findUnique({
         where: {
           id: input.alertId,

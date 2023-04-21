@@ -45,7 +45,7 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
   return (
     <div>
       <Card>
-        <CardHeader actions={[<BillingButton key="billing" teamId={team.id} />]}>
+        <CardHeader>
           <CardTitle>Usage & Billing</CardTitle>
           <CardDescription>
             <Text>
@@ -98,9 +98,10 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
             </div>
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex items-center justify-end gap-2">
+          <BillingButton teamId={team.id} />
           <Link key="plans" href={`/${team.slug}/settings/plans`}>
-            <Button variant="link">Change your plan</Button>
+            <Button variant="primary">Change your plan</Button>
           </Link>
         </CardFooter>
       </Card>

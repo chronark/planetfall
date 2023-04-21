@@ -3,7 +3,7 @@
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { Label } from "@/components/label";
-import { trpc } from "@/lib/utils/trpc";
+import { trpc } from "@/lib/trpc";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import slugify from "slugify";
@@ -92,7 +92,7 @@ export const CreateTeam: React.FC<Props> = ({ user }) => {
               <AlertDialogTitle>Create your Team</AlertDialogTitle>
             </AlertDialogHeader>
 
-            <form className="flex flex-col  gap-4" onSubmit={teamForm.handleSubmit(submit)}>
+            <form className="flex flex-col gap-4" onSubmit={teamForm.handleSubmit(submit)}>
               <div className="text-left">
                 <Label htmlFor="name">Name</Label>
                 <Text size="sm">
@@ -116,8 +116,8 @@ export const CreateTeam: React.FC<Props> = ({ user }) => {
               <div className="text-left">
                 <Label htmlFor="slug">Slug</Label>
                 <Text size="sm">The slug is your unique namespace on Planetfall.</Text>
-                <div className="overflow-hidden relative mt-1 flex h-10 w-full rounded border border-zinc-700 bg-transparent  text-sm placeholder:text-zinc-400 focus:outline-none  disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-50  ">
-                  <span className="inline-flex items-center border-r bg-zinc-50 border-zinc-200 px-3 text-zinc-500 sm:text-sm">
+                <div className="relative flex w-full h-10 mt-1 overflow-hidden text-sm bg-transparent border rounded border-zinc-700 placeholder:text-zinc-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-50 ">
+                  <span className="inline-flex items-center px-3 border-r bg-zinc-50 border-zinc-200 text-zinc-500 sm:text-sm">
                     https://planetfall/
                   </span>
                   <input
@@ -127,7 +127,7 @@ export const CreateTeam: React.FC<Props> = ({ user }) => {
                       validate: (value) => slugRegex.test(value),
                     })}
                     defaultValue={createSlug(teamForm.getValues().name)}
-                    className="py-2 px-3 w-full focus:outline-none focus:ring-0 focus:border-transparent"
+                    className="w-full px-3 py-2 focus:outline-none focus:ring-0 focus:border-transparent"
                   />
                 </div>
                 {teamForm.formState.errors.slug ? (
@@ -137,7 +137,7 @@ export const CreateTeam: React.FC<Props> = ({ user }) => {
                   </p>
                 ) : null}
               </div>
-              {error ? <div className="mt-2  text-red-500 text-sm">{error}</div> : null}
+              {error ? <div className="mt-2 text-sm text-red-500">{error}</div> : null}
               <Button type="submit" variant="primary" isLoading={loading}>
                 Create Team
               </Button>

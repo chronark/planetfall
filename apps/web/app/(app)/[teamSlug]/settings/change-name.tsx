@@ -11,7 +11,7 @@ import {
 } from "@/components/index";
 import { Tag } from "@/components/tag";
 import { Input } from "@/components/input";
-import { trpc } from "@/lib/utils/trpc";
+import { trpc } from "@/lib/trpc";
 import { useToast } from "@/components/toast";
 import { Loading } from "@/components/loading";
 import { useForm } from "react-hook-form";

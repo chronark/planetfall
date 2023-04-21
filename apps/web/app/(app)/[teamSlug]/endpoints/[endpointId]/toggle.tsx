@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-import { trpc } from "lib/utils/trpc";
+import { trpc } from "@/lib/trpc/hooks";
 import { Switch } from "@/components/switch";
 import { Label } from "@/components/label";
 import { useToast, Toaster } from "@/components/toast";
@@ -15,6 +15,8 @@ export const Toggle: React.FC<Props> = ({ endpointId, active }) => {
   const { addToast } = useToast();
 
   const [checked, setChecked] = useState(active);
+
+  const toggle = trpc.endpoint.toggleActive.useMutation();
   return (
     <div className="flex items-center gap-2 ">
       <Toaster />
@@ -25,7 +27,7 @@ export const Toggle: React.FC<Props> = ({ endpointId, active }) => {
           try {
             // optimistic update
             setChecked(!checked);
-            const res = await trpc.endpoint.toggleActive.mutate({ endpointId });
+            const res = await toggle.mutateAsync({ endpointId });
             setChecked(res.active);
             addToast({
               title: "Success",

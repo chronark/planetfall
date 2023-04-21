@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { t } from "../trpc";
+import { auth, t } from "../trpc";
 import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
 
 export const channelsRouter = t.router({
   createEmail: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
@@ -13,10 +14,6 @@ export const channelsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
       const team = await db.team.findUnique({
         where: { id: input.teamId },
         include: {
@@ -47,6 +44,7 @@ export const channelsRouter = t.router({
       });
     }),
   updateEmail: t.procedure
+    .use(auth)
     .input(
       z.object({
         channelId: z.string(),
@@ -55,10 +53,6 @@ export const channelsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
       const channel = await db.emailChannel.findUnique({
         where: {
           id: input.channelId,
@@ -92,16 +86,13 @@ export const channelsRouter = t.router({
       });
     }),
   deleteEmail: t.procedure
+    .use(auth)
     .input(
       z.object({
         channelId: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
       const channel = await db.emailChannel.findUnique({
         where: {
           id: input.channelId,

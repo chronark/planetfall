@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/page";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Endpoint, Region } from "@planetfall/db";
 import { Button } from "@/components/button";
-import { trpc } from "lib/utils/trpc";
+import { trpc } from "@/lib/trpc/hooks";
 import { useToast } from "@/components/toast";
 import { useRouter } from "next/navigation";
 import * as Slider from "@radix-ui/react-slider";
@@ -84,6 +84,7 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
 
   const [loading, setLoading] = useState<Record<string, boolean>>({});
 
+  const update = trpc.endpoint.update.useMutation();
   return (
     <>
       <PageHeader
@@ -141,8 +142,8 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       isLoading={loading.name}
                       onClick={nameForm.handleSubmit(async ({ name }) => {
                         setLoading({ ...loading, name: true });
-                        await trpc.endpoint.update
-                          .mutate({
+                        await update
+                          .mutateAsync({
                             endpointId: endpoint.id,
                             name,
                           })
@@ -242,8 +243,8 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       isLoading={loading.url}
                       onClick={urlForm.handleSubmit(async ({ url, method }) => {
                         setLoading({ ...loading, url: true });
-                        await trpc.endpoint.update
-                          .mutate({
+                        await update
+                          .mutateAsync({
                             endpointId: endpoint.id,
                             url,
                             method,
@@ -320,8 +321,8 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       isLoading={loading.redirect}
                       onClick={redirectForm.handleSubmit(async ({ followRedirects }) => {
                         setLoading({ ...loading, redirect: true });
-                        await trpc.endpoint.update
-                          .mutate({
+                        await update
+                          .mutateAsync({
                             endpointId: endpoint.id,
                             followRedirects: followRedirects === "true",
                           })
@@ -423,8 +424,8 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       isLoading={loading.headers}
                       onClick={requestForm.handleSubmit(async ({ headers, body }) => {
                         setLoading({ ...loading, headers: true });
-                        await trpc.endpoint.update
-                          .mutate({
+                        await update
+                          .mutateAsync({
                             endpointId: endpoint.id,
 
                             headers: headers ? JSON.parse(headers) : undefined,
@@ -537,8 +538,8 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       isLoading={loading.latency}
                       onClick={latencyForm.handleSubmit(async ({ timeout, degradedAfter }) => {
                         setLoading({ ...loading, latency: true });
-                        await trpc.endpoint.update
-                          .mutate({
+                        await update
+                          .mutateAsync({
                             endpointId: endpoint.id,
                             timeout,
                             degradedAfter,
@@ -646,8 +647,8 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       isLoading={loading.status}
                       onClick={nameForm.handleSubmit(async ({ name }) => {
                         setLoading({ ...loading, status: true });
-                        await trpc.endpoint.update
-                          .mutate({
+                        await update
+                          .mutateAsync({
                             endpointId: endpoint.id,
                             statusAssertions: statusAssertionsForm.getValues().assertions,
                           })
@@ -738,8 +739,8 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       isLoading={loading.header}
                       onClick={headerAssertionsForm.handleSubmit(async () => {
                         setLoading({ ...loading, header: true });
-                        await trpc.endpoint.update
-                          .mutate({
+                        await update
+                          .mutateAsync({
                             endpointId: endpoint.id,
                             headerAssertions: headerAssertionsForm.getValues().assertions,
                           })
@@ -828,8 +829,8 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       isLoading={loading.regions}
                       onClick={async () => {
                         setLoading({ ...loading, regions: true });
-                        await trpc.endpoint.update
-                          .mutate({
+                        await update
+                          .mutateAsync({
                             endpointId: endpoint.id,
                             regionIds: selectedRegions.map((r) => r.id),
                           })
@@ -932,8 +933,8 @@ export const Form: React.FC<Props> = ({ regions, teamSlug, endpoint }) => {
                       isLoading={loading.interval}
                       onClick={intervalForm.handleSubmit(async ({ interval, distribution }) => {
                         setLoading({ ...loading, interval: true });
-                        await trpc.endpoint.update
-                          .mutate({
+                        await update
+                          .mutateAsync({
                             endpointId: endpoint.id,
                             interval: interval ? interval * 1000 : undefined,
                             distribution,

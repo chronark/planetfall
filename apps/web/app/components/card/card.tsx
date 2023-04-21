@@ -17,7 +17,7 @@ const CardHeader: React.FC<React.PropsWithChildren<{ actions?: React.ReactNode[]
   actions,
   children,
 }) => (
-  <div className="flex space-x-1.5  justify-between p-6">
+  <div className="flex space-x-1.5 justify-between m-6 overflow-hidden">
     <div className="flex flex-col space-y-1.5">{children}</div>
     <div className="flex space-x-2">{actions}</div>
   </div>
@@ -29,7 +29,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+      className={cn("text-lg font-semibold leading-none tracking-tight ", className)}
       {...props}
     />
   ),

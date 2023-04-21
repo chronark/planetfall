@@ -1,6 +1,8 @@
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
-import type { Router } from "../server/routers";
 import superjson from "superjson";
+
+import type { Router } from "./routers";
+
 function getBaseUrl() {
   if (typeof window !== "undefined") {
     // browser should use relative path

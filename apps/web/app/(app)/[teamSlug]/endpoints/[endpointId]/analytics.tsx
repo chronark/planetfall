@@ -16,13 +16,12 @@ import { Button } from "@/components/button";
 import { Text } from "@/components/text";
 import { AlertCircle, AlertTriangle, FlaskConical, FlaskRound, Zap } from "lucide-react";
 import Link from "next/link";
-import { trpc } from "@/lib/utils/trpc";
 import ms from "ms";
-import useSWR from "swr";
 import { Loading } from "@/components/loading";
 import { useToast } from "@/components/toast";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/hover-card";
 import { ScrollArea, ScrollBar } from "@/components/scroll-area";
+import { trpc } from "@/lib/trpc/hooks";
 
 type Props = {
   endpoint: {
@@ -78,7 +77,8 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
   const { addToast } = useToast();
 
   const now = new Date().setMinutes(0, 0, 0);
-  const req = {
+
+  const { data, error, isLoading } = trpc.tinybird.analytics.useQuery({
     endpointId: endpoint.id,
     since: now - ms(since),
     granularity: granularity,
@@ -89,9 +89,7 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
     getP90: metric === "p90",
     getP95: metric === "p95",
     getP99: metric === "p99",
-  };
-
-  const { data, error, isLoading } = useSWR(req, trpc.tinybird.analytics.query);
+  });
   useEffect(() => {
     if (error) {
       addToast({

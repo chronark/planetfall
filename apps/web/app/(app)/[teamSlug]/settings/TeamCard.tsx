@@ -28,7 +28,7 @@ import {
 import { Tag } from "@/components/tag";
 import Image from "next/image";
 import { Input } from "@/components/input";
-import { trpc } from "@/lib/utils/trpc";
+import { trpc } from "@/lib/trpc/hooks";
 import { useToast, Toaster } from "@/components/toast";
 import { Loading } from "@/components/loading";
 
@@ -55,6 +55,21 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
+  const invite = trpc.team.createInvitation.useMutation({
+    onSuccess() {
+      toast.addToast({
+        title: "Invitation sent",
+        content: `We have sent an invitation to ${inviteEmail}`,
+      });
+    },
+    onError(error) {
+      toast.addToast({
+        title: "Error",
+        content: error.message,
+        variant: "error",
+      });
+    },
+  });
   const columns = [
     accessor("user", {
       header: "User",
@@ -131,26 +146,10 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
               className="flex items-center gap-4"
               onSubmit={async (e) => {
                 e.preventDefault();
-                setLoading(true);
-                await trpc.team.createInvitation
-                  .mutate({
-                    teamId: teamId,
-                    email: inviteEmail,
-                  })
-                  .then(() => {
-                    toast.addToast({
-                      title: "Invitation sent",
-                      content: `We have sent an invitation to ${inviteEmail}`,
-                    });
-                  })
-                  .catch((err) => {
-                    toast.addToast({
-                      title: "Error",
-                      content: err.message,
-                      variant: "error",
-                    });
-                  });
-                setLoading(false);
+                invite.mutateAsync({
+                  teamId,
+                  email: inviteEmail,
+                });
               }}
             >
               <Input
@@ -160,7 +159,7 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
                 onChange={(v) => setInviteEmail(v.currentTarget.value)}
               />
               <Button type="submit" variant="primary">
-                {loading ? <Loading /> : "Invite"}
+                {invite.isLoading ? <Loading /> : "Invite"}
               </Button>
             </form>
           )}
@@ -171,8 +170,9 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
 
   return (
     <Card>
-      <CardHeader actions={actions}>
+      <CardHeader>
         <CardTitle>Members</CardTitle>
+        <div className="flex items-center justify-end gap-2">{actions}</div>
       </CardHeader>
       <CardContent>
         <table className="min-w-full border-separate" style={{ borderSpacing: 0 }}>

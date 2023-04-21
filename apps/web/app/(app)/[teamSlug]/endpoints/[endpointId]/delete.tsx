@@ -1,11 +1,10 @@
 "use client";
 import { Button } from "@/components/button";
 import { Confirm } from "@/components/confirm";
-import { Endpoint } from "@planetfall/db";
 import React from "react";
 
 import { useRouter } from "next/navigation";
-import { trpc } from "lib/utils/trpc";
+import { trpc } from "@/lib/trpc/hooks";
 
 type Props = {
   endpointId: string;
@@ -15,13 +14,14 @@ type Props = {
 
 export const DeleteButton: React.FC<Props> = ({ endpointId, endpointName, endpointUrl }) => {
   const router = useRouter();
+  const mutation = trpc.endpoint.delete.useMutation();
   return (
     <Confirm
       title="Delete endpoint?"
       description={endpointName ?? endpointUrl}
       trigger={<Button variant="danger">Delete</Button>}
       onConfirm={async () => {
-        await trpc.endpoint.delete.mutate({ endpointId });
+        await mutation.mutateAsync({ endpointId });
         router.refresh();
       }}
     />

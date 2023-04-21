@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/button";
 import { Loading } from "@/components/loading";
-import { trpc } from "lib/utils/trpc";
+import { trpc } from "@/lib/trpc/hooks";
 import { useState } from "react";
 
 type Props = {
@@ -11,13 +11,14 @@ type Props = {
 export const BillingButton: React.FC<Props> = (props): JSX.Element => {
   const [loading, setLoading] = useState(false);
 
+  const portal = trpc.billing.portal.useMutation();
   return (
     <Button
       onClick={async () => {
         try {
           setLoading(true);
 
-          const res = await trpc.billing.portal.query({
+          const res = await portal.mutateAsync({
             teamId: props.teamId,
           });
           if (res.url) {

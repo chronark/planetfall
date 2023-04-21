@@ -84,7 +84,6 @@
     "slugify": "^1.6.6",
     "stripe": "^11.13.0",
     "superjson": "^1.12.2",
-    "swr": "^2.1.1",
     "tailwind-merge": "^1.11.0",
     "tailwindcss-animate": "^1.0.5",
     "tailwindcss-radix": "^2.8.0",

@@ -9,7 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { PlayChecks } from "lib/server/routers/play";
+import { PlayChecks } from "@/lib/trpc/routers/play";
 
 type Props = {
   regions: PlayChecks["regions"];

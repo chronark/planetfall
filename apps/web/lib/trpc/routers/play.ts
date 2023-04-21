@@ -63,7 +63,7 @@ export const playRouter = t.router({
     )
     .output(z.object({ shareId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { success, remaining, reset, limit } = await ratelimit.limit(ctx.user.id ?? "global");
+      const { success, remaining, reset, limit } = await ratelimit.limit(ctx.user?.id ?? "global");
       if (!success) {
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",
@@ -179,7 +179,7 @@ export const playRouter = t.router({
         urls: input.urls,
         regionIds: input.regionIds,
         method: input.method,
-        userId: ctx.user.id,
+        userId: ctx.user?.id,
       });
 
       for (let i = 0; i < 100; i++) {

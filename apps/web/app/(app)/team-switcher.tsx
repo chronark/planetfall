@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/dialog";
 import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent } from "@/components/dropdown";
-import { trpc } from "@/lib/utils/trpc";
+import { trpc } from "@/lib/trpc/hooks";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -37,26 +37,17 @@ export const TeamSwitcher: React.FC<Props> = ({ teams, currentTeamId }): JSX.Ele
   const currentTeam = teams.find((team) => team.id === currentTeamId)!;
   const router = useRouter();
 
-  const [loading, setLoading] = useState(false);
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm<{ name: string }>({ reValidateMode: "onSubmit" });
 
-  const submit = async (data: { name: string }) => {
-    setLoading(true);
-
-    try {
-      const team = await trpc.team.create.mutate({
-        name: data.name,
-      });
-
+  const create = trpc.team.create.useMutation({
+    onSuccess(team) {
       router.push(`/${team.slug}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+  });
 
   return (
     <DropdownMenu>
@@ -99,7 +90,10 @@ export const TeamSwitcher: React.FC<Props> = ({ teams, currentTeamId }): JSX.Ele
                   All new teams start with a 14 day trial, afterwards you need to add a credit card
                 </DialogDescription>
 
-                <form onSubmit={handleSubmit(submit)} className="">
+                <form
+                  onSubmit={handleSubmit((data) => create.mutate({ name: data.name }))}
+                  className=""
+                >
                   <Label htmlFor="name">Name</Label>
                   <div className="mt-1 ">
                     <Input
@@ -117,7 +111,7 @@ export const TeamSwitcher: React.FC<Props> = ({ teams, currentTeamId }): JSX.Ele
                   </div>
 
                   <DialogFooter className="mt-4">
-                    <Button type="submit">{loading ? <Loading /> : "Create"}</Button>
+                    <Button type="submit">{create.isLoading ? <Loading /> : "Create"}</Button>
                   </DialogFooter>
                 </form>
               </DialogContent>

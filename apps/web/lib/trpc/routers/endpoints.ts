@@ -1,7 +1,7 @@
 import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { t } from "../trpc";
+import { auth, t } from "../trpc";
 import { db } from "@planetfall/db";
 import highstorm from "@highstorm/client";
 import {
@@ -13,10 +13,40 @@ import {
   HeaderAssertion,
   deserialize,
 } from "@planetfall/assertions";
-import { audit } from "@planetfall/audit";
 
 export const endpointRouter = t.router({
+  auditLogs: t.procedure
+    .use(auth)
+    .input(z.object({ endpointId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const endpoint = await db.endpoint.findUnique({
+        where: {
+          id: input.endpointId,
+        },
+        include: {
+          auditLog: {
+            include: { user: true },
+          },
+          team: {
+            include: {
+              members: {
+                where: {
+                  userId: ctx.user.id,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!endpoint || !endpoint.team.members.some((u) => u.userId === ctx.user.id)) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return endpoint.auditLog;
+    }),
   create: t.procedure
+    .use(auth)
     .input(
       z.object({
         name: z.string(),
@@ -41,9 +71,6 @@ export const endpointRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const team = await db.team.findUnique({
         where: {
           id: input.teamId,
@@ -133,6 +160,7 @@ export const endpointRouter = t.router({
       return created;
     }),
   update: t.procedure
+    .use(auth)
     .input(
       z.object({
         endpointId: z.string(),
@@ -152,9 +180,6 @@ export const endpointRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const endpoint = await db.endpoint.findUnique({
         where: { id: input.endpointId },
         include: { team: { include: { members: true } } },
@@ -227,6 +252,7 @@ export const endpointRouter = t.router({
     }),
 
   toggleActive: t.procedure
+    .use(auth)
     .input(
       z.object({
         endpointId: z.string(),
@@ -238,9 +264,6 @@ export const endpointRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const endpoint = await db.endpoint.findUnique({
         where: { id: input.endpointId },
         include: { team: { include: { members: true } } },
@@ -283,15 +306,13 @@ export const endpointRouter = t.router({
       return updated;
     }),
   delete: t.procedure
+    .use(auth)
     .input(
       z.object({
         endpointId: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const endpoint = await db.endpoint.findUnique({
         where: { id: input.endpointId },
         include: { team: { include: { members: true } } },

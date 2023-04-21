@@ -1,5 +1,4 @@
 import { db } from "@planetfall/db";
-import { asyncComponent } from "lib/api";
 import {
   BarChart,
   Eye,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import React, { cache } from "react";
 import { Feature, Props } from "./feature";
+import { asyncComponent } from "@/components/async-component";
 
 export const Features = asyncComponent(async () => {
   const regions = await cache(() => db.region.findMany())();

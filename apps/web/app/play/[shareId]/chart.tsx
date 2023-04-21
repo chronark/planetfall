@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Column } from "@ant-design/plots";
-import { PlayChecks } from "lib/server/routers/play";
+import { PlayChecks } from "@/lib/trpc/routers/play";
 
 type Props = {
   regions: PlayChecks["regions"];

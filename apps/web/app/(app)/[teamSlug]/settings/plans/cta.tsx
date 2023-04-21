@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/button";
 import { Loading } from "@/components/loading";
-import { trpc } from "@/lib/utils/trpc";
+import { trpc } from "@/lib/trpc/hooks";
 import { Plan } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -24,65 +24,65 @@ export const CurrentButton: React.FC = (): JSX.Element => {
 };
 
 export const DowngradeButton: React.FC<Props> = ({ teamId, plan }): JSX.Element => {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { addToast } = useToast();
 
-  const onClick = async () => {
-    try {
-      setIsLoading(true);
-      await trpc.billing.changePlan.mutate({
-        teamId,
-        // @ts-ignore
-        plan,
-      });
-      router.refresh();
-    } catch (error) {
+  const changePlan = trpc.billing.changePlan.useMutation({
+    onError(error) {
       console.error(error);
       addToast({
         title: "Error",
-        content: (error as TRPCError).message,
+        content: error.message,
         variant: "error",
       });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    onSuccess() {
+      router.refresh();
+    },
+  });
+
   return (
-    <Button className="w-full" variant="secondary" onClick={onClick}>
-      {isLoading ? <Loading /> : "Downgrade"}
+    <Button
+      className="w-full"
+      variant="secondary"
+      onClick={() => changePlan.mutate({ teamId, plan: plan as any })}
+    >
+      {changePlan.isLoading ? <Loading /> : "Downgrade"}
     </Button>
   );
 };
 
 export const UpgradeButton: React.FC<Props> = ({ teamId, plan }): JSX.Element => {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { addToast } = useToast();
 
-  const onClick = async () => {
-    try {
-      setIsLoading(true);
-      await trpc.billing.changePlan.mutate({
-        teamId,
-        // @ts-ignore
-        plan,
-      });
-      router.refresh();
-    } catch (error) {
+  const changePlan = trpc.billing.changePlan.useMutation({
+    onError(error) {
       console.error(error);
       addToast({
         title: "Error",
-        content: (error as TRPCError).message,
+        content: error.message,
         variant: "error",
       });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    onSuccess() {
+      router.refresh();
+    },
+  });
+
   return (
-    <Button className="w-full" variant="primary" onClick={onClick}>
-      {isLoading ? <Loading /> : "Upgrade"}
+    <Button
+      className="w-full"
+      variant="primary"
+      onClick={() =>
+        changePlan.mutate({
+          teamId,
+          // @ts-ignore
+          plan,
+        })
+      }
+    >
+      {changePlan.isLoading ? <Loading /> : "Upgrade"}
     </Button>
   );
 };

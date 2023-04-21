@@ -1,7 +1,7 @@
 import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { t } from "../trpc";
+import { auth, t } from "../trpc";
 import { db } from "@planetfall/db";
 import slugify from "slugify";
 import { DEFAULT_QUOTA } from "plans";
@@ -13,6 +13,7 @@ import { Email } from "@planetfall/emails";
 
 export const teamRouter = t.router({
   create: t.procedure
+    .use(auth)
     .input(
       z.object({
         name: z.string(),
@@ -20,10 +21,6 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
       const user = await db.user.findUnique({
         where: {
           id: ctx.user.id,
@@ -88,6 +85,7 @@ export const teamRouter = t.router({
       return team;
     }),
   createInvitation: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
@@ -95,9 +93,6 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const team = await db.team.findUnique({
         where: {
           id: input.teamId,
@@ -187,6 +182,7 @@ export const teamRouter = t.router({
       });
     }),
   updateMember: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
@@ -195,9 +191,6 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const team = await db.team.findUnique({
         where: {
           id: input.teamId,
@@ -244,6 +237,7 @@ export const teamRouter = t.router({
       });
     }),
   removeMember: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
@@ -251,9 +245,6 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const team = await db.team.findUnique({
         where: {
           id: input.teamId,
@@ -316,15 +307,13 @@ export const teamRouter = t.router({
       });
     }),
   delete: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const team = await db.team.findUnique({
         where: {
           id: input.teamId,
@@ -359,6 +348,7 @@ export const teamRouter = t.router({
       });
     }),
   updateName: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
@@ -366,9 +356,6 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const team = await db.team.findFirst({
         where: {
           id: input.teamId,
@@ -408,6 +395,7 @@ export const teamRouter = t.router({
       });
     }),
   updateSlug: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
@@ -415,9 +403,6 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const team = await db.team.findFirst({
         where: {
           id: input.teamId,

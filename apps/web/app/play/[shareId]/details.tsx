@@ -5,7 +5,7 @@ import { Heading } from "@/components/heading";
 import { Stats } from "@/components/stats";
 import { Trace } from "@/components/trace";
 import { Select, SelectTrigger, SelectItem, SelectContent, SelectValue } from "@/components/select";
-import { PlayChecks } from "lib/server/routers/play";
+import { PlayChecks } from "@/lib/trpc/routers/play";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { VercelEdge } from "@/components/icons/VercelEdge";

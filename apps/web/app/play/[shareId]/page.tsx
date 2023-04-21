@@ -6,7 +6,7 @@ import { Redis } from "@upstash/redis";
 import { Chart } from "./chart";
 import { Table } from "./table";
 import { Details } from "./details";
-import type { PlayChecks } from "lib/server/routers/play";
+import type { PlayChecks } from "@/lib/trpc/routers/play";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
 import { auth } from "@clerk/nextjs/app-beta";

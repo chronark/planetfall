@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { t } from "../trpc";
+import { auth, t } from "../trpc";
 import { db } from "@planetfall/db";
 import Stripe from "stripe";
 import { Redis } from "@upstash/redis";
@@ -17,6 +17,7 @@ const redis = Redis.fromEnv();
 
 export const billingRouter = t.router({
   changePlan: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
@@ -24,10 +25,6 @@ export const billingRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
       const team = await db.team.findUnique({
         where: { id: input.teamId },
         include: {
@@ -111,16 +108,13 @@ export const billingRouter = t.router({
       await redis.set(redisLockKey, true, { ex: 60 * 60 * 24 });
     }),
   portal: t.procedure
+    .use(auth)
     .input(
       z.object({
         teamId: z.string(),
       }),
     )
-    .query(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
+    .mutation(async ({ input, ctx }) => {
       let team = await db.team.findUnique({
         where: { id: input.teamId },
         include: {

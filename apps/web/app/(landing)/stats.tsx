@@ -1,9 +1,9 @@
 import React from "react";
 import { db } from "@planetfall/db";
-import { asyncComponent } from "lib/api/component";
 
 import CountingNumbers from "./counting-numbers";
 import { Section } from "./section";
+import { asyncComponent } from "@/components/async-component";
 
 export const dynamic = "force-static";
 export const revalidate = 3600;
@@ -44,10 +44,10 @@ export const Stats = asyncComponent(async () => {
   ]);
   return (
     <Section id="stats" title="Trusted by">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <dl className="grid grid-cols-1 gap-y-16 gap-x-8 text-center lg:grid-cols-4">
+      <div className="px-6 mx-auto max-w-7xl lg:px-8">
+        <dl className="grid grid-cols-1 text-center gap-y-16 gap-x-8 lg:grid-cols-4">
           {stats.map(({ label, value }) => (
-            <div key={label} className="mx-auto flex max-w-xs flex-col gap-y-4">
+            <div key={label} className="flex flex-col max-w-xs mx-auto gap-y-4">
               <dt className="text-base leading-7 text-gray-600">{label}</dt>
               <dd className="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
                 <CountingNumbers value={value} />

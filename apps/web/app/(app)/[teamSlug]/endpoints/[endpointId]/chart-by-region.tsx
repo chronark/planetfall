@@ -42,34 +42,32 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks, team }) => {
 
   return (
     <Card>
-      <CardHeader
-        actions={[
-          <div key="select" className="flex justify-end w-full">
-            <Select onValueChange={(v) => setSelectedRegion(v)} defaultValue={selectedRegion}>
-              <SelectTrigger>
-                <SelectValue defaultValue={selectedRegion} />
-              </SelectTrigger>
-              <SelectContent>
-                {endpoint.regions.map((r) => (
-                  <SelectItem key={r.id} value={r.id}>
-                    <div className="flex items-center gap-1">
-                      {r.id.startsWith("aws:") ? (
-                        <AwsLambda className="w-4 h-4" />
-                      ) : r.id.startsWith("vercelEdge:") ? (
-                        <VercelEdge className="w-4 h-4" />
-                      ) : r.id.startsWith("fly:") ? (
-                        <Fly className="w-4 h-4" />
-                      ) : null}
-                      {r.name}
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>,
-        ]}
-      >
+      <CardHeader>
         <CardTitle>Latency</CardTitle>
+        <div className="flex items-center justify-end gap-2">
+          <Select onValueChange={(v) => setSelectedRegion(v)} defaultValue={selectedRegion}>
+            <SelectTrigger>
+              <SelectValue defaultValue={selectedRegion} />
+            </SelectTrigger>
+            <SelectContent>
+              {endpoint.regions.map((r) => (
+                <SelectItem key={r.id} value={r.id}>
+                  <div className="flex items-center gap-1">
+                    {r.id.startsWith("aws:") ? (
+                      <AwsLambda className="w-4 h-4" />
+                    ) : r.id.startsWith("vercelEdge:") ? (
+                      <VercelEdge className="w-4 h-4" />
+                    ) : r.id.startsWith("fly:") ? (
+                      <Fly className="w-4 h-4" />
+                    ) : null}
+                    {r.name}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        ,
       </CardHeader>
       <CardContent>
         <Chart endpoint={endpoint} checks={checksByRegion} team={team} />

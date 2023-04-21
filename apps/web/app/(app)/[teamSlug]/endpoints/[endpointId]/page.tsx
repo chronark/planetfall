@@ -29,6 +29,8 @@ import {
 import { Divider } from "@/components/divider";
 import classNames from "classnames";
 import { Analytics } from "./analytics";
+import { Endpoint } from "app/_statuspages/[slug]/endpoint";
+import { EndpointAuditLog } from "./EndpointAuditLog";
 
 export async function generateMetadata({
   params,
@@ -144,6 +146,7 @@ export default async function Page(props: {
           >
             <Button>Settings</Button>
           </Link>,
+          <EndpointAuditLog key="auditLog" endpointId={endpoint.id} />,
           <DeleteButton
             key="delete"
             endpointId={endpoint.id}
@@ -234,8 +237,12 @@ export default async function Page(props: {
         {errors.length > 0 ? (
           <>
             <Card>
-              <CardHeader
-                actions={[
+              <CardHeader>
+                <CardTitle>Errors</CardTitle>
+                <CardDescription>
+                  There have been {errors.length} errors in the last 24 hours.
+                </CardDescription>
+                <div className="flex items-center justify-end gap-2">
                   <Button key="errors">
                     <Link
                       href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/errors`}
@@ -243,13 +250,8 @@ export default async function Page(props: {
                     >
                       Go to Errors
                     </Link>
-                  </Button>,
-                ]}
-              >
-                <CardTitle>Errors</CardTitle>
-                <CardDescription>
-                  There have been {errors.length} errors in the last 24 hours.
-                </CardDescription>
+                  </Button>
+                </div>
               </CardHeader>
             </Card>
             <Divider />

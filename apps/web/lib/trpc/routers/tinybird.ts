@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { t } from "../trpc";
+import { auth, t } from "../trpc";
 import { db } from "@planetfall/db";
 import { getCustomAnalytics } from "@planetfall/tinybird";
 
 export const tinybirdRouter = t.router({
   analytics: t.procedure
+    .use(auth)
     .input(
       z.object({
         endpointId: z.string(),
@@ -22,9 +23,6 @@ export const tinybirdRouter = t.router({
       }),
     )
     .query(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
       const endpoint = await db.endpoint.findFirst({
         where: {
           AND: {
