@@ -134,6 +134,7 @@ export default async function Page(props: { params: { slug: string } }) {
   for (const [endpointId, regions] of Object.entries(data)) {
     for (const regionId of Object.keys(regions.regions)) {
       if (regionId !== "global" && !shouldInclude[endpointId][regionId]) {
+        // @ts-ignore assignign undefined is better than deleting
         data[endpointId].regions[regionId] = undefined;
       }
     }

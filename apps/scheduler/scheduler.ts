@@ -144,8 +144,8 @@ export class Scheduler {
       }
     }
 
-    this.logger.info("Synced endpoints", {
-      totalEndpoints: this.endpoints.size,
+    this.logger.info("report.endpoints.active", {
+      activeEndpoints: this.endpoints.size,
     });
   }
 
