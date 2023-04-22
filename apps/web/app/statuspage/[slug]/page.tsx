@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getEndpointMetricsOver90Days, getEndpointSeriesOver90Days } from "@planetfall/tinybird";
 import { EndpointData, Metrics } from "./types";
 import { Endpoint } from "./endpoint";
+import { notFound } from "next/navigation";
 
 export const revalidate = 60;
 export const dynamic = "error";
@@ -23,9 +24,10 @@ const getStatusPage = cache(
 );
 
 export default async function Page(props: { params: { slug: string } }) {
+  console.log("Requested page", props.params.slug);
   const statusPage = await getStatusPage(props.params.slug);
   if (!statusPage) {
-    return null;
+    return notFound();
   }
 
   /**
@@ -132,7 +134,7 @@ export default async function Page(props: { params: { slug: string } }) {
   for (const [endpointId, regions] of Object.entries(data)) {
     for (const regionId of Object.keys(regions.regions)) {
       if (regionId !== "global" && !shouldInclude[endpointId][regionId]) {
-        delete data[endpointId].regions[regionId];
+        data[endpointId].regions[regionId] = undefined;
       }
     }
   }
@@ -142,7 +144,7 @@ export default async function Page(props: { params: { slug: string } }) {
       <header className="container flex items-center justify-between w-full mx-auto mt-4 lg:mt-8 xl:mt-16 ">
         <h2 className="mb-4 text-5xl font-bold text-zinc-900">{statusPage.name}</h2>
       </header>
-      <main className="container min-h-screen mx-auto py-8 ">
+      <main className="container min-h-screen py-8 mx-auto ">
         <ul className="flex flex-col gap-4 lg:gap-8">
           {Object.values(data)
             .sort((a, b) => a.name.localeCompare(b.name))

@@ -176,7 +176,7 @@ export class Notifications {
                     fields: [
                       {
                         type: "mrkdwn",
-                        text: `<https://planetfall.io/${endpoint.team.slug}/checks/${event.check.id}/reports|Details>`,
+                        text: `<https://planetfall.io/${endpoint.team.slug}/checks/${event.check.id}|Details>`,
                       },
                     ],
                   },

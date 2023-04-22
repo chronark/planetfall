@@ -4,17 +4,13 @@ import { Client as Tinybird, getEndpointStats, getErrors } from "@planetfall/tin
 
 import { db } from "@planetfall/db";
 import { Stats } from "@/components/stats";
-import { ErrorsTable } from "./errors/table";
-import { Heading } from "@/components/heading";
 import { LatestTable } from "./latest-table";
 import { DeleteButton } from "./delete";
 import { auth } from "@clerk/nextjs/app-beta";
 import { Button } from "@/components/button";
 import { Toggle } from "./toggle";
-import { Text } from "@/components/text";
 import { ChartsSection } from "./chart-by-region";
 import Link from "next/link";
-import { Switch } from "@/components/switch";
 import { Chart } from "./chart";
 import type { Metadata } from "next";
 
@@ -29,7 +25,6 @@ import {
 import { Divider } from "@/components/divider";
 import classNames from "classnames";
 import { Analytics } from "./analytics";
-import { Endpoint } from "app/_statuspages/[slug]/endpoint";
 import { EndpointAuditLog } from "./EndpointAuditLog";
 
 export async function generateMetadata({

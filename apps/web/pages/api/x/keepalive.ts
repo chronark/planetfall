@@ -4,7 +4,7 @@ export const config = {
   runtime: "edge",
 };
 
-export default async function (req: NextRequest) {
+export default async function (_req: NextRequest) {
   const t1 = Date.now();
   await fetch("https://planetfall.io", { keepalive: true });
   const t2 = Date.now();

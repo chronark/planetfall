@@ -26,7 +26,7 @@ export const SupportBubble: React.FC = () => {
       }
     : undefined;
 
-  const [open, setOpen] = useState(false);
+  const [_open, _setOpen] = useState(false);
 
   return (
     <div>

@@ -16,7 +16,7 @@ export default function NotFoundPage() {
           <Link href="mailto:support@planetfall.io">
             <Button>Contact support</Button>
           </Link>
-          <Link href="/home">
+          <Link href="https://planetfall.io/home">
             <Button variant="primary">Go home</Button>
           </Link>
         </div>

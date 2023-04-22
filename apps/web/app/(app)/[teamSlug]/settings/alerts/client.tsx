@@ -145,10 +145,7 @@ export const ClientPage: React.FC<Props> = ({ endpoints, team, alerts }) => {
               <form onSubmit={createForm.handleSubmit(submit)}>
                 <DialogHeader>
                   <Heading h3>Create a new alert</Heading>
-                  <Text>
-                    Select the endpoints you want to be notified about and an email address where we
-                    should send alerts.
-                  </Text>
+                  <Text>Select the endpoints you want to be notified about:</Text>
                 </DialogHeader>
 
                 <div className="flex flex-col gap-2 mt-8">
@@ -173,12 +170,12 @@ export const ClientPage: React.FC<Props> = ({ endpoints, team, alerts }) => {
                     </div>
                   ))}
 
-                  <Tabs defaultValue="slack">
+                  <Tabs defaultValue="slack" className="mt-8">
                     <TabsList className="grid w-full grid-cols-2">
                       <TabsTrigger value="email">Email</TabsTrigger>
                       <TabsTrigger value="slack">Slack</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="email">
+                    <TabsContent value="email" className="mt-8">
                       <Label>Email</Label>
                       <Input type="email" {...createForm.register("email")} />
                     </TabsContent>

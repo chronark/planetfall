@@ -18,7 +18,7 @@
     "@planetfall/tsconfig": "workspace:*",
     "@types/node": "^18.15.13",
     "prisma": "^4.13.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.4"
   },
   "prisma": {
     "schema": "./prisma/schema.prisma"

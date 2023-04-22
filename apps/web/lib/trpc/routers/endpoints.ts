@@ -39,7 +39,7 @@ export const endpointRouter = t.router({
         },
       });
 
-      if (!endpoint || !endpoint.team.members.some((u) => u.userId === ctx.user.id)) {
+      if (!endpoint?.team.members.some((u) => u.userId === ctx.user.id)) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 

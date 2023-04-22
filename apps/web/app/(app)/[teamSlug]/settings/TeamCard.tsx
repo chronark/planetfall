@@ -52,7 +52,7 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
   const { accessor } = createColumnHelper<Props["members"][0]>();
   const [invitationId, _setInvitationId] = useState<string | null>(null);
   const [inviteEmail, setInviteEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [_loading, _setLoading] = useState(false);
   const toast = useToast();
 
   const invite = trpc.team.createInvitation.useMutation({
