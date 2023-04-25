@@ -6,7 +6,7 @@ import { Redis } from "@upstash/redis";
 import { Chart } from "./chart";
 import { Table } from "./table";
 import { Details } from "./details";
-import type { PlayChecks } from "@/lib/trpc/routers/play";
+import type { PlayResult } from "@/lib/trpc/routers/play";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
 import { auth } from "@clerk/nextjs/app-beta";
@@ -15,7 +15,7 @@ const redis = Redis.fromEnv();
 export const revalidate = 3600;
 
 export default async function Share(props: { params: { shareId: string } }) {
-  const res = await redis.get<PlayChecks>(["play", props.params.shareId].join(":"));
+  const res = await redis.get<PlayResult>(["play", props.params.shareId].join(":"));
   if (!res) {
     return notFound();
   }

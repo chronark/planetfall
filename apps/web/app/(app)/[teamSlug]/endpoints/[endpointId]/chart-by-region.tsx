@@ -42,10 +42,13 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks, team }) => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Latency</CardTitle>
-        <div className="flex items-center justify-end gap-2">
-          <Select onValueChange={(v) => setSelectedRegion(v)} defaultValue={selectedRegion}>
+      <CardHeader
+        actions={[
+          <Select
+            key="region"
+            onValueChange={(v) => setSelectedRegion(v)}
+            defaultValue={selectedRegion}
+          >
             <SelectTrigger>
               <SelectValue defaultValue={selectedRegion} />
             </SelectTrigger>
@@ -65,9 +68,10 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks, team }) => {
                 </SelectItem>
               ))}
             </SelectContent>
-          </Select>
-        </div>
-        ,
+          </Select>,
+        ]}
+      >
+        <CardTitle>Latency</CardTitle>
       </CardHeader>
       <CardContent>
         <Chart endpoint={endpoint} checks={checksByRegion} team={team} />

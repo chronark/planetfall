@@ -12,18 +12,10 @@ export default async function PlayPage(props: {
     repeat?: string;
   };
 }) {
-  let regions = await db.region.findMany({
-    where: { visible: true },
-  });
-
   const { userId } = auth();
-  if (!userId) {
-    regions = regions.filter((r) => r.platform !== "aws");
-  }
 
   return (
     <Form
-      regions={regions}
       signedIn={Boolean(userId)}
       defaultValues={{
         url1: props.searchParams?.url,

@@ -2,11 +2,11 @@
 
 import React from "react";
 import { Column } from "@ant-design/plots";
-import { PlayChecks } from "@/lib/trpc/routers/play";
+import { PlayResult } from "@/lib/trpc/routers/play";
 
 type Props = {
-  regions: PlayChecks["regions"];
-  urls: PlayChecks["urls"];
+  regions: PlayResult["regions"];
+  urls: PlayResult["urls"];
 };
 
 const defaultStyle = {

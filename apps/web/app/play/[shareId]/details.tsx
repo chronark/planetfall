@@ -5,7 +5,7 @@ import { Heading } from "@/components/heading";
 import { Stats } from "@/components/stats";
 import { Trace } from "@/components/trace";
 import { Select, SelectTrigger, SelectItem, SelectContent, SelectValue } from "@/components/select";
-import { PlayChecks } from "@/lib/trpc/routers/play";
+import { PlayResult } from "@/lib/trpc/routers/play";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { VercelEdge } from "@/components/icons/VercelEdge";
@@ -22,12 +22,12 @@ import { parseCacheControlHeaders, parseXVercelId } from "@planetfall/header-ana
 import { Text } from "@/components/text";
 
 type Props = {
-  urls: PlayChecks["urls"];
-  regions: PlayChecks["regions"];
+  urls: PlayResult["urls"];
+  regions: PlayResult["regions"];
 };
 
 export const Details: React.FC<Props> = ({ regions, urls }) => {
-  const [selectedRegion, setSelectedRegion] = React.useState<PlayChecks["regions"][0] | undefined>(
+  const [selectedRegion, setSelectedRegion] = React.useState<PlayResult["regions"][0] | undefined>(
     regions[0],
   );
 

@@ -10,7 +10,6 @@ export default function SignInPage() {
         afterSignUpUrl="/onboarding"
         routing="hash"
       />
-      ;
     </div>
   );
 }

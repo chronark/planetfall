@@ -21,7 +21,7 @@ type CheckRequest = {
   followRedirects?: boolean;
 };
 
-type PingResponse = {
+export type PingResponse = {
   status?: number;
   latency?: number;
   body?: string;

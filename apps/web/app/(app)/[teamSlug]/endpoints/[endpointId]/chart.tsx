@@ -34,9 +34,8 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Latency by Region</CardTitle>
-        <div className="flex items-center justify-end gap-2">
+      <CardHeader
+        actions={[
           <div key="regions" className="flex items-center justify-end w-full gap-4">
             {regions.length > 10 ? (
               <Select onValueChange={(v) => setShowTopBottom(v === "true")}>
@@ -60,8 +59,10 @@ export const Chart: React.FC<Props> = ({ regions, endpoint }) => {
                 <SelectItem value="p99">P99</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-        </div>
+          </div>,
+        ]}
+      >
+        <CardTitle>Latency by Region</CardTitle>
       </CardHeader>
       <CardContent>
         <Bar

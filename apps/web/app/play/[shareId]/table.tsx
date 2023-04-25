@@ -9,11 +9,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { PlayChecks } from "@/lib/trpc/routers/play";
+import { PlayResult } from "@/lib/trpc/routers/play";
 
 type Props = {
-  regions: PlayChecks["regions"];
-  urls: PlayChecks["urls"];
+  regions: PlayResult["regions"];
+  urls: PlayResult["urls"];
 };
 
 const Cell: React.FC<{ value: (number | string | undefined)[] }> = ({ value }) => {

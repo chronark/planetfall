@@ -21,37 +21,23 @@ type FormData = {
 };
 
 type Props = {
-  regions: Region[];
   defaultValues: Partial<FormData>;
   signedIn: boolean;
 };
-export const Form: React.FC<Props> = ({
-  defaultValues,
-  regions: allRegions,
-  signedIn,
-}): JSX.Element => {
+export const Form: React.FC<Props> = ({ defaultValues, signedIn }): JSX.Element => {
   const {
     register,
     formState: { errors },
     handleSubmit,
     setError,
-    setValue,
   } = useForm<FormData>({ reValidateMode: "onSubmit", defaultValues });
 
-  const vercelRegions = allRegions.filter((r) => r.platform === "vercelEdge");
-  const awsRegions = allRegions.filter((r) => r.platform === "aws");
-  const flyRegions = allRegions.filter((r) => r.platform === "fly");
-
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const _searchParams = useSearchParams();
   const router = useRouter();
   const { addToast } = useToast();
 
   async function submit(data: FormData) {
-    if (selectedRegions.length === 0) {
-      setError("regions", { message: "Select at least 1 region" });
-    }
     setIsLoading(true);
     const urls = [data.url1];
     if (data.url2) {
@@ -61,7 +47,6 @@ export const Form: React.FC<Props> = ({
       .mutate({
         urls,
         method: data.method as any,
-        regionIds: selectedRegions,
       })
       .then(({ shareId }) => {
         addToast({
@@ -146,8 +131,7 @@ export const Form: React.FC<Props> = ({
             ) : null}
           </div>
         </div>
-
-        {/* {signedIn ? (
+        {signedIn ? (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
@@ -176,137 +160,7 @@ export const Form: React.FC<Props> = ({
               {errors.url2 ? <p className="mt-2 text-sm text-red-500">{errors.url2.type}</p> : null}
             </div>
           </div>
-        ) : null} */}
-
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-medium leading-6 text-zinc-900">Regions</h3>
-              <p className="max-w-2xl mt-1 text-sm text-zinc-500">
-                Select the regions from where we should call your API.
-              </p>
-            </div>
-            <Button
-              type="button"
-              onClick={() => {
-                if (selectedRegions.length >= allRegions.length / 2) {
-                  setSelectedRegions([]);
-                } else {
-                  setSelectedRegions(allRegions.map((r) => r.id));
-                }
-              }}
-            >
-              {selectedRegions.length >= allRegions.length / 2 ? "Deselect all" : "Select all"}
-            </Button>
-          </div>
-          <div className="space-y-6 sm:space-y-5">
-            <div role="group">
-              <div className="sm:grid sm:items-baseline sm:gap-4">
-                <div className="flex flex-col space-y-4">
-                  <div>
-                    <h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
-                      Vercel Edge
-                    </h4>
-                    <fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
-                      {vercelRegions.map((r) => (
-                        <button
-                          type="button"
-                          key={r.id}
-                          className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-                            selectedRegions.includes(r.id)
-                              ? "border-zinc-900 bg-zinc-50"
-                              : "border-zinc-300"
-                          }`}
-                          onClick={() => {
-                            if (selectedRegions.includes(r.id)) {
-                              setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
-                            } else {
-                              setSelectedRegions([...selectedRegions, r.id]);
-                            }
-                          }}
-                        >
-                          <span className="px-2 py-1 lg:px-4">{r.name.replace("@edge", "")}</span>
-                        </button>
-                      ))}
-                    </fieldset>
-                  </div>
-
-                  <div className="h-full">
-                    <h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
-                      Fly.io
-                    </h4>
-
-                    <fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
-                      {flyRegions.map((r) => (
-                        <button
-                          type="button"
-                          key={r.id}
-                          className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-                            selectedRegions.includes(r.id)
-                              ? "border-zinc-900 bg-zinc-50"
-                              : "border-zinc-300"
-                          }`}
-                          onClick={() => {
-                            if (selectedRegions.includes(r.id)) {
-                              setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
-                            } else {
-                              setSelectedRegions([...selectedRegions, r.id]);
-                            }
-                          }}
-                        >
-                          <span className="px-2 py-1 lg:px-4">{r.name}</span>
-                        </button>
-                      ))}
-                    </fieldset>
-                  </div>
-                  <div className="h-full">
-                    <h4 className="w-full mt-8 mb-4 font-medium leading-6 text-center md:mb-8 md:mt-16 text-zinc-900">
-                      AWS Lambda
-                    </h4>
-
-                    {awsRegions.length > 0 ? (
-                      <fieldset className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
-                        {awsRegions.map((r) => (
-                          <button
-                            type="button"
-                            key={r.id}
-                            className={`flex justify-between items-center text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-                              selectedRegions.includes(r.id)
-                                ? "border-zinc-900 bg-zinc-50"
-                                : "border-zinc-300"
-                            }`}
-                            onClick={() => {
-                              if (selectedRegions.includes(r.id)) {
-                                setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
-                              } else {
-                                setSelectedRegions([...selectedRegions, r.id]);
-                              }
-                            }}
-                          >
-                            <span className="px-2 py-1 lg:px-4">{r.name}</span>
-                          </button>
-                        ))}
-                      </fieldset>
-                    ) : (
-                      <div className="flex items-center justify-center w-full p-8 border border-dashed rounded lg:p-24 border-zinc-300 ">
-                        <Link href="/auth/sign-in">
-                          <Button variant="primary" type="button">
-                            Sign In to get access to AWS Lambda regions
-                          </Button>
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              {errors.regions ? (
-                <p className="mt-2 text-sm text-red-500">
-                  {errors.regions.message || "Select at least one region"}
-                </p>
-              ) : null}
-            </div>
-          </div>
-        </div>
+        ) : null}
       </div>
     </form>
   );

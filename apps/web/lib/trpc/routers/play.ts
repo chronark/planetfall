@@ -2,19 +2,20 @@ import { newId, newShortId } from "@planetfall/id";
 import { TRPCError, unsetMarker } from "@trpc/server";
 import { z } from "zod";
 import { t } from "../trpc";
-import { db } from "@planetfall/db";
+import { Region, db } from "@planetfall/db";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
 import { Client as Tinybird } from "@planetfall/tinybird";
-const tb = new Tinybird();
+import { PingResponse } from "pages/api/v1/edge-ping/_ping";
+const _tb = new Tinybird();
 const redis = Redis.fromEnv();
 const ratelimit = new Ratelimit({
   redis,
   limiter: Ratelimit.fixedWindow(10, "10 s"),
 });
 
-const playChecks = z.object({
+const results = z.object({
   urls: z.array(z.string().url()),
   time: z.number(),
   regions: z.array(
@@ -27,9 +28,9 @@ const playChecks = z.object({
           url: z.string().url(),
           latency: z.number().optional(),
           time: z.number(),
-          status: z.number(),
-          body: z.string(),
-          headers: z.record(z.string()),
+          status: z.number().optional(),
+          body: z.string().optional(),
+          headers: z.record(z.string()).optional(),
           tags: z.array(z.string()),
           timing: z
             .object({
@@ -50,7 +51,10 @@ const playChecks = z.object({
     }),
   ),
 });
-export type PlayChecks = z.infer<typeof playChecks>;
+
+export type PlayResult = z.infer<typeof results>;
+
+let regions: Region[] = [];
 
 export const playRouter = t.router({
   check: t.procedure
@@ -58,7 +62,6 @@ export const playRouter = t.router({
       z.object({
         method: z.enum(["GET", "POST", "PUT", "DELETE", "PATCH"]),
         urls: z.array(z.string().url()),
-        regionIds: z.array(z.string()).min(1),
       }),
     )
     .output(z.object({ shareId: z.string() }))
@@ -74,113 +77,93 @@ export const playRouter = t.router({
       ctx.res.setHeader("X-RateLimit-Remaining", remaining);
       ctx.res.setHeader("X-RateLimit-Reset", reset);
 
-      const start = Date.now();
-      const ps = await Promise.allSettled(
-        input.regionIds.map(async (regionId) => {
-          const region = await db.region.findUnique({
-            where: { id: regionId },
-          });
-          if (!region) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: `regionId: ${regionId} not found`,
-            });
-          }
+      console.log("A");
+      const _start = Date.now();
+
+      // get and cache outside of the handler
+      if (regions.length === 0) {
+        regions = await db.region.findMany({
+          where: {
+            platform: "fly",
+          },
+        });
+      }
+      console.log(
+        JSON.stringify(
+          regions.map((r) => r.id),
+          null,
+          2,
+        ),
+      );
+
+      const results = await Promise.all(
+        regions.map(async (region) => {
           const headers = new Headers({
             "Content-Type": "application/json",
           });
 
-          const res = await fetch(region.url, {
-            method: "POST",
-            headers,
-            body: JSON.stringify({
-              url: input.urls[0],
-              method: input.method,
-              timeout: 10000,
-              prewarm: false,
-              runs: 1,
+          const checks = await Promise.all(
+            input.urls.map(async (url) => {
+              const res = await fetch(region.url, {
+                method: "POST",
+                headers,
+                body: JSON.stringify({
+                  url,
+                  method: input.method,
+                  timeout: 10000,
+                  prewarm: false,
+                  runs: 1,
+                }),
+              }).catch((err) => {
+                console.error(err);
+                return null;
+              });
+
+              if (res === null || res.status !== 200) {
+                return null;
+              }
+              console.log(region.url, res.status);
+
+              const pingResponse = (await res.json()) as PingResponse[];
+
+              const pong = pingResponse[0];
+              if (!pong) {
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+              }
+
+              return {
+                id: newId("check"),
+                time: pong.time,
+                body: pong.body,
+                headers: pong.headers,
+                status: pong.status,
+                tags: pong.tags ?? [],
+                latency: pong.latency,
+                // @ts-ignore this is defined for golang checkers, but not for vercel edge
+                timing: pong.timing,
+                url,
+              };
             }),
-          }).catch((err) => {
-            console.error(err);
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: `Unable to ping ${region.url}: ${region.id}: ${err.message}}`,
-            });
-          });
-
-          if (res.status !== 200) {
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: `unable to ping: ${region.url} [${res.status}]: ${await res.text()}`,
-            });
-          }
-
-          const checks: {
-            time: number;
-            url: string;
-            status: number;
-            latency: number;
-            body: string;
-            headers: Record<string, string>;
-            tags: string[];
-            timing: {
-              dnsStart: number;
-              dnsDone: number;
-              connectStart: number;
-              connectDone: number;
-              firstByteStart: number;
-              firstByteDone: number;
-              tlsHandshakeStart: number;
-              tlsHandshakeDone: number;
-              transferStart: number;
-              transferDone: number;
-            };
-          }[] = [];
-
-          try {
-            checks.push(
-              ...((await res.json()) as any[]).map((r) => ({
-                url: region.url,
-                ...r,
-              })),
-            );
-          } catch (e) {
-            console.error(e);
-          }
+          );
 
           return {
             id: region.id,
             name: region.name,
-            checks: checks.map((c) => ({
-              ...c,
-              id: newId("check"),
-            })),
+            checks,
           };
         }),
       );
 
-      const out: PlayChecks = {
+      console.log(JSON.stringify({ results }, null, 2));
+      const out: PlayResult = {
         urls: input.urls,
         time: Date.now(),
-        regions: [],
+        regions: results.map((r) => ({
+          id: r.id,
+          name: r.name,
+          checks: r.checks.filter((c) => c !== null) as PlayResult["regions"][0]["checks"],
+        })),
       };
-
-      for (const p of ps) {
-        if (p.status === "fulfilled") {
-          out.regions.push(p.value);
-        } else {
-          console.error(p.reason);
-        }
-      }
-
-      tb.publish("play.checks", {
-        time: Date.now(),
-        latency: Date.now() - start,
-        urls: input.urls,
-        regionIds: input.regionIds,
-        method: input.method,
-        userId: ctx.user?.id,
-      });
 
       for (let i = 0; i < 100; i++) {
         const id = newShortId();

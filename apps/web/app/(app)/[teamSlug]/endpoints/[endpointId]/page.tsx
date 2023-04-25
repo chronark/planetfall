@@ -232,12 +232,8 @@ export default async function Page(props: {
         {errors.length > 0 ? (
           <>
             <Card>
-              <CardHeader>
-                <CardTitle>Errors</CardTitle>
-                <CardDescription>
-                  There have been {errors.length} errors in the last 24 hours.
-                </CardDescription>
-                <div className="flex items-center justify-end gap-2">
+              <CardHeader
+                actions={[
                   <Button key="errors">
                     <Link
                       href={`/${props.params.teamSlug}/endpoints/${props.params.endpointId}/errors`}
@@ -245,8 +241,13 @@ export default async function Page(props: {
                     >
                       Go to Errors
                     </Link>
-                  </Button>
-                </div>
+                  </Button>,
+                ]}
+              >
+                <CardTitle>Errors</CardTitle>
+                <CardDescription>
+                  There have been {errors.length} errors in the last 24 hours.
+                </CardDescription>
               </CardHeader>
             </Card>
             <Divider />
