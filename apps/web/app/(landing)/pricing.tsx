@@ -149,7 +149,6 @@ const sections: {
           Pro: true,
           Enterprise: true,
         },
-        tag: "New",
       },
       {
         name: "Webhooks",
@@ -167,7 +166,7 @@ const sections: {
           Pro: true,
           Enterprise: true,
         },
-        tag: "Planned",
+        tag: "New",
       },
       {
         name: "Opsgenie",
