@@ -91,7 +91,9 @@ export const TeamSwitcher: React.FC<Props> = ({ teams, currentTeamId }): JSX.Ele
                 </DialogDescription>
 
                 <form
-                  onSubmit={handleSubmit((data) => create.mutate({ name: data.name }))}
+                  onSubmit={handleSubmit((data) =>
+                    create.mutate({ name: data.name, trial: true, plan: "PRO" }),
+                  )}
                   className=""
                 >
                   <Label htmlFor="name">Name</Label>

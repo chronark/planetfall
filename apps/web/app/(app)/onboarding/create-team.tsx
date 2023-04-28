@@ -63,6 +63,8 @@ export const CreateTeam: React.FC<Props> = ({ user }) => {
       const newTeam = await trpc.team.create.mutate({
         name: data.name,
         slug: data.slug,
+        trial: false,
+        plan: "FREE",
       });
       setTeam(newTeam);
     } catch (err) {

@@ -1,16 +1,7 @@
 "use client";
 import { Chat, PlainProvider } from "@team-plain/react-chat-ui";
 import { useAuth } from "@clerk/nextjs/app-beta/client";
-import { useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/sheet";
 import { Button } from "@/components/button";
 
 export const SupportBubble: React.FC = () => {
@@ -26,22 +17,20 @@ export const SupportBubble: React.FC = () => {
       }
     : undefined;
 
-  const [_open, _setOpen] = useState(false);
-
   return (
-    <div>
-      <PlainProvider appKey={process.env.NEXT_PUBLIC_PLAIN_APP_KEY!} customer={customer}>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="primary" size="xs">
-              Support
-            </Button>
-          </SheetTrigger>
-          <SheetContent position="right" size="default" className="bg-white">
-            <Chat />
-          </SheetContent>
-        </Sheet>
-      </PlainProvider>
-    </div>
+    <PlainProvider appKey={process.env.NEXT_PUBLIC_PLAIN_APP_KEY!} customer={customer}>
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="primary" size="xs">
+            Support
+          </Button>
+        </SheetTrigger>
+
+        <SheetContent position="right" size="auto"  className="bg-white">
+          <Chat />
+        </SheetContent>
+       
+      </Sheet>
+    </PlainProvider>
   );
 };

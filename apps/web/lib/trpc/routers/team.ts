@@ -18,6 +18,8 @@ export const teamRouter = t.router({
       z.object({
         name: z.string(),
         slug: z.string().optional(),
+        trial: z.boolean(),
+        plan: z.enum(["FREE", "PRO", "ENTERPRISE"]),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -46,7 +48,7 @@ export const teamRouter = t.router({
             id: teamId,
             name: input.name,
             slug: input.slug ?? slugify(input.name, { lower: true }),
-            trialExpires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+            trialExpires: input.trial ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) : undefined,
             members: {
               create: {
                 user: {
@@ -61,7 +63,7 @@ export const teamRouter = t.router({
             maxMonthlyRequests: DEFAULT_QUOTA.FREE.maxMonthlyRequests,
             maxPages: DEFAULT_QUOTA.FREE.maxStatusPages,
             maxTimeout: DEFAULT_QUOTA.FREE.maxTimeout,
-            plan: "FREE",
+            plan: input.plan,
           },
         })
         .catch((err) => {
