@@ -26,10 +26,9 @@ export const SupportBubble: React.FC = () => {
           </Button>
         </SheetTrigger>
 
-        <SheetContent position="right" size="auto"  className="bg-white">
+        <SheetContent position="right" size="auto" className="bg-white">
           <Chat />
         </SheetContent>
-       
       </Sheet>
     </PlainProvider>
   );
