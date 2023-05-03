@@ -60,6 +60,7 @@
     "@upstash/ratelimit": "^0.4.2",
     "@upstash/redis": "^1.20.4",
     "@vercel/analytics": "^1.0.0",
+    "@vercel/edge-config": "^0.1.9",
     "@vercel/og": "^0.5.3",
     "alpha-trm-v2": "^1.0.26",
     "base-x": "^4.0.0",

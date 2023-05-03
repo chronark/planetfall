@@ -159,6 +159,7 @@ model Region {
   url       String
   endpoints Endpoint[]
   visible   Boolean
+  custom    Boolean?
 
   @@unique([platform, region])
 }
@@ -314,7 +315,7 @@ model Alert {
   // this alert is listening to the following endpoints
   endpoints Endpoint[]
 
-  emailChannels   EmailChannel[]
+  emailChannels EmailChannel[]
   slackChannels SlackChannel[]
 
   @@index([teamId])
@@ -336,17 +337,16 @@ model EmailChannel {
 }
 
 model SlackChannel {
- id String @id
+  id String @id
 
   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId String
 
   alerts Alert[]
 
-  url  String
+  url    String
   active Boolean
 
   @@unique([teamId, url])
   @@index([teamId])
-
 }

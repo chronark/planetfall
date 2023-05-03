@@ -28,7 +28,7 @@ locals {
      "yul",
      "yyz"
   ])
-  replicas = 1
+  replicas = 2
 }
 
 

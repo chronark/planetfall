@@ -31,12 +31,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         plan: {
           not: "FREE",
         },
-        trialExpires: {
-          gte: new Date(),
-        },
       },
     },
   });
+  console.log(`Creating invoices for ${teams.length} teams`);
   for (const team of teams) {
     if (!team.stripeCustomerId) {
       console.error(
@@ -49,12 +47,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const usage = await getUsage({
       teamId: team.id,
-      year: now.getUTCFullYear(),
-      month: now.getUTCMonth() + 1,
+      year: start.getUTCFullYear(),
+      month: start.getUTCMonth() + 1,
     });
+    console.log(
+      JSON.stringify({
+        teamId: team.id,
+        usage: usage.data,
+      }),
+    );
     const totalUsage = usage.data.reduce((total, day) => total + day.usage, 0);
 
-    if (totalUsage > 0) {
+    if (totalUsage > 100000) {
       const invoice = await stripe.invoices.create({
         customer: team.stripeCustomerId,
         auto_advance: false,
@@ -74,7 +78,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           start: Math.floor(start.getTime() / 1000),
           end: Math.floor(end.getTime() / 1000),
         },
-        description: `Usage for ${team.name}(${team.plan})`,
+        description: `Usage for ${team.name} (${team.plan})`,
       });
       console.log("created invoice item", { id: invoiceItem.id });
     }

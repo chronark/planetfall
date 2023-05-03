@@ -161,6 +161,7 @@ importers:
       '@upstash/ratelimit': ^0.4.2
       '@upstash/redis': ^1.20.4
       '@vercel/analytics': ^1.0.0
+      '@vercel/edge-config': ^0.1.9
       '@vercel/og': ^0.5.3
       alpha-trm-v2: ^1.0.26
       autoprefixer: ^10.4.14
@@ -249,6 +250,7 @@ importers:
       '@upstash/ratelimit': 0.4.2_@upstash+redis@1.20.4
       '@upstash/redis': 1.20.4
       '@vercel/analytics': 1.0.0_react@18.2.0
+      '@vercel/edge-config': 0.1.9
       '@vercel/og': 0.5.3
       alpha-trm-v2: 1.0.26_v2m5e27vhdewzwhryxwfaorcca
       base-x: 4.0.0
@@ -4272,6 +4274,11 @@ packages:
       react: ^16.8||^17||^18
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /@vercel/edge-config/0.1.9:
+    resolution: {integrity: sha512-tw52z4AqBgDNxm+sfLtTHOTTwuEKKaiPnklY+RRnMRSLuHTTIfv5yCLtmu3cjYDmZmMK5EZGxgO1mFGL5WdcNQ==}
+    engines: {node: '>=14.6'}
     dev: false
 
   /@vercel/og/0.5.3:
