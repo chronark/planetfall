@@ -1,10 +1,10 @@
-import { Platform, PrismaClient } from "@prisma/client";
+import { Platform, Region, PrismaClient } from "@prisma/client";
 
 const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:af-south-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://fwvbnvbb6oz2jzgpovm75hb4540twgye.lambda-url.af-south-1.on.aws",
     region: "af-south-1",
@@ -13,7 +13,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:ap-east-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://pzfcpsl6rah7ob2qcirdbdwoxi0mprfy.lambda-url.ap-east-1.on.aws",
     region: "ap-east-1",
@@ -22,7 +22,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:ap-northeast-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://aedkpukrqw2v2xoxiyxqtw2jye0sxqgj.lambda-url.ap-northeast-1.on.aws",
     region: "ap-northeast-1",
@@ -31,7 +31,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:ap-northeast-2`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://srbdfu4sloqa36m365l2hxj3zy0sfxgd.lambda-url.ap-northeast-2.on.aws",
     region: "ap-northeast-2",
@@ -40,7 +40,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:ap-northeast-3`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://otqwy4ztlzxbfsqblo6aippqne0zsosn.lambda-url.ap-northeast-3.on.aws",
     region: "ap-northeast-3",
@@ -49,7 +49,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:ap-south-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://z3sxifqdguqafynsgno7oszvlu0vmlvj.lambda-url.ap-south-1.on.aws",
     region: "ap-south-1",
@@ -58,7 +58,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:ap-southeast-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://x7gipm6xm43azjux7pocbauzde0sktuf.lambda-url.ap-southeast-1.on.aws",
     region: "ap-southeast-1",
@@ -67,7 +67,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:ap-southeast-2`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://quiz2c6reccroj4nfanpg5ugam0bwkjn.lambda-url.ap-southeast-2.on.aws",
     region: "ap-southeast-2",
@@ -76,7 +76,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:ap-southeast-3`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://yarzmqqceswzdjiumxjhxb6wp40hfmon.lambda-url.ap-southeast-3.on.aws",
     region: "ap-southeast-3",
@@ -85,7 +85,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:ca-central-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://lbmzunimpea2xn6avrxatagc340bhqcz.lambda-url.ca-central-1.on.aws",
     region: "ca-central-1",
@@ -94,7 +94,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:eu-central-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://anurwjl4ys7a4sd5taw2l7yswm0weooh.lambda-url.eu-central-1.on.aws",
     region: "eu-central-1",
@@ -103,7 +103,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:eu-north-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://nm5a2nt7arvrdmkpmghsuw6gbm0jmoud.lambda-url.eu-north-1.on.aws",
     region: "eu-north-1",
@@ -112,7 +112,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:eu-south-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://emmt56urfbjlcsz7g5pthurwra0dpyyb.lambda-url.eu-south-1.on.aws",
     region: "eu-south-1",
@@ -121,7 +121,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:eu-west-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://euyfmjginq73yhz2u2ctkoz2te0vovcl.lambda-url.eu-west-1.on.aws",
     region: "eu-west-1",
@@ -130,7 +130,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:eu-west-2`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://x223heggtqzliqdnjf7ptr64qq0yggsb.lambda-url.eu-west-2.on.aws",
     region: "eu-west-2",
@@ -139,7 +139,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:eu-west-3`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://p7jcbz4gj6gy74brseg66gyx3y0mfxqo.lambda-url.eu-west-3.on.aws",
     region: "eu-west-3",
@@ -148,7 +148,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:me-south-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://ebv5syscefvfqaq27ryuh2bydm0aeuwn.lambda-url.me-south-1.on.aws",
     region: "me-south-1",
@@ -157,7 +157,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:sa-east-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://nqx75bedph5vsytqrywnxotufm0xckzy.lambda-url.sa-east-1.on.aws",
     region: "sa-east-1",
@@ -166,7 +166,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:us-east-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://6dt2klkvdaryvh3pjb4osro4ky0lqtqo.lambda-url.us-east-1.on.aws",
     region: "us-east-1",
@@ -175,7 +175,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:us-east-2`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://ydlfvu24gdqqgowde72tt5zjee0zifnt.lambda-url.us-east-2.on.aws",
     region: "us-east-2",
@@ -184,7 +184,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:us-west-1`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://dj7qjsq2vjlzyg75zkqogfmwxu0cwcyp.lambda-url.us-west-1.on.aws",
     region: "us-west-1",
@@ -193,7 +193,7 @@ const awsRegions: Region[] = [
   {
     id: `${Platform.aws}:us-west-2`,
     platform: Platform.aws,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://sqkhjigvvpijz65inuixu6vhum0ppsqp.lambda-url.us-west-2.on.aws",
     region: "us-west-2",
@@ -204,7 +204,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:arn1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/arn1",
     region: "arn1",
@@ -213,7 +213,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:bom1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/bom1",
     region: "bom1",
@@ -222,7 +222,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:cdg1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/cdg1",
     region: "cdg1",
@@ -231,7 +231,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:cle1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/cle1",
     region: "cle1",
@@ -240,7 +240,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:cpt1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/cpt1",
     region: "cpt1",
@@ -249,7 +249,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:dub1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/dub1",
     region: "dub1",
@@ -258,7 +258,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:fra1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/fra1",
     region: "fra1",
@@ -267,7 +267,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:gru1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/gru1",
     region: "gru1",
@@ -276,7 +276,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:hkg1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/hkg1",
     region: "hkg1",
@@ -285,7 +285,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:hnd1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/hnd1",
     region: "hnd1",
@@ -294,7 +294,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:iad1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/iad1",
     region: "iad1",
@@ -303,7 +303,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:icn1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/icn1",
     region: "icn1",
@@ -312,7 +312,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:kix1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/kix1",
     region: "kix1",
@@ -321,7 +321,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:lhr1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/lhr1",
     region: "lhr1",
@@ -330,7 +330,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:pdx1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/pdx1",
     region: "pdx1",
@@ -339,7 +339,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:sfo1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/sfo1",
     region: "sfo1",
@@ -348,7 +348,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:sin1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/sin1",
     region: "sin1",
@@ -357,7 +357,7 @@ const edgeRegions: Region[] = [
   {
     id: `${Platform.vercelEdge}:syd1`,
     platform: Platform.vercelEdge,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall.io/api/v1/edge-ping/syd1",
     region: "syd1",
@@ -369,7 +369,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:arn1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/arn1",
     region: "arn1",
     name: "Stockholm, Sweden",
@@ -378,7 +378,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:bom1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/bom1",
     region: "bom1",
     name: "Mumbai, India",
@@ -387,7 +387,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:cdg1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/cdg1",
     region: "cdg1",
     name: "Paris, France",
@@ -396,7 +396,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:cle1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/cle1",
     region: "cle1",
     name: "Cleveland, US",
@@ -405,7 +405,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:cpt1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/cpt1",
     region: "cpt1",
     name: "Cape Town, South Africa",
@@ -414,7 +414,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:dub1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/dub1",
     region: "dub1",
     name: "Dublin, Ireland",
@@ -423,7 +423,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:fra1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/fra1",
     region: "fra1",
     name: "Frankfurt, Germany",
@@ -432,7 +432,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:gru1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/gru1",
     region: "gru1",
     name: "São Paulo, Brazil",
@@ -441,7 +441,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:hkg1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/hkg1",
     region: "hkg1",
     name: "Hong Kong",
@@ -450,7 +450,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:hnd1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/hnd1",
     region: "hnd1",
     name: "Tokyo, Japan",
@@ -459,7 +459,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:iad1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/iad1",
     region: "iad1",
     name: "Washington, D.C., US",
@@ -468,7 +468,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:icn1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/icn1",
     region: "icn1",
     name: "Seoul, South Korea",
@@ -477,7 +477,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:kix1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/kix1",
     region: "kix1",
     name: "Osaka, Japan",
@@ -486,7 +486,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:lhr1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/lhr1",
     region: "lhr1",
     name: "London, United Kingdom",
@@ -495,7 +495,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:pdx1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/pdx1",
     region: "pdx1",
     name: "Portland, US",
@@ -504,7 +504,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:sfo1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/sfo1",
     region: "sfo1",
     name: "San Francisco, US",
@@ -513,7 +513,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:sin1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/sin1",
     region: "sin1",
     name: "Singapore",
@@ -522,7 +522,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:syd1`,
     platform: Platform.vercelEdge,
     visible: false,
-    custom: true,
+    custom: "vercel-edge-config",
     url: "https://planetfall.io/api/v1/check/custom/vercel-edge-config/syd1",
     region: "syd1",
     name: "Sydney, Australia",
@@ -532,7 +532,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:ams`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/ams",
     region: "ams",
@@ -541,7 +541,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:cdg`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/cdg",
     region: "cdg",
@@ -550,7 +550,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:den`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/den",
     region: "den",
@@ -559,7 +559,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:dfw`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/dfw",
     region: "dfw",
@@ -568,7 +568,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:ewr`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/ewr",
     region: "ewr",
@@ -577,7 +577,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:fra`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/fra",
     region: "fra",
@@ -586,7 +586,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:gru`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/gru",
     region: "gru",
@@ -595,7 +595,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:hkg`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/hkg",
     region: "hkg",
@@ -604,7 +604,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:iad`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/iad",
     region: "iad",
@@ -613,7 +613,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:jnb`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/jnb",
     region: "jnb",
@@ -622,7 +622,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:lax`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/lax",
     region: "lax",
@@ -631,7 +631,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:lhr`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/lhr",
     region: "lhr",
@@ -640,7 +640,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:maa`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/maa",
     region: "maa",
@@ -649,7 +649,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:mad`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/mad",
     region: "mad",
@@ -658,7 +658,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:mia`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/mia",
     region: "mia",
@@ -667,7 +667,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:nrt`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/nrt",
     region: "nrt",
@@ -676,7 +676,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:ord`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/ord",
     region: "ord",
@@ -685,7 +685,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:otp`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/otp",
     region: "otp",
@@ -694,7 +694,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:scl`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/scl",
     region: "scl",
@@ -703,7 +703,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:sea`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/sea",
     region: "sea",
@@ -712,7 +712,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:sin`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/sin",
     region: "sin",
@@ -721,7 +721,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:sjc`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/sjc",
     region: "sjc",
@@ -730,7 +730,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:syd`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/syd",
     region: "syd",
@@ -739,7 +739,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:waw`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/waw",
     region: "waw",
@@ -748,7 +748,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:yul`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/yul",
     region: "yul",
@@ -757,7 +757,7 @@ const flyRegions: Region[] = [
   {
     id: `${Platform.fly}:yyz`,
     platform: Platform.fly,
-    custom: false,
+    custom: null,
     visible: true,
     url: "https://planetfall-check-runner.fly.dev/ping/yyz",
     region: "yyz",
@@ -765,16 +765,12 @@ const flyRegions: Region[] = [
   },
 ];
 
-type Region = {
-  id: string
-  platform: Platform,
-  custom: boolean,
-  visible: boolean,
-  url: string,
-  region: string
-  name: string
-}
-const regions: Region[] = [...edgeRegions, ...awsRegions, ...flyRegions, ...customVercelEdgeConfigRegions];
+const regions: Region[] = [
+  ...edgeRegions,
+  ...awsRegions,
+  ...flyRegions,
+  ...customVercelEdgeConfigRegions,
+];
 
 async function main() {
   const db = new PrismaClient();
@@ -782,10 +778,9 @@ async function main() {
     console.log("Upserting", r.id, r.url);
     await db.region.upsert({
       where: {
-        id: r.id
+        id: r.id,
       },
       update: {
-
         platform: r.platform,
         region: r.region,
         name: r.name,
