@@ -1,7 +1,8 @@
 import { Platform, PrismaClient } from "@prisma/client";
 
-const awsRegions = [
+const awsRegions: Region[] = [
   {
+    id: `${Platform.aws}:af-south-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -10,6 +11,7 @@ const awsRegions = [
     name: "Cape Town, South Africa",
   },
   {
+    id: `${Platform.aws}:ap-east-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -18,6 +20,7 @@ const awsRegions = [
     name: "Hong Kong",
   },
   {
+    id: `${Platform.aws}:ap-northeast-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -26,6 +29,7 @@ const awsRegions = [
     name: "Tokyo, Japan",
   },
   {
+    id: `${Platform.aws}:ap-northeast-2`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -34,6 +38,7 @@ const awsRegions = [
     name: "Seoul, South Korea",
   },
   {
+    id: `${Platform.aws}:ap-northeast-3`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -42,6 +47,7 @@ const awsRegions = [
     name: "Osaka, Japan",
   },
   {
+    id: `${Platform.aws}:ap-south-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -50,6 +56,7 @@ const awsRegions = [
     name: "Mumbai, India",
   },
   {
+    id: `${Platform.aws}:ap-southeast-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -58,6 +65,7 @@ const awsRegions = [
     name: "Singapore",
   },
   {
+    id: `${Platform.aws}:ap-southeast-2`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -66,6 +74,7 @@ const awsRegions = [
     name: "Sydney, Australia",
   },
   {
+    id: `${Platform.aws}:ap-southeast-3`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -74,6 +83,7 @@ const awsRegions = [
     name: "Jakarta, Indonesia",
   },
   {
+    id: `${Platform.aws}:ca-central-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -82,6 +92,7 @@ const awsRegions = [
     name: "Montreal, Canada",
   },
   {
+    id: `${Platform.aws}:eu-central-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -90,6 +101,7 @@ const awsRegions = [
     name: "Frankfurt, Germany",
   },
   {
+    id: `${Platform.aws}:eu-north-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -98,6 +110,7 @@ const awsRegions = [
     name: "Stockholm, Sweden",
   },
   {
+    id: `${Platform.aws}:eu-south-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -106,6 +119,7 @@ const awsRegions = [
     name: "Milan, Italy",
   },
   {
+    id: `${Platform.aws}:eu-west-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -114,6 +128,7 @@ const awsRegions = [
     name: "Dublin, Ireland",
   },
   {
+    id: `${Platform.aws}:eu-west-2`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -122,6 +137,7 @@ const awsRegions = [
     name: "London, UK",
   },
   {
+    id: `${Platform.aws}:eu-west-3`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -130,6 +146,7 @@ const awsRegions = [
     name: "Paris, France",
   },
   {
+    id: `${Platform.aws}:me-south-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -138,6 +155,7 @@ const awsRegions = [
     name: "Bahrain",
   },
   {
+    id: `${Platform.aws}:sa-east-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -146,6 +164,7 @@ const awsRegions = [
     name: "São Paulo, Brazil",
   },
   {
+    id: `${Platform.aws}:us-east-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -154,6 +173,7 @@ const awsRegions = [
     name: "N. Virginia, US",
   },
   {
+    id: `${Platform.aws}:us-east-2`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -162,6 +182,7 @@ const awsRegions = [
     name: "Ohio, US, ",
   },
   {
+    id: `${Platform.aws}:us-west-1`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -170,6 +191,7 @@ const awsRegions = [
     name: "N. California, US",
   },
   {
+    id: `${Platform.aws}:us-west-2`,
     platform: Platform.aws,
     custom: false,
     visible: true,
@@ -178,8 +200,9 @@ const awsRegions = [
     name: "Oregon, US",
   },
 ];
-const edgeRegions = [
+const edgeRegions: Region[] = [
   {
+    id: `${Platform.vercelEdge}:arn1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -188,6 +211,7 @@ const edgeRegions = [
     name: "Stockholm, Sweden",
   },
   {
+    id: `${Platform.vercelEdge}:bom1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -196,6 +220,7 @@ const edgeRegions = [
     name: "Mumbai, India",
   },
   {
+    id: `${Platform.vercelEdge}:cdg1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -204,6 +229,7 @@ const edgeRegions = [
     name: "Paris, France",
   },
   {
+    id: `${Platform.vercelEdge}:cle1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -212,6 +238,7 @@ const edgeRegions = [
     name: "Cleveland, US",
   },
   {
+    id: `${Platform.vercelEdge}:cpt1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -220,6 +247,7 @@ const edgeRegions = [
     name: "Cape Town, South Africa",
   },
   {
+    id: `${Platform.vercelEdge}:dub1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -228,6 +256,7 @@ const edgeRegions = [
     name: "Dublin, Ireland",
   },
   {
+    id: `${Platform.vercelEdge}:fra1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -236,6 +265,7 @@ const edgeRegions = [
     name: "Frankfurt, Germany",
   },
   {
+    id: `${Platform.vercelEdge}:gru1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -244,6 +274,7 @@ const edgeRegions = [
     name: "São Paulo, Brazil",
   },
   {
+    id: `${Platform.vercelEdge}:hkg1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -252,6 +283,7 @@ const edgeRegions = [
     name: "Hong Kong",
   },
   {
+    id: `${Platform.vercelEdge}:hnd1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -260,6 +292,7 @@ const edgeRegions = [
     name: "Tokyo, Japan",
   },
   {
+    id: `${Platform.vercelEdge}:iad1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -268,6 +301,7 @@ const edgeRegions = [
     name: "Washington, D.C., US",
   },
   {
+    id: `${Platform.vercelEdge}:icn1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -276,6 +310,7 @@ const edgeRegions = [
     name: "Seoul, South Korea",
   },
   {
+    id: `${Platform.vercelEdge}:kix1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -284,6 +319,7 @@ const edgeRegions = [
     name: "Osaka, Japan",
   },
   {
+    id: `${Platform.vercelEdge}:lhr1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -292,6 +328,7 @@ const edgeRegions = [
     name: "London, United Kingdom",
   },
   {
+    id: `${Platform.vercelEdge}:pdx1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -300,6 +337,7 @@ const edgeRegions = [
     name: "Portland, US",
   },
   {
+    id: `${Platform.vercelEdge}:sfo1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -308,6 +346,7 @@ const edgeRegions = [
     name: "San Francisco, US",
   },
   {
+    id: `${Platform.vercelEdge}:sin1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -316,6 +355,7 @@ const edgeRegions = [
     name: "Singapore",
   },
   {
+    id: `${Platform.vercelEdge}:syd1`,
     platform: Platform.vercelEdge,
     custom: false,
     visible: true,
@@ -324,8 +364,9 @@ const edgeRegions = [
     name: "Sydney, Australia",
   },
 ];
-const customVercelEdgeConfigRegions = [
+const customVercelEdgeConfigRegions: Region[] = [
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:arn1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -334,6 +375,7 @@ const customVercelEdgeConfigRegions = [
     name: "Stockholm, Sweden",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:bom1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -342,6 +384,7 @@ const customVercelEdgeConfigRegions = [
     name: "Mumbai, India",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:cdg1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -350,6 +393,7 @@ const customVercelEdgeConfigRegions = [
     name: "Paris, France",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:cle1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -358,6 +402,7 @@ const customVercelEdgeConfigRegions = [
     name: "Cleveland, US",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:cpt1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -366,6 +411,7 @@ const customVercelEdgeConfigRegions = [
     name: "Cape Town, South Africa",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:dub1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -374,6 +420,7 @@ const customVercelEdgeConfigRegions = [
     name: "Dublin, Ireland",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:fra1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -382,6 +429,7 @@ const customVercelEdgeConfigRegions = [
     name: "Frankfurt, Germany",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:gru1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -390,6 +438,7 @@ const customVercelEdgeConfigRegions = [
     name: "São Paulo, Brazil",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:hkg1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -398,6 +447,7 @@ const customVercelEdgeConfigRegions = [
     name: "Hong Kong",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:hnd1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -406,6 +456,7 @@ const customVercelEdgeConfigRegions = [
     name: "Tokyo, Japan",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:iad1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -414,6 +465,7 @@ const customVercelEdgeConfigRegions = [
     name: "Washington, D.C., US",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:icn1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -422,6 +474,7 @@ const customVercelEdgeConfigRegions = [
     name: "Seoul, South Korea",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:kix1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -430,6 +483,7 @@ const customVercelEdgeConfigRegions = [
     name: "Osaka, Japan",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:lhr1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -438,6 +492,7 @@ const customVercelEdgeConfigRegions = [
     name: "London, United Kingdom",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:pdx1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -446,6 +501,7 @@ const customVercelEdgeConfigRegions = [
     name: "Portland, US",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:sfo1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -454,6 +510,7 @@ const customVercelEdgeConfigRegions = [
     name: "San Francisco, US",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:sin1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -462,6 +519,7 @@ const customVercelEdgeConfigRegions = [
     name: "Singapore",
   },
   {
+    id: `${Platform.vercelEdge}:custom:vercel-edge-config:syd1`,
     platform: Platform.vercelEdge,
     visible: false,
     custom: true,
@@ -470,8 +528,9 @@ const customVercelEdgeConfigRegions = [
     name: "Sydney, Australia",
   },
 ];
-const flyRegions = [
+const flyRegions: Region[] = [
   {
+    id: `${Platform.fly}:ams`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -480,6 +539,7 @@ const flyRegions = [
     name: "Amsterdam, Netherlands",
   },
   {
+    id: `${Platform.fly}:cdg`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -488,6 +548,7 @@ const flyRegions = [
     name: "Paris, France",
   },
   {
+    id: `${Platform.fly}:den`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -496,6 +557,7 @@ const flyRegions = [
     name: "Denver, Colorado (US)",
   },
   {
+    id: `${Platform.fly}:dfw`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -504,6 +566,7 @@ const flyRegions = [
     name: "Dallas, Texas (US)",
   },
   {
+    id: `${Platform.fly}:ewr`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -512,6 +575,7 @@ const flyRegions = [
     name: "Secaucus, NJ (US)",
   },
   {
+    id: `${Platform.fly}:fra`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -520,6 +584,7 @@ const flyRegions = [
     name: "Frankfurt, Germany",
   },
   {
+    id: `${Platform.fly}:gru`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -528,6 +593,7 @@ const flyRegions = [
     name: "São Paulo",
   },
   {
+    id: `${Platform.fly}:hkg`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -536,6 +602,7 @@ const flyRegions = [
     name: "Hong Kong, Hong Kong",
   },
   {
+    id: `${Platform.fly}:iad`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -544,6 +611,7 @@ const flyRegions = [
     name: "Ashburn, Virginia (US)",
   },
   {
+    id: `${Platform.fly}:jnb`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -552,6 +620,7 @@ const flyRegions = [
     name: "Johannesburg, South Africa",
   },
   {
+    id: `${Platform.fly}:lax`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -560,6 +629,7 @@ const flyRegions = [
     name: "Los Angeles, California (US)",
   },
   {
+    id: `${Platform.fly}:lhr`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -568,6 +638,7 @@ const flyRegions = [
     name: "London, United Kingdom",
   },
   {
+    id: `${Platform.fly}:maa`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -576,6 +647,7 @@ const flyRegions = [
     name: "Chennai (Madras), India",
   },
   {
+    id: `${Platform.fly}:mad`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -584,6 +656,7 @@ const flyRegions = [
     name: "Madrid, Spain",
   },
   {
+    id: `${Platform.fly}:mia`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -592,6 +665,7 @@ const flyRegions = [
     name: "Miami, Florida (US)",
   },
   {
+    id: `${Platform.fly}:nrt`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -600,6 +674,7 @@ const flyRegions = [
     name: "Tokyo, Japan",
   },
   {
+    id: `${Platform.fly}:ord`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -608,6 +683,7 @@ const flyRegions = [
     name: "Chicago, Illinois (US)",
   },
   {
+    id: `${Platform.fly}:otp`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -616,6 +692,7 @@ const flyRegions = [
     name: "Bucharest, Romania",
   },
   {
+    id: `${Platform.fly}:scl`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -624,6 +701,7 @@ const flyRegions = [
     name: "Santiago, Chile",
   },
   {
+    id: `${Platform.fly}:sea`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -632,6 +710,7 @@ const flyRegions = [
     name: "Seattle, Washington (US)",
   },
   {
+    id: `${Platform.fly}:sin`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -640,6 +719,7 @@ const flyRegions = [
     name: "Singapore",
   },
   {
+    id: `${Platform.fly}:sjc`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -648,6 +728,7 @@ const flyRegions = [
     name: "Sunnyvale, California (US)",
   },
   {
+    id: `${Platform.fly}:syd`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -656,6 +737,7 @@ const flyRegions = [
     name: "Sydney, Australia",
   },
   {
+    id: `${Platform.fly}:waw`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -664,6 +746,7 @@ const flyRegions = [
     name: "Warsaw, Poland",
   },
   {
+    id: `${Platform.fly}:yul`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -672,6 +755,7 @@ const flyRegions = [
     name: "Montreal, Canada	",
   },
   {
+    id: `${Platform.fly}:yyz`,
     platform: Platform.fly,
     custom: false,
     visible: true,
@@ -681,35 +765,42 @@ const flyRegions = [
   },
 ];
 
-const regions = [...edgeRegions, ...awsRegions, ...flyRegions, ...customVercelEdgeConfigRegions];
+type Region = {
+  id: string
+  platform: Platform,
+  custom: boolean,
+  visible: boolean,
+  url: string,
+  region: string
+  name: string
+}
+const regions: Region[] = [...edgeRegions, ...awsRegions, ...flyRegions, ...customVercelEdgeConfigRegions];
 
 async function main() {
   const db = new PrismaClient();
   for (const r of regions) {
-    console.log("Upserting", r.platform, r.region);
+    console.log("Upserting", r.id, r.url);
     await db.region.upsert({
       where: {
-        platform_region: {
-          platform: r.platform,
-          region: r.region,
-        },
+        id: r.id
       },
       update: {
+
         platform: r.platform,
         region: r.region,
         name: r.name,
         url: r.url,
         visible: r.visible,
-        custom: r.custom ?? false,
+        custom: r.custom,
       },
       create: {
-        id: [r.platform, r.region].join(":"),
+        id: r.id,
         platform: r.platform,
         region: r.region,
         name: r.name,
         url: r.url,
         visible: r.visible,
-        custom: r.custom ?? false,
+        custom: r.custom,
       },
     });
   }

@@ -159,9 +159,9 @@ model Region {
   url       String
   endpoints Endpoint[]
   visible   Boolean
-  custom    Boolean?
+  custom    String?
 
-  @@unique([platform, region])
+  @@unique([platform, region, custom])
 }
 
 model TeamInvitation {
