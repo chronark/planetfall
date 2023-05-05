@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",
-    "@types/node": "^18.15.13",
-    "tsx": "^3.12.6",
+    "@types/node": "^20.0.0",
+    "tsx": "^3.12.7",
     "typescript": "^5.0.4",
     "zod": "^3.21.4"
   }

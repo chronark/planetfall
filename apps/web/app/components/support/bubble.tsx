@@ -6,7 +6,6 @@ import { Button } from "@/components/button";
 
 export const SupportBubble: React.FC = () => {
   const auth = useAuth();
-  console.log(auth.userId);
   const customer = auth.isSignedIn
     ? {
         type: "logged-in" as any,
