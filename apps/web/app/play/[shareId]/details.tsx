@@ -69,8 +69,7 @@ export const Details: React.FC<Props> = ({ regions, urls }) => {
 
       <CardContent>
         <div className="flex flex-col justify-between w-full divide-y md:flex-row md:divide-y-0 ">
-          {selectedRegion?.checks
-            .sort((a, b) => a.time - b.time)
+          {selectedRegion?.checks 
             .map((c, i) => {
               /**
                * using `Headers` because checks from edge or from lambdas have different casing
