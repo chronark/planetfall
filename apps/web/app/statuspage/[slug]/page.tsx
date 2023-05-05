@@ -24,7 +24,6 @@ const getStatusPage = cache(
 );
 
 export default async function Page(props: { params: { slug: string } }) {
-  console.log("Requested page", props.params.slug);
   const statusPage = await getStatusPage(props.params.slug);
   if (!statusPage) {
     return notFound();

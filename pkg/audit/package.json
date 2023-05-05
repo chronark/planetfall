@@ -13,7 +13,7 @@
   "devDependencies": {
     "@planetfall/tinybird": "workspace:*",
     "@planetfall/tsconfig": "workspace:*",
-    "@types/node": "18.15.13",
+    "@types/node": "20.0.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {

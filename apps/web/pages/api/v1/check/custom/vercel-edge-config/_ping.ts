@@ -12,16 +12,6 @@ export type PingRequest = {
   runs?: number;
 };
 
-type CheckRequest = {
-  url: string;
-  method: string;
-  body: string;
-  headers: Record<string, string>;
-  //Timeout in milliseconds
-  timeout: number;
-  followRedirects?: boolean;
-};
-
 export type PingResponse = {
   status?: number;
   latency?: number;
@@ -30,6 +20,16 @@ export type PingResponse = {
   time: number;
   error?: string;
   tags?: string[];
+};
+
+type CheckRequest = {
+  url: string;
+  method: string;
+  body: string;
+  headers: Record<string, string>;
+  //Timeout in milliseconds
+  timeout: number;
+  followRedirects?: boolean;
 };
 
 export async function ping(req: PingRequest): Promise<PingResponse[]> {
@@ -80,16 +80,10 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
   return responses;
 }
 
-async function check(req: CheckRequest): Promise<PingResponse> {
+async function check(_req: CheckRequest): Promise<PingResponse> {
   const now = Date.now();
-  const controller = new AbortController();
-  const timeout = setTimeout(
-    () => controller.abort(new Error(`Request timeout reached after ${req.timeout} ms`)),
-    req.timeout,
-  );
   const res = await get("greeting");
   const latency = Date.now() - now;
-  clearTimeout(timeout);
 
   const headers: Record<string, string> = {};
 

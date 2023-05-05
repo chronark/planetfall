@@ -15,6 +15,7 @@ import {
 import { Fly } from "@/components/icons/Fly";
 import { Line } from "@ant-design/plots";
 import { AreaChart, LineChart } from "@tremor/react";
+import cn from "classnames";
 function format(n: number): string {
   return Intl.NumberFormat(undefined).format(Math.round(n));
 }
@@ -60,27 +61,29 @@ export const AvailabilityChart: React.FC<Props> = ({
         {global.series.slice(-days).map((bucket) => {
           const start = new Date(bucket.time);
           const percentageHeight = bucket.p75 >= 0 ? Math.max(5, (bucket.p75 / max) * 100) : 100;
-          const bucketError = bucket.errors > 0;
-          const bucketDegraded = degradedAfter && bucket.p75 > degradedAfter;
+          const _bucketError = bucket.errors > 0;
+          const _bucketDegraded = degradedAfter && bucket.p75 > degradedAfter;
 
-          const cn = [
-            "flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
-          ];
-
-          if (bucket.p75 < 0) {
-            cn.push("  bg-zinc-400/20 hover:bg-zinc-400/50 ");
-          } else if (bucketError) {
-            cn.push(" bg-red-500  ");
-          } else if (bucketDegraded) {
-            cn.push(" bg-yellow-400  ");
-          } else {
-            cn.push(" bg-emerald-500 ");
+          let availability = bucket.count === 0 ? 1 : 1 - bucket.errors / bucket.count;
+          // Availability should not be rounded to 100% if there are errors
+          if (bucket.errors > 0) {
+            availability = Math.min(availability, 0.9999);
           }
 
           return (
             <HoverCard.Root openDelay={50} closeDelay={40} key={bucket.time}>
               <HoverCard.Trigger
-                className={cn.join(" ")}
+                className={cn(
+                  "flex-1 rounded-sm border border-white transition-all duration-150 px-px hover:scale-110 py-1 ",
+                  {
+                    "bg-zinc-400/20 hover:bg-zinc-400/50": bucket.p75 < 0,
+                    "bg-emerald-500": availability > 0.9999,
+                    "bg-lime-500": 0.9999 >= availability && availability > 0.99,
+                    "bg-yellow-500": 0.99 >= availability && availability > 0.97,
+                    "bg-orange-400": 0.97 >= availability && availability > 0.95,
+                    "bg-red-500": 0.95 >= availability,
+                  },
+                )}
                 style={{
                   height: `${percentageHeight}%`,
                 }}
@@ -177,7 +180,7 @@ const Expanded: React.FC<{ endpoint: EndpointData }> = ({ endpoint }) => {
       header: "",
 
       cell: (info) => (
-        <div className="h-8 w-auto">
+        <div className="w-auto h-8">
           <Line
             padding={[4, 0, 4, 4]}
             autoFit={true}

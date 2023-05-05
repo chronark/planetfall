@@ -64,12 +64,6 @@ export class Tinybird {
     }
     const body = await res.json();
 
-    console.log({
-      now: new Date().toUTCString(),
-      responseDate: res.headers.get("date"),
-      url: url.toString(),
-    });
-
     return body;
   }
 

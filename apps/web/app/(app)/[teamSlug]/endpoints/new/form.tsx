@@ -90,6 +90,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
         url: data.url,
         method: data.method,
         headers: data.headers ? JSON.parse(data.headers) : undefined,
+        body: data.body,
         degradedAfter: data.degradedAfter
           ? Number.isNaN(data.degradedAfter)
             ? undefined

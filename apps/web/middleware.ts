@@ -25,7 +25,6 @@ function middleware(req: NextRequest) {
   }
   if (subdomain !== "") {
     url.pathname = `/statuspage/${subdomain}`;
-    console.log("Rewriting to", url.pathname);
     return NextResponse.rewrite(url);
   }
   return NextResponse.next();
