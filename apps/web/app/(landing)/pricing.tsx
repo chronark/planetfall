@@ -1,3 +1,4 @@
+"use client";
 import React, { Fragment, PropsWithChildren } from "react";
 import Link from "next/link";
 import { DEFAULT_QUOTA } from "../../plans";
@@ -5,9 +6,12 @@ import ms from "ms";
 import classNames from "classnames";
 import { Check, Minus } from "lucide-react";
 import { Section } from "./section";
-import { features } from "node:process";
+const format = {
+  dollar: new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format,
+  number: new Intl.NumberFormat(undefined, { notation: "compact" }).format,
+};
 
-type Tier = "Free" | "Pro" | "Enterprise";
+type Tier = "Hobby" | "Pro" | "Enterprise";
 
 type Tag = "New" | "Planned" | "Beta" | "In Development";
 
@@ -16,17 +20,20 @@ const tiers: {
   href: string;
   price:
     | {
-        checks: number;
-        price: number;
+        unit: string;
+        cost: string;
       }
     | string;
   description: string;
   cta: string;
 }[] = [
   {
-    name: "Free",
+    name: "Hobby",
     href: "/auth/sign-up",
-    price: "$0",
+    price: {
+      unit: "10.000 Checks",
+      cost: "$1",
+    },
     description: "No credit card required",
     cta: "Start for free",
   },
@@ -34,17 +41,20 @@ const tiers: {
     name: "Pro",
     href: "/auth/sign-up",
     price: {
-      checks: 10000,
-      price: 1,
+      unit: "month",
+      cost: "$500",
     },
     description: "Pay as you go",
-    cta: "Start for free",
+    cta: "Get Started",
   },
   {
     name: "Enterprise",
     href: "mailto:support@planetfall.io",
-    price: "Contact us",
-    description: "For large-scale APIs",
+    price: {
+      unit: "month",
+      cost: "$1500",
+    },
+    description: "For enterprises with custom needs",
     cta: "Contact us",
   },
 ];
@@ -60,29 +70,29 @@ const sections: {
     name: "Features",
     features: [
       {
-        name: "Checks",
+        name: "Included Checks",
         tiers: {
-          Free: `Up to ${Intl.NumberFormat(undefined, { notation: "compact" }).format(
-            DEFAULT_QUOTA.FREE.maxMonthlyRequests,
-          )}`,
-          Pro: `Up to ${Intl.NumberFormat(undefined, { notation: "compact" }).format(
-            DEFAULT_QUOTA.PRO.maxMonthlyRequests,
-          )}`,
+          Hobby: format.number(DEFAULT_QUOTA.FREE.maxMonthlyRequests),
+
+          Pro: format.number(DEFAULT_QUOTA.PRO.maxMonthlyRequests),
           Enterprise: "∞",
+        },
+      },
+      {
+        name: "Additional Checks",
+        tiers: {
+          Hobby: "$0.0001 per check",
+          Pro: "$0.0001 per check",
+          Enterprise: "No additional cost",
         },
       },
       {
         name: "Status Pages",
         tiers: {
-          Free: DEFAULT_QUOTA.FREE.maxStatusPages.toString(),
+          Hobby: DEFAULT_QUOTA.FREE.maxStatusPages.toString(),
           Pro: DEFAULT_QUOTA.PRO.maxStatusPages.toString(),
           Enterprise: "∞",
         },
-        tag: "New",
-      },
-      {
-        name: "Teams",
-        tiers: { Free: false, Pro: true, Enterprise: true },
       },
     ],
   },
@@ -92,7 +102,7 @@ const sections: {
       {
         name: "18 Vercel Edge Regions",
         tiers: {
-          Free: true,
+          Hobby: true,
           Pro: true,
           Enterprise: true,
         },
@@ -100,7 +110,7 @@ const sections: {
       {
         name: "26 Fly.io Regions",
         tiers: {
-          Free: true,
+          Hobby: false,
           Pro: true,
           Enterprise: true,
         },
@@ -108,43 +118,51 @@ const sections: {
       {
         name: "22 AWS Regions",
         tiers: {
-          Free: false,
+          Hobby: false,
           Pro: true,
           Enterprise: true,
         },
       },
     ],
   },
-  // {
-  // 	name: "Storage",
-  // 	features: [
-  // 		{
-  // 			name: "Data Retention",
-  // 			tiers: {
-  // 				Free: ms(DEFAULT_QUOTA.FREE.retention, { long: true }),
-  // 				Pro: ms(DEFAULT_QUOTA.PRO.retention, { long: true }),
-  // 				Enterprise: ms(DEFAULT_QUOTA.ENTERPRISE.retention, { long: true }),
-  // 			},
-  // 		},
-  // 		{
-  // 			name: "Audit Logs",
-  // 			tiers: {
-  // 				Free: false,
+  {
+    name: "Retention",
+    features: [
+      {
+        name: "Individual Check History",
+        tiers: {
+          Hobby: ms(1000 * 60 * 60 * 24 * 7, { long: true }),
+          Pro: ms(1000 * 60 * 60 * 24 * 90, { long: true }),
+          Enterprise: ms(1000 * 60 * 60 * 24 * 365, { long: true }),
+        },
+      },
+      {
+        name: "Aggregated Metrics",
+        tiers: {
+          Hobby: ms(1000 * 60 * 60 * 24 * 7, { long: true }),
+          Pro: ms(1000 * 60 * 60 * 24 * 90, { long: true }),
+          Enterprise: ms(1000 * 60 * 60 * 24 * 365, { long: true }),
+        },
+      },
+      {
+        name: "Audit Logs",
+        tiers: {
+          Hobby: false,
 
-  // 				Pro: false,
-  // 				Enterprise: true,
-  // 			},
-  // 			tag: "Planned",
-  // 		},
-  // 	],
-  // },
+          Pro: true,
+          Enterprise: true,
+        },
+        tag: "Planned",
+      },
+    ],
+  },
   {
     name: "Alerts",
     features: [
       {
         name: "Email",
         tiers: {
-          Free: true,
+          Hobby: true,
 
           Pro: true,
           Enterprise: true,
@@ -153,7 +171,7 @@ const sections: {
       {
         name: "Webhooks",
         tiers: {
-          Free: true,
+          Hobby: true,
           Pro: true,
           Enterprise: true,
         },
@@ -162,7 +180,7 @@ const sections: {
       {
         name: "Slack",
         tiers: {
-          Free: false,
+          Hobby: false,
           Pro: true,
           Enterprise: true,
         },
@@ -171,7 +189,49 @@ const sections: {
       {
         name: "Opsgenie",
         tiers: {
-          Free: false,
+          Hobby: false,
+          Pro: true,
+          Enterprise: true,
+        },
+        tag: "Planned",
+      },
+    ],
+  },
+  {
+    name: "Integrations",
+    features: [
+      {
+        name: "Grafana",
+        tiers: {
+          Hobby: false,
+
+          Pro: false,
+          Enterprise: true,
+        },
+        tag: "Planned",
+      },
+      {
+        name: "Prometheus",
+        tiers: {
+          Hobby: false,
+          Pro: true,
+          Enterprise: true,
+        },
+        tag: "Planned",
+      },
+      {
+        name: "Slack",
+        tiers: {
+          Hobby: false,
+          Pro: true,
+          Enterprise: true,
+        },
+        tag: "New",
+      },
+      {
+        name: "Atlassian StatusPage",
+        tiers: {
+          Hobby: false,
           Pro: true,
           Enterprise: true,
         },
@@ -210,11 +270,9 @@ export const Pricing: React.FC = (): JSX.Element => {
               ) : (
                 <>
                   <span className="text-4xl font-bold tracking-tight text-zinc-900">
-                    ${tier.price.price}
+                    {tier.price.cost}
                   </span>
-                  <span className="text-base font-medium text-zinc-900">
-                    /{tier.price.checks.toLocaleString()} Checks
-                  </span>
+                  <span className="text-base font-medium text-zinc-900">/{tier.price.unit}</span>
                 </>
               )}
             </p>
@@ -274,7 +332,7 @@ export const Pricing: React.FC = (): JSX.Element => {
 
       {/* lg+ */}
       <div className="container hidden mx-auto isolate lg:block">
-        <div className="relative -mx-8">
+        <div className="-mx-8 ">
           <table className="w-full text-left border-separate table-fixed border-spacing-x-8">
             <caption className="sr-only">Pricing plan comparison</caption>
             <colgroup>
@@ -287,7 +345,7 @@ export const Pricing: React.FC = (): JSX.Element => {
               <tr>
                 <td />
                 {tiers.map((tier) => (
-                  <th key={tier.name} scope="col" className="px-6 pt-6 xl:px-8 xl:pt-8">
+                  <th key={tier.name} scope="col" className="sticky px-6 pt-6 xl:px-8 xl:pt-8">
                     <div className="text-sm font-semibold leading-7 text-zinc-900">{tier.name}</div>
                   </th>
                 ))}
@@ -308,10 +366,10 @@ export const Pricing: React.FC = (): JSX.Element => {
                       ) : (
                         <>
                           <span className="text-4xl font-bold tracking-tight text-zinc-900">
-                            ${tier.price.price}
+                            {tier.price.cost}
                           </span>
                           <span className="text-base font-medium text-zinc-900">
-                            /{tier.price.checks.toLocaleString()} Checks
+                            /{tier.price.unit}
                           </span>
                         </>
                       )}
