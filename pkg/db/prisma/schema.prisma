@@ -280,6 +280,7 @@ model Check {
   timing   Json?
 
   @@index([endpointId])
+  @@index([time])
 }
 
 model VerificationRequest {
