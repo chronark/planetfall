@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { Fragment, PropsWithChildren } from "react";
 import Link from "next/link";
 import { DEFAULT_QUOTA } from "../../plans";
@@ -8,8 +8,8 @@ import { Check, Minus } from "lucide-react";
 import { Section } from "./section";
 const format = {
   dollar: new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format,
-  number: new Intl.NumberFormat(undefined, { notation: "compact" }).format
-}
+  number: new Intl.NumberFormat(undefined, { notation: "compact" }).format,
+};
 
 type Tier = "Hobby" | "Pro" | "Enterprise";
 
@@ -19,45 +19,45 @@ const tiers: {
   name: Tier;
   href: string;
   price:
-  | {
-    unit: string;
-    cost: string;
-  }
-  | string;
+    | {
+        unit: string;
+        cost: string;
+      }
+    | string;
   description: string;
   cta: string;
 }[] = [
-    {
-      name: "Hobby",
-      href: "/auth/sign-up",
-      price: {
-        unit: "10.000 Checks",
-        cost: "$1",
-      },
-      description: "No credit card required",
-      cta: "Start for free",
+  {
+    name: "Hobby",
+    href: "/auth/sign-up",
+    price: {
+      unit: "10.000 Checks",
+      cost: "$1",
     },
-    {
-      name: "Pro",
-      href: "/auth/sign-up",
-      price: {
-        unit: "month",
-        cost: "$500",
-      },
-      description: "Pay as you go",
-      cta: "Get Started",
+    description: "No credit card required",
+    cta: "Start for free",
+  },
+  {
+    name: "Pro",
+    href: "/auth/sign-up",
+    price: {
+      unit: "month",
+      cost: "$500",
     },
-    {
-      name: "Enterprise",
-      href: "mailto:support@planetfall.io",
-      price: {
-        unit: "month",
-        cost: "$1500",
-      },
-      description: "For enterprises with custom needs",
-      cta: "Contact us",
+    description: "Pay as you go",
+    cta: "Get Started",
+  },
+  {
+    name: "Enterprise",
+    href: "mailto:support@planetfall.io",
+    price: {
+      unit: "month",
+      cost: "$1500",
     },
-  ];
+    description: "For enterprises with custom needs",
+    cta: "Contact us",
+  },
+];
 const sections: {
   name: string;
   features: {
@@ -66,185 +66,180 @@ const sections: {
     tag?: Tag;
   }[];
 }[] = [
-    {
-      name: "Features",
-      features: [
-        {
-          name: "Included Checks",
-          tiers: {
-            Hobby: format.number(DEFAULT_QUOTA.FREE.maxMonthlyRequests),
+  {
+    name: "Features",
+    features: [
+      {
+        name: "Included Checks",
+        tiers: {
+          Hobby: format.number(DEFAULT_QUOTA.FREE.maxMonthlyRequests),
 
-            Pro: format.number(DEFAULT_QUOTA.PRO.maxMonthlyRequests),
-            Enterprise: "∞",
-          },
+          Pro: format.number(DEFAULT_QUOTA.PRO.maxMonthlyRequests),
+          Enterprise: "∞",
         },
-        {
-          name: "Additional Checks",
-          tiers: {
-            Hobby: "$0.0001 per check",
-            Pro: "$0.0001 per check",
-            Enterprise: "No additional cost",
-          },
+      },
+      {
+        name: "Additional Checks",
+        tiers: {
+          Hobby: "$0.0001 per check",
+          Pro: "$0.0001 per check",
+          Enterprise: "No additional cost",
         },
-        {
-          name: "Status Pages",
-          tiers: {
-            Hobby: DEFAULT_QUOTA.FREE.maxStatusPages.toString(),
-            Pro: DEFAULT_QUOTA.PRO.maxStatusPages.toString(),
-            Enterprise: "∞",
-          },
-          tag: "New",
+      },
+      {
+        name: "Status Pages",
+        tiers: {
+          Hobby: DEFAULT_QUOTA.FREE.maxStatusPages.toString(),
+          Pro: DEFAULT_QUOTA.PRO.maxStatusPages.toString(),
+          Enterprise: "∞",
         },
-        {
-          name: "Teams",
-          tiers: { Hobby: false, Pro: true, Enterprise: true },
+      },
+    ],
+  },
+  {
+    name: "Regions",
+    features: [
+      {
+        name: "18 Vercel Edge Regions",
+        tiers: {
+          Hobby: true,
+          Pro: true,
+          Enterprise: true,
         },
-      ],
-    },
-    {
-      name: "Regions",
-      features: [
-        {
-          name: "18 Vercel Edge Regions",
-          tiers: {
-            Hobby: true,
-            Pro: true,
-            Enterprise: true,
-          },
+      },
+      {
+        name: "26 Fly.io Regions",
+        tiers: {
+          Hobby: false,
+          Pro: true,
+          Enterprise: true,
         },
-        {
-          name: "26 Fly.io Regions",
-          tiers: {
-            Hobby: false,
-            Pro: true,
-            Enterprise: true,
-          },
+      },
+      {
+        name: "22 AWS Regions",
+        tiers: {
+          Hobby: false,
+          Pro: true,
+          Enterprise: true,
         },
-        {
-          name: "22 AWS Regions",
-          tiers: {
-            Hobby: false,
-            Pro: true,
-            Enterprise: true,
-          },
+      },
+    ],
+  },
+  {
+    name: "Retention",
+    features: [
+      {
+        name: "Individual Check History",
+        tiers: {
+          Hobby: ms(1000 * 60 * 60 * 24 * 7, { long: true }),
+          Pro: ms(1000 * 60 * 60 * 24 * 90, { long: true }),
+          Enterprise: ms(1000 * 60 * 60 * 24 * 365, { long: true }),
         },
-      ],
-    },
-    {
-      name: "Retention",
-      features: [
-        {
-          name: "Individual Check History",
-          tiers: {
-            Hobby: ms(1000 * 60 * 60 * 24 * 7, { long: true }),
-            Pro: ms(1000 * 60 * 60 * 24 * 90, { long: true }),
-            Enterprise: ms(1000 * 60 * 60 * 24 * 365, { long: true }),
-          },
+      },
+      {
+        name: "Aggregated Metrics",
+        tiers: {
+          Hobby: ms(1000 * 60 * 60 * 24 * 7, { long: true }),
+          Pro: ms(1000 * 60 * 60 * 24 * 90, { long: true }),
+          Enterprise: ms(1000 * 60 * 60 * 24 * 365, { long: true }),
         },
-        {
-          name: "Aggregated Metrics",
-          tiers: {
-            Hobby: ms(1000 * 60 * 60 * 24 * 7, { long: true }),
-            Pro: ms(1000 * 60 * 60 * 24 * 90, { long: true }),
-            Enterprise: ms(1000 * 60 * 60 * 24 * 365, { long: true }),
-          },
-        },
-        {
-          name: "Audit Logs",
-          tiers: {
-            Hobby: false,
+      },
+      {
+        name: "Audit Logs",
+        tiers: {
+          Hobby: false,
 
-            Pro: true,
-            Enterprise: true,
-          },
-          tag: "Planned",
+          Pro: true,
+          Enterprise: true,
         },
-      ],
-    },
-    {
-      name: "Alerts",
-      features: [
-        {
-          name: "Email",
-          tiers: {
-            Hobby: true,
+        tag: "Planned",
+      },
+    ],
+  },
+  {
+    name: "Alerts",
+    features: [
+      {
+        name: "Email",
+        tiers: {
+          Hobby: true,
 
-            Pro: true,
-            Enterprise: true,
-          },
+          Pro: true,
+          Enterprise: true,
         },
-        {
-          name: "Webhooks",
-          tiers: {
-            Hobby: true,
-            Pro: true,
-            Enterprise: true,
-          },
-          tag: "Planned",
+      },
+      {
+        name: "Webhooks",
+        tiers: {
+          Hobby: true,
+          Pro: true,
+          Enterprise: true,
         },
-        {
-          name: "Slack",
-          tiers: {
-            Hobby: false,
-            Pro: true,
-            Enterprise: true,
-          },
-          tag: "New",
+        tag: "Planned",
+      },
+      {
+        name: "Slack",
+        tiers: {
+          Hobby: false,
+          Pro: true,
+          Enterprise: true,
         },
-        {
-          name: "Opsgenie",
-          tiers: {
-            Hobby: false,
-            Pro: true,
-            Enterprise: true,
-          },
-          tag: "Planned",
+        tag: "New",
+      },
+      {
+        name: "Opsgenie",
+        tiers: {
+          Hobby: false,
+          Pro: true,
+          Enterprise: true,
         },
-      ],
-    },
-    {
-      name: "Integrations",
-      features: [
-        {
-          name: "Grafana",
-          tiers: {
-            Hobby: false,
+        tag: "Planned",
+      },
+    ],
+  },
+  {
+    name: "Integrations",
+    features: [
+      {
+        name: "Grafana",
+        tiers: {
+          Hobby: false,
 
-            Pro: false,
-            Enterprise: true,
-          },
-          tag: "Planned",
+          Pro: false,
+          Enterprise: true,
         },
-        {
-          name: "Prometheus",
-          tiers: {
-            Hobby: false,
-            Pro: true,
-            Enterprise: true,
-          },
-          tag: "Planned",
+        tag: "Planned",
+      },
+      {
+        name: "Prometheus",
+        tiers: {
+          Hobby: false,
+          Pro: true,
+          Enterprise: true,
         },
-        {
-          name: "Slack",
-          tiers: {
-            Hobby: false,
-            Pro: true,
-            Enterprise: true,
-          },
-          tag: "New",
+        tag: "Planned",
+      },
+      {
+        name: "Slack",
+        tiers: {
+          Hobby: false,
+          Pro: true,
+          Enterprise: true,
         },
-        {
-          name: "Atlassian StatusPage",
-          tiers: {
-            Hobby: false,
-            Pro: true,
-            Enterprise: true,
-          },
-          tag: "Planned",
+        tag: "New",
+      },
+      {
+        name: "Atlassian StatusPage",
+        tiers: {
+          Hobby: false,
+          Pro: true,
+          Enterprise: true,
         },
-      ],
-    },
-  ];
+        tag: "Planned",
+      },
+    ],
+  },
+];
 
 const _Button: React.FC<PropsWithChildren<{ href: string }>> = ({ children, href }) => {
   return (
@@ -259,7 +254,7 @@ const _Button: React.FC<PropsWithChildren<{ href: string }>> = ({ children, href
 
 export const Pricing: React.FC = (): JSX.Element => {
   return (
-    <Section  id="pricing" title="Pricing" description="Start for free, scale as you grow.">
+    <Section id="pricing" title="Pricing" description="Start for free, scale as you grow.">
       {/* xs to lg */}
       <div className="max-w-md mx-auto space-y-8 lg:hidden">
         {tiers.map((tier) => (
