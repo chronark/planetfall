@@ -8,10 +8,6 @@ const nextConfig = {
   },
   rewrites: () => [
     {
-      source: "/:path*",
-      destination: "/:path*",
-    },
-    {
       source: "/docs",
       destination: "https://planetfall-docs.vercel.app/docs",
     },

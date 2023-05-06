@@ -73,13 +73,11 @@ export class Scheduler {
       month,
     });
 
-
     this.logger.info("report.usage.requests.allteams", {
       month,
       year,
       requests: usage.data.reduce((sum, u) => sum + u.usage, 0),
-    })
-
+    });
 
     for (const t of teams) {
       if (t.plan === "DISABLED") {
