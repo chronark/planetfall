@@ -3,8 +3,9 @@ import * as tb from "@planetfall/tinybird";
 import { newId } from "@planetfall/id";
 import { Logger } from "./logger";
 import * as assertions from "@planetfall/assertions";
-import { Notifications } from "./notifications";
+import { AlertNotifications } from "./alerts";
 import { getUsage } from "@planetfall/tinybird";
+import { Notifications } from "./notifications";
 
 export class Scheduler {
   // key: endpointId
@@ -12,15 +13,21 @@ export class Scheduler {
   private db: PrismaClient;
   private logger: Logger;
   private tinybird: tb.Client;
+  private alerts: AlertNotifications;
   private notifications: Notifications;
   regions: Record<string, Region>;
 
-  constructor({ logger, notifications }: { logger: Logger; notifications: Notifications }) {
+  constructor({
+    logger,
+    alerts,
+    notifications,
+  }: { logger: Logger; alerts: AlertNotifications; notifications: Notifications }) {
     this.db = new PrismaClient();
     this.tinybird = new tb.Client();
     this.endpoints = new Map();
     this.logger = logger;
     this.regions = {};
+    this.alerts = alerts;
     this.notifications = notifications;
   }
 
@@ -104,6 +111,14 @@ export class Scheduler {
         for (const e of t.endpoints) {
           this.removeEndpoint(e.id);
         }
+        await this.notifications.send({
+          type: "exceededFreeTier",
+          data: {
+            time: Date.now(),
+            teamId: t.id,
+            currentUsage: totalUsage,
+          },
+        });
       } else {
         for (const e of t.endpoints) {
           if (e.active && !e.deletedAt) {
@@ -359,7 +374,7 @@ export class Scheduler {
                 error: d.error,
               },
             });
-            this.notifications
+            this.alerts
               .notify({
                 type: "check",
                 check: {

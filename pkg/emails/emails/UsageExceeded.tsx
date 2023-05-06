@@ -39,7 +39,7 @@ export function UsageExceeded({
               You have made <strong>{fmt(currentUsage)}</strong> out of{" "}
               <strong>{fmt(maxMonthlyRequests)}</strong> checks this month.
             </Text>
-            <Text>To keep using Planetfall, please upgrade your plan</Text>
+            <Text>To keep using Planetfall, please upgrade your plan.</Text>
             <Section
               style={{
                 textAlign: "center",
@@ -60,13 +60,13 @@ export function UsageExceeded({
             </Section>
 
             <Text className="text-zinc-600">
-              You can manage your endpoints in the app:{" "}
+              If you have questions, please reply to this email or talk to us at:{" "}
               <Link
-                href={`https://planetfall.io/${teamSlug}/endpoints}`}
+                href="https://planetfall.io/support"
                 target="_blank"
                 className="underline text-zinc-800"
               >
-                https://planetfall.io
+                https://planetfall.io/support
               </Link>
             </Text>
             <Hr />

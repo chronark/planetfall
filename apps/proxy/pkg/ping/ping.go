@@ -4,12 +4,12 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/base64"
-	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/http/httptrace"
+	"net/url"
 	"strings"
 	"time"
 
@@ -19,15 +19,16 @@ import (
 /*
 curl https://proxy-go.vercel.app/api \
 -H "Content-Type: application/json" \
--d '{
-	"url": "https://definite-viper-32652.upstash.io/get/key",
-	"method": "GET",
-	"headers": {  "Authorization": "AX-MASQgZGNjNGFmYjItZmQyMi00OWQ0LTlmOWMtZGE4OWFmOTU0MDUzZjIxOGUwOTk0NWQ5NDMzMDhiYzU0MzJlMjdlMWZhNWE="},
-	"timeout": 10000,
-	"followRedirects": true,
-	"prewarm": true,
-	"runs": 1
-}' 
+
+	-d '{
+		"url": "https://definite-viper-32652.upstash.io/get/key",
+		"method": "GET",
+		"headers": {  "Authorization": "AX-MASQgZGNjNGFmYjItZmQyMi00OWQ0LTlmOWMtZGE4OWFmOTU0MDUzZjIxOGUwOTk0NWQ5NDMzMDhiYzU0MzJlMjdlMWZhNWE="},
+		"timeout": 10000,
+		"followRedirects": true,
+		"prewarm": true,
+		"runs": 1
+	}'
 */
 type PingRequest struct {
 	Url     string            `json:"url"`
@@ -173,14 +174,16 @@ func check(ctx context.Context, client *http.Client, input checkRequest) (Respon
 	res, err := client.Do(req)
 	timing.TransferDone = time.Now().UnixMilli()
 	latency := time.Since(start).Milliseconds()
-	if errors.Is(err, context.DeadlineExceeded) {
-		return Response{
-			Time:   now.UnixMilli(),
-			Timing: timing,
-			Error:  fmt.Sprintf("Timeout after %d ms", input.Timeout),
-		}, nil
-	}
 	if err != nil {
+		if urlErr, ok := err.(*url.Error); ok {
+			if urlErr.Timeout() {
+				return Response{
+					Time:   now.UnixMilli(),
+					Timing: timing,
+					Error:  fmt.Sprintf("Timeout after %d ms", input.Timeout),
+				}, nil
+			}
+		}
 		return Response{}, fmt.Errorf("Error while checking %s: %w", input.Url, err)
 	}
 

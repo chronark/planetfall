@@ -9,7 +9,7 @@ const validation = z.object({
   cardKeys: z.array(z.literal("user-teams")),
   customer: z.object({
     email: z.string(),
-    externalId: z.string(),
+    externalId: z.string().nullable(),
   }),
 });
 
@@ -22,8 +22,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const validated = validation.safeParse(req.body);
 
   if (!validated.success) {
+    console.error(`Validation Error: ${validated.error.message}`);
     res.status(400);
-    res.end();
+
+    res.json({ error: validated.error.message });
     return;
   }
 
