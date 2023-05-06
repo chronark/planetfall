@@ -1,0 +1,31 @@
+{
+  "name": "@planetfall/docs",
+  "version": "0.0.1",
+  "description": "Docs",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chronark/planetfall.git"
+  },
+  "author": "Shu Ding <g@shud.in>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chronark/planetfall/issues"
+  },
+  "homepage": "https://github.com/chronark/planetfall#readme",
+  "dependencies": {
+    "next": "^13.4.1",
+    "nextra": "^2.5.0",
+    "nextra-theme-docs": "^2.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.0.0",
+    "typescript": "^5.0.4"
+  }
+}

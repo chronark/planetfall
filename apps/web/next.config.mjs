@@ -1,11 +1,25 @@
-const withMarkdoc = require("@markdoc/next.js")();
-const { withAxiom } = require("next-axiom");
-/** @type {import('next').NextConfig} */
+import { withAxiom } from "next-axiom";
+
+/** @type {import("next").NextConfig} */
 const nextConfig = {
   pageExtensions: ["tsx", "ts", "jsx", "mdx", "md"],
   images: {
     domains: ["www.gravatar.com", "avatars.githubusercontent.com", "images.clerk.dev"],
   },
+  rewrites: () => [
+    {
+      source: "/:path*",
+      destination: "/:path*",
+    },
+    {
+      source: "/docs",
+      destination: "https://planetfall-docs.vercel.app/docs",
+    },
+    {
+      source: "/docs/:match*",
+      destination: "https://planetfall-docs.vercel.app/docs/:match*",
+    },
+  ],
   transpilePackages: ["@planetfall/emails"],
   experimental: {
     appDir: true,
@@ -19,4 +33,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withAxiom(withMarkdoc(nextConfig));
+export default withAxiom(nextConfig);

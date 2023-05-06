@@ -6,6 +6,7 @@ import * as assertions from "@planetfall/assertions";
 import { AlertNotifications } from "./alerts";
 import { getUsage } from "@planetfall/tinybird";
 import { Notifications } from "./notifications";
+import { SetupManager } from "./setup";
 
 export class Scheduler {
   // key: endpointId
@@ -15,6 +16,7 @@ export class Scheduler {
   private tinybird: tb.Client;
   private alerts: AlertNotifications;
   private notifications: Notifications;
+  private setupManager: SetupManager;
   regions: Record<string, Region>;
 
   constructor({
@@ -29,6 +31,7 @@ export class Scheduler {
     this.regions = {};
     this.alerts = alerts;
     this.notifications = notifications;
+    this.setupManager = new SetupManager();
   }
 
   public async run() {

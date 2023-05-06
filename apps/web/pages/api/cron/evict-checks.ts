@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const deleted = await db.check.deleteMany({
     where: {
       time: {
-        lt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 7 days
+        lt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30), // 30 days
       },
     },
   });

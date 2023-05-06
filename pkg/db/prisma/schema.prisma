@@ -261,8 +261,29 @@ model Endpoint {
 
   alerts Alert[]
 
+  setup Setup?
+
+
   @@index([teamId])
   @@index([ownerId])
+}
+
+// Setup can be used to create credentials
+model Setup { 
+  id String @id
+  endpoint Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  endpointId String @unique
+
+  method Method
+  url String
+  headers Json?
+  body String? @db.Text
+
+  // How long the setup response should be cached
+  ttl Int
+
+
+  @@index([endpointId])
 }
 
 model Check {

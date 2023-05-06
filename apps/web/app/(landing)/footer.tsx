@@ -7,7 +7,7 @@ export const Footer: React.FC = (): JSX.Element => {
     <footer className="container mx-auto">
       <div className="py-8 text-center ">
         <nav className="text-sm " aria-label="quick links">
-          <div className="flex justify-center -my-1 gap-1 text-zinc-500">
+          <div className="flex justify-center gap-1 -my-1 text-zinc-500">
             Built by
             <Link href="https://twitter.com/chronark_" className=" hover:text-zinc-300">
               @chronark_
@@ -22,9 +22,9 @@ export const Footer: React.FC = (): JSX.Element => {
       <div className="flex flex-col items-center py-10 border-t border-zinc-400/10 sm:flex-row-reverse sm:justify-between">
         <div className="flex gap-x-6">
           <Link
-            href="https://twitter.com/planetfallio"
+            href="https://twitter.com/chronark_"
             className="group"
-            aria-label="Planetfall twitter account"
+            aria-label="Chronark twitter account"
           >
             <svg aria-hidden="true" className="w-6 h-6 fill-zinc-500 group-hover:fill-zinc-300">
               <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0 0 22 5.92a8.19 8.19 0 0 1-2.357.646 4.118 4.118 0 0 0 1.804-2.27 8.224 8.224 0 0 1-2.605.996 4.107 4.107 0 0 0-6.993 3.743 11.65 11.65 0 0 1-8.457-4.287 4.106 4.106 0 0 0 1.27 5.477A4.073 4.073 0 0 1 2.8 9.713v.052a4.105 4.105 0 0 0 3.292 4.022 4.093 4.093 0 0 1-1.853.07 4.108 4.108 0 0 0 3.834 2.85A8.233 8.233 0 0 1 2 18.407a11.615 11.615 0 0 0 6.29 1.84" />
