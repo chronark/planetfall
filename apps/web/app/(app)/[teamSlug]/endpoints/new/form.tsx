@@ -393,7 +393,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
               <CardHeader>
                 <CardTitle>Regions</CardTitle>
                 <CardDescription>
-                  Select the regions from you want to monitor your endpoint.
+                  Select the regions from which you want to monitor your endpoint.
                 </CardDescription>
               </CardHeader>
 
