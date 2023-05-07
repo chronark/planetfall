@@ -1,12 +1,13 @@
-import { db } from "@planetfall/db";
-import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { env } from "@/lib/env";
 import { NextRequest, NextResponse } from "next/server";
 
 const validation = z.object({
   endpointId: z.string(),
 });
+
+export const config = {
+  runtime: "edge",
+};
 
 export default async function handler(req: NextRequest) {
   try {

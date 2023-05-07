@@ -11,8 +11,6 @@ $0.20 + $0.0000166667 * 1 * 1000000 ~= $17
 
 1M requests will earn planetfall $ 100
 
-
-
 # vercel serverless
 
 ## cost
@@ -24,8 +22,6 @@ $0.20 + $0.0000166667 * 1 * 1000000 ~= $17
 $40 / (100*60*60) * 1 * 1000000 = $111
 
 1M requests will earn planetfall $ 100
-
-
 
 # vercel edge
 

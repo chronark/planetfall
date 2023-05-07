@@ -8,7 +8,6 @@
 </div>
 <br/>
 
-
 ## Installation
 
 ```sh-session
@@ -24,7 +23,9 @@ $ npx @planetfall/cli ...
 ```
 
 ## Usage
+
 <!-- usage -->
+
 ```sh-session
 $ npm install -g @planetfall/cli
 $ planetfall COMMAND
@@ -36,7 +37,9 @@ USAGE
   $ planetfall COMMAND
 ...
 ```
+
 <!-- usagestop -->
+
 ```sh-session
 $ planetfall check https://example.com
 
@@ -44,9 +47,7 @@ Checking... Done
 
 Please visit the following URL to see the results:
 https://planetfall.io/play/N3T4Ug8npBC
-
 ```
-
 
 ## Help
 
@@ -66,5 +67,4 @@ DESCRIPTION
 
 EXAMPLES
   $ planetfall check
-
 ```
