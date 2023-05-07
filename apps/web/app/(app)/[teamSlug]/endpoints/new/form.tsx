@@ -22,7 +22,21 @@ import { Switch } from "@/components/switch";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/tooltip";
 import { Alert, AlertDescription, AlertTitle } from "@/components/alert";
 import { Input } from "@/components/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/select";
+import { Textarea } from "@/components/textarea";
+import { Separator } from "@/components/separator";
+import { Checkbox } from "@/components/checkbox";
+import type { Platform } from "@planetfall/db";
+import { Badge } from "@/components/badge";
 type Props = {
   teamId: string;
   teamSlug: string;
@@ -31,7 +45,7 @@ type Props = {
 };
 
 type FormData = {
-  active: boolean
+  active: boolean;
   name: string;
   url: string;
   method: "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
@@ -44,8 +58,8 @@ type FormData = {
   headerAssertions: z.infer<typeof assertions.headerAssertion>[];
   timeout: number;
   degradedAfter?: number;
-  followRedirects: boolean
-  prewarm: boolean
+  followRedirects: boolean;
+  prewarm: boolean;
 };
 
 export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeout }) => {
@@ -66,13 +80,20 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
       followRedirects: true,
       prewarm: false,
       interval: 60,
+      method: "GET",
+      distribution: "ALL",
     },
   });
 
   const { addToast } = useToast();
   const router = useRouter();
 
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform | "all">("vercelEdge");
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+
+  const displayRegions = regions.filter(
+    (region) => selectedPlatform === "all" || region.platform === selectedPlatform,
+  );
 
   // const createEndpoint = trpc.endpoint.create.useMutation();
 
@@ -118,7 +139,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
         teamId,
         statusAssertions: data.statusAssertions,
         followRedirects: data.followRedirects,
-        prewarm: data.prewarm
+        prewarm: data.prewarm,
       });
 
       const { id } = await res;
@@ -137,38 +158,328 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
   }
 
   const formValues = watch();
-  console.log(JSON.stringify(formValues, null, 2))
+
   const monthlyRequests =
     ((formValues.distribution === "ALL" ? selectedRegions.length : 1) * 30 * 24 * 60 * 60) /
-    formValues.interval || 0;
+      formValues.interval || 0;
   return (
     <TooltipProvider>
-
-      <div className="flex flex-col gap-4 lg:flex-row">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
         {/* main   */}
-        <Card className="w-full lg:w-3/4">
+        <div className="grid w-full grid-cols-1 col-span-4 gap-4 lg:col-span-3">
+          <Card>
+            <CardHeader>
+              <CardTitle>Endpoint</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-6">
+                {/* Name */}
+                <div className="flex flex-col items-start col-span-6 gap-1 sm:col-span-2">
+                  <Label htmlFor="timeout">Name</Label>
+                  <span className="text-xs text-zinc-500">Give your endpoint a name</span>
+                </div>
 
-        </Card>
-        <div className="flex flex-col w-full gap-4 lg:w-1/4">
+                <Input className="col-span-4" {...register("name", {})} placeholder="My Endpoint" />
+
+                <div className="flex flex-col items-start col-span-6 gap-1 sm:col-span-2">
+                  <Label htmlFor="timeout">Url</Label>
+                  <span className="text-xs text-zinc-500">Method and URL of your endpoint</span>
+                </div>
+
+                <div className="col-span-1">
+                  <Select
+                    {...register("method", {
+                      required: true,
+                    })}
+                  >
+                    <SelectTrigger className="max-w-[8rem] w-full ">
+                      <SelectValue
+                        defaultValue={formValues.method}
+                        placeholder={formValues.method}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="GET">GET</SelectItem>
+                      <SelectItem value="POST">POST</SelectItem>
+                      <SelectItem value="PUT">PUT</SelectItem>
+                      <SelectItem value="DELETE">DELETE</SelectItem>
+                      <SelectItem value="OPTIONS">OPTIONS</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Input
+                  className="col-span-3"
+                  {...register("url", {})}
+                  placeholder="https://example.com"
+                />
+              </div>
+              <Separator className="my-12" />
+              <CardTitle>Request</CardTitle>
+              <div className="grid grid-cols-6 gap-4 mt-6">
+                <div className="flex flex-col items-start col-span-6 gap-1 md:col-span-2">
+                  <Label htmlFor="timeout">Headers</Label>
+                  <span className="text-xs text-zinc-500">Headers in JSON format, or empty</span>
+                </div>
+
+                <Textarea
+                  className="col-span-6 md:col-span-4"
+                  {...register("headers", {})}
+                  placeholder={`{
+  "Content-Type": "application/json"
+}`}
+                />
+
+                <div className="flex flex-col items-start col-span-6 gap-1 md:col-span-2">
+                  <Label htmlFor="timeout">Body</Label>
+                  <span className="text-xs text-zinc-500">Not required</span>
+                </div>
+
+                <Textarea
+                  className="col-span-6 md:col-span-4"
+                  {...register("body", {})}
+                  placeholder={`{
+  "hello": "world"
+}`}
+                />
+              </div>
+
+              <Separator className="my-12" />
+              <CardTitle>Assertions</CardTitle>
+              <CardDescription>
+                Validate the response from your API. If any of the assertions fail, we will alert
+                you.
+              </CardDescription>
+              <div className="grid grid-cols-6 gap-4 mt-6">
+                <div className="flex flex-col items-start col-span-6 gap-1 md:col-span-2">
+                  <Label htmlFor="timeout">Status</Label>
+                  <span className="text-xs text-zinc-500">Status code of the response</span>
+                </div>
+
+                <div className="col-span-6 space-y-4 md:col-span-4">
+                  {statusAssertions.fields.map((f, i) => (
+                    <div key={f.id} className="flex items-center gap-4">
+                      <Select
+                        {...register(`statusAssertions.${i}.compare`, {
+                          required: true,
+                        })}
+                      >
+                        <SelectTrigger className="max-w-[8rem] w-full ">
+                          <SelectValue defaultValue="eq" placeholder="Equal" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="gt">Greater than</SelectItem>
+                          <SelectItem value="gte">Greater than or equal</SelectItem>
+                          <SelectItem value="lt">Less than</SelectItem>
+                          <SelectItem value="lte">Less than or equal</SelectItem>
+                          <SelectItem value="eq">Equal</SelectItem>
+                          <SelectItem value="not_eq">Not Equal</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Input
+                        {...register(`statusAssertions.${i}.target`, {
+                          required: true,
+                          valueAsNumber: true,
+                        })}
+                        type="number"
+                      />
+
+                      <div>
+                        <Button
+                          size="square"
+                          onClick={() => statusAssertions.remove(i)}
+                          variant="subtle"
+                        >
+                          <Minus className="w-6 h-6" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="w-full text-right">
+                    <Button
+                      variant="subtle"
+                      size="xs"
+                      onClick={() =>
+                        statusAssertions.append({
+                          version: "v1",
+                          type: "status",
+                          compare: "eq",
+                          target: 200,
+                        })
+                      }
+                    >
+                      Add Assertion
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-start col-span-6 gap-1 md:col-span-2">
+                  <Label htmlFor="timeout">Headers</Label>
+                  <span className="text-xs text-zinc-500">
+                    Expect a header to be present, or have a specific value
+                  </span>
+                </div>
+
+                <div className="col-span-6 space-y-4 md:col-span-4">
+                  {headerAssertions.fields.map((f, i) => (
+                    <div key={f.id} className="flex items-center gap-4">
+                      <Input
+                        {...register(`headerAssertions.${i}.key`, {
+                          required: true,
+                        })}
+                      />
+
+                      <Select
+                        {...register(`headerAssertions.${i}.compare`, {
+                          required: true,
+                        })}
+                      >
+                        <SelectTrigger className="max-w-[8rem] w-full ">
+                          <SelectValue defaultValue="eq" placeholder="Equal" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="gt">Greater than</SelectItem>
+                          <SelectItem value="gte">Greater than or equal</SelectItem>
+                          <SelectItem value="lt">Less than</SelectItem>
+                          <SelectItem value="lte">Less than or equal</SelectItem>
+                          <SelectItem value="eq">Equal</SelectItem>
+                          <SelectItem value="not_eq">Not Equal</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Input
+                        {...register(`headerAssertions.${i}.target`, {
+                          required: true,
+                          valueAsNumber: true,
+                        })}
+                      />
+
+                      <div>
+                        <Button
+                          size="square"
+                          onClick={() => headerAssertions.remove(i)}
+                          variant="subtle"
+                        >
+                          <Minus className="w-6 h-6" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="w-full text-right">
+                    <Button
+                      variant="subtle"
+                      onClick={() =>
+                        headerAssertions.append({
+                          version: "v1",
+                          type: "header",
+                          key: "Content-Type",
+                          compare: "eq",
+                          target: "application/json",
+                        })
+                      }
+                      size="xs"
+                    >
+                      Add Assertion
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <div className="flex items-center justify-between w-full ">
+              <CardHeader>
+                <CardTitle>Regions</CardTitle>
+                <CardDescription>
+                  Select the regions from you want to monitor your endpoint.
+                </CardDescription>
+              </CardHeader>
+
+              <CardHeader>
+                <Select
+                  onValueChange={(v: Platform | "all") => {
+                    setSelectedPlatform(v);
+                  }}
+                >
+                  <SelectTrigger className="max-w-[8rem] ">
+                    <SelectValue defaultValue="vercelEdge" placeholder="Vercel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Choose a Provider</SelectLabel>
+                      <SelectSeparator />
+                      <SelectItem value="vercelEdge">Vercel Edge</SelectItem>
+                      <SelectItem value="fly">fly.io</SelectItem>
+                      <SelectItem value="aws">AWS</SelectItem>
+                      <SelectSeparator />
+                      <SelectItem value="all">All</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </CardHeader>
+            </div>
+
+            <CardContent>
+              <TooltipProvider>
+                <fieldset className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                  {displayRegions.map((r) => (
+                    <Tooltip key={r.id}>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          className={`px-2 py-1 text-sm lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+                            selectedRegions.includes(r.id)
+                              ? "border-zinc-900 bg-zinc-50"
+                              : "border-zinc-300"
+                          }`}
+                          onClick={() => {
+                            if (selectedRegions.includes(r.id)) {
+                              setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
+                            } else {
+                              setSelectedRegions([...selectedRegions, r.id]);
+                            }
+                          }}
+                        >
+                          <span>{r.name}</span>
+                          {selectedPlatform === "all" ? (
+                            <p className="text-xs uppercase text-zinc-500">{r.platform}</p>
+                          ) : null}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <span className="font-semibold">{r.name}</span>
+                        <p className="text-xs text-zinc-500">Platform: {r.platform}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ))}
+                </fieldset>
+              </TooltipProvider>
+            </CardContent>
+          </Card>
+        </div>
+        {/* Side */}
+        <div className="relative grid w-full h-full grid-cols-1 col-span-4 gap-4 lg:col-span-1">
           {/* toggles */}
           <Card>
             <CardHeader>
               <CardTitle>Configuration</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className="flex items-center justify-between w-full gap-4">
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger>
                     <Label htmlFor="active">Active</Label>
-                    <Switch
-                      {...register("active")}
-                      checked={formValues.active}
-                      onCheckedChange={(on) => {
-                        setValue("active", on)
-                      }} />
-                  </div>
-                </TooltipTrigger>
+                  </TooltipTrigger>
+                  <Checkbox
+                    {...register("active")}
+                    checked={formValues.active}
+                    onCheckedChange={(on) => {
+                      setValue("active", Boolean(on));
+                    }}
+                  />
+                </div>
                 <TooltipContent>
                   <span className="font-semibold">Active</span>
                   <p>
@@ -176,31 +487,42 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                   </p>
                 </TooltipContent>
               </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className="flex items-center justify-between w-full gap-4">
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger>
                     <Label htmlFor="followRedirects">Follow Redirects</Label>
-                    <Switch type="button"  {...register("followRedirects")} checked={formValues.followRedirects} onCheckedChange={(on) => {
-                      setValue("followRedirects", on)
-                    }} />
-                  </div>
-                </TooltipTrigger>
+                  </TooltipTrigger>
+                  <Checkbox
+                    type="button"
+                    {...register("followRedirects")}
+                    checked={formValues.followRedirects}
+                    onCheckedChange={(on) => {
+                      setValue("followRedirects", Boolean(on));
+                    }}
+                  />
+                </div>
                 <TooltipContent>
                   <span className="font-semibold">Follow Redirects</span>
                   <p>
-                    When enabled, redirects will be followed, otherwise the first response will be returned.
+                    When enabled, redirects will be followed, otherwise the first response will be
+                    returned.
                   </p>
                 </TooltipContent>
               </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className="flex items-center justify-between w-full gap-4">
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger>
                     <Label htmlFor="followRedirects">Prewarm</Label>
-                    <Switch type="button"  {...register("prewarm")} checked={formValues.prewarm} onCheckedChange={(on) => {
-                      setValue("prewarm", on)
-                    }} />
-                  </div>
-                </TooltipTrigger>
+                  </TooltipTrigger>
+                  <Checkbox
+                    type="button"
+                    {...register("prewarm")}
+                    checked={formValues.prewarm}
+                    onCheckedChange={(on) => {
+                      setValue("prewarm", Boolean(on));
+                    }}
+                  />
+                </div>
                 <TooltipContent>
                   <span className="font-semibold">Prewarm</span>
                   <p>
@@ -210,8 +532,6 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                   </p>
                 </TooltipContent>
               </Tooltip>
-
-
             </CardContent>
           </Card>
           {/* timings */}
@@ -220,26 +540,21 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
               <CardTitle>Limits</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className="flex items-center justify-between w-full gap-4">
-                    <div className="flex flex-col items-start gap-1">
-
-                      <Label htmlFor="timeout">Timeout</Label>
-                      <span className="text-xs text-zinc-500">Milliseconds</span>
-                    </div>
-                    <Input
-                      className="max-w-[8rem] text-right"
-                      {...register("timeout", {
-                        valueAsNumber: true,
-                        min: 1,
-                      })}
-                      type="number"
-                    />
-
-                  </div>
-                </TooltipTrigger>
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger className="flex flex-col items-start gap-1">
+                    <Label htmlFor="timeout">Timeout</Label>
+                    <span className="text-xs text-zinc-500">Milliseconds</span>
+                  </TooltipTrigger>
+                  <Input
+                    className="max-w-[8rem] text-right"
+                    {...register("timeout", {
+                      valueAsNumber: true,
+                      min: 1,
+                    })}
+                    type="number"
+                  />
+                </div>
                 <TooltipContent>
                   <span className="font-semibold">Timeout</span>
                   <p>
@@ -248,41 +563,73 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                   </p>
                 </TooltipContent>
               </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className="flex items-center justify-between w-full gap-4">
-                    <div className="flex flex-col items-start gap-1">
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger className="flex flex-col items-start gap-1">
+                    <Label htmlFor="timeout">Degraded</Label>
+                    <span className="text-xs text-zinc-500">Milliseconds</span>
+                  </TooltipTrigger>
 
-                      <Label htmlFor="timeout">Degraded</Label>
-                      <span className="text-xs text-zinc-500">Milliseconds</span>
-                    </div>
+                  <Input
+                    className="max-w-[8rem] text-right"
+                    {...register("degradedAfter", {
+                      valueAsNumber: true,
+                      min: 1,
+                    })}
+                    type="number"
+                  />
 
+                  <TooltipContent>
+                    <span className="font-semibold">Degraded</span>
+                    <p>The degraded threshold in milliseconds for each request.</p>
+                    <p>
+                      If the request takes longer than the degraded threshold, it will be marked as
+                      degraded.
+                    </p>
 
-                    <Input
-                      className="max-w-[8rem] text-right"
-
-                      {...register("degradedAfter", {
-                        valueAsNumber: true,
-                        min: 1,
-                      })}
-                      type="number"
-                    />
-
-                  </div>
+                    <p>Leave empty to disable</p>
+                  </TooltipContent>
+                </div>
+              </Tooltip>
+            </CardContent>
+          </Card>
+          {/* dynamic */}
+          <Card>
+            <div className="flex items-center justify-between">
+              <CardHeader>
+                <CardTitle>Dynamic</CardTitle>
+              </CardHeader>
+              <CardHeader>
+                <Badge>Alpha</Badge>
+              </CardHeader>
+            </div>
+            <CardContent className="flex flex-col gap-4">
+              <Tooltip delayDuration={200}>
+                <TooltipTrigger className="flex flex-col items-start gap-1">
+                  <Link
+                    href="/docs/dynamic_setup"
+                    className="text-sm text-zinc-500 hover:underline"
+                  >
+                    planetfall.io/docs/dynamic_setup
+                  </Link>
+                  <Button disabled className="w-full">
+                    Create Dynamic Setup
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <span className="font-semibold">Degraded</span>
-                  <p>
-                    The degraded threshold in milliseconds for each request.</p>
-                  <p>
-                    If the request takes longer than the degraded threshold, it will be marked as degraded.
+                  <span className="font-semibold">Dynamic</span>
+                  <p className="text-sm text-zinc-700">
+                    Dynamic setups are in alpha.{" "}
+                    <Link
+                      href="mailto:support@planetfall.io"
+                      className="underline hover:text-zinc-900"
+                    >
+                      Contact us
+                    </Link>{" "}
+                    to get access.
                   </p>
-
-                  <p>Leave empty to disable</p>
                 </TooltipContent>
               </Tooltip>
-
-
             </CardContent>
           </Card>
           {/* interval */}
@@ -291,89 +638,78 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
               <CardTitle>Frequency</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className="flex items-center justify-between w-full gap-4">
-                    <div className="flex flex-col items-start gap-1">
-
-                      <Label htmlFor="timeout">Interval</Label>
-                      <span className="text-xs text-zinc-500">Seconds</span>
-                    </div>
-                    <Input
-                      className="max-w-[8rem] text-right"
-                      {...register("interval", {
-                        valueAsNumber: true,
-                        min: 1,
-                      })}
-                      type="number"
-                    />
-
-                  </div>
-                </TooltipTrigger>
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger className="flex flex-col items-start gap-1">
+                    <Label htmlFor="timeout">Interval</Label>
+                    <span className="text-xs text-zinc-500">Seconds</span>
+                  </TooltipTrigger>
+                  <Input
+                    className="max-w-[8rem] text-right"
+                    {...register("interval", {
+                      valueAsNumber: true,
+                      min: 1,
+                    })}
+                    type="number"
+                  />
+                </div>
                 <TooltipContent>
                   <span className="font-semibold">Interval</span>
-                  <p>
-                    The interval in seconds for each request.
-                  </p>
-                  <p>
-                    An interval of 60 seconds will send a request every minute.
-                  </p>
+                  <p>The interval in seconds for each request.</p>
+                  <p>An interval of 60 seconds will send a request every minute.</p>
                 </TooltipContent>
               </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className="flex items-center justify-between w-full gap-4">
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger className="flex flex-col items-start gap-1">
+                    <Label htmlFor="distribution">Distribution</Label>
+                  </TooltipTrigger>
 
-                    <Label htmlFor="timeout">Distribution</Label>
-
-
-
-                    <Select
-
-                    >
-                      <SelectTrigger className="max-w-[8rem] w-full ">
-                        <SelectValue defaultValue="ALL" placeholder="ALL" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        { }
-                        <SelectItem value="ALL">All</SelectItem>
-                        <SelectItem value="RANDOM">Round Robin</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                  </div>
-                </TooltipTrigger>
+                  <Select
+                    {...register("distribution", {
+                      required: true,
+                    })}
+                    onValueChange={(v: "ALL" | "RANDOM") => {
+                      setValue("distribution", v);
+                    }}
+                  >
+                    <SelectTrigger className="max-w-[8rem] w-full ">
+                      <SelectValue
+                        defaultValue={formValues.distribution}
+                        placeholder={formValues.distribution}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ALL">All</SelectItem>
+                      <SelectItem value="RANDOM">Round Robin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <TooltipContent>
                   <span className="font-semibold">Distribution</span>
                   <p>
                     Choose whether we should send a request from every selected region at once, or
                     only from one.
                   </p>
-
                 </TooltipContent>
               </Tooltip>
-
-
             </CardContent>
           </Card>
           {/* Submit */}
-          <Card>
+          <Card className="flex flex-col justify-between">
             <CardHeader>
               <CardDescription>
-
-                The current configuration will result in approximately {Intl.NumberFormat(undefined, { notation: "compact" }).format(monthlyRequests)} requests per month.
+                The current configuration will result in approximately{" "}
+                <strong>
+                  {Intl.NumberFormat(undefined, { notation: "compact" }).format(monthlyRequests)}
+                </strong>{" "}
+                requests per month.
               </CardDescription>
             </CardHeader>
             <CardContent>
-
-              <div className="flex justify-end">
-                <Button variant="primary" className="w-full"
-                  onClick={handleSubmit(submit)}
-                >
-                  {loading ? <Loading /> : "Create"}
-                </Button>
-              </div>
+              <Button variant="primary" className="w-full" onClick={handleSubmit(submit)}>
+                {loading ? <Loading /> : "Create"}
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -1002,10 +1338,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
           </div>
         </div>
       </div> */}
-
-
       </div>
-    </TooltipProvider >
-
+    </TooltipProvider>
   );
 };
