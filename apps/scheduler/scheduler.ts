@@ -31,7 +31,7 @@ export class Scheduler {
     this.regions = {};
     this.alerts = alerts;
     this.notifications = notifications;
-    this.setupManager = new SetupManager();
+    this.setupManager = new SetupManager({ logger: this.logger });
   }
 
   public async run() {
@@ -55,9 +55,6 @@ export class Scheduler {
       },
       include: {
         endpoints: {
-          include: {
-            setup: true,
-          },
           where: {
             AND: {
               active: true,
@@ -182,6 +179,7 @@ export class Scheduler {
       where: { id: endpointId },
       include: {
         regions: true,
+        setup: true,
       },
     });
     if (!endpoint) {
@@ -205,7 +203,7 @@ export class Scheduler {
   }
 
   private async testEndpoint(
-    endpoint: Endpoint & { regions: Region[]; setup?: Setup },
+    endpoint: Endpoint & { regions: Region[]; setup: Setup | null },
   ): Promise<void> {
     try {
       if (endpoint.regions.length === 0) {
@@ -226,13 +224,11 @@ export class Scheduler {
        * Set default values from endpoint config
        */
       let url = endpoint.url;
-      const headers = new Headers({
-        "Content-Type": "application/json",
-      });
+      const headers: Record<string, string> = {};
 
       if (endpoint.headers) {
         for (const [k, v] of Object.entries(endpoint.headers as Record<string, string>)) {
-          headers.set(k, v);
+          headers[k] = v;
         }
       }
 
@@ -250,7 +246,7 @@ export class Scheduler {
         }
         if (setup.headers) {
           for (const [k, v] of Object.entries(setup.headers)) {
-            headers.set(k, v);
+            headers[k] = v;
           }
         }
         if (setup.body) {
@@ -271,14 +267,21 @@ export class Scheduler {
           endpointId: endpoint.id,
           regionId: region.id,
         });
-
+        /**
+         * checkRunnerHeaders are sent to the check runner's http handler
+         * Not to the customer's endpoint
+         */
+        const checkRunnerHeaders = new Headers({
+          "Content-Type": "application/json",
+        });
         if (region.platform === "fly") {
-          headers.set("Fly-Prefer-Region", region.region);
+          checkRunnerHeaders.set("Fly-Prefer-Region", region.region);
         }
+        console.log("Request headers", headers);
 
         const res = await fetch(region.url, {
           method: "POST",
-          headers,
+          headers: checkRunnerHeaders,
           body: JSON.stringify({
             url,
             method,

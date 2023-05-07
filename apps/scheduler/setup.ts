@@ -2,6 +2,7 @@ import { z } from "zod";
 import { Cache } from "./cache";
 
 import type { Setup } from "@planetfall/db";
+import { Logger } from "./logger";
 
 const setupResponseValidation = z.object({
   url: z.string().url().optional(),
@@ -14,9 +15,11 @@ export type SetupResponse = z.infer<typeof setupResponseValidation>;
 
 export class SetupManager {
   private cache: Cache<SetupResponse>;
+  private logger: Logger;
 
-  constructor() {
+  constructor(opts: { logger: Logger }) {
     this.cache = new Cache({ ttlSeconds: 5 * 60 });
+    this.logger = opts.logger;
   }
 
   public async getSetupResponse(endpointId: string, setup: Setup): Promise<SetupResponse> {
@@ -24,6 +27,9 @@ export class SetupManager {
     if (cached) {
       return cached;
     }
+    this.logger.info("Fetching setup instructions", {
+      ...setup,
+    });
 
     async function get(): Promise<SetupResponse> {
       const headers = new Headers({
@@ -50,9 +56,14 @@ export class SetupManager {
       return validated.data;
     }
 
-    return get().catch((err) => {
+    const instructions = await get().catch((err) => {
       console.warn(err);
       return get();
     });
+    this.logger.info("Received setup instructions", {
+      setupId: setup.id,
+      ...instructions,
+    });
+    return instructions;
   }
 }
