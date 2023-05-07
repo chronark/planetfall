@@ -78,6 +78,7 @@ enum Method {
   PUT
   DELETE
   PATCH
+  OPTIONS
 }
 
 enum MemberRole {
@@ -98,6 +99,8 @@ model Membership {
   role MemberRole
 
   @@id([userId, teamId])
+  @@index([teamId])
+  @@index([userId])
 }
 
 enum Plan {
@@ -175,6 +178,7 @@ model TeamInvitation {
   userId String?
 
   @@unique([teamId, userId])
+  @@index([userId])
 }
 
 // model Deployment {
@@ -274,10 +278,8 @@ model Setup {
   endpoint Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
   endpointId String @unique
 
-  method Method
   url String
   headers Json?
-  body String? @db.Text
 
   // How long the setup response should be cached
   ttl Int

@@ -26,14 +26,18 @@ export class SetupManager {
     }
 
     async function get(): Promise<SetupResponse> {
-      const headers = new Headers();
+      const headers = new Headers({
+        "Content-Type": "application/json",
+      });
       for (const [key, value] of Object.entries(setup.headers as Record<string, string>)) {
         headers.set(key, value);
       }
       const res = await fetch(setup.url, {
-        method: setup.method,
+        method: "POST",
         headers,
-        body: setup.body,
+        body: JSON.stringify({
+          endpointId,
+        }),
       });
       if (!res.ok) {
         throw new Error(`Error fetching ${setup.url}: ${await res.text()}`);

@@ -1,4 +1,4 @@
-import { Endpoint, PrismaClient, Region, Team } from "@planetfall/db";
+import { Endpoint, PrismaClient, Region, Setup } from "@planetfall/db";
 import * as tb from "@planetfall/tinybird";
 import { newId } from "@planetfall/id";
 import { Logger } from "./logger";
@@ -55,6 +55,9 @@ export class Scheduler {
       },
       include: {
         endpoints: {
+          include: {
+            setup: true,
+          },
           where: {
             AND: {
               active: true,
@@ -201,7 +204,9 @@ export class Scheduler {
     }
   }
 
-  private async testEndpoint(endpoint: Endpoint & { regions: Region[] }): Promise<void> {
+  private async testEndpoint(
+    endpoint: Endpoint & { regions: Region[]; setup?: Setup },
+  ): Promise<void> {
     try {
       if (endpoint.regions.length === 0) {
         this.logger.info("endpoint has no regions, disabling it..", {
@@ -216,6 +221,46 @@ export class Scheduler {
         this.removeEndpoint(endpoint.id);
         return;
       }
+
+      /**
+       * Set default values from endpoint config
+       */
+      let url = endpoint.url;
+      const headers = new Headers({
+        "Content-Type": "application/json",
+      });
+
+      if (endpoint.headers) {
+        for (const [k, v] of Object.entries(endpoint.headers as Record<string, string>)) {
+          headers.set(k, v);
+        }
+      }
+
+      let body = endpoint.body;
+      let method = endpoint.method;
+
+      /**
+       * Overwrite with dynamic setup
+       */
+      if (endpoint.setup) {
+        const setup = await this.setupManager.getSetupResponse(endpoint.id, endpoint.setup);
+
+        if (setup.url) {
+          url = setup.url;
+        }
+        if (setup.headers) {
+          for (const [k, v] of Object.entries(setup.headers)) {
+            headers.set(k, v);
+          }
+        }
+        if (setup.body) {
+          body = setup.body;
+        }
+        if (setup.method) {
+          method = setup.method;
+        }
+      }
+
       const regions =
         endpoint.distribution === "ALL"
           ? endpoint.regions
@@ -227,9 +272,6 @@ export class Scheduler {
           regionId: region.id,
         });
 
-        const headers = new Headers({
-          "Content-Type": "application/json",
-        });
         if (region.platform === "fly") {
           headers.set("Fly-Prefer-Region", region.region);
         }
@@ -238,10 +280,10 @@ export class Scheduler {
           method: "POST",
           headers,
           body: JSON.stringify({
-            url: endpoint.url,
-            method: endpoint.method,
-            headers: endpoint.headers,
-            body: endpoint.body ?? undefined,
+            url,
+            method,
+            headers,
+            body,
             timeout: endpoint.timeout ?? undefined,
             followRedirects: endpoint.followRedirects ?? false,
             prewarm: endpoint.prewarm,

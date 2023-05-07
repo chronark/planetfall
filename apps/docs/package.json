@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Docs",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3001",
     "build": "next build",
     "start": "next start"
   },
