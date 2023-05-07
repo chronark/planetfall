@@ -10,11 +10,19 @@ import { Loading } from "@/components/loading";
 import { useRouter } from "next/navigation";
 import * as assertions from "@planetfall/assertions";
 import { trpc } from "@/lib/trpc/hooks";
-import { Minus } from "lucide-react";
+import { Car, Minus } from "lucide-react";
 import { Toaster, useToast } from "@/components/toast";
 import { VercelEdge } from "@/components/icons/VercelEdge";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { Fly } from "@/components/icons/Fly";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
+import { Label } from "@/components/label";
+import { Toggle } from "@/components/toggle";
+import { Switch } from "@/components/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/tooltip";
+import { Alert, AlertDescription, AlertTitle } from "@/components/alert";
+import { Input } from "@/components/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
 type Props = {
   teamId: string;
   teamSlug: string;
@@ -23,6 +31,7 @@ type Props = {
 };
 
 type FormData = {
+  active: boolean
   name: string;
   url: string;
   method: "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
@@ -35,7 +44,8 @@ type FormData = {
   headerAssertions: z.infer<typeof assertions.headerAssertion>[];
   timeout: number;
   degradedAfter?: number;
-  followRedirects: "true" | "false";
+  followRedirects: boolean
+  prewarm: boolean
 };
 
 export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeout }) => {
@@ -46,12 +56,16 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
     setError,
     getValues,
     control,
+    setValue,
     watch,
   } = useForm<FormData>({
     reValidateMode: "onSubmit",
     defaultValues: {
+      active: true,
       timeout: defaultTimeout,
-      followRedirects: "true",
+      followRedirects: true,
+      prewarm: false,
+      interval: 60,
     },
   });
 
@@ -86,6 +100,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
     setLoading(true);
     try {
       const res = await create.mutateAsync({
+        active: data.active,
         name: data.name,
         url: data.url,
         method: data.method,
@@ -102,7 +117,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
         distribution: data.distribution,
         teamId,
         statusAssertions: data.statusAssertions,
-        followRedirects: data.followRedirects === "true",
+        followRedirects: data.followRedirects,
+        prewarm: data.prewarm
       });
 
       const { id } = await res;
@@ -121,14 +137,248 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
   }
 
   const formValues = watch();
+  console.log(JSON.stringify(formValues, null, 2))
   const monthlyRequests =
     ((formValues.distribution === "ALL" ? selectedRegions.length : 1) * 30 * 24 * 60 * 60) /
-      formValues.interval || 0;
-
+    formValues.interval || 0;
   return (
-    <form className="space-y-8 divide-y divide-zinc-200">
-      <Toaster />
-      <div className="space-y-8 sm:space-y-5 lg:space-y-24">
+    <TooltipProvider>
+
+      <div className="flex flex-col gap-4 lg:flex-row">
+        {/* main   */}
+        <Card className="w-full lg:w-3/4">
+
+        </Card>
+        <div className="flex flex-col w-full gap-4 lg:w-1/4">
+          {/* toggles */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Configuration</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center justify-between w-full gap-4">
+                    <Label htmlFor="active">Active</Label>
+                    <Switch
+                      {...register("active")}
+                      checked={formValues.active}
+                      onCheckedChange={(on) => {
+                        setValue("active", on)
+                      }} />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="font-semibold">Active</span>
+                  <p>
+                    When active, the endpoint will be monitored and requests will be sent to it.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center justify-between w-full gap-4">
+                    <Label htmlFor="followRedirects">Follow Redirects</Label>
+                    <Switch type="button"  {...register("followRedirects")} checked={formValues.followRedirects} onCheckedChange={(on) => {
+                      setValue("followRedirects", on)
+                    }} />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="font-semibold">Follow Redirects</span>
+                  <p>
+                    When enabled, redirects will be followed, otherwise the first response will be returned.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center justify-between w-full gap-4">
+                    <Label htmlFor="followRedirects">Prewarm</Label>
+                    <Switch type="button"  {...register("prewarm")} checked={formValues.prewarm} onCheckedChange={(on) => {
+                      setValue("prewarm", on)
+                    }} />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="font-semibold">Prewarm</span>
+                  <p>
+                    When enabled, the endpoint will be prewarmed by sending a request first
+                    <br />
+                    and then reusing the connection and measuring a second request.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+
+
+            </CardContent>
+          </Card>
+          {/* timings */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Limits</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center justify-between w-full gap-4">
+                    <div className="flex flex-col items-start gap-1">
+
+                      <Label htmlFor="timeout">Timeout</Label>
+                      <span className="text-xs text-zinc-500">Milliseconds</span>
+                    </div>
+                    <Input
+                      className="max-w-[8rem] text-right"
+                      {...register("timeout", {
+                        valueAsNumber: true,
+                        min: 1,
+                      })}
+                      type="number"
+                    />
+
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="font-semibold">Timeout</span>
+                  <p>
+                    The timeout in milliseconds for each request. <br />
+                    If the timeout is reached, the request will be aborted and marked as failed.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center justify-between w-full gap-4">
+                    <div className="flex flex-col items-start gap-1">
+
+                      <Label htmlFor="timeout">Degraded</Label>
+                      <span className="text-xs text-zinc-500">Milliseconds</span>
+                    </div>
+
+
+                    <Input
+                      className="max-w-[8rem] text-right"
+
+                      {...register("degradedAfter", {
+                        valueAsNumber: true,
+                        min: 1,
+                      })}
+                      type="number"
+                    />
+
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="font-semibold">Degraded</span>
+                  <p>
+                    The degraded threshold in milliseconds for each request.</p>
+                  <p>
+                    If the request takes longer than the degraded threshold, it will be marked as degraded.
+                  </p>
+
+                  <p>Leave empty to disable</p>
+                </TooltipContent>
+              </Tooltip>
+
+
+            </CardContent>
+          </Card>
+          {/* interval */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Frequency</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center justify-between w-full gap-4">
+                    <div className="flex flex-col items-start gap-1">
+
+                      <Label htmlFor="timeout">Interval</Label>
+                      <span className="text-xs text-zinc-500">Seconds</span>
+                    </div>
+                    <Input
+                      className="max-w-[8rem] text-right"
+                      {...register("interval", {
+                        valueAsNumber: true,
+                        min: 1,
+                      })}
+                      type="number"
+                    />
+
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="font-semibold">Interval</span>
+                  <p>
+                    The interval in seconds for each request.
+                  </p>
+                  <p>
+                    An interval of 60 seconds will send a request every minute.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center justify-between w-full gap-4">
+
+                    <Label htmlFor="timeout">Distribution</Label>
+
+
+
+                    <Select
+
+                    >
+                      <SelectTrigger className="max-w-[8rem] w-full ">
+                        <SelectValue defaultValue="ALL" placeholder="ALL" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        { }
+                        <SelectItem value="ALL">All</SelectItem>
+                        <SelectItem value="RANDOM">Round Robin</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="font-semibold">Distribution</span>
+                  <p>
+                    Choose whether we should send a request from every selected region at once, or
+                    only from one.
+                  </p>
+
+                </TooltipContent>
+              </Tooltip>
+
+
+            </CardContent>
+          </Card>
+          {/* Submit */}
+          <Card>
+            <CardHeader>
+              <CardDescription>
+
+                The current configuration will result in approximately {Intl.NumberFormat(undefined, { notation: "compact" }).format(monthlyRequests)} requests per month.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+
+              <div className="flex justify-end">
+                <Button variant="primary" className="w-full"
+                  onClick={handleSubmit(submit)}
+                >
+                  {loading ? <Loading /> : "Create"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* <div className="space-y-8 sm:space-y-5 lg:space-y-24">
         <div className="space-y-6 sm:space-y-5">
           <div>
             <h3 className="text-lg font-medium leading-6 text-zinc-900">Name</h3>
@@ -153,9 +403,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                       required: true,
                     })}
                     placeholder="My API"
-                    className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${
-                      errors.url ? "border-red-500" : "border-zinc-700"
-                    } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-zinc-700"
+                      } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                   />
                 </div>
                 {errors.name ? (
@@ -215,9 +464,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                       validate: (v) => z.string().url().safeParse(v).success,
                     })}
                     placeholder="https://example.com"
-                    className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${
-                      errors.url ? "border-red-500" : "border-zinc-700"
-                    } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-zinc-700"
+                      } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                   />
                 </div>
                 {errors.url ? (
@@ -283,11 +531,9 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                   rows={3}
                   disabled={!["POST", "PUT", "PATCH"].includes(formValues.method)}
                   {...register("body")}
-                  className={`transition-all  focus:bg-zinc-50 md:px-4 px-2 py-1 md:py-3  w-full ${
-                    errors.body ? "border-red-500" : "border-zinc-700"
-                  } ${
-                    ["POST", "PUT", "PATCH"].includes(formValues.method) ? "" : "cursor-not-allowed"
-                  } hover:border-zinc-900 focus:border-zinc-900   border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                  className={`transition-all  focus:bg-zinc-50 md:px-4 px-2 py-1 md:py-3  w-full ${errors.body ? "border-red-500" : "border-zinc-700"
+                    } ${["POST", "PUT", "PATCH"].includes(formValues.method) ? "" : "cursor-not-allowed"
+                    } hover:border-zinc-900 focus:border-zinc-900   border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                   defaultValue={""}
                   placeholder={
                     ["POST", "PUT", "PATCH"].includes(formValues.method)
@@ -312,9 +558,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                     validate: (v) => (v ? JSON.parse(v) : true),
                   })}
                   placeholder={`{\n  "Authorization": "Bearer XXX"\n}`}
-                  className={`transition-all  focus:bg-zinc-50 md:px-4 px-2 py-1 md:py-3  w-full ${
-                    errors.headers ? "border-red-500" : "border-zinc-700"
-                  } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                  className={`transition-all  focus:bg-zinc-50 md:px-4 px-2 py-1 md:py-3  w-full ${errors.headers ? "border-red-500" : "border-zinc-700"
+                    } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                   defaultValue={""}
                 />
                 {errors.headers ? (
@@ -593,11 +838,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                           <button
                             type="button"
                             key={r.id}
-                            className={`flex justify-between items-center px-2 py-1 lg:px-4 border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-                              selectedRegions.includes(r.id)
-                                ? "border-zinc-900 bg-zinc-50"
-                                : "border-zinc-300"
-                            }`}
+                            className={`flex justify-between items-center px-2 py-1 lg:px-4 border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${selectedRegions.includes(r.id)
+                              ? "border-zinc-900 bg-zinc-50"
+                              : "border-zinc-300"
+                              }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
@@ -622,11 +866,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                           <button
                             type="button"
                             key={r.id}
-                            className={`flex justify-between items-center px-2 py-1 lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-                              selectedRegions.includes(r.id)
-                                ? "border-zinc-900 bg-zinc-50"
-                                : "border-zinc-300"
-                            }`}
+                            className={`flex justify-between items-center px-2 py-1 lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${selectedRegions.includes(r.id)
+                              ? "border-zinc-900 bg-zinc-50"
+                              : "border-zinc-300"
+                              }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
@@ -651,11 +894,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                           <button
                             type="button"
                             key={r.id}
-                            className={`flex justify-between items-center px-2 py-1 lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-                              selectedRegions.includes(r.id)
-                                ? "border-zinc-900 bg-zinc-50"
-                                : "border-zinc-300"
-                            }`}
+                            className={`flex justify-between items-center px-2 py-1 lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${selectedRegions.includes(r.id)
+                              ? "border-zinc-900 bg-zinc-50"
+                              : "border-zinc-300"
+                              }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
@@ -759,25 +1001,11 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="pt-5">
-        <div className="flex justify-end gap-8">
-          <Link
-            href={`/${teamSlug}/endpoints`}
-            className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 text-zinc-900 md:hover:bg-zinc-50 hover:text-zinc-900 group"
-          >
-            Cancel
-          </Link>
-          <button
-            type="button"
-            onClick={handleSubmit(submit)}
-            className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
-          >
-            {loading ? <Loading /> : "Create"}
-          </button>
-        </div>
+
       </div>
-    </form>
+    </TooltipProvider >
+
   );
 };
