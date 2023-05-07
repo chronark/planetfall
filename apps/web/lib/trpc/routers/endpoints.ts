@@ -49,6 +49,7 @@ export const endpointRouter = t.router({
     .use(auth)
     .input(
       z.object({
+        active: z.boolean(),
         name: z.string(),
         method: z.enum(["POST", "GET", "PUT", "DELETE", "PATCH"]),
         url: z.string().url(),
@@ -60,6 +61,7 @@ export const endpointRouter = t.router({
         regionIds: z.array(z.string()).min(1),
         distribution: z.enum(["ALL", "RANDOM"]),
         teamId: z.string(),
+        prewarm: z.boolean(),
         followRedirects: z.boolean(),
         statusAssertions: z.array(statusAssertion).optional(),
         headerAssertions: z.array(headerAssertion).optional(),
@@ -119,9 +121,10 @@ export const endpointRouter = t.router({
           name: input.name,
           url: input.url,
           interval: input.interval,
-          active: true,
+          active: input.active,
           degradedAfter: input.degradedAfter,
           timeout: input.timeout,
+          prewarm: input.prewarm,
           distribution: input.distribution,
           followRedirects: input.followRedirects,
           regions: {

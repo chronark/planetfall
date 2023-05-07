@@ -15,7 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/alert";
+} from "@/components/alert-dialog";
 import { TRPCError } from "@trpc/server";
 import { useRouter } from "next/navigation";
 

@@ -10,11 +10,33 @@ import { Loading } from "@/components/loading";
 import { useRouter } from "next/navigation";
 import * as assertions from "@planetfall/assertions";
 import { trpc } from "@/lib/trpc/hooks";
-import { Minus } from "lucide-react";
+import { Car, Minus } from "lucide-react";
 import { Toaster, useToast } from "@/components/toast";
 import { VercelEdge } from "@/components/icons/VercelEdge";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { Fly } from "@/components/icons/Fly";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
+import { Label } from "@/components/label";
+import { Toggle } from "@/components/toggle";
+import { Switch } from "@/components/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/tooltip";
+import { Alert, AlertDescription, AlertTitle } from "@/components/alert";
+import { Input } from "@/components/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/select";
+import { Textarea } from "@/components/textarea";
+import { Separator } from "@/components/separator";
+import { Checkbox } from "@/components/checkbox";
+import type { Platform } from "@planetfall/db";
+import { Badge } from "@/components/badge";
 type Props = {
   teamId: string;
   teamSlug: string;
@@ -23,6 +45,7 @@ type Props = {
 };
 
 type FormData = {
+  active: boolean;
   name: string;
   url: string;
   method: "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
@@ -35,7 +58,8 @@ type FormData = {
   headerAssertions: z.infer<typeof assertions.headerAssertion>[];
   timeout: number;
   degradedAfter?: number;
-  followRedirects: "true" | "false";
+  followRedirects: boolean;
+  prewarm: boolean;
 };
 
 export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeout }) => {
@@ -46,19 +70,30 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
     setError,
     getValues,
     control,
+    setValue,
     watch,
   } = useForm<FormData>({
     reValidateMode: "onSubmit",
     defaultValues: {
+      active: true,
       timeout: defaultTimeout,
-      followRedirects: "true",
+      followRedirects: true,
+      prewarm: false,
+      interval: 60,
+      method: "GET",
+      distribution: "ALL",
     },
   });
 
   const { addToast } = useToast();
   const router = useRouter();
 
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform | "all">("vercelEdge");
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+
+  const displayRegions = regions.filter(
+    (region) => selectedPlatform === "all" || region.platform === selectedPlatform,
+  );
 
   // const createEndpoint = trpc.endpoint.create.useMutation();
 
@@ -86,6 +121,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
     setLoading(true);
     try {
       const res = await create.mutateAsync({
+        active: data.active,
         name: data.name,
         url: data.url,
         method: data.method,
@@ -102,7 +138,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
         distribution: data.distribution,
         teamId,
         statusAssertions: data.statusAssertions,
-        followRedirects: data.followRedirects === "true",
+        followRedirects: data.followRedirects,
+        prewarm: data.prewarm,
       });
 
       const { id } = await res;
@@ -121,14 +158,563 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
   }
 
   const formValues = watch();
+
   const monthlyRequests =
     ((formValues.distribution === "ALL" ? selectedRegions.length : 1) * 30 * 24 * 60 * 60) /
       formValues.interval || 0;
-
   return (
-    <form className="space-y-8 divide-y divide-zinc-200">
-      <Toaster />
-      <div className="space-y-8 sm:space-y-5 lg:space-y-24">
+    <TooltipProvider>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+        {/* main   */}
+        <div className="grid w-full grid-cols-1 col-span-4 gap-4 lg:col-span-3">
+          <Card>
+            <CardHeader>
+              <CardTitle>Endpoint</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-6">
+                {/* Name */}
+                <div className="flex flex-col items-start col-span-6 gap-1 sm:col-span-2">
+                  <Label htmlFor="timeout">Name</Label>
+                  <span className="text-xs text-zinc-500">Give your endpoint a name</span>
+                </div>
+
+                <Input className="col-span-4" {...register("name", {})} placeholder="My Endpoint" />
+
+                <div className="flex flex-col items-start col-span-6 gap-1 sm:col-span-2">
+                  <Label htmlFor="timeout">Url</Label>
+                  <span className="text-xs text-zinc-500">Method and URL of your endpoint</span>
+                </div>
+
+                <div className="col-span-1">
+                  <Select
+                    {...register("method", {
+                      required: true,
+                    })}
+                  >
+                    <SelectTrigger className="max-w-[8rem] w-full ">
+                      <SelectValue
+                        defaultValue={formValues.method}
+                        placeholder={formValues.method}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="GET">GET</SelectItem>
+                      <SelectItem value="POST">POST</SelectItem>
+                      <SelectItem value="PUT">PUT</SelectItem>
+                      <SelectItem value="DELETE">DELETE</SelectItem>
+                      <SelectItem value="OPTIONS">OPTIONS</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Input
+                  className="col-span-3"
+                  {...register("url", {})}
+                  placeholder="https://example.com"
+                />
+              </div>
+              <Separator className="my-12" />
+              <CardTitle>Request</CardTitle>
+              <div className="grid grid-cols-6 gap-4 mt-6">
+                <div className="flex flex-col items-start col-span-6 gap-1 md:col-span-2">
+                  <Label htmlFor="timeout">Headers</Label>
+                  <span className="text-xs text-zinc-500">Headers in JSON format, or empty</span>
+                </div>
+
+                <Textarea
+                  className="col-span-6 md:col-span-4"
+                  {...register("headers", {})}
+                  placeholder={`{
+  "Content-Type": "application/json"
+}`}
+                />
+
+                <div className="flex flex-col items-start col-span-6 gap-1 md:col-span-2">
+                  <Label htmlFor="timeout">Body</Label>
+                  <span className="text-xs text-zinc-500">Not required</span>
+                </div>
+
+                <Textarea
+                  className="col-span-6 md:col-span-4"
+                  {...register("body", {})}
+                  placeholder={`{
+  "hello": "world"
+}`}
+                />
+              </div>
+
+              <Separator className="my-12" />
+              <CardTitle>Assertions</CardTitle>
+              <CardDescription>
+                Validate the response from your API. If any of the assertions fail, we will alert
+                you.
+              </CardDescription>
+              <div className="grid grid-cols-6 gap-4 mt-6">
+                <div className="flex flex-col items-start col-span-6 gap-1 md:col-span-2">
+                  <Label htmlFor="timeout">Status</Label>
+                  <span className="text-xs text-zinc-500">Status code of the response</span>
+                </div>
+
+                <div className="col-span-6 space-y-4 md:col-span-4">
+                  {statusAssertions.fields.map((f, i) => (
+                    <div key={f.id} className="flex items-center gap-4">
+                      <Select
+                        {...register(`statusAssertions.${i}.compare`, {
+                          required: true,
+                        })}
+                      >
+                        <SelectTrigger className="max-w-[8rem] w-full ">
+                          <SelectValue defaultValue="eq" placeholder="Equal" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="gt">Greater than</SelectItem>
+                          <SelectItem value="gte">Greater than or equal</SelectItem>
+                          <SelectItem value="lt">Less than</SelectItem>
+                          <SelectItem value="lte">Less than or equal</SelectItem>
+                          <SelectItem value="eq">Equal</SelectItem>
+                          <SelectItem value="not_eq">Not Equal</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Input
+                        {...register(`statusAssertions.${i}.target`, {
+                          required: true,
+                          valueAsNumber: true,
+                        })}
+                        type="number"
+                      />
+
+                      <div>
+                        <Button
+                          size="square"
+                          onClick={() => statusAssertions.remove(i)}
+                          variant="subtle"
+                        >
+                          <Minus className="w-6 h-6" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="w-full text-right">
+                    <Button
+                      variant="subtle"
+                      size="xs"
+                      onClick={() =>
+                        statusAssertions.append({
+                          version: "v1",
+                          type: "status",
+                          compare: "eq",
+                          target: 200,
+                        })
+                      }
+                    >
+                      Add Assertion
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-start col-span-6 gap-1 md:col-span-2">
+                  <Label htmlFor="timeout">Headers</Label>
+                  <span className="text-xs text-zinc-500">
+                    Expect a header to be present, or have a specific value
+                  </span>
+                </div>
+
+                <div className="col-span-6 space-y-4 md:col-span-4">
+                  {headerAssertions.fields.map((f, i) => (
+                    <div key={f.id} className="flex items-center gap-4">
+                      <Input
+                        {...register(`headerAssertions.${i}.key`, {
+                          required: true,
+                        })}
+                      />
+
+                      <Select
+                        {...register(`headerAssertions.${i}.compare`, {
+                          required: true,
+                        })}
+                      >
+                        <SelectTrigger className="max-w-[8rem] w-full ">
+                          <SelectValue defaultValue="eq" placeholder="Equal" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="gt">Greater than</SelectItem>
+                          <SelectItem value="gte">Greater than or equal</SelectItem>
+                          <SelectItem value="lt">Less than</SelectItem>
+                          <SelectItem value="lte">Less than or equal</SelectItem>
+                          <SelectItem value="eq">Equal</SelectItem>
+                          <SelectItem value="not_eq">Not Equal</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Input
+                        {...register(`headerAssertions.${i}.target`, {
+                          required: true,
+                          valueAsNumber: true,
+                        })}
+                      />
+
+                      <div>
+                        <Button
+                          size="square"
+                          onClick={() => headerAssertions.remove(i)}
+                          variant="subtle"
+                        >
+                          <Minus className="w-6 h-6" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="w-full text-right">
+                    <Button
+                      variant="subtle"
+                      onClick={() =>
+                        headerAssertions.append({
+                          version: "v1",
+                          type: "header",
+                          key: "Content-Type",
+                          compare: "eq",
+                          target: "application/json",
+                        })
+                      }
+                      size="xs"
+                    >
+                      Add Assertion
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <div className="flex items-center justify-between w-full ">
+              <CardHeader>
+                <CardTitle>Regions</CardTitle>
+                <CardDescription>
+                  Select the regions from which you want to monitor your endpoint.
+                </CardDescription>
+              </CardHeader>
+
+              <CardHeader>
+                <Select
+                  onValueChange={(v: Platform | "all") => {
+                    setSelectedPlatform(v);
+                  }}
+                >
+                  <SelectTrigger className="max-w-[8rem] ">
+                    <SelectValue defaultValue="vercelEdge" placeholder="Vercel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Choose a Provider</SelectLabel>
+                      <SelectSeparator />
+                      <SelectItem value="vercelEdge">Vercel Edge</SelectItem>
+                      <SelectItem value="fly">fly.io</SelectItem>
+                      <SelectItem value="aws">AWS</SelectItem>
+                      <SelectSeparator />
+                      <SelectItem value="all">All</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </CardHeader>
+            </div>
+
+            <CardContent>
+              <TooltipProvider>
+                <fieldset className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                  {displayRegions.map((r) => (
+                    <Tooltip key={r.id}>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          className={`px-2 py-1 text-sm lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
+                            selectedRegions.includes(r.id)
+                              ? "border-zinc-900 bg-zinc-50"
+                              : "border-zinc-300"
+                          }`}
+                          onClick={() => {
+                            if (selectedRegions.includes(r.id)) {
+                              setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
+                            } else {
+                              setSelectedRegions([...selectedRegions, r.id]);
+                            }
+                          }}
+                        >
+                          <span>{r.name}</span>
+                          {selectedPlatform === "all" ? (
+                            <p className="text-xs uppercase text-zinc-500">{r.platform}</p>
+                          ) : null}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <span className="font-semibold">{r.name}</span>
+                        <p className="text-xs text-zinc-500">Platform: {r.platform}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ))}
+                </fieldset>
+              </TooltipProvider>
+            </CardContent>
+          </Card>
+        </div>
+        {/* Side */}
+        <div className="relative grid w-full h-full grid-cols-1 col-span-4 gap-4 lg:col-span-1">
+          {/* toggles */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Configuration</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger>
+                    <Label htmlFor="active">Active</Label>
+                  </TooltipTrigger>
+                  <Checkbox
+                    {...register("active")}
+                    checked={formValues.active}
+                    onCheckedChange={(on) => {
+                      setValue("active", Boolean(on));
+                    }}
+                  />
+                </div>
+                <TooltipContent>
+                  <span className="font-semibold">Active</span>
+                  <p>
+                    When active, the endpoint will be monitored and requests will be sent to it.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger>
+                    <Label htmlFor="followRedirects">Follow Redirects</Label>
+                  </TooltipTrigger>
+                  <Checkbox
+                    type="button"
+                    {...register("followRedirects")}
+                    checked={formValues.followRedirects}
+                    onCheckedChange={(on) => {
+                      setValue("followRedirects", Boolean(on));
+                    }}
+                  />
+                </div>
+                <TooltipContent>
+                  <span className="font-semibold">Follow Redirects</span>
+                  <p>
+                    When enabled, redirects will be followed, otherwise the first response will be
+                    returned.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger>
+                    <Label htmlFor="followRedirects">Prewarm</Label>
+                  </TooltipTrigger>
+                  <Checkbox
+                    type="button"
+                    {...register("prewarm")}
+                    checked={formValues.prewarm}
+                    onCheckedChange={(on) => {
+                      setValue("prewarm", Boolean(on));
+                    }}
+                  />
+                </div>
+                <TooltipContent>
+                  <span className="font-semibold">Prewarm</span>
+                  <p>
+                    When enabled, the endpoint will be prewarmed by sending a request first
+                    <br />
+                    and then reusing the connection and measuring a second request.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </CardContent>
+          </Card>
+          {/* timings */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Limits</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger className="flex flex-col items-start gap-1">
+                    <Label htmlFor="timeout">Timeout</Label>
+                    <span className="text-xs text-zinc-500">Milliseconds</span>
+                  </TooltipTrigger>
+                  <Input
+                    className="max-w-[8rem] text-right"
+                    {...register("timeout", {
+                      valueAsNumber: true,
+                      min: 1,
+                    })}
+                    type="number"
+                  />
+                </div>
+                <TooltipContent>
+                  <span className="font-semibold">Timeout</span>
+                  <p>
+                    The timeout in milliseconds for each request. <br />
+                    If the timeout is reached, the request will be aborted and marked as failed.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger className="flex flex-col items-start gap-1">
+                    <Label htmlFor="timeout">Degraded</Label>
+                    <span className="text-xs text-zinc-500">Milliseconds</span>
+                  </TooltipTrigger>
+
+                  <Input
+                    className="max-w-[8rem] text-right"
+                    {...register("degradedAfter", {
+                      valueAsNumber: true,
+                      min: 1,
+                    })}
+                    type="number"
+                  />
+
+                  <TooltipContent>
+                    <span className="font-semibold">Degraded</span>
+                    <p>The degraded threshold in milliseconds for each request.</p>
+                    <p>
+                      If the request takes longer than the degraded threshold, it will be marked as
+                      degraded.
+                    </p>
+
+                    <p>Leave empty to disable</p>
+                  </TooltipContent>
+                </div>
+              </Tooltip>
+            </CardContent>
+          </Card>
+          {/* dynamic */}
+          <Card>
+            <div className="flex items-center justify-between">
+              <CardHeader>
+                <CardTitle>Dynamic</CardTitle>
+              </CardHeader>
+              <CardHeader>
+                <Badge>Alpha</Badge>
+              </CardHeader>
+            </div>
+            <CardContent className="flex flex-col gap-4">
+              <Tooltip delayDuration={200}>
+                <TooltipTrigger className="flex flex-col items-start gap-1">
+                  <Link
+                    href="/docs/dynamic_setup"
+                    className="text-sm text-zinc-500 hover:underline"
+                  >
+                    planetfall.io/docs/dynamic_setup
+                  </Link>
+                  <Button disabled className="w-full">
+                    Create Dynamic Setup
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="font-semibold">Dynamic</span>
+                  <p className="text-sm text-zinc-700">
+                    Dynamic setups are in alpha.{" "}
+                    <Link
+                      href="mailto:support@planetfall.io"
+                      className="underline hover:text-zinc-900"
+                    >
+                      Contact us
+                    </Link>{" "}
+                    to get access.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </CardContent>
+          </Card>
+          {/* interval */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Frequency</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger className="flex flex-col items-start gap-1">
+                    <Label htmlFor="timeout">Interval</Label>
+                    <span className="text-xs text-zinc-500">Seconds</span>
+                  </TooltipTrigger>
+                  <Input
+                    className="max-w-[8rem] text-right"
+                    {...register("interval", {
+                      valueAsNumber: true,
+                      min: 1,
+                    })}
+                    type="number"
+                  />
+                </div>
+                <TooltipContent>
+                  <span className="font-semibold">Interval</span>
+                  <p>The interval in seconds for each request.</p>
+                  <p>An interval of 60 seconds will send a request every minute.</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip delayDuration={200}>
+                <div className="flex items-center justify-between w-full gap-4">
+                  <TooltipTrigger className="flex flex-col items-start gap-1">
+                    <Label htmlFor="distribution">Distribution</Label>
+                  </TooltipTrigger>
+
+                  <Select
+                    {...register("distribution", {
+                      required: true,
+                    })}
+                    onValueChange={(v: "ALL" | "RANDOM") => {
+                      setValue("distribution", v);
+                    }}
+                  >
+                    <SelectTrigger className="max-w-[8rem] w-full ">
+                      <SelectValue
+                        defaultValue={formValues.distribution}
+                        placeholder={formValues.distribution}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ALL">All</SelectItem>
+                      <SelectItem value="RANDOM">Round Robin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <TooltipContent>
+                  <span className="font-semibold">Distribution</span>
+                  <p>
+                    Choose whether we should send a request from every selected region at once, or
+                    only from one.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </CardContent>
+          </Card>
+          {/* Submit */}
+          <Card className="flex flex-col justify-between">
+            <CardHeader>
+              <CardDescription>
+                The current configuration will result in approximately{" "}
+                <strong>
+                  {Intl.NumberFormat(undefined, { notation: "compact" }).format(monthlyRequests)}
+                </strong>{" "}
+                requests per month.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="primary" className="w-full" onClick={handleSubmit(submit)}>
+                {loading ? <Loading /> : "Create"}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* <div className="space-y-8 sm:space-y-5 lg:space-y-24">
         <div className="space-y-6 sm:space-y-5">
           <div>
             <h3 className="text-lg font-medium leading-6 text-zinc-900">Name</h3>
@@ -153,9 +739,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                       required: true,
                     })}
                     placeholder="My API"
-                    className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${
-                      errors.url ? "border-red-500" : "border-zinc-700"
-                    } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-zinc-700"
+                      } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                   />
                 </div>
                 {errors.name ? (
@@ -215,9 +800,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                       validate: (v) => z.string().url().safeParse(v).success,
                     })}
                     placeholder="https://example.com"
-                    className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${
-                      errors.url ? "border-red-500" : "border-zinc-700"
-                    } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                    className={`transition-all  focus:bg-zinc-50 md:px-4 md:h-12  w-full ${errors.url ? "border-red-500" : "border-zinc-700"
+                      } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                   />
                 </div>
                 {errors.url ? (
@@ -283,11 +867,9 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                   rows={3}
                   disabled={!["POST", "PUT", "PATCH"].includes(formValues.method)}
                   {...register("body")}
-                  className={`transition-all  focus:bg-zinc-50 md:px-4 px-2 py-1 md:py-3  w-full ${
-                    errors.body ? "border-red-500" : "border-zinc-700"
-                  } ${
-                    ["POST", "PUT", "PATCH"].includes(formValues.method) ? "" : "cursor-not-allowed"
-                  } hover:border-zinc-900 focus:border-zinc-900   border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                  className={`transition-all  focus:bg-zinc-50 md:px-4 px-2 py-1 md:py-3  w-full ${errors.body ? "border-red-500" : "border-zinc-700"
+                    } ${["POST", "PUT", "PATCH"].includes(formValues.method) ? "" : "cursor-not-allowed"
+                    } hover:border-zinc-900 focus:border-zinc-900   border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                   defaultValue={""}
                   placeholder={
                     ["POST", "PUT", "PATCH"].includes(formValues.method)
@@ -312,9 +894,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                     validate: (v) => (v ? JSON.parse(v) : true),
                   })}
                   placeholder={`{\n  "Authorization": "Bearer XXX"\n}`}
-                  className={`transition-all  focus:bg-zinc-50 md:px-4 px-2 py-1 md:py-3  w-full ${
-                    errors.headers ? "border-red-500" : "border-zinc-700"
-                  } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
+                  className={`transition-all  focus:bg-zinc-50 md:px-4 px-2 py-1 md:py-3  w-full ${errors.headers ? "border-red-500" : "border-zinc-700"
+                    } hover:border-zinc-900 focus:border-zinc-900  border rounded hover:bg-zinc-50 duration-300 ease-in-out focus:outline-none focus:shadow`}
                   defaultValue={""}
                 />
                 {errors.headers ? (
@@ -593,11 +1174,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                           <button
                             type="button"
                             key={r.id}
-                            className={`flex justify-between items-center px-2 py-1 lg:px-4 border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-                              selectedRegions.includes(r.id)
-                                ? "border-zinc-900 bg-zinc-50"
-                                : "border-zinc-300"
-                            }`}
+                            className={`flex justify-between items-center px-2 py-1 lg:px-4 border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${selectedRegions.includes(r.id)
+                              ? "border-zinc-900 bg-zinc-50"
+                              : "border-zinc-300"
+                              }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
@@ -622,11 +1202,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                           <button
                             type="button"
                             key={r.id}
-                            className={`flex justify-between items-center px-2 py-1 lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-                              selectedRegions.includes(r.id)
-                                ? "border-zinc-900 bg-zinc-50"
-                                : "border-zinc-300"
-                            }`}
+                            className={`flex justify-between items-center px-2 py-1 lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${selectedRegions.includes(r.id)
+                              ? "border-zinc-900 bg-zinc-50"
+                              : "border-zinc-300"
+                              }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
@@ -651,11 +1230,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                           <button
                             type="button"
                             key={r.id}
-                            className={`flex justify-between items-center px-2 py-1 lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${
-                              selectedRegions.includes(r.id)
-                                ? "border-zinc-900 bg-zinc-50"
-                                : "border-zinc-300"
-                            }`}
+                            className={`flex justify-between items-center px-2 py-1 lg:px-4 text-left border border-zinc-300 rounded overflow-hidden  hover:border-zinc-700 ${selectedRegions.includes(r.id)
+                              ? "border-zinc-900 bg-zinc-50"
+                              : "border-zinc-300"
+                              }`}
                             onClick={() => {
                               if (selectedRegions.includes(r.id)) {
                                 setSelectedRegions(selectedRegions.filter((id) => id !== r.id));
@@ -759,25 +1337,8 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
             </div>
           </div>
         </div>
+      </div> */}
       </div>
-
-      <div className="pt-5">
-        <div className="flex justify-end gap-8">
-          <Link
-            href={`/${teamSlug}/endpoints`}
-            className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 text-zinc-900 md:hover:bg-zinc-50 hover:text-zinc-900 group"
-          >
-            Cancel
-          </Link>
-          <button
-            type="button"
-            onClick={handleSubmit(submit)}
-            className="inline-flex items-center justify-center py-2 font-medium leading-snug transition-all duration-300 ease-in-out rounded shadow-sm hover:cursor-pointer whitespace-nowrap md:px-4 md:border border-zinc-900 md:bg-zinc-900 md:text-zinc-50 md:hover:bg-zinc-50 hover:text-zinc-900 group"
-          >
-            {loading ? <Loading /> : "Create"}
-          </button>
-        </div>
-      </div>
-    </form>
+    </TooltipProvider>
   );
 };

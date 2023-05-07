@@ -8,8 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/card";
-import { ChevronRight, Mail, Plus, Trash } from "lucide-react";
-import Link from "next/link";
 import { PageHeader } from "@/components/page";
 import { Button } from "@/components/button";
 import { Text } from "@/components/text";
@@ -29,9 +27,7 @@ import { Label } from "@/components/label";
 import { Input } from "@/components/input";
 import { Heading } from "@/components/heading";
 import { useToast } from "@/components/toast";
-import { Checkbox } from "@/components/check";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/select";
-import { SelectValue } from "@radix-ui/react-select";
+import { Checkbox } from "@/components/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/tabs/tabs";
 
 type Props = {

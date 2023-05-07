@@ -19,6 +19,8 @@ const buttonVariants = cva(
         link: "bg-transparent underline-offset-4 hover:underline text-zinc-900 dark:text-zinc-100 hover:bg-transparent dark:hover:bg-transparent",
         danger:
           "bg-transparent text-red-500 border border-red-500 hover:bg-red-50 dark:border-red-700 dark:text-red-100",
+        subtle:
+          "bg-transparent border  border-zinc-300 text-zinc-700 hover:border-zinc-700 dark:border-zinc-700 dark:text-zinc-100",
       },
 
       size: {
@@ -27,6 +29,8 @@ const buttonVariants = cva(
         sm: "h-9 px-2",
         lg: "h-11 px-8",
         xl: "h-12 px-10",
+        square: "h-10 w-10",
+        "square-lg": "h-11 w-11",
       },
     },
     defaultVariants: {
