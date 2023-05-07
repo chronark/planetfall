@@ -277,7 +277,6 @@ export class Scheduler {
         if (region.platform === "fly") {
           checkRunnerHeaders.set("Fly-Prefer-Region", region.region);
         }
-        console.log("Request headers", headers);
 
         const res = await fetch(region.url, {
           method: "POST",
