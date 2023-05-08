@@ -145,11 +145,11 @@ export const getCustomAnalytics = tb.buildPipe({
   data: z.object({
     time: z.string().transform((s) => new Date(s).getTime()),
     regionId: z.string(),
-    count: z.number().optional(),
-    p75: z.number().optional(),
-    p90: z.number().optional(),
-    p95: z.number().optional(),
-    p99: z.number().optional(),
-    errors: z.number().optional(),
+    count: nullableNumberWithDefault,
+    p75: nullableNumberWithDefault,
+    p90: nullableNumberWithDefault,
+    p95: nullableNumberWithDefault,
+    p99: nullableNumberWithDefault,
+    errors: nullableNumberWithDefault,
   }),
 });

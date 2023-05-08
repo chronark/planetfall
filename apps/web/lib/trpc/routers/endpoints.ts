@@ -51,7 +51,7 @@ export const endpointRouter = t.router({
       z.object({
         active: z.boolean(),
         name: z.string(),
-        method: z.enum(["POST", "GET", "PUT", "DELETE", "PATCH"]),
+        method: z.enum(["POST", "GET", "PUT", "DELETE", "PATCH", "OPTIONS"]),
         url: z.string().url(),
         body: z.string().optional(),
         headers: z.record(z.string()).optional(),
@@ -137,7 +137,7 @@ export const endpointRouter = t.router({
             },
           },
           headers: input.headers,
-          body: input.body,
+          body: input.body || null,
           owner: {
             connect: {
               id: ctx.user.id,

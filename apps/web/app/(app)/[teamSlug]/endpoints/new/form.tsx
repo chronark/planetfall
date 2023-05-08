@@ -1,5 +1,5 @@
 "use client";
-import { Region } from "@planetfall/db";
+import { Method, Region } from "@planetfall/db";
 import React, { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
@@ -48,7 +48,7 @@ type FormData = {
   active: boolean;
   name: string;
   url: string;
-  method: "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
+  method: Method;
   headers?: string;
   body?: string;
   interval: number;
@@ -188,6 +188,7 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
 
                 <div className="col-span-1">
                   <Select
+                    onValueChange={(m: Method) => setValue("method", m)}
                     {...register("method", {
                       required: true,
                     })}
@@ -231,12 +232,16 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
 
                 <div className="flex flex-col items-start col-span-6 gap-1 md:col-span-2">
                   <Label htmlFor="timeout">Body</Label>
-                  <span className="text-xs text-zinc-500">Not required</span>
+                  <span className="text-xs text-zinc-500">
+                    {formValues.method === "GET" ? "Disabled for GET requests" : "Not required"}
+                  </span>
                 </div>
 
                 <Textarea
                   className="col-span-6 md:col-span-4"
-                  {...register("body", {})}
+                  {...register("body", {
+                    disabled: formValues.method === "GET",
+                  })}
                   placeholder={`{
   "hello": "world"
 }`}
