@@ -2,5 +2,9 @@ import React from "react";
 
 import { Pricing } from "../pricing";
 export default function PricingPage() {
-  return <Pricing />;
+  return (
+    <div className="mt-8">
+      <Pricing />;
+    </div>
+  );
 }

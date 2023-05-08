@@ -190,24 +190,6 @@ export const Analytics: React.FC<Props> = ({ endpoint }) => {
         ]}
       >
         <CardTitle>Analytics</CardTitle>
-        <CardDescription>
-          <HoverCard>
-            <HoverCardTrigger asChild>
-              <div className="flex items-center gap-2 px-2 py-1 border rounded-full bg-primary-100/20 border-primary-500 max-w-min">
-                <FlaskConical className="w-3 h-3 text-primary-500" />
-                <span className="text-xs text-primary-500">Experimental</span>
-              </div>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <Text variant="subtle" size="sm">
-                Please report bugs to{" "}
-                <Link href="mailto:support@planetfall.io" className="underline">
-                  support@planetfall.io
-                </Link>
-              </Text>
-            </HoverCardContent>
-          </HoverCard>
-        </CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? <Loading /> : null}

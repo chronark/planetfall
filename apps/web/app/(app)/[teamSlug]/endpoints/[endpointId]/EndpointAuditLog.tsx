@@ -24,7 +24,7 @@ export const EndpointAuditLog: React.FC<Props> = ({ endpointId }) => {
   const auditLogs = trpc.endpoint.auditLogs.useQuery({ endpointId });
   return (
     <Sheet>
-      <SheetTrigger>
+      <SheetTrigger asChild>
         <Button>Changelog</Button>
       </SheetTrigger>
       <SheetContent className="bg-white " size="content">

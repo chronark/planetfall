@@ -111,9 +111,9 @@ export const ClientPage: React.FC<Props> = ({ endpoints, team, user }) => {
                       <Link
                         key={endpoint.id}
                         href={`/${team.slug}/endpoints/${endpoint.id}`}
-                        className=" hover:bg-zinc-50 flex items-center px-4 py-4 md:px-6"
+                        className="flex items-center px-4 py-4 hover:bg-zinc-50 md:px-6"
                       >
-                        <div className="flex flex-1 flex-col md:flex-row md:items-center md:justify-between">
+                        <div className="flex flex-col flex-1 md:flex-row md:items-center md:justify-between">
                           <div className="flex flex-col items-start w-full md:w-1/2 ">
                             <div className="flex items-center gap-1 ">
                               <Status
@@ -126,16 +126,6 @@ export const ClientPage: React.FC<Props> = ({ endpoints, team, user }) => {
                                       endpoint.stats.p99 > endpoint.degradedAfter
                                     ? "degraded"
                                     : "healthy"
-                                }
-                                tooltip={
-                                  endpoint.stats.errors > 0
-                                    ? `There have been ${countFormat(endpoint.stats.errors)} errors`
-                                    : endpoint.degradedAfter &&
-                                      endpoint.stats.p99 > endpoint.degradedAfter
-                                    ? "The performance of this endpoint has degraded"
-                                    : endpoint.active
-                                    ? "This endpoint is healthy"
-                                    : "This endpoint is stopped"
                                 }
                               />
 
@@ -151,7 +141,7 @@ export const ClientPage: React.FC<Props> = ({ endpoints, team, user }) => {
                               Checks in the last 24h
                             </span>
                           </div>
-                          <div className="w-full md:w-1/2  grid grid-cols-2  sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-8 ">
+                          <div className="grid w-full grid-cols-2 gap-2 md:w-1/2 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-8 ">
                             <Metric
                               label="P75"
                               value={latencyFormat(endpoint.stats.p75)}
@@ -174,8 +164,8 @@ export const ClientPage: React.FC<Props> = ({ endpoints, team, user }) => {
                             />
                           </div>
                         </div>
-                        <div className="ml-5 flex-shrink-0">
-                          <ChevronRight className="h-5 w-5 text-zinc-400" aria-hidden="true" />
+                        <div className="flex-shrink-0 ml-5">
+                          <ChevronRight className="w-5 h-5 text-zinc-400" aria-hidden="true" />
                         </div>
                       </Link>
                     );
@@ -198,7 +188,7 @@ const Metric: React.FC<{ label: string; value: string; unit: string }> = ({
   <div className="justify-start gap-1 max-w-[7rem]   text-sm flex grow-0 border items-baseline  whitespace-nowrap  rounded px-2 py-1 text-zinc-700 bg-zinc-50 border-zinc-100  lg:bg-transparent lg:border-transparent">
     <span className="font-medium">{label}</span>
 
-    <span className="text-sm grow  text-right">{value}</span>
+    <span className="text-sm text-right grow">{value}</span>
     <span className="text-xs">{unit}</span>
   </div>
 );

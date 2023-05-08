@@ -55,7 +55,7 @@ const ShowBanner: React.FC<{ team: Team; usage: number }> = ({ team, usage }) =>
           check your billing
         </Link>{" "}
         or{" "}
-        <Link href={`/${team.slug}/support`} className="underline">
+        <Link href="/support" className="underline">
           contact us
         </Link>
         .
@@ -88,7 +88,7 @@ const ShowBanner: React.FC<{ team: Team; usage: number }> = ({ team, usage }) =>
               Upgrade your plan
             </Link>{" "}
             or{" "}
-            <Link href={`/${team.slug}/support`} className="underline">
+            <Link href="/support" className="underline">
               contact us
             </Link>{" "}
             to keep using Planetfall.
