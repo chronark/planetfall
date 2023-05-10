@@ -298,7 +298,6 @@ export class Scheduler {
             regionId: region.id,
             vercelId: res.headers.get("x-vercel-id"),
           });
-
         }
         if (res.status !== 200) {
           this.logger.error("endpoint test failed", {

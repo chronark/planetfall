@@ -531,10 +531,10 @@ export const Form: React.FC<Props> = ({ teamSlug, teamId, regions, defaultTimeou
                 <TooltipContent>
                   <span className="font-semibold">Prewarm</span>
                   <p>
-                    When enabled, the endpoint will be prewarmed by sending a request first
-                    <br />
-                    and then reusing the connection and measuring a second request.
+                    When enabled, the endpoint will be prewarmed by sending a request first and then
+                    reusing the connection and measuring a second request.
                   </p>
+                  <p>Prewarming is currently not available for Vercel Edge functions</p>
                 </TooltipContent>
               </Tooltip>
             </CardContent>
