@@ -18,7 +18,11 @@ export class Logger {
         orgId: axiomOrgId,
       });
 
-      this.logger.attachTransport((logObj) => axiom.ingestEvents("scheduler", [logObj]));
+      this.logger.attachTransport((logObj) => {
+        axiom.ingestEvents("scheduler", [logObj]).catch((err) => {
+          console.error(`Failed to send log to axiom: ${err.message}`);
+        });
+      });
     }
   }
 
