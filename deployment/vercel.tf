@@ -168,21 +168,42 @@ resource "vercel_project_domain" "wildcard" {
 }
 
 
+resource "vercel_project" "docs" {
+  name      = "planetfall"
+  team_id   = var.vercel_team_id
+  framework = "nextjs"
+
+
+  build_command              = "cd ../.. && pnpm turbo run build --filter=docs"
+  root_directory             = "apps/docs"
+  serverless_function_region = "fra1"
+
+  git_repository = {
+    repo = "chronark/planetfall"
+    type = "github"
+  }
+
+
+}
 
 
 
-# data "vercel_project_directory" "root" {
-#   path = "../"
-# }
+resource "vercel_project" "vercel-edge-runner" {
+  name      = "planetfall"
+  team_id   = var.vercel_team_id
+  framework = "nextjs"
 
 
-# resource "vercel_deployment" "planetfall" {
-#   project_id  = vercel_project.web.id
-#   team_id     = var.vercel_team_id
-#   files       = data.vercel_project_directory.root.files
-#   path_prefix = data.vercel_project_directory.root.path
-# }
+  build_command              = "cd ../.. && pnpm turbo run build --filter=vercel-edge-runner"
+  root_directory             = "apps/vercel-edge-runner"
+  serverless_function_region = "fra1"
+
+  git_repository = {
+    repo = "chronark/planetfall"
+    type = "github"
+  }
 
 
+}
 
 
