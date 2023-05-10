@@ -123,7 +123,23 @@ importers:
       typescript: 5.0.4
 
   apps/vercel-edge-runner:
-    specifiers: {}
+    specifiers:
+      '@types/node': ^20.1.2
+      '@types/react': 18.2.6
+      '@types/react-dom': 18.2.4
+      next: ^13.4.1
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      typescript: ^5.0.4
+    dependencies:
+      next: 13.4.1_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    devDependencies:
+      '@types/node': 20.1.2
+      '@types/react': 18.2.6
+      '@types/react-dom': 18.2.4
+      typescript: 5.0.4
 
   apps/web:
     specifiers:
@@ -4554,6 +4570,10 @@ packages:
 
   /@types/node/20.1.0:
     resolution: {integrity: sha512-O+z53uwx64xY7D6roOi4+jApDGFg0qn6WHcxe5QeqjMaTezBO/mxdfFXIVAVVyNWKx84OmPB3L8kbVYOTeN34A==}
+
+  /@types/node/20.1.2:
+    resolution: {integrity: sha512-CTO/wa8x+rZU626cL2BlbCDzydgnFNgc19h4YvizpTO88MFQxab8wqisxaofQJ/9bLGugRdWIuX/TbIs6VVF6g==}
+    dev: true
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
