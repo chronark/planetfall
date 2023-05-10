@@ -62,6 +62,7 @@ export default function RootLayout({
         <meta name="description" content="Global Latency Monitoring" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/logo.svg" />
+        <script src="https://beamanalytics.b-cdn.net/beam.min.js" data-token="e08d63f1-631b-4eeb-89b3-7799fedde74f" async/>
       </head>
       <body className={process.env.NODE_ENV === "development" ? "debug-screens" : undefined}>
         <Providers>{children}</Providers>
