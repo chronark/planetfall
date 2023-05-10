@@ -5,7 +5,6 @@ export const config = {
 };
 import { ping } from "./_ping";
 export default async function handler(req: NextRequest): Promise<NextResponse> {
-
   if (req.method !== "POST") {
     return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
   }

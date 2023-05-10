@@ -292,6 +292,14 @@ export class Scheduler {
             runs: endpoint.runs,
           }),
         });
+        if (res.headers.has("x-vercel-id")) {
+          this.logger.info("vercel region response", {
+            endpointId: endpoint.id,
+            regionId: region.id,
+            vercelId: res.headers.get("x-vercel-id"),
+          });
+
+        }
         if (res.status !== 200) {
           this.logger.error("endpoint test failed", {
             status: res.status,
