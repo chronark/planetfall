@@ -169,7 +169,7 @@ resource "vercel_project_domain" "wildcard" {
 
 
 resource "vercel_project" "docs" {
-  name      = "docs"
+  name      = "planetfall-docs"
   team_id   = var.vercel_team_id
   framework = "nextjs"
 
