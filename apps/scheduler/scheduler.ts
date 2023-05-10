@@ -322,6 +322,7 @@ export class Scheduler {
           };
         }[];
 
+
         const data = parsed.map((c) => {
           if (!c.error) {
             const as = endpoint.assertions ? assertions.deserialize(endpoint.assertions) : [];
@@ -347,6 +348,11 @@ export class Scheduler {
               }
             }
           }
+          this.logger.info("report.check", { 
+            endpointId: endpoint.id,
+            latency: c.latency,
+            regionId: region.id,
+          });
 
           return {
             id: newId("check"),

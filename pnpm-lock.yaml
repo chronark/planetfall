@@ -122,6 +122,9 @@ importers:
       ts-node: 10.9.1_sc42aji77byzfj43uxzoje53je
       typescript: 5.0.4
 
+  apps/vercel-edge-runner:
+    specifiers: {}
+
   apps/web:
     specifiers:
       '@ant-design/plots': ^1.2.4
