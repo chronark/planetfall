@@ -15,6 +15,9 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/input";
 import { Loading } from "@/components/loading";
 import { Toaster, useToast } from "@/components/toast";
+import { Alert } from "@/components/alert";
+import { AlertTitle } from "@/components/alert";
+import { AlertDescription } from "@/components/alert";
 
 type Props = {
   teamSlug: string;
@@ -70,10 +73,13 @@ export const DeleteCard: React.FC<Props> = ({ teamSlug, teamId }): JSX.Element =
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Are you sure you want to delete {teamSlug}?</DialogTitle>
-                <DialogDescription className="px-4 py-2 font-medium text-red-600 bg-red-100 border border-red-500 rounded">
-                  This action cannot be undone. This will permanently delete your account and remove
-                  your data from our servers.
-                </DialogDescription>
+
+                <Alert variant="destructive">
+                  <AlertTitle>This is a permanent action and cannot be undone.</AlertTitle>
+                  <AlertDescription>
+                    This will permanently delete your account and remove your data from our servers.
+                  </AlertDescription>
+                </Alert>
 
                 <form onSubmit={handleSubmit(submit)} className="mt-4 md:mt-8">
                   <Text>

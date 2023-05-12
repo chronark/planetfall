@@ -31,6 +31,9 @@ import { Input } from "@/components/input";
 import { trpc } from "@/lib/trpc/hooks";
 import { useToast, Toaster } from "@/components/toast";
 import { Loading } from "@/components/loading";
+import { Table, TableHead, TableHeader, TableBody, TableCell, TableRow } from "@/components/table";
+import { Badge } from "@/components/badge";
+import { Trash } from "lucide-react";
 
 type Props = {
   teamId: string;
@@ -49,20 +52,22 @@ type Props = {
 };
 
 export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX.Element => {
-  const { accessor } = createColumnHelper<Props["members"][0]>();
   const [invitationId, _setInvitationId] = useState<string | null>(null);
   const [inviteEmail, setInviteEmail] = useState("");
+  const [open, setOpen] = useState(false);
   const [_loading, _setLoading] = useState(false);
   const toast = useToast();
 
   const invite = trpc.team.createInvitation.useMutation({
     onSuccess() {
+      setOpen(false);
       toast.addToast({
         title: "Invitation sent",
         content: `We have sent an invitation to ${inviteEmail}`,
       });
     },
     onError(error) {
+      setOpen(false);
       toast.addToast({
         title: "Error",
         content: error.message,
@@ -70,53 +75,11 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
       });
     },
   });
-  const columns = [
-    accessor("user", {
-      header: "User",
-      cell: (info) => (
-        <div className="flex items-center">
-          <Image
-            width={64}
-            height={64}
-            className="w-10 h-10 rounded-full"
-            src={info.getValue().image ?? ""}
-            alt={`Profile image of ${info.getValue().name}`}
-          />
-          <span className="ml-3 text-sm font-medium text-zinc-900">{info.getValue().name}</span>
-        </div>
-      ),
-    }),
-    accessor("role", {
-      header: "Role",
-      cell: (info) => (
-        <Tag variant="outline" size="sm">
-          {info.getValue()}
-        </Tag>
-      ),
-    }),
-    accessor("role", {
-      header: "",
-      cell: (info) =>
-        (currentUser.role === "OWNER" && info.getValue() !== "OWNER") ||
-        (currentUser.role === "ADMIN" && info.getValue() === "MEMBER") ? (
-          <Confirm
-            title="Remove user"
-            trigger={<Button variant="danger">Remove</Button>}
-            onConfirm={() => {}}
-          />
-        ) : null,
-    }),
-  ];
-  const table = useReactTable({
-    data: members,
-    columns,
 
-    getCoreRowModel: getCoreRowModel(),
-  });
   const actions: JSX.Element[] = [];
   if (currentUser.role === "OWNER" || currentUser.role === "ADMIN") {
     actions.push(
-      <Dialog>
+      <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
         <DialogTrigger asChild>
           <Button>Invite User</Button>
         </DialogTrigger>
@@ -170,56 +133,58 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader actions={[actions]}>
         <CardTitle>Members</CardTitle>
-        <div className="flex items-center justify-end gap-2">{actions}</div>
       </CardHeader>
       <CardContent>
-        <table className="min-w-full border-separate" style={{ borderSpacing: 0 }}>
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header, _i) => (
-                  <th
-                    key={header.id}
-                    className="sticky px-4 bg-white z-10  border-zinc-400  py-3.5 text-left text-sm font-semibold text-zinc-900"
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-              </tr>
+        <Table className="-mx-4">
+          <TableHeader>
+            <TableRow>
+              <TableHead>User</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead> </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {members.map((member) => (
+              <TableRow key={member.user.id}>
+                <TableCell>
+                  <div className="flex items-center">
+                    <Image
+                      width={64}
+                      height={64}
+                      className="w-10 h-10 rounded-full"
+                      src={member.user.image ?? ""}
+                      alt={`Profile image of ${member.user.name}`}
+                    />
+
+                    <span className="ml-3 text-sm font-medium text-zinc-900">
+                      {member.user.name}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge>{member.role}</Badge>
+                </TableCell>
+
+                <TableCell>
+                  {(currentUser.role === "OWNER" && member.role !== "OWNER") ||
+                  (currentUser.role === "ADMIN" && member.role === "MEMBER") ? (
+                    <Confirm
+                      title="Remove user"
+                      trigger={
+                        <Button variant="danger" size="sm">
+                          Remove
+                        </Button>
+                      }
+                      onConfirm={() => {}}
+                    />
+                  ) : null}
+                </TableCell>
+              </TableRow>
             ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className="px-3 py-2 text-sm rounded whitespace-nowrap text-zinc-500"
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            {table.getFooterGroups().map((footerGroup) => (
-              <tr key={footerGroup.id}>
-                {footerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.footer, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </tfoot>
-        </table>
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );

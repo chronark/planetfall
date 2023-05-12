@@ -60,11 +60,7 @@ export function TeamInvitation({
               }}
             >
               <Button
-                style={{
-                  // tailwind p- classes didn't work
-                  padding: "8px 16px",
-                }}
-                className="font-medium text-white rounded bg-zinc-900"
+                className="px-8 py-4 font-medium text-white rounded bg-zinc-900"
                 href={inviteLink}
               >
                 Join the team
