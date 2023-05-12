@@ -5,10 +5,10 @@ async function main() {
 
   await db.endpoint.updateMany({
     where: {
-      prewarm: true,
+      teamId: "team_NszcknrCNzjFgnLvqUCXGR",
     },
     data: {
-      prewarm: false,
+      prewarm: true,
     },
   });
 

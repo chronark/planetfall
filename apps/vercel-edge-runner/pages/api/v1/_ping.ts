@@ -43,13 +43,13 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
     timeout: req.timeout,
     followRedirects: req.followRedirects,
   };
-  // if (req.prewarm) {
-  //   console.log("Prewarming", req.url);
-  //   console.time(`warming up: ${req.url}`);
-  //   await check(checkRequest);
-  //   console.timeEnd(`warming up: ${req.url}`);
-  //   await new Promise((r) => setTimeout(r, 2000));
-  // }
+  if (req.prewarm) {
+    console.log("Prewarming", req.url);
+    console.time(`warming up: ${req.url}`);
+    await check(checkRequest);
+    console.timeEnd(`warming up: ${req.url}`);
+    await new Promise((r) => setTimeout(r, 2000));
+  }
 
   const runs = req.runs ?? 1;
   const responses: PingResponse[] = [];
