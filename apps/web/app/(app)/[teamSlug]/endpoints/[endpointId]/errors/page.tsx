@@ -73,7 +73,7 @@ export default async function Page(props: {
       <main className="container mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>{errors.length} Errors</CardTitle>={`${errors.length} Errors`}
+            <CardTitle>{errors.length} Errors</CardTitle>
             <CardDescription>in the last 24 hours</CardDescription>
           </CardHeader>
           <CardContent>
