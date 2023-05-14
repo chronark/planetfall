@@ -188,7 +188,15 @@ resource "vercel_project" "docs" {
 
 
 
-resource "vercel_project" "vercel-edge-runner" {
+resource "vercel_project_domain" "planetfall_docs" {
+  project_id = vercel_project.docs.id
+  team_id    = var.vercel_team_id
+  domain     = "planetfall-docs.vercel.app"
+}
+
+
+
+resource "vercel_project" "vercel_edge_runner" {
   name      = "vercel-edge-runner"
   team_id   = var.vercel_team_id
   framework = "nextjs"
@@ -214,3 +222,11 @@ resource "vercel_project" "vercel-edge-runner" {
 }
 
 
+
+
+
+resource "vercel_project_domain" "planetfall_edge_runner" {
+  project_id = vercel_project.vercel_edge_runner.id
+  team_id    = var.vercel_team_id
+  domain     = "planetfall-edge-runner.vercel.app"
+}
