@@ -75,7 +75,8 @@ resource "vercel_project" "web" {
       key    = "UPSTASH_REDIS_REST_URL"
       value  = "https:${upstash_redis_database.planetfall.endpoint}"
       target = ["production", "preview", "development"]
-      }, {
+      }, 
+      {
       key    = "UPSTASH_REDIS_REST_TOKEN"
       value  = upstash_redis_database.planetfall.rest_token
       target = ["production", "preview", "development"]
@@ -215,8 +216,6 @@ resource "vercel_project" "vercel_edge_runner" {
 
 
 }
-
-
 
 
 

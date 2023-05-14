@@ -30,7 +30,7 @@ variable "zip" {
 
 
 variable "check_runner_signing_key_public" {
-  type = string
+  type      = string
   sensitive = true
 }
 

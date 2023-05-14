@@ -1,11 +1,11 @@
 
 resource "vercel_dns_record" "clerk_accounts" {
-  team_id     = var.vercel_team_id
-  domain      = vercel_project_domain.planetfall_io.domain
-  name        = "accounts"
-  type        = "CNAME"
-  ttl         = 60
-  value       = "accounts.clerk.services"
+  team_id = var.vercel_team_id
+  domain  = vercel_project_domain.planetfall_io.domain
+  name    = "accounts"
+  type    = "CNAME"
+  ttl     = 60
+  value   = "accounts.clerk.services"
 }
 
 

@@ -1,32 +1,32 @@
 
 locals {
   fly_regions = toset([
-     "ams",
-     "cdg",
-     "den",
-     "dfw",
-     "ewr",
-     "fra",
-     "gru",
-     "hkg",
-     "iad",
-     "jnb",
-     "lax",
-     "lhr",
-     "maa",
-     "mad",
-     "mia",
-     "nrt",
-     "ord",
-     "otp",
-     "scl",
-     "sea",
-     "sin",
-     "sjc",
-     "syd",
-     "waw",
-     "yul",
-     "yyz"
+    "ams",
+    "cdg",
+    "den",
+    "dfw",
+    "ewr",
+    "fra",
+    "gru",
+    "hkg",
+    "iad",
+    "jnb",
+    "lax",
+    "lhr",
+    "maa",
+    "mad",
+    "mia",
+    "nrt",
+    "ord",
+    "otp",
+    "scl",
+    "sea",
+    "sin",
+    "sjc",
+    "syd",
+    "waw",
+    "yul",
+    "yyz"
   ])
   replicas = 2
 }
@@ -54,8 +54,8 @@ resource "fly_machine" "check_runner" {
   cputype  = "shared"
   memorymb = 1024
   env = {
-    AXIOM_TOKEN = var.axiom_token
-    AXIOM_ORG   = var.axiom_org
+    AXIOM_TOKEN        = var.axiom_token
+    AXIOM_ORG          = var.axiom_org
     SIGNING_PUBLIC_KEY = var.check_runner_signing_keys.public
   }
   services = [

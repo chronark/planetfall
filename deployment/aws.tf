@@ -26,8 +26,8 @@ module "check_runner_us_east_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "us-east-1"
-  environment = "production"
+  region                          = "us-east-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.us_east_1
@@ -54,8 +54,8 @@ module "check_runner_us_east_2" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "us-east-2"
-  environment = "production"
+  region                          = "us-east-2"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.us_east_2
@@ -80,8 +80,8 @@ module "check_runner_us_west_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "us-west-1"
-  environment = "production"
+  region                          = "us-west-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.us_west_1
@@ -108,8 +108,8 @@ module "check_runner_us_west_2" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "us-west-2"
-  environment = "production"
+  region                          = "us-west-2"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.us_west_2
@@ -136,8 +136,8 @@ module "check_runner_ap_south_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "ap-south-1"
-  environment = "production"
+  region                          = "ap-south-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_south_1
@@ -162,8 +162,8 @@ module "check_runner_ap_northeast_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "ap-northeast-1"
-  environment = "production"
+  region                          = "ap-northeast-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_northeast_1
@@ -187,8 +187,8 @@ module "check_runner_ap_northeast_2" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "ap-northeast-2"
-  environment = "production"
+  region                          = "ap-northeast-2"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_northeast_2
@@ -212,8 +212,8 @@ module "check_runner_ap_northeast_3" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "ap-northeast-3"
-  environment = "production"
+  region                          = "ap-northeast-3"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_northeast_3
@@ -239,8 +239,8 @@ module "check_runner_ap_southeast_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "ap-southeast-1"
-  environment = "production"
+  region                          = "ap-southeast-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_southeast_1
@@ -264,8 +264,8 @@ module "check_runner_ap_southeast_2" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "ap-southeast-2"
-  environment = "production"
+  region                          = "ap-southeast-2"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_southeast_2
@@ -292,8 +292,8 @@ module "check_runner_ca_central_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "ca-central-1"
-  environment = "production"
+  region                          = "ca-central-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ca_central_1
@@ -318,8 +318,8 @@ module "check_runner_eu_central_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "eu-central-1"
-  environment = "production"
+  region                          = "eu-central-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_central_1
@@ -344,8 +344,8 @@ module "check_runner_eu_west_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "eu-west-1"
-  environment = "production"
+  region                          = "eu-west-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_west_1
@@ -370,8 +370,8 @@ module "check_runner_eu_west_2" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "eu-west_2"
-  environment = "production"
+  region                          = "eu-west_2"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_west_2
@@ -396,8 +396,8 @@ module "check_runner_eu_west_3" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "eu-west_3"
-  environment = "production"
+  region                          = "eu-west_3"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_west_3
@@ -421,8 +421,8 @@ module "check_runner_eu_north_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "eu-north-1"
-  environment = "production"
+  region                          = "eu-north-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_north_1
@@ -448,8 +448,8 @@ module "check_runner_sa_east_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "sa-east-1"
-  environment = "production"
+  region                          = "sa-east-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.sa_east_1
@@ -475,8 +475,8 @@ module "check_runner_me_south_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "me-south-1"
-  environment = "production"
+  region                          = "me-south-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.me_south_1
@@ -501,8 +501,8 @@ module "check_runner_ap_southeast_3" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "ap-southeast_3"
-  environment = "production"
+  region                          = "ap-southeast_3"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_southeast_3
@@ -527,8 +527,8 @@ module "check_runner_af_south_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "af-south-1"
-  environment = "production"
+  region                          = "af-south-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.af_south_1
@@ -553,8 +553,8 @@ module "check_runner_ap_east_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "ap-east-1"
-  environment = "production"
+  region                          = "ap-east-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_east_1
@@ -578,8 +578,8 @@ module "check_runner_eu_south_1" {
     path = data.archive_file.function_archive.output_path
     hash = data.archive_file.function_archive.output_base64sha256
   }
-  region      = "eu-south-1"
-  environment = "production"
+  region                          = "eu-south-1"
+  environment                     = "production"
   check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_south_1
