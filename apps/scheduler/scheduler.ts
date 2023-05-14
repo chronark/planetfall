@@ -272,7 +272,7 @@ export class Scheduler {
           : [endpoint.regions[Math.floor(Math.random() * endpoint.regions.length)]];
 
       for await (const region of regions) {
-        this.logger.debug("testing endpoint", {
+        this.logger.info("testing endpoint", {
           endpointId: endpoint.id,
           regionId: region.id,
         });

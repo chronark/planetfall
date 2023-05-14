@@ -174,9 +174,8 @@ resource "vercel_project" "docs" {
   framework = "nextjs"
 
 
-  build_command              = "cd ../.. && pnpm turbo run build --force --filter=docs"
+  # build_command              = "cd ../.. && pnpm turbo run build --force --filter=docs"
   root_directory             = "apps/docs"
-  serverless_function_region = "fra1"
 
   git_repository = {
     repo = "chronark/planetfall"
