@@ -20,6 +20,15 @@ import {
   DialogTrigger,
 } from "@/components/dialog";
 import { Button } from "@/components/button";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableCell,
+  TableRow,
+} from "@/components/table/table";
+import { DataTable } from "@/components/table";
 export type Props = {
   header: {
     key: string;
@@ -97,20 +106,20 @@ export const HeaderTable: React.FC<Props> = ({ header }): JSX.Element => {
                         )}
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="mx-auto grid max-w-2xl grid-cols-1 gap-8 overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4">
+                    <div className="grid max-w-2xl grid-cols-1 gap-8 mx-auto overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4">
                       {networkHops.map((hop) => (
                         <div key={hop.regionId}>
                           <div className="flex items-center text-xs font-semibold leading-6 text-zinc-400">
                             <svg
                               viewBox="0 0 4 4"
-                              className="mr-4 h-1 w-1 flex-none"
+                              className="flex-none w-1 h-1 mr-4"
                               aria-hidden="true"
                             >
                               <circle cx={2} cy={2} r={2} fill="currentColor" />
                             </svg>
                             {hop.continent}
                             <div
-                              className="absolute -ml-2 h-px w-screen -translate-x-full bg-zinc-900/10 sm:-ml-4 lg:static lg:ml-8 lg:-mr-6 lg:w-auto lg:flex-auto lg:translate-x-0"
+                              className="absolute w-screen h-px -ml-2 -translate-x-full bg-zinc-900/10 sm:-ml-4 lg:static lg:ml-8 lg:-mr-6 lg:w-auto lg:flex-auto lg:translate-x-0"
                               aria-hidden="true"
                             />
                           </div>
@@ -135,55 +144,5 @@ export const HeaderTable: React.FC<Props> = ({ header }): JSX.Element => {
       cell: (info) => <span className="break-all">{info.getValue()}</span>,
     }),
   ];
-  const table = useReactTable({
-    data: header,
-    columns,
-
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return (
-    <table className="min-w-full border-separate" style={{ borderSpacing: 0 }}>
-      <thead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header, _i) => (
-              <th
-                key={header.id}
-                className="sticky px-3 bg-white z-10   py-3.5 text-left text-sm font-semibold text-zinc-900"
-              >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(header.column.columnDef.header, header.getContext())}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <td key={cell.id} className="px-3 py-2 text-sm whitespace-nowrap text-zinc-500">
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-      <tfoot>
-        {table.getFooterGroups().map((footerGroup) => (
-          <tr key={footerGroup.id}>
-            {footerGroup.headers.map((header) => (
-              <th key={header.id}>
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(header.column.columnDef.footer, header.getContext())}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </tfoot>
-    </table>
-  );
+  return <DataTable columns={columns} data={header} />;
 };

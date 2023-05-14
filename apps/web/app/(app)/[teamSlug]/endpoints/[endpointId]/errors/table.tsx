@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/table";
+} from "@/components/table/table";
 
 import Link from "next/link";
 import { ChevronRight, Minus } from "lucide-react";

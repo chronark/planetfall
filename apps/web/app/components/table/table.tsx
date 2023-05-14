@@ -3,9 +3,14 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
-  ({ className, ...props }, ref) => (
+  ({ className, style, ...props }, ref) => (
     <div className="w-full overflow-auto">
-      <table ref={ref} className={cn("w-full caption-bottom text-sm", className)} {...props} />
+      <table
+        ref={ref}
+        className={cn("w-full caption-bottom text-sm border-separate", className)}
+        style={{ borderSpacing: 0, ...style }}
+        {...props}
+      />
     </div>
   ),
 );
@@ -35,10 +40,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
   ({ className, ...props }, ref) => (
     <tr
       ref={ref}
-      className={cn(
-        "transition-colors hover:bg-zinc-100/50 data-[state=selected]:bg-zinc-100",
-        className,
-      )}
+      className={cn(" hover:bg-zinc-50  data-[state=selected]:bg-zinc-100", className)}
       {...props}
     />
   ),
@@ -52,7 +54,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-12 px-4 text-left align-middle font-medium text-zinc-900 [&:has([role=checkbox])]:pr-0",
+      "h-12 px-4 text-left align-middle font-medium text-zinc-900 [&:has([role=checkbox])]:pr-0 border-t border-b border-zinc-500 [&:first-child]:border-l [&:first-child]:rounded-l-lg  [&:last-child]:border-r [&:last-child]:rounded-r-lg",
       className,
     )}
     {...props}
@@ -66,7 +68,7 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+    className={cn("px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0", className)}
     {...props}
   />
 ));

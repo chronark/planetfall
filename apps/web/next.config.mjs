@@ -48,7 +48,9 @@ const nextConfig = {
     appDir: true,
     esmExternals: "loose",
     // typedRoutes: true,
-    serverComponentsExternalPackages: ["@planetfall/db", "@prisma/client", "@tremor/react"],
+    serverActions: true,
+
+    serverComponentsExternalPackages: ["@planetfall/db", "@prisma/client"],
   },
   webpack: (config) => {
     config.experiments.asyncWebAssembly = true;

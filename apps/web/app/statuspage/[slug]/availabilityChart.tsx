@@ -4,8 +4,6 @@ import { Stats } from "@/components/stats";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import classNames from "classnames";
-import { AwsLambda } from "@/components/icons/AwsLambda";
-import { VercelEdge } from "@/components/icons/VercelEdge";
 import {
   createColumnHelper,
   flexRender,
@@ -14,7 +12,6 @@ import {
 } from "@tanstack/react-table";
 import { Fly } from "@/components/icons/Fly";
 import { Line } from "@ant-design/plots";
-import { AreaChart, LineChart } from "@tremor/react";
 import cn from "classnames";
 function format(n: number): string {
   return Intl.NumberFormat(undefined).format(Math.round(n));

@@ -21,7 +21,7 @@
   "devDependencies": {
     "prettier": "^2.8.8",
     "rome": "^11.0.0",
-    "turbo": "^1.9.3",
+    "turbo": "^1.9.4",
     "typescript": "^5.0.4"
   },
   "prisma": {
@@ -32,6 +32,6 @@
     "javascriptreact": "(?:\\bclassName\\s*=\\s*[\\\"\\'](https://github.com/heybourn/headwind/blob/master/[_a-zA-Z0-9\\s\\-\\:\\/]+)[\\\"\\'])|(?:\\btw\\s*`([_a-zA-Z0-9\\s\\-\\:\\/]*)`)"
   },
   "dependencies": {
-    "next": "13.4.1"
+    "next": "13.4.2"
   }
 }

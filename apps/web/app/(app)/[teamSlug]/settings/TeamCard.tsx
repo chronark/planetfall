@@ -31,7 +31,14 @@ import { Input } from "@/components/input";
 import { trpc } from "@/lib/trpc/hooks";
 import { useToast, Toaster } from "@/components/toast";
 import { Loading } from "@/components/loading";
-import { Table, TableHead, TableHeader, TableBody, TableCell, TableRow } from "@/components/table";
+import {
+  Table,
+  TableHead,
+  TableHeader,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/components/table/table";
 import { Badge } from "@/components/badge";
 import { Trash } from "lucide-react";
 
@@ -137,7 +144,7 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
         <CardTitle>Members</CardTitle>
       </CardHeader>
       <CardContent>
-        <Table className="-mx-4">
+        <Table >
           <TableHeader>
             <TableRow>
               <TableHead>User</TableHead>

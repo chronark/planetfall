@@ -46,6 +46,7 @@ export const newId = new IdGenerator({
   page: "page",
   check: "chk",
   token: "tkn",
+  jwt: "jwt",
   run: "run",
 }).id;
 
