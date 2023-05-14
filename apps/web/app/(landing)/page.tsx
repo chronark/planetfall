@@ -5,7 +5,7 @@ import { Features } from "./features";
 import { Cta } from "./cta";
 import { Hero } from "./hero";
 import { Pricing } from "./pricing";
-// import { Stats } from "./stats";
+import { Stats } from "./stats";
 // import { Companies } from "./companies";
 
 // export const config = {
@@ -20,7 +20,7 @@ export default async function LandingPage() {
       <Hero />
 
       {/* <Companies /> */}
-      {/* <Stats /> */}
+      <Stats />
       <Features />
       {/* <Testimonials /> */}
       <Cta />

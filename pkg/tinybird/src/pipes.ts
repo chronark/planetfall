@@ -111,6 +111,14 @@ export const getUsage = tb.buildPipe({
   }),
 });
 
+export const globalUsage = tb.buildPipe({
+  pipe: "landingpage__average_usage__v1",
+  data: z.object({
+    usage: z.number(),
+    time: z.string().transform((s) => new Date(s).getTime()),
+  }),
+});
+
 export const getErrors = tb.buildPipe({
   pipe: "get_errors__v1",
   parameters: z.object({

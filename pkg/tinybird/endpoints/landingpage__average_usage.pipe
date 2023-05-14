@@ -1,0 +1,12 @@
+VERSION 1
+TOKEN "live" READ
+DESCRIPTION >
+    returns the number of requests per day for the last 30 days
+
+NODE endpoint
+
+SQL >
+    SELECT countMerge(usage) as usage, makeDate(year, month, day) as time
+    FROM global_usage__v1
+    WHERE time >= now() - INTERVAL 30 DAY
+    GROUP BY time
