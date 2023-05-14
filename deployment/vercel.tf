@@ -4,7 +4,6 @@ resource "vercel_project" "web" {
   framework = "nextjs"
 
 
-  build_command              = "cd ../.. && pnpm turbo run build --filter=web"
   root_directory             = "apps/web"
   serverless_function_region = "fra1"
 
@@ -174,8 +173,7 @@ resource "vercel_project" "docs" {
   framework = "nextjs"
 
 
-  # build_command              = "cd ../.. && pnpm turbo run build --force --filter=docs"
-  root_directory             = "apps/docs"
+  root_directory = "apps/docs"
 
   git_repository = {
     repo = "chronark/planetfall"
@@ -201,9 +199,7 @@ resource "vercel_project" "vercel_edge_runner" {
   framework = "nextjs"
 
 
-  build_command              = "cd ../.. && pnpm turbo run build --filter=vercel-edge-runner"
-  root_directory             = "apps/vercel-edge-runner"
-  serverless_function_region = "fra1"
+  root_directory = "apps/vercel-edge-runner"
 
   git_repository = {
     repo = "chronark/planetfall"
