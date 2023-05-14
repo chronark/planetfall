@@ -56,6 +56,7 @@ resource "fly_machine" "check_runner" {
   env = {
     AXIOM_TOKEN = var.axiom_token
     AXIOM_ORG   = var.axiom_org
+    SIGNING_PUBLIC_KEY = var.check_runner_signing_keys.public
   }
   services = [
     {

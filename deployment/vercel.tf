@@ -72,7 +72,7 @@ resource "vercel_project" "web" {
       value  = var.tinybird_token
       target = ["production", "preview"]
     },
-     {
+    {
       key    = "UPSTASH_REDIS_REST_URL"
       value  = "https:${upstash_redis_database.planetfall.endpoint}"
       target = ["production", "preview", "development"]
@@ -81,7 +81,7 @@ resource "vercel_project" "web" {
       value  = upstash_redis_database.planetfall.rest_token
       target = ["production", "preview", "development"]
     },
-   
+
     {
       key    = "RESEND_API_KEY"
       value  = var.resend_api_key,
@@ -123,12 +123,12 @@ resource "vercel_project" "web" {
       value  = var.clerk_webhook_secret.production,
       target = ["production"]
     },
-     {
+    {
       key    = "CLERK_WEBHOOK_SECRET",
       value  = var.clerk_webhook_secret.preview,
       target = ["preview"]
     },
-     {
+    {
       key    = "CLERK_WEBHOOK_SECRET",
       value  = var.clerk_webhook_secret.development,
       target = ["development"]
@@ -202,6 +202,13 @@ resource "vercel_project" "vercel-edge-runner" {
     repo = "chronark/planetfall"
     type = "github"
   }
+  environment = [
+    {
+      key    = "SIGNING_PUBLIC_KEY",
+      value  = var.check_runner_signing_keys.public,
+      target = ["production", "preview", "development"]
+    }
+  ]
 
 
 }

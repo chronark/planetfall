@@ -24,7 +24,12 @@ const alerts = new AlertNotifications({
   email,
 });
 
-const s = new Scheduler({ logger, alerts, notifications });
+const signingKey = process.env.SIGNING_PRIVATE_KEY;
+if (!signingKey) {
+  throw new Error("SIGNING_PRIVATE_KEY is required");
+}
+
+const s = new Scheduler({ logger, alerts, notifications, signingKey });
 s.run();
 
 const server = http.createServer((_req, res) => {

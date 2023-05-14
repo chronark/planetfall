@@ -144,7 +144,7 @@ export const TeamCard: React.FC<Props> = ({ teamId, members, currentUser }): JSX
         <CardTitle>Members</CardTitle>
       </CardHeader>
       <CardContent>
-        <Table >
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>User</TableHead>

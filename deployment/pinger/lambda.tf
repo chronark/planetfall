@@ -44,6 +44,11 @@ resource "aws_lambda_function" "check_runner" {
 
 
 
+  environment {
+    variables = {
+      SIGNING_PUBLIC_KEY = var.check_runner_signing_keys.public
+    }
+  }
 
 
   role = aws_iam_role.lambda_exec.arn

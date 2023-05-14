@@ -7,9 +7,11 @@ import { AlertNotifications } from "./alerts";
 import { getUsage } from "@planetfall/tinybird";
 import { Notifications } from "./notifications";
 import { SetupManager } from "./setup";
+import crypto from "node:crypto";
 
 export class Scheduler {
   // key: endpointId
+  private readonly signingKey: string;
   private endpoints: Map<string, { intervalId: NodeJS.Timeout; updatedAt: number }>;
   private db: PrismaClient;
   private logger: Logger;
@@ -23,7 +25,13 @@ export class Scheduler {
     logger,
     alerts,
     notifications,
-  }: { logger: Logger; alerts: AlertNotifications; notifications: Notifications }) {
+    signingKey,
+  }: {
+    logger: Logger;
+    alerts: AlertNotifications;
+    notifications: Notifications;
+    signingKey: string;
+  }) {
     this.db = new PrismaClient();
     this.tinybird = new tb.Client();
     this.endpoints = new Map();
@@ -32,6 +40,7 @@ export class Scheduler {
     this.alerts = alerts;
     this.notifications = notifications;
     this.setupManager = new SetupManager({ logger: this.logger });
+    this.signingKey = signingKey;
   }
 
   public async run() {
@@ -278,19 +287,26 @@ export class Scheduler {
           checkRunnerHeaders.set("Fly-Prefer-Region", region.region);
         }
 
+        const bodyStr = JSON.stringify({
+          exp: Date.now() + 1000 * 60,
+          url,
+          method,
+          headers,
+          body,
+          timeout: endpoint.timeout ?? undefined,
+          followRedirects: endpoint.followRedirects ?? false,
+          prewarm: endpoint.prewarm,
+          runs: endpoint.runs,
+        });
+        const signature = crypto
+          .createHmac("sha256", this.signingKey)
+          .update(bodyStr)
+          .digest("hex");
+        checkRunnerHeaders.set("Authorization", signature);
         const res = await fetch(region.url, {
           method: "POST",
           headers: checkRunnerHeaders,
-          body: JSON.stringify({
-            url,
-            method,
-            headers,
-            body,
-            timeout: endpoint.timeout ?? undefined,
-            followRedirects: endpoint.followRedirects ?? false,
-            prewarm: endpoint.prewarm,
-            runs: endpoint.runs,
-          }),
+          body: bodyStr,
         });
         if (res.headers.has("x-vercel-id")) {
           this.logger.info("vercel region response", {

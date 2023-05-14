@@ -98,8 +98,8 @@ variable "resend_api_key" {
 
 variable "clerk_secret_key" {
   type = object({
-    production = string
-    preview    = string
+    production  = string
+    preview     = string
     development = string
   })
   sensitive = true
@@ -108,28 +108,36 @@ variable "clerk_secret_key" {
 
 variable "clerk_publishable_key" {
   type = object({
-    production = string
-    preview    = string
+    production  = string
+    preview     = string
     development = string
 
   })
-  
+
 }
-variable "clerk_webhook_secret"{
- type = object({
-    production = string
-    preview    = string
+variable "clerk_webhook_secret" {
+  type = object({
+    production  = string
+    preview     = string
     development = string
   })
   sensitive = true
 }
 
-variable "plain_app_key"{
-  type = string
+variable "plain_app_key" {
+  type      = string
   sensitive = true
 }
 
 variable "highstorm_token" {
-  type = string
-  sensitive=true
+  type      = string
+  sensitive = true
+}
+
+variable "check_runner_signing_keys" {
+  type = object({
+    private = string
+    public  = string
+  })
+  sensitive = true
 }
