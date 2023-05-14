@@ -1,5 +1,4 @@
 import "./globals.css";
-import { Analytics } from "app/components/analytics";
 import { Inter } from "next/font/google";
 import { Metadata } from "next";
 import { Providers } from "./providers";
@@ -70,7 +69,6 @@ export default function RootLayout({
       </head>
       <body className={process.env.NODE_ENV === "development" ? "debug-screens" : undefined}>
         <Providers>{children}</Providers>
-        <Analytics />
       </body>
     </html>
   );

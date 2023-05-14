@@ -174,7 +174,7 @@ resource "vercel_project" "docs" {
   framework = "nextjs"
 
 
-  build_command              = "cd ../.. && pnpm turbo run build --filter=docs"
+  build_command              = "cd ../.. && pnpm turbo run build --force --filter=docs"
   root_directory             = "apps/docs"
   serverless_function_region = "fra1"
 
