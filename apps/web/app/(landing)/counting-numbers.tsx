@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function CountingNumbers({
   value,
-  duration = 800,
+  duration = 2000,
 }: {
   value: number;
   duration?: number;
