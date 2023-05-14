@@ -28,6 +28,7 @@ module "check_runner_us_east_1" {
   }
   region      = "us-east-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.us_east_1
   }
@@ -55,6 +56,7 @@ module "check_runner_us_east_2" {
   }
   region      = "us-east-2"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.us_east_2
   }
@@ -80,6 +82,7 @@ module "check_runner_us_west_1" {
   }
   region      = "us-west-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.us_west_1
   }
@@ -107,6 +110,7 @@ module "check_runner_us_west_2" {
   }
   region      = "us-west-2"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.us_west_2
   }
@@ -134,6 +138,7 @@ module "check_runner_ap_south_1" {
   }
   region      = "ap-south-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_south_1
   }
@@ -159,6 +164,7 @@ module "check_runner_ap_northeast_1" {
   }
   region      = "ap-northeast-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_northeast_1
   }
@@ -183,6 +189,7 @@ module "check_runner_ap_northeast_2" {
   }
   region      = "ap-northeast-2"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_northeast_2
   }
@@ -207,6 +214,7 @@ module "check_runner_ap_northeast_3" {
   }
   region      = "ap-northeast-3"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_northeast_3
   }
@@ -233,6 +241,7 @@ module "check_runner_ap_southeast_1" {
   }
   region      = "ap-southeast-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_southeast_1
   }
@@ -257,6 +266,7 @@ module "check_runner_ap_southeast_2" {
   }
   region      = "ap-southeast-2"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_southeast_2
   }
@@ -284,6 +294,7 @@ module "check_runner_ca_central_1" {
   }
   region      = "ca-central-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ca_central_1
   }
@@ -309,6 +320,7 @@ module "check_runner_eu_central_1" {
   }
   region      = "eu-central-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_central_1
   }
@@ -334,6 +346,7 @@ module "check_runner_eu_west_1" {
   }
   region      = "eu-west-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_west_1
   }
@@ -359,6 +372,7 @@ module "check_runner_eu_west_2" {
   }
   region      = "eu-west_2"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_west_2
   }
@@ -384,6 +398,7 @@ module "check_runner_eu_west_3" {
   }
   region      = "eu-west_3"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_west_3
   }
@@ -408,6 +423,7 @@ module "check_runner_eu_north_1" {
   }
   region      = "eu-north-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_north_1
   }
@@ -434,6 +450,7 @@ module "check_runner_sa_east_1" {
   }
   region      = "sa-east-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.sa_east_1
   }
@@ -460,6 +477,7 @@ module "check_runner_me_south_1" {
   }
   region      = "me-south-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.me_south_1
   }
@@ -485,6 +503,7 @@ module "check_runner_ap_southeast_3" {
   }
   region      = "ap-southeast_3"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_southeast_3
   }
@@ -510,6 +529,7 @@ module "check_runner_af_south_1" {
   }
   region      = "af-south-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.af_south_1
   }
@@ -535,6 +555,7 @@ module "check_runner_ap_east_1" {
   }
   region      = "ap-east-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.ap_east_1
   }
@@ -559,6 +580,7 @@ module "check_runner_eu_south_1" {
   }
   region      = "eu-south-1"
   environment = "production"
+  check_runner_signing_key_public = var.check_runner_signing_keys.public
   providers = {
     aws = aws.eu_south_1
   }
@@ -583,6 +605,7 @@ module "check_runner_eu_south_1" {
 #   }
 #   region      = "ap-south-2"
 #   environment = "production"
+# check_runner_signing_keys = var.check_runner_signing_keys
 #   providers = {
 #     aws = aws.ap_south_2
 #   }
@@ -609,6 +632,7 @@ module "check_runner_eu_south_1" {
 #   }
 #   region      = "eu-south-2"
 #   environment = "production"
+# check_runner_signing_keys = var.check_runner_signing_keys
 #   providers = {
 #     aws = aws.eu_south_2
 #   }
@@ -634,6 +658,7 @@ module "check_runner_eu_south_1" {
 #   }
 #   region      = "eu-central-2"
 #   environment = "production"
+# check_runner_signing_keys = var.check_runner_signing_keys
 #   providers = {
 #     aws = aws.eu_central_2
 #   }

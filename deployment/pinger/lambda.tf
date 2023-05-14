@@ -29,6 +29,11 @@ variable "zip" {
 
 
 
+variable "check_runner_signing_key_public" {
+  type = string
+  sensitive = true
+}
+
 
 resource "aws_lambda_function" "check_runner" {
   function_name    = "check-runner-${var.region}-${var.environment}"
@@ -46,7 +51,7 @@ resource "aws_lambda_function" "check_runner" {
 
   environment {
     variables = {
-      SIGNING_PUBLIC_KEY = var.check_runner_signing_keys.public
+      SIGNING_PUBLIC_KEY = var.check_runner_signing_key_public
     }
   }
 
