@@ -158,28 +158,37 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 export default async function Page(props: {
   params: { teamSlug: string; checkId: string };
 }) {
-
   const { userId } = auth();
   if (!userId) {
     return redirect("/auth/sign-in");
   }
   const res = await getCheck({ checkId: props.params.checkId });
-  console.log(JSON.stringify({ res }, null, 2))
+  console.log(JSON.stringify({ res }, null, 2));
   const check = res.data.at(0);
   if (!check) {
-    console.warn(__filename, "Check not found");
-    notFound();
-    return;
+    return notFound();
   }
 
-
   const endpoint = await db.endpoint.findUnique({
-    where: { id: check.endpointId }, include: {
+    where: { id: check.endpointId },
+    include: {
+      team: {
+        include: {
+          members: true
+        }
+      },
       regions: {
-        where: { id: check.regionId }
-      }
-    }
-  })
+        where: { id: check.regionId },
+      },
+    },
+  });
+
+  if (!endpoint) {
+    return notFound();
+  }
+  if (!endpoint.team.members.find((member) => member.userId === userId)) {
+    return notFound();
+  }
 
   return (
     <div>

@@ -126,8 +126,14 @@ export const getCheck = tb.buildPipe({
     time: z.string().transform((s) => new Date(s).getTime()),
     error: z.string().nullable(),
     body: z.string().nullable(),
-    headers: z.string().nullable().transform((v) => (v ? JSON.parse(v) : null)),
-    timing: z.string().nullable().transform((v) => (v ? JSON.parse(v) : null)),
+    headers: z
+      .string()
+      .nullable()
+      .transform((v) => (v ? JSON.parse(v) : null)),
+    timing: z
+      .string()
+      .nullable()
+      .transform((v) => (v ? JSON.parse(v) : null)),
   }),
 });
 

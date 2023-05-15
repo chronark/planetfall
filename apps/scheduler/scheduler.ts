@@ -375,7 +375,6 @@ export class Scheduler {
             latency: c.latency,
             regionId: region.id,
           });
-
           return {
             id: newId("check"),
             endpointId: endpoint.id,

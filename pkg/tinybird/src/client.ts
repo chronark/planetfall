@@ -53,22 +53,23 @@ export class Client {
   }
 
   public async publishChecks(checks: Check[]): Promise<void> {
-    await Promise.all([this.publish(
-      "checks__v3",
-      checks.map((c) => ({
-        id: c.id,
-        endpointId: c.endpointId,
-        latency: c.latency,
-        regionId: c.regionId,
-        status: c.status,
-        teamId: c.teamId,
-        time: c.time,
-        error: c.error,
-        body: c.body,
-        headers: JSON.stringify(c.headers ?? {}),
-        timing: JSON.stringify(c.timing ?? {}),
-      })),
-    ),
+    await Promise.all([
+      this.publish(
+        "checks__v3",
+        checks.map((c) => ({
+          id: c.id,
+          endpointId: c.endpointId,
+          latency: c.latency,
+          regionId: c.regionId,
+          status: c.status,
+          teamId: c.teamId,
+          time: c.time,
+          error: c.error,
+          body: c.body,
+          headers: JSON.stringify(c.headers),
+          timing: JSON.stringify(c.timing),
+        })),
+      ),
     ]);
   }
 
