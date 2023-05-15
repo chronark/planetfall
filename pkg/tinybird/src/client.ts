@@ -74,7 +74,6 @@ export class Client {
     ]);
   }
 
-
   public async getLatestChecksByEndpoint(
     endpointId: string,
     opts?: {
