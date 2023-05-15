@@ -23,6 +23,9 @@ export const Endpoint: React.FC<{
   degradedAfter?: number;
 }> = ({ endpoint, degradedAfter }) => {
   const globalStats = endpoint.regions["global"];
+  if (!globalStats) {
+    return null;
+  }
   const totalChecks = globalStats.count;
 
   let availability = totalChecks === 0 ? 1 : 1 - globalStats.errors / totalChecks;

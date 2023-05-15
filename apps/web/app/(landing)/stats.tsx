@@ -25,7 +25,7 @@ export const Stats = asyncComponent(async () => {
     },
     {
       label: "Ø Checks per Day",
-      value: (await globalUsage({})).data.reduce((acc, day) => acc + day.usage, 0) / 30,
+      value: (await globalUsage({})).data.reduce((acc, day) => acc + day.usage, 0),
     },
   ]);
   return (
