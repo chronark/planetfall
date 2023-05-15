@@ -1,0 +1,11 @@
+VERSION 1
+TOKEN "live" READ
+DESCRIPTION >
+    Get a check by ID
+
+NODE endpoint
+SQL >
+%
+    SELECT *
+    FROM checks__v3
+    WHERE id = {{String(checkId, required=True)}}

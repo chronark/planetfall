@@ -94,7 +94,7 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             <div
               style={{
                 width: `${(Math.max(1, timings.tlsHandshakeDone - timings.tlsHandshakeStart) /
-                    (end - start)) *
+                  (end - start)) *
                   100
                   }%`,
               }}
@@ -164,7 +164,7 @@ export default async function Page(props: {
     return redirect("/auth/sign-in");
   }
   const res = await getCheck({ checkId: props.params.checkId });
-  console.log({ res })
+  console.log(JSON.stringify({ res }, null, 2))
   const check = res.data.at(0);
   if (!check) {
     console.warn(__filename, "Check not found");
@@ -173,11 +173,13 @@ export default async function Page(props: {
   }
 
 
-  const endpoint = check.endpointId
-    ? await db.endpoint.findUnique({ where: { id: check.endpointId } })
-    : null;
-
-  const regions = await db.region.findMany({ where: { visible: true } });
+  const endpoint = await db.endpoint.findUnique({
+    where: { id: check.endpointId }, include: {
+      regions: {
+        where: { id: check.regionId }
+      }
+    }
+  })
 
   return (
     <div>
@@ -213,7 +215,7 @@ export default async function Page(props: {
             <Stats label="Latency" value={check.latency?.toLocaleString() ?? "None"} suffix="ms" />
             <Stats
               label="Region"
-              value={regions.find((r) => r.id === check.regionId)?.name ?? "X"}
+              value={endpoint?.regions.find((r) => r.id === check.regionId)?.name ?? "N/A"}
             />
           </div>
         </div>
