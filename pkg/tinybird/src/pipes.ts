@@ -111,6 +111,26 @@ export const getUsage = tb.buildPipe({
   }),
 });
 
+export const getCheck = tb.buildPipe({
+  pipe: "get_check__v1",
+  parameters: z.object({
+    checkId: z.string(),
+  }),
+  data: z.object({
+    id: z.string(),
+    endpointId: z.string(),
+    latency: z.number().transform((v) => (v >= 0 ? v : null)),
+    status: z.number().transform((v) => (v >= 0 ? v : null)),
+    regionId: z.string(),
+    teamId: z.string(),
+    time: z.string().transform((s) => new Date(s).getTime()),
+    error: z.string().transform((v) => (v !== "" ? v : null)),
+    body: z.string().transform((v) => (v !== "" ? v : null)),
+    headers: z.string().transform((v) => (v !== "" ? JSON.parse(v) : null)),
+    timing: z.string().transform((v) => (v !== "" ? JSON.parse(v) : null)),
+  }),
+});
+
 export const globalUsage = tb.buildPipe({
   pipe: "landingpage__average_usage__v1",
   data: z.object({

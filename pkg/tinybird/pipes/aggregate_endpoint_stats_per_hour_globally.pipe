@@ -17,10 +17,10 @@ SQL >
         quantileTimingState(0.99)(latency) AS p99,
         COUNTState(error) AS errors,
         'global' as regionId
-    FROM checks__v1
+    FROM checks__v3
     GROUP BY time, endpointId, regionId
 
 TYPE MATERIALIZED
-DATASOURCE endpoint_stats_per_hour__v2
+DATASOURCE endpoint_stats_per_hour__v3
 ENGINE "AggregatingMergeTree"
 ENGINE_SORTING_KEY "endpointId,regionId,time"

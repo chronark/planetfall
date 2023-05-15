@@ -54,7 +54,7 @@ export class Client {
 
   public async publishChecks(checks: Check[]): Promise<void> {
     await Promise.all([
-      this.publish("checks__v1", checks),
+      this.publish("checks__v3", checks),
       this.publish(
         "checks__v2",
         checks.map((c) => ({
@@ -74,14 +74,6 @@ export class Client {
     ]);
   }
 
-  public async getEndpointStatsPerDay(endpointId: string): Promise<MetricOverTime[]> {
-    const data = await this.fetch<MetricOverTime[]>("get_endpoint_stats_per_day__v1", {
-      endpointId,
-      days: 90,
-    });
-
-    return data.map((d) => ({ ...d, time: new Date(d.time).getTime() }));
-  }
 
   public async getLatestChecksByEndpoint(
     endpointId: string,

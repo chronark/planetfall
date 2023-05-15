@@ -1,6 +1,6 @@
 import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
-import { Client as Tinybird } from "@planetfall/tinybird";
+import { Client as Tinybird, getCheck } from "@planetfall/tinybird";
 
 import { Button } from "@/components/button";
 import { db } from "@planetfall/db";
@@ -163,10 +163,8 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 export default async function Page(props: {
   params: { teamSlug: string; checkId: string };
 }) {
-  const check = await db.check.findUnique({
-    where: { id: props.params.checkId },
-  });
-
+  const res = await getCheck({ checkId: props.params.checkId });
+  const check = res.data.at(0);
   if (!check) {
     console.warn(__filename, "User not found");
     notFound();
@@ -249,7 +247,7 @@ export default async function Page(props: {
           </>
         ) : null}
 
-        {check.header ? (
+        {check.headers ? (
           <>
             <Divider />
             <Card>
@@ -258,7 +256,7 @@ export default async function Page(props: {
               </CardHeader>
               <CardContent>
                 <HeaderTable
-                  header={Object.entries(check.header as Record<string, string>).map(
+                  header={Object.entries(check.headers as Record<string, string>).map(
                     ([key, value]) => ({ key, value }),
                   )}
                 />

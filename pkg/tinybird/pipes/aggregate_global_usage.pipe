@@ -13,7 +13,7 @@ SQL >
         toYear(time) AS year,
         toMonth(time) AS month,
         toDayOfMonth(time) AS day
-    FROM checks__v1
+    FROM checks__v3
     GROUP BY
         year,
         month,

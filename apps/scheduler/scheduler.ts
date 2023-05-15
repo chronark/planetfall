@@ -381,7 +381,7 @@ export class Scheduler {
             endpointId: endpoint.id,
             teamId: endpoint.teamId,
             latency: c.latency,
-            time: new Date(c.time),
+            time: c.time,
             status: c.status,
             regionId: region.id,
             error: c.error,
@@ -390,41 +390,15 @@ export class Scheduler {
             timing: c.timing,
           };
         });
-        for (const d of data) {
-          this.logger.debug("storing check", { checkId: d.id });
-        }
 
-        
-
-        await this.db.check.createMany({ data }).catch((err) => {
-          this.logger.error("error publishing checks to planetscale", {
+        await this.tinybird.publishChecks(data).catch((err) => {
+          this.logger.error("error publishing checks to tinybird", {
             endpointId: endpoint.id,
             regionId: region.id,
             error: (err as Error).message,
           });
           throw err;
         });
-        await this.tinybird
-          .publishChecks(
-            data.map((d) => ({
-              id: d.id,
-              endpointId: d.endpointId,
-              teamId: d.teamId,
-              latency: d.latency,
-              time: d.time.getTime(),
-              error: d.error,
-              regionId: d.regionId,
-              status: d.status,
-            })),
-          )
-          .catch((err) => {
-            this.logger.error("error publishing checks to tinybird", {
-              endpointId: endpoint.id,
-              regionId: region.id,
-              error: (err as Error).message,
-            });
-            throw err;
-          });
         for (const d of data) {
           if (d.error) {
             this.logger.info("emitting notification event", {
@@ -443,7 +417,7 @@ export class Scheduler {
                   id: d.id,
                   endpointId: d.endpointId,
                   teamId: d.teamId,
-                  time: d.time.getTime(),
+                  time: d.time,
                   error: d.error,
                 },
               })

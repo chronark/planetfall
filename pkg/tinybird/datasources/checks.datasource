@@ -1,25 +1,22 @@
-VERSION 2
+VERSION 3
 # TOKEN "live" READWRITE
 
 SCHEMA >
     `id` String `json:$.id`,
     `endpointId` String `json:$.endpointId`,
     # In milliseconds
-    # negative if not available
-    `latency` Int16 `json:$.latency`,
+    `latency` Nullable(Int16) `json:$.latency`,
     `regionId` String `json:$.regionId`,
-    # zero or negative if not available
-    `status` Int16 `json:$.status`,
+    `status` Nullable(Int16) `json:$.status`,
     `teamId` String `json:$.teamId`,
     `time` DateTime `json:$.time`,
-    # empty string means no error
-    `error` String `json:$.error`,
-    # base64 encoded, empty string if not available
-    `body` String `json:$.body`,
-    # json encoded, empty string or "{}" if not available
-    `headers` String `json:$.headers`,
-    # json encoded, empty string or "{}" if not available
-    `timing` String `json:$.timing`
+    `error` Nullable(String) `json:$.error`,
+    # base64 encoded
+    `body` Nullable(String) `json:$.body`,
+    # json encoded
+    `headers` Nullable(String) `json:$.headers`,
+    # json encoded
+    `timing` Nullable(String) `json:$.timing`
 
 
 
