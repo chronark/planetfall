@@ -8,5 +8,5 @@ NODE endpoint
 SQL >
     SELECT countMerge(usage) as usage, makeDate(year, month, day) as time
     FROM global_usage__v1
-    WHERE time >= now() - INTERVAL 30 DAY
+    WHERE time >= now() - INTERVAL 1 DAY
     GROUP BY time

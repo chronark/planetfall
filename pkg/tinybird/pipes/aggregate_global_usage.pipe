@@ -20,7 +20,7 @@ SQL >
         day
 
 TYPE materialized
-DATASOURCE global_usage
+DATASOURCE global_usage__v1
 ENGINE "AggregatingMergeTree"
 ENGINE_SORTING_KEY "year, month, day"
 
