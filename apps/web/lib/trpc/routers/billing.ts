@@ -6,7 +6,6 @@ import Stripe from "stripe";
 import { Redis } from "@upstash/redis";
 import { createInvoice } from "@/lib/billing/stripe";
 import { DEFAULT_QUOTA } from "plans";
-import { audit } from "@planetfall/audit";
 import highstorm from "@highstorm/client";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2022-11-15",
@@ -140,11 +139,13 @@ export const billingRouter = t.router({
           message: "You need to be an owner or admin to do this",
         });
       }
-      audit.log({
-        actorId: ctx.user.id,
-        event: "team.billing_portal_opened",
-        resourceId: team.id,
-        source: "trpc",
+      highstorm("team.billing_portal_opened", {
+        event: `${team.slug} opened the billing portal`,
+        metadata: {
+          actorId: ctx.user.id,
+          resourceId: team.id,
+          source: "trpc",
+        },
       });
       if (!team.stripeCustomerId) {
         const customer = await stripe.customers.create({

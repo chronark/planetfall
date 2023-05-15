@@ -1,3 +1,4 @@
+import { z } from "zod";
 export class Client {
   private readonly baseUrl = "https://api.tinybird.co";
   private readonly token: string;
@@ -52,7 +53,25 @@ export class Client {
   }
 
   public async publishChecks(checks: Check[]): Promise<void> {
-    await Promise.all([this.publish("checks__v1", checks)]);
+    await Promise.all([
+      this.publish("checks__v1", checks),
+      this.publish(
+        "checks__v2",
+        checks.map((c) => ({
+          id: c.id,
+          endpointId: c.endpointId,
+          latency: c.latency ?? -1,
+          regionId: c.regionId,
+          status: c.status ?? -1,
+          teamId: c.teamId,
+          time: c.time,
+          error: c.error ?? "",
+          body: c.body ?? "",
+          headers: JSON.stringify(c.headers ?? {}),
+          timing: JSON.stringify(c.timing ?? {}),
+        })),
+      ),
+    ]);
   }
 
   public async getEndpointStatsPerDay(endpointId: string): Promise<MetricOverTime[]> {
@@ -90,9 +109,11 @@ export type Check = {
   regionId: string;
   status?: number;
   teamId: string;
-  // Unix timestamp with millisecond precision
   time: number;
   error?: string;
+  body?: string;
+  headers?: Record<string, string>;
+  timing?: Record<string, number>;
 };
 
 export type Metric = {

@@ -1,16 +1,28 @@
-VERSION 1
+VERSION 2
 # TOKEN "live" READWRITE
 
 SCHEMA >
     `id` String `json:$.id`,
     `endpointId` String `json:$.endpointId`,
-    `latency` Nullable(Int16) `json:$.latency`,
+    # In milliseconds
+    # negative if not available
+    `latency` Int16 `json:$.latency`,
     `regionId` String `json:$.regionId`,
-    `status` Nullable(Int16) `json:$.status`,
+    # zero or negative if not available
+    `status` Int16 `json:$.status`,
     `teamId` String `json:$.teamId`,
     `time` DateTime `json:$.time`,
-    `error` Nullable(String) `json:$.error`
+    # empty string means no error
+    `error` String `json:$.error`,
+    # base64 encoded, empty string if not available
+    `body` String `json:$.body`,
+    # json encoded, empty string or "{}" if not available
+    `headers` String `json:$.headers`,
+    # json encoded, empty string or "{}" if not available
+    `timing` String `json:$.timing`
+
+
 
 ENGINE "MergeTree"
 ENGINE_TTL "time + INTERVAL 90 DAY"
-ENGINE_SORTING_KEY "endpointId,regionId,time"
+ENGINE_SORTING_KEY "endpointId,regionId,time,id"

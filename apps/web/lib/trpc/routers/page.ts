@@ -3,8 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { auth, t } from "../trpc";
 import { db } from "@planetfall/db";
-import { audit } from "@planetfall/audit";
-
+import highstorm from "@highstorm/client";
 export const pageRouter = t.router({
   create: t.procedure
     .use(auth)
@@ -22,6 +21,7 @@ export const pageRouter = t.router({
         select: {
           id: true,
           maxTimeout: true,
+          slug: true,
           maxPages: true,
           _count: {
             select: {
@@ -67,11 +67,14 @@ export const pageRouter = t.router({
           },
         },
       });
-      audit.log({
-        actorId: ctx.user.id,
-        event: "page.create",
-        resourceId: page.id,
-        source: "trpc",
+      highstorm("statuspage.created", {
+        event: `${team.slug} created a new status page`,
+        metadata: {
+          actorId: ctx.user.id,
+          event: "page.create",
+          resourceId: page.id,
+          source: "trpc",
+        },
       });
       return page;
     }),
@@ -115,11 +118,13 @@ export const pageRouter = t.router({
           },
         },
       });
-      audit.log({
-        actorId: ctx.user.id,
-        event: "page.update",
-        resourceId: updated.id,
-        source: "trpc",
+      highstorm("statuspage.updated", {
+        event: `${page.team.slug} updated a status page`,
+        metadata: {
+          actorId: ctx.user.id,
+          resourceId: updated.id,
+          source: "trpc",
+        },
       });
       return updated;
     }),
@@ -153,11 +158,14 @@ export const pageRouter = t.router({
         where: { id: input.pageId },
       });
 
-      audit.log({
-        actorId: ctx.user.id,
-        event: "page.delete",
-        resourceId: deleted.id,
-        source: "trpc",
+      highstorm("statuspage.deleted", {
+        event: `${page.team.slug} deleted a status page`,
+        metadata: {
+          actorId: ctx.user.id,
+          event: "page.delete",
+          resourceId: deleted.id,
+          source: "trpc",
+        },
       });
       return deleted;
     }),

@@ -1,4 +1,4 @@
-import { audit } from "@planetfall/audit";
+import highstorm from "@highstorm/client";
 import { db } from "@planetfall/db";
 import { Email } from "@planetfall/emails";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -33,12 +33,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       where: { id: team.id },
       data: { plan: "DISABLED" },
     });
-    await audit.log({
-      event: "team.plan.change",
-      actorId: "cron",
-      resourceId: team.id,
-      source: "cron",
-      tags: { newPlan: "DISABLED" },
+    await highstorm("team.plan.change", {
+      event: `${team.slug} changed their plan to DISABLED`,
+      metadata: {
+        actorId: "cron",
+        resourceId: team.id,
+        source: "cron",
+      },
     });
     const email = new Email();
     await Promise.all(
