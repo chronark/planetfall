@@ -44,9 +44,8 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
           <div className="flex w-4/5">
             <div
               style={{
-                width: `${
-                  (Math.max(1, timings.dnsDone - timings.dnsStart) / (end - start)) * 100
-                }%`,
+                width: `${(Math.max(1, timings.dnsDone - timings.dnsStart) / (end - start)) * 100
+                  }%`,
               }}
             >
               <div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -69,9 +68,8 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             />
             <div
               style={{
-                width: `${
-                  (Math.max(1, timings.connectDone - timings.connectStart) / (end - start)) * 100
-                }%`,
+                width: `${(Math.max(1, timings.connectDone - timings.connectStart) / (end - start)) * 100
+                  }%`,
               }}
             >
               <div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -95,11 +93,10 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             />
             <div
               style={{
-                width: `${
-                  (Math.max(1, timings.tlsHandshakeDone - timings.tlsHandshakeStart) /
+                width: `${(Math.max(1, timings.tlsHandshakeDone - timings.tlsHandshakeStart) /
                     (end - start)) *
                   100
-                }%`,
+                  }%`,
               }}
             >
               <div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -121,10 +118,9 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             />
             <div
               style={{
-                width: `${
-                  (Math.max(1, timings.firstByteDone - timings.firstByteStart) / (end - start)) *
+                width: `${(Math.max(1, timings.firstByteDone - timings.firstByteStart) / (end - start)) *
                   100
-                }%`,
+                  }%`,
               }}
             >
               <div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -146,9 +142,8 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             />
             <div
               style={{
-                width: `${
-                  (Math.max(1, timings.transferDone - timings.transferStart) / (end - start)) * 100
-                }%`,
+                width: `${(Math.max(1, timings.transferDone - timings.transferStart) / (end - start)) * 100
+                  }%`,
               }}
             >
               <div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -163,8 +158,13 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
 export default async function Page(props: {
   params: { teamSlug: string; checkId: string };
 }) {
+
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/auth/sign-in");
+  }
   const res = await getCheck({ checkId: props.params.checkId });
-  console.log({res})
+  console.log({ res })
   const check = res.data.at(0);
   if (!check) {
     console.warn(__filename, "Check not found");
@@ -172,10 +172,6 @@ export default async function Page(props: {
     return;
   }
 
-  const { userId } = auth();
-  if (!userId) {
-    return redirect("/auth/sign-in");
-  }
 
   const endpoint = check.endpointId
     ? await db.endpoint.findUnique({ where: { id: check.endpointId } })
