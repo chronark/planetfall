@@ -44,8 +44,9 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
           <div className="flex w-4/5">
             <div
               style={{
-                width: `${(Math.max(1, timings.dnsDone - timings.dnsStart) / (end - start)) * 100
-                  }%`,
+                width: `${
+                  (Math.max(1, timings.dnsDone - timings.dnsStart) / (end - start)) * 100
+                }%`,
               }}
             >
               <div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -68,8 +69,9 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             />
             <div
               style={{
-                width: `${(Math.max(1, timings.connectDone - timings.connectStart) / (end - start)) * 100
-                  }%`,
+                width: `${
+                  (Math.max(1, timings.connectDone - timings.connectStart) / (end - start)) * 100
+                }%`,
               }}
             >
               <div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -93,10 +95,11 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             />
             <div
               style={{
-                width: `${(Math.max(1, timings.tlsHandshakeDone - timings.tlsHandshakeStart) /
-                  (end - start)) *
+                width: `${
+                  (Math.max(1, timings.tlsHandshakeDone - timings.tlsHandshakeStart) /
+                    (end - start)) *
                   100
-                  }%`,
+                }%`,
               }}
             >
               <div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -118,9 +121,10 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             />
             <div
               style={{
-                width: `${(Math.max(1, timings.firstByteDone - timings.firstByteStart) / (end - start)) *
+                width: `${
+                  (Math.max(1, timings.firstByteDone - timings.firstByteStart) / (end - start)) *
                   100
-                  }%`,
+                }%`,
               }}
             >
               <div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -142,8 +146,9 @@ const DNS: React.FC<{ timings: Timings }> = ({ timings }): JSX.Element => {
             />
             <div
               style={{
-                width: `${(Math.max(1, timings.transferDone - timings.transferStart) / (end - start)) * 100
-                  }%`,
+                width: `${
+                  (Math.max(1, timings.transferDone - timings.transferStart) / (end - start)) * 100
+                }%`,
               }}
             >
               <div className="h-1.5 bg-gradient-to-r from-blue-500 to-sky-500 rounded-sm" />
@@ -174,8 +179,8 @@ export default async function Page(props: {
     include: {
       team: {
         include: {
-          members: true
-        }
+          members: true,
+        },
       },
       regions: {
         where: { id: check.regionId },
