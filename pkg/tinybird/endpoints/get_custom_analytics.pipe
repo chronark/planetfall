@@ -27,7 +27,7 @@ SELECT
     time
 FROM 
     {% if defined(granularity) and granularity == "1h" %}
-        endpoint_stats_per_hour__v2
+        endpoint_stats_per_hour__v3
     {% else %}
         endpoint_stats_per_day__v2
     {% end %}

@@ -164,9 +164,10 @@ export default async function Page(props: {
   params: { teamSlug: string; checkId: string };
 }) {
   const res = await getCheck({ checkId: props.params.checkId });
+  console.log({res})
   const check = res.data.at(0);
   if (!check) {
-    console.warn(__filename, "User not found");
+    console.warn(__filename, "Check not found");
     notFound();
     return;
   }
