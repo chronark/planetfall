@@ -381,8 +381,7 @@ export class Scheduler {
             teamId: endpoint.teamId,
             latency: c.latency,
             time: c.time,
-            status:
-              c.status,
+            status: c.status,
             regionId: region.id,
             error: c.error,
             body: c.body,

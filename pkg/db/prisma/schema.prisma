@@ -288,24 +288,6 @@ model Setup {
   @@index([endpointId])
 }
 
-model Check {
-  id         String @id
-  endpointId String
-
-  body     String?  @db.Text
-  header   Json?
-  status   Int?
-  latency  Int?
-  regionId String
-  teamId   String
-  time     DateTime
-  error    String?
-  timing   Json?
-
-  @@index([endpointId])
-  @@index([time])
-}
-
 model VerificationRequest {
   // usually email
   identifier String

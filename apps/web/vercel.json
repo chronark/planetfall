@@ -1,10 +1,6 @@
 {
   "crons": [
     {
-      "path": "/api/cron/evict-checks?key=13cf53eab0949cf835f5018a2b69ea754c4e99f715fb1d7b4c91ee3bd852b94f",
-      "schedule": "0 0 * * *"
-    },
-    {
       "path": "/api/cron/monthly-billing?key=480a32723978b74dae12dd2508033952861256ae63698e18a3f031eabdc45e38",
       "schedule": "0 12 1 * *"
     },
