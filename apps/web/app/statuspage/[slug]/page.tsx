@@ -46,8 +46,6 @@ export default async function Page(props: { params: { slug: string } }) {
     getEndpointSeriesOver90Days({ endpointIds }),
   ]);
 
-  console.log({ metrics, series });
-
   const data: {
     [endpointId: string]: EndpointData;
   } = {};

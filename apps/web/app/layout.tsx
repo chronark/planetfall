@@ -4,6 +4,9 @@ import { Metadata } from "next";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
+  metadataBase: process.env.VERCEL_URL
+    ? new URL(`https://${process.env.VERCEL_URL}`)
+    : new URL("http://localhost:3000"),
   title: {
     default: "Planetfall",
     template: "%s | Planetfall",

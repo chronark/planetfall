@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const { userId } = auth();
@@ -19,7 +19,7 @@ export default async function Home() {
   });
 
   if (!team) {
-    return notFound();
+    return redirect("/onboarding");
   }
   redirect(`/${team.slug}`);
 }

@@ -1,0 +1,16 @@
+VERSION 1
+DESCRIPTION >
+    Copies all checks from the checks__v3 datasource to the checks_by_id__v1 datasource.
+
+
+NODE copy
+SQL >
+
+    SELECT * FROM checks__v3
+
+TYPE materialized
+DATASOURCE checks_by_id__v1
+ENGINE "MergeTree"
+ENGINE_SORTING_KEY "id"
+ENGINE_TTL "time + toIntervalDay(30)"
+

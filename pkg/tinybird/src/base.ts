@@ -41,7 +41,7 @@ export class Tinybird {
   private async fetch(
     pipe: string,
     parameters: Record<string, string | number | boolean | string[]> = {},
-    opts?: { cache?: RequestCache },
+    opts?: { cache?: RequestCache; revalidate?: number },
   ): Promise<unknown> {
     const url = new URL(`/v0/pipes/${pipe}.json`, this.baseUrl);
     for (const [key, value] of Object.entries(parameters)) {
@@ -57,6 +57,10 @@ export class Tinybird {
         Authorization: `Bearer ${this.token}`,
       },
       cache: opts?.cache,
+      // @ts-ignore
+      next: {
+        revalidate: opts?.revalidate,
+      },
     });
     if (!res.ok) {
       const error = (await res.json()) as PipeErrorResponse;
@@ -76,6 +80,10 @@ export class Tinybird {
     data: z.ZodSchema<TData, any, any>;
     opts?: {
       cache?: RequestCache;
+      /**
+       * Number of seconds to revalidate the cache
+       */
+      revalidate?: number;
     };
   }): (
     params: TParameters,

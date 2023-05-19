@@ -7,7 +7,6 @@ import { AlertNotifications } from "./alerts";
 import { getUsage } from "@planetfall/tinybird";
 import { Notifications } from "./notifications";
 import { SetupManager } from "./setup";
-import crypto from "node:crypto";
 
 export class Scheduler {
   // key: endpointId

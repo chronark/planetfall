@@ -15,7 +15,7 @@ import { Tag } from "@/components/tag";
 import { AlertCircle, Check } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
-
+import { unstable_cache } from "next/cache";
 type Timings = {
   dnsStart: number;
   dnsDone: number;

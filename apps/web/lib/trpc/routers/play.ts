@@ -1,11 +1,12 @@
 import { newId, newShortId } from "@planetfall/id";
-import { TRPCError, unsetMarker } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { t } from "../trpc";
 import { Region, db } from "@planetfall/db";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
+import highstorm from "@highstorm/client";
 import { Client as Tinybird } from "@planetfall/tinybird";
 import { PingResponse } from "pages/api/v1/edge-ping/_ping";
 const _tb = new Tinybird();
@@ -165,6 +166,14 @@ export const playRouter = t.router({
         })),
       };
 
+      highstorm("play", {
+        event: `${ctx.user?.id ?? "someone"} ran a check in the playground`,
+        metadata: {
+          user: ctx.user?.id ?? "anonymous",
+          url1: input.urls[0],
+          url2: input.urls[1],
+        },
+      });
       for (let i = 0; i < 100; i++) {
         const id = newShortId();
         const r = await redis.set(["play", id].join(":"), out, {

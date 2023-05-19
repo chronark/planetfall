@@ -7,6 +7,7 @@ import { Breadcrumbs } from "./breadcrumbs";
 import { db } from "@planetfall/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import { asyncComponent } from "@/components/async-component";
+import { Feedback } from "@/components/feedback";
 
 export type NavbarProps = {
   teamSlug: string;
@@ -64,13 +65,16 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
               />
             }
           />
-          <UserButton
-            user={{
-              email: user.email,
-              name: user.name,
-              image: user.image,
-            }}
-          />
+          <div className="flex items-center justify-between gap-4">
+            {/* <Feedback /> */}
+            <UserButton
+              user={{
+                email: user.email,
+                name: user.name,
+                image: user.image,
+              }}
+            />
+          </div>
         </div>
         <div className="mt-2 lg:mt-4 md:space-x-4 ">
           {navigation.map((item) => (

@@ -6,7 +6,8 @@ import * as Dropdown from "@/components/dropdown";
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
-import { Settings, LogOut } from "lucide-react";
+import { Settings, LogOut, Feather } from "lucide-react";
+import { Feedback } from "@/components/feedback";
 type Props = {
   user: {
     name: string;

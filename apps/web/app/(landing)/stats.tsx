@@ -5,29 +5,34 @@ import CountingNumbers from "./counting-numbers";
 import { Section } from "./section";
 import { asyncComponent } from "@/components/async-component";
 import { globalUsage } from "@planetfall/tinybird";
-
-export const dynamic = "force-static";
-export const revalidate = 3600;
+import { unstable_cache } from "next/cache";
 
 export const Stats = asyncComponent(async () => {
-  const stats = await Promise.all([
+  const stats = await unstable_cache(
+    async () =>
+      Promise.all([
+        {
+          label: "Teams",
+          value: await db.team.count(),
+        },
+        {
+          label: "Endpoints",
+          value: await db.endpoint.count(),
+        },
+        {
+          label: "Status Pages",
+          value: await db.statusPage.count(),
+        },
+        {
+          label: "Ø Checks per Day",
+          value: (await globalUsage({})).data.reduce((acc, day) => acc + day.usage, 7),
+        },
+      ]),
+    [],
     {
-      label: "Teams",
-      value: await db.team.count(),
+      revalidate: 3600,
     },
-    {
-      label: "Endpoints",
-      value: await db.endpoint.count(),
-    },
-    {
-      label: "Status Pages",
-      value: await db.statusPage.count(),
-    },
-    {
-      label: "Ø Checks per Day",
-      value: (await globalUsage({})).data.reduce((acc, day) => acc + day.usage, 0),
-    },
-  ]);
+  )();
   return (
     <Section id="stats" title="Currently Monitoring">
       <div className="px-6 mx-auto max-w-7xl lg:px-8">

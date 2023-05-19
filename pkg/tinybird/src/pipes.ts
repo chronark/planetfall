@@ -135,6 +135,9 @@ export const getCheck = tb.buildPipe({
       .nullable()
       .transform((v) => (v ? JSON.parse(v) : null)),
   }),
+  opts: {
+    revalidate: 60 * 60 * 24, // 1 day
+  },
 });
 
 export const globalUsage = tb.buildPipe({

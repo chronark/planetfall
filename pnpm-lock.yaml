@@ -93,6 +93,7 @@ importers:
       '@upstash/redis': ^1.20.6
       dotenv-cli: ^7.2.1
       isomorphic-fetch: ^3.0.0
+      jose: ^4.14.4
       kafkajs: ^2.2.3
       ms: ^2.1.3
       stripe: ^12.4.0
@@ -109,6 +110,7 @@ importers:
       '@planetfall/tinybird': link:../../pkg/tinybird
       '@upstash/redis': 1.20.6
       isomorphic-fetch: 3.0.0
+      jose: 4.14.4
       kafkajs: 2.2.4
       ms: 2.1.3
       stripe: 12.4.0
@@ -214,6 +216,7 @@ importers:
       eslint-config-next: 13.4.2
       focus-visible: ^5.2.0
       framer-motion: ^10.12.10
+      jose: ^4.14.4
       jsonwebtoken: ^9.0.0
       lucide-react: ^0.216.0
       ms: ^2.1.3
@@ -302,6 +305,7 @@ importers:
       cmdk: 0.2.0_tqcjxml4rosq5qpg5cznikfcd4
       focus-visible: 5.2.0
       framer-motion: 10.12.10_biqbaboplfbrettd7655fr4n2y
+      jose: 4.14.4
       jsonwebtoken: 9.0.0
       lucide-react: 0.216.0_react@18.2.0
       ms: 2.1.3
@@ -8785,8 +8789,8 @@ packages:
     engines: {node: '>= 0.6.0'}
     dev: true
 
-  /jose/4.14.1:
-    resolution: {integrity: sha512-SgjXLpP7jhQkUNKL6RpowoR/IF4QKE+WjLDMpNnh2vmhiFs67NftrNpvFtgbwpvRdtueFliahYYWz9E+XZZQlg==}
+  /jose/4.14.4:
+    resolution: {integrity: sha512-j8GhLiKmUAh+dsFXlX1aJCbt5KMibuKb+d7j1JaOJG6s2UjX1PQlW+OKB/sD4a/5ZYF4RcmYmLSndOoU3Lt/3g==}
     dev: false
 
   /js-beautify/1.14.7:
@@ -10110,7 +10114,7 @@ packages:
       '@babel/runtime': 7.21.0
       '@panva/hkdf': 1.0.4
       cookie: 0.5.0
-      jose: 4.14.1
+      jose: 4.14.4
       next: 13.4.2_biqbaboplfbrettd7655fr4n2y
       oauth: 0.9.15
       openid-client: 5.4.0
@@ -10648,7 +10652,7 @@ packages:
   /openid-client/5.4.0:
     resolution: {integrity: sha512-hgJa2aQKcM2hn3eyVtN12tEA45ECjTJPXCgUh5YzTzy9qwapCvmDTVPWOcWVL0d34zeQoQ/hbG9lJhl3AYxJlQ==}
     dependencies:
-      jose: 4.14.1
+      jose: 4.14.4
       lru-cache: 6.0.0
       object-hash: 2.2.0
       oidc-token-hash: 5.0.2
