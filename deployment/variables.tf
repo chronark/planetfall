@@ -141,3 +141,9 @@ variable "check_runner_signing_keys" {
   })
   sensitive = true
 }
+
+
+variable "plain_api_key" {
+  type      = string
+  sensitive = true
+}

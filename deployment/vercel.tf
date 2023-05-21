@@ -142,6 +142,11 @@ resource "vercel_project" "web" {
       key    = "HIGHSTORM_TOKEN",
       value  = var.highstorm_token,
       target = ["production"]
+    },
+    {
+      key: "PLAIN_API_KEY",
+      value: var.plain_api_key,
+      target: ["production", "preview", "development"]
     }
 
   ]
