@@ -1,15 +1,13 @@
-import { newId, newShortId } from "@planetfall/id";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { t } from "../trpc";
 import { Region, db } from "@planetfall/db";
+import { newId, newShortId } from "@planetfall/id";
+import { TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { z } from "zod";
 
 import highstorm from "@highstorm/client";
-import { Client as Tinybird } from "@planetfall/tinybird";
 import { PingResponse } from "pages/api/v1/edge-ping/_ping";
-const _tb = new Tinybird();
 const redis = Redis.fromEnv();
 const ratelimit = new Ratelimit({
   redis,

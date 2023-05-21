@@ -1,10 +1,10 @@
-import pc from "picocolors";
-import csv from "csv-parser";
-import { fetch } from "undici";
 import { Sema } from "async-sema";
+import csv from "csv-parser";
+import { stringify as toCSVString } from "csv-string";
 import { resolveCname } from "dns";
 import { createReadStream } from "fs";
-import { stringify as toCSVString } from "csv-string";
+import pc from "picocolors";
+import { fetch } from "undici";
 
 const SOURCE_FILE = process.argv[2];
 if (!SOURCE_FILE) {

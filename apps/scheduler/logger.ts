@@ -1,5 +1,5 @@
-import * as tslog from "tslog";
 import { Client as Axiom } from "@axiomhq/axiom-node";
+import * as tslog from "tslog";
 
 export class Logger {
   private logger: tslog.Logger<tslog.ILogObj>;

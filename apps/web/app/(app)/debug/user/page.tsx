@@ -1,8 +1,8 @@
 import { Button } from "@/components/button";
 import { auth } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
-import { Link } from "lucide-react";
 import { Email } from "@planetfall/emails";
+import { Link } from "lucide-react";
 
 export default async function DebugUserPage() {
   const { userId, session } = auth();

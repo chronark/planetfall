@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { Bar } from "@ant-design/plots";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
+import { Bar } from "@ant-design/plots";
+import React, { useState } from "react";
 type Props = {
   regions: {
     regionId: string;

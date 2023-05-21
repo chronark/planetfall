@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/button";
 import {
   Card,
   CardContent,
@@ -8,10 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/card";
-import { PageHeader } from "@/components/page";
-import { Button } from "@/components/button";
-import { Text } from "@/components/text";
-import { useState } from "react";
+import { Checkbox } from "@/components/checkbox";
+import Confirm from "@/components/confirm";
 import {
   Dialog,
   DialogContent,
@@ -19,16 +18,17 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/components/dialog";
-import Confirm from "@/components/confirm";
+import { Heading } from "@/components/heading";
+import { Input } from "@/components/input";
+import { Label } from "@/components/label";
+import { PageHeader } from "@/components/page";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/tabs/tabs";
+import { Text } from "@/components/text";
+import { useToast } from "@/components/toast";
 import { trpc } from "@/lib/trpc";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Label } from "@/components/label";
-import { Input } from "@/components/input";
-import { Heading } from "@/components/heading";
-import { useToast } from "@/components/toast";
-import { Checkbox } from "@/components/checkbox";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/tabs/tabs";
 
 type Props = {
   user: {

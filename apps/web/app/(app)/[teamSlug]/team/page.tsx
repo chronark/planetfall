@@ -1,7 +1,7 @@
-import PageHeader from "@/components/page/header";
-import { notFound, redirect } from "next/navigation";
 import { TeamTable } from "./table";
+import PageHeader from "@/components/page/header";
 import { db } from "@planetfall/db";
+import { notFound, redirect } from "next/navigation";
 
 import { auth } from "@clerk/nextjs/app-beta";
 export default async function Page(props: { params: { teamSlug: string } }) {

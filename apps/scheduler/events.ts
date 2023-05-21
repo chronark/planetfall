@@ -1,7 +1,7 @@
-import { Kafka } from "kafkajs";
-import { Scheduler } from "./scheduler";
-import { z } from "zod";
 import { Logger } from "./logger";
+import { Scheduler } from "./scheduler";
+import { Kafka } from "kafkajs";
+import { z } from "zod";
 
 const validation = z.object({
   endpointId: z.string(),

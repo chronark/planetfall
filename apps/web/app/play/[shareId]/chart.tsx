@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
-import { Column } from "@ant-design/plots";
 import { PlayResult } from "@/lib/trpc/routers/play";
+import { Column } from "@ant-design/plots";
+import React from "react";
 
 type Props = {
   regions: PlayResult["regions"];
@@ -48,16 +48,7 @@ export const Chart: React.FC<Props> = ({ regions, urls }) => {
           label: {
             autoRotate: true,
             formatter: (regionId, _item, _index) => {
-              const name = regionMap[regionId] ?? regionId;
-              return `${
-                regionId.startsWith("aws:")
-                  ? "λ"
-                  : regionId.startsWith("vercelEdge:")
-                  ? "▲"
-                  : regionId.startsWith("fly:")
-                  ? "fly"
-                  : ""
-              } ${name}`;
+              return regionMap[regionId] ?? regionId;
             },
           },
         }}

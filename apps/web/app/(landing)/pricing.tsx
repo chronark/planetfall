@@ -1,11 +1,11 @@
-import React, { Fragment, PropsWithChildren } from "react";
-import Link from "next/link";
 import { DEFAULT_QUOTA } from "../../plans";
-import ms from "ms";
+import { Section } from "./section";
 import classNames from "classnames";
 import { Check, Minus } from "lucide-react";
-import { Section } from "./section";
+import ms from "ms";
+import Link from "next/link";
 import { features } from "node:process";
+import React, { Fragment, PropsWithChildren } from "react";
 
 type Tier = "Free" | "Pro" | "Enterprise";
 
@@ -198,7 +198,7 @@ export const Pricing: React.FC = (): JSX.Element => {
       {/* xs to lg */}
       <div className="max-w-md mx-auto space-y-8 lg:hidden">
         {tiers.map((tier) => (
-          <section key={tier.name} className='p-8'>
+          <section key={tier.name} className="p-8">
             <h3 id={tier.name} className="text-sm font-semibold leading-6 text-zinc-900">
               {tier.name}
             </h3>

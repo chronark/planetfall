@@ -12,12 +12,12 @@
   "license": "ISC",
   "dependencies": {
     "@planetfall/id": "workspace:^1.0.0",
-    "@prisma/client": "^4.14.0"
+    "@prisma/client": "^4.14.1"
   },
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",
-    "@types/node": "^20.1.3",
-    "prisma": "^4.14.0",
+    "@types/node": "^20.2.1",
+    "prisma": "^4.14.1",
     "typescript": "^5.0.4"
   },
   "prisma": {

@@ -3,8 +3,8 @@ import { Button } from "@/components/button";
 import { Confirm } from "@/components/confirm";
 import React from "react";
 
-import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc/hooks";
+import { useRouter } from "next/navigation";
 
 type Props = {
   endpointId: string;

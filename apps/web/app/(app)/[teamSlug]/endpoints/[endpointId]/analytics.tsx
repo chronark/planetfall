@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Bar, Column, Line } from "@ant-design/plots";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
+import { Button } from "@/components/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import {
   DropdownMenu,
@@ -12,16 +10,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/dropdown";
-import { Button } from "@/components/button";
-import { Text } from "@/components/text";
-import { AlertCircle, AlertTriangle, FlaskConical, FlaskRound, Zap } from "lucide-react";
-import Link from "next/link";
-import ms from "ms";
-import { Loading } from "@/components/loading";
-import { useToast } from "@/components/toast";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/hover-card";
+import { Loading } from "@/components/loading";
 import { ScrollArea, ScrollBar } from "@/components/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
+import { Text } from "@/components/text";
+import { useToast } from "@/components/toast";
 import { trpc } from "@/lib/trpc/hooks";
+import { Bar, Column, Line } from "@ant-design/plots";
+import { AlertCircle, AlertTriangle, FlaskConical, FlaskRound, Zap } from "lucide-react";
+import ms from "ms";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 type Props = {
   endpoint: {

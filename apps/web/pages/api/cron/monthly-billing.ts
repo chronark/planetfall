@@ -1,14 +1,12 @@
 import { env } from "@/lib/env";
 import { db } from "@planetfall/db";
+import { getUsage } from "@planetfall/tinybird";
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
-import { Client as Tinybird, getUsage } from "@planetfall/tinybird";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-11-15",
 });
-
-const _tinybird = new Tinybird();
 
 const key = "480a32723978b74dae12dd2508033952861256ae63698e18a3f031eabdc45e38";
 

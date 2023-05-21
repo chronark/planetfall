@@ -1,15 +1,15 @@
-import React from "react";
-import { db } from "@planetfall/db";
-import { notFound, redirect } from "next/navigation";
-import { TeamCard } from "./TeamCard";
-import { Divider } from "@/components/divider";
-import { auth } from "@clerk/nextjs/app-beta";
 import { DeleteCard } from "./DeleteCard";
+import { TeamCard } from "./TeamCard";
 import { ChangeNameCard } from "./change-name";
 import { ChangeSlugCard } from "./change-slug";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
-import { Tag } from "@/components/tag";
+import { Divider } from "@/components/divider";
 import { Input } from "@/components/input";
+import { Tag } from "@/components/tag";
+import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
+import { notFound, redirect } from "next/navigation";
+import React from "react";
 
 export default async function SettingsPage(props: {
   params: { teamSlug: string };

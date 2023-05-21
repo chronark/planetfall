@@ -1,9 +1,9 @@
+import { auth, t } from "../trpc";
+import highstorm from "@highstorm/client";
+import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { auth, t } from "../trpc";
-import { db } from "@planetfall/db";
-import highstorm from "@highstorm/client";
 export const pageRouter = t.router({
   create: t.procedure
     .use(auth)
@@ -50,7 +50,7 @@ export const pageRouter = t.router({
         });
       }
 
-      if (!team.members.some((m) => m.userId === ctx.user!.id)) {
+      if (!team.members.some((m) => m.userId === ctx.user?.id)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });
@@ -100,7 +100,7 @@ export const pageRouter = t.router({
         });
       }
 
-      if (!page.team.members.some((m) => m.userId === ctx.user!.id)) {
+      if (!page.team.members.some((m) => m.userId === ctx.user?.id)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });
@@ -148,7 +148,7 @@ export const pageRouter = t.router({
         });
       }
 
-      if (!page.team.members.some((m) => m.userId === ctx.user!.id)) {
+      if (!page.team.members.some((m) => m.userId === ctx.user?.id)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });

@@ -1,6 +1,6 @@
-import { randomBytes, randomInt, randomUUID } from "node:crypto";
-import { animals, adjectives } from "./constants";
+import { adjectives, animals } from "./constants";
 import baseX from "base-x";
+import { randomBytes, randomInt, randomUUID } from "node:crypto";
 
 function encodeBase58(buf: Buffer): string {
   const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";

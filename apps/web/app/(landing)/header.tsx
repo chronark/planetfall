@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { Logo } from "../components/logo";
 import classNames from "classnames";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 import { useAuth } from "@clerk/nextjs";
 

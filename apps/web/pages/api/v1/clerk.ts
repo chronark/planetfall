@@ -1,7 +1,7 @@
+import { env } from "@/lib/env";
 import { db } from "@planetfall/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { env } from "@/lib/env";
 
 const validation = z.object({
   data: z.object({

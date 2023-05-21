@@ -1,19 +1,21 @@
 import PageHeader from "@/components/page/header";
+import { getEndpointStats, getErrors, getLatestChecksByEndpoint } from "@planetfall/tinybird";
 import { redirect } from "next/navigation";
-import { Client as Tinybird, getEndpointStats, getErrors } from "@planetfall/tinybird";
 
-import { db } from "@planetfall/db";
-import { Stats } from "@/components/stats";
-import { LatestTable } from "./latest-table";
-import { DeleteButton } from "./delete";
-import { auth } from "@clerk/nextjs/app-beta";
-import { Button } from "@/components/button";
-import { Toggle } from "./toggle";
-import { ChartsSection } from "./chart-by-region";
-import Link from "next/link";
 import { Chart } from "./chart";
+import { ChartsSection } from "./chart-by-region";
+import { DeleteButton } from "./delete";
+import { LatestTable } from "./latest-table";
+import { Toggle } from "./toggle";
+import { Button } from "@/components/button";
+import { Stats } from "@/components/stats";
+import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
 import type { Metadata } from "next";
+import Link from "next/link";
 
+import { EndpointAuditLog } from "./EndpointAuditLog";
+import { Analytics } from "./analytics";
 import {
   Card,
   CardContent,
@@ -24,8 +26,6 @@ import {
 } from "@/components/card";
 import { Divider } from "@/components/divider";
 import classNames from "classnames";
-import { Analytics } from "./analytics";
-import { EndpointAuditLog } from "./EndpointAuditLog";
 
 export async function generateMetadata({
   params,
@@ -94,17 +94,15 @@ export default async function Page(props: {
     throw new Error("Access denied");
   }
 
-  const tb = new Tinybird();
-
   const [stats, checks, errors] = await Promise.all([
     getEndpointStats({ endpointId: endpoint.id }),
-    tb.getLatestChecksByEndpoint(endpoint.id, { limit: 100000 }),
+    getLatestChecksByEndpoint({ endpointId: endpoint.id, limit: 100 }).then((r) => r.data),
     (
       await getErrors({ endpointId: endpoint.id, since: Date.now() - 24 * 60 * 60 * 1000 })
     ).data.map((e) => ({
       id: e.id,
       time: e.time,
-      error: e.error!,
+      error: e.error,
       latency: e.latency,
       region: endpoint.regions.find((r) => r.id === e.regionId)?.name ?? e.regionId,
     })),

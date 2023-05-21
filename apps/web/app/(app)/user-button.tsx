@@ -1,13 +1,13 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
 import * as Dropdown from "@/components/dropdown";
+import { useAuth } from "@clerk/nextjs";
 
-import React from "react";
-import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
-import { Settings, LogOut, Feather } from "lucide-react";
 import { Feedback } from "@/components/feedback";
+import { Feather, LogOut, Settings } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React from "react";
 type Props = {
   user: {
     name: string;

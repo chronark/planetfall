@@ -1,10 +1,10 @@
-import { db, Region } from "@planetfall/db";
-import React, { cache } from "react";
-import Link from "next/link";
-import { getEndpointMetricsOver90Days, getEndpointSeriesOver90Days } from "@planetfall/tinybird";
-import { EndpointData, Metrics } from "./types";
 import { Endpoint } from "./endpoint";
+import { EndpointData, Metrics } from "./types";
+import { Region, db } from "@planetfall/db";
+import { getEndpointMetricsOver90Days, getEndpointSeriesOver90Days } from "@planetfall/tinybird";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import React, { cache } from "react";
 
 export const revalidate = 60;
 export const dynamic = "error";

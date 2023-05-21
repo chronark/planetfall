@@ -1,8 +1,8 @@
+import { CreateTeam } from "./create-team";
 import { currentUser } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
 import { redirect } from "next/navigation";
 import { useId } from "react";
-import { CreateTeam } from "./create-team";
 
 export default async function OnboardingPage() {
   const clerkUser = await currentUser();
@@ -14,12 +14,12 @@ export default async function OnboardingPage() {
     where: { id: clerkUser.id },
     update: {
       name: clerkUser.username!,
-      email: clerkUser.emailAddresses[0]!.emailAddress,
+      email: clerkUser.emailAddresses[0]?.emailAddress,
     },
     create: {
       id: clerkUser.id,
       name: clerkUser.username!,
-      email: clerkUser.emailAddresses[0]!.emailAddress,
+      email: clerkUser.emailAddresses[0]?.emailAddress,
     },
   });
 

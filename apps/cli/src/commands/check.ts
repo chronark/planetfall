@@ -1,4 +1,4 @@
-import { Command, Flags, CliUx } from "@oclif/core";
+import { CliUx, Command, Flags } from "@oclif/core";
 import fetch from "isomorphic-fetch";
 export default class Check extends Command {
   static description = "Fetch a URL and record latencies from multiple regions";

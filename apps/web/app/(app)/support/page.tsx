@@ -1,12 +1,12 @@
+import { Breadcrumbs } from "../breadcrumbs";
+import { NavLink } from "../navlink";
+import { UserButton } from "../user-button";
+import { Chat } from "./chat";
 import { Card, CardContent } from "@/components/card";
 import { currentUser } from "@clerk/nextjs/app-beta";
 import { Mail, Twitter } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Breadcrumbs } from "../breadcrumbs";
-import { NavLink } from "../navlink";
-import { UserButton } from "../user-button";
-import { Chat } from "./chat";
 
 const navigation = [
   {

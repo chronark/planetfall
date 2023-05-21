@@ -1,9 +1,9 @@
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { auth, t } from "../trpc";
+import highstorm from "@highstorm/client";
 import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
-import highstorm from "@highstorm/client";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const alertsRouter = t.router({
   createEmailAlert: t.procedure

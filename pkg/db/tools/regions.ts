@@ -1,4 +1,4 @@
-import { Platform, Region, PrismaClient } from "@prisma/client";
+import { Platform, PrismaClient, Region } from "@prisma/client";
 
 const awsRegions: Region[] = [
   {

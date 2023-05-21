@@ -1,8 +1,8 @@
-import { z } from "zod";
 import { Cache } from "./cache";
+import { z } from "zod";
 
-import type { Setup } from "@planetfall/db";
 import { Logger } from "./logger";
+import type { Setup } from "@planetfall/db";
 
 const setupResponseValidation = z.object({
   url: z.string().url().optional(),

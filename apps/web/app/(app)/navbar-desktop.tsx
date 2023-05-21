@@ -1,13 +1,13 @@
-import { UserButton } from "./user-button";
-import { notFound, redirect } from "next/navigation";
+import { Breadcrumbs } from "./breadcrumbs";
 import { NavLink } from "./navlink";
 import { TeamSwitcher } from "./team-switcher";
-import { Breadcrumbs } from "./breadcrumbs";
+import { UserButton } from "./user-button";
+import { notFound, redirect } from "next/navigation";
 
-import { db } from "@planetfall/db";
-import { auth } from "@clerk/nextjs/app-beta";
 import { asyncComponent } from "@/components/async-component";
 import { Feedback } from "@/components/feedback";
+import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
 
 export type NavbarProps = {
   teamSlug: string;

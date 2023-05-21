@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
 
-import { trpc } from "@/lib/trpc/hooks";
-import { Switch } from "@/components/switch";
 import { Label } from "@/components/label";
-import { useToast, Toaster } from "@/components/toast";
+import { Switch } from "@/components/switch";
+import { Toaster, useToast } from "@/components/toast";
+import { trpc } from "@/lib/trpc/hooks";
 
 type Props = {
   endpointId: string;

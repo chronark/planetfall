@@ -1,6 +1,6 @@
 "use client";
 import { useSession } from "@clerk/nextjs";
-import { PlainProvider, Chat as PlainChat } from "@team-plain/react-chat-ui";
+import { Chat as PlainChat, PlainProvider } from "@team-plain/react-chat-ui";
 
 export const Chat: React.FC = () => {
   const { session } = useSession();

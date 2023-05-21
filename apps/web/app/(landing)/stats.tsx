@@ -1,5 +1,5 @@
-import React from "react";
 import { db } from "@planetfall/db";
+import React from "react";
 
 import CountingNumbers from "./counting-numbers";
 import { Section } from "./section";
@@ -25,7 +25,7 @@ export const Stats = asyncComponent(async () => {
         },
         {
           label: "Ø Checks per Day",
-          value: (await globalUsage({})).data.reduce((acc, day) => acc + day.usage, 7),
+          value: (await globalUsage({})).data.reduce((acc, day) => acc + day.usage, 0) / 7,
         },
       ]),
     [],

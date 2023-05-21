@@ -1,10 +1,10 @@
 "use client";
 
+import { AvailabilityChart } from "./availabilityChart";
+import { EndpointData } from "./types";
 import { Heading } from "@/components/heading";
 // import { div, div, div } from "@/components/div";
 import cn from "classnames";
-import { EndpointData } from "./types";
-import { AvailabilityChart } from "./availabilityChart";
 function format(n: number): string {
   return Intl.NumberFormat(undefined).format(Math.round(n));
 }
@@ -13,7 +13,7 @@ const Stat: React.FC<{ label: string; value: number }> = ({ label, value }) => {
   return (
     <div className="flex items-center space-x-1 text-xs text-zinc-700 whitespace-nowrap">
       <span className="font-semibold">{label}:</span>
-      <span className="">{format(value)} ms</span>
+      <span className="">{value < 1 ? "<1" : format(value)} ms</span>
     </div>
   );
 };

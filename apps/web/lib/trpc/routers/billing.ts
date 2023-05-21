@@ -1,12 +1,12 @@
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { auth, t } from "../trpc";
-import { db } from "@planetfall/db";
-import Stripe from "stripe";
-import { Redis } from "@upstash/redis";
 import { createInvoice } from "@/lib/billing/stripe";
-import { DEFAULT_QUOTA } from "plans";
 import highstorm from "@highstorm/client";
+import { db } from "@planetfall/db";
+import { TRPCError } from "@trpc/server";
+import { Redis } from "@upstash/redis";
+import { DEFAULT_QUOTA } from "plans";
+import Stripe from "stripe";
+import { z } from "zod";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2022-11-15",
   typescript: true,
@@ -166,7 +166,7 @@ export const billingRouter = t.router({
       }
 
       const portal = await stripe.billingPortal.sessions.create({
-        customer: team!.stripeCustomerId!,
+        customer: team?.stripeCustomerId!,
         return_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
       });
 

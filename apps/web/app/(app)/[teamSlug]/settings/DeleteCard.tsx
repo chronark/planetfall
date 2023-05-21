@@ -1,23 +1,23 @@
 "use client";
-import React, { useState } from "react";
-import { Button, Card, Text, CardHeader, CardTitle, CardDescription } from "@/components/index";
-import {
-  DialogDescription,
-  DialogHeader,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/dialog";
-import { useForm } from "react-hook-form";
-import { trpc } from "@/lib/trpc/hooks";
-import { useRouter } from "next/navigation";
-import { Input } from "@/components/input";
-import { Loading } from "@/components/loading";
-import { Toaster, useToast } from "@/components/toast";
 import { Alert } from "@/components/alert";
 import { AlertTitle } from "@/components/alert";
 import { AlertDescription } from "@/components/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/dialog";
+import { Button, Card, CardDescription, CardHeader, CardTitle, Text } from "@/components/index";
+import { Input } from "@/components/input";
+import { Loading } from "@/components/loading";
+import { Toaster, useToast } from "@/components/toast";
+import { trpc } from "@/lib/trpc/hooks";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 
 type Props = {
   teamSlug: string;

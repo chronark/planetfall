@@ -1,12 +1,12 @@
-import { Scheduler } from "./scheduler";
-import http from "node:http";
-import "isomorphic-fetch";
-import { Logger } from "./logger";
 import { AlertNotifications } from "./alerts";
+import { Logger } from "./logger";
+import { Notifications } from "./notifications";
+import { Scheduler } from "./scheduler";
 import { db } from "@planetfall/db";
 import { Email } from "@planetfall/emails/dist/client";
 import { Redis } from "@upstash/redis";
-import { Notifications } from "./notifications";
+import "isomorphic-fetch";
+import http from "node:http";
 
 const logger = new Logger();
 const email = new Email();

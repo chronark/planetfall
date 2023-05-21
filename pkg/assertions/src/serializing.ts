@@ -1,14 +1,14 @@
 import { Assertion } from "./types";
 import {
-  statusAssertion,
+  HeaderAssertion,
+  JsonBodyAssertion,
   StatusAssertion,
-  textBodyAssertion,
+  TextBodyAssertion,
   base,
   headerAssertion,
   jsonBodyAssertion,
-  HeaderAssertion,
-  JsonBodyAssertion,
-  TextBodyAssertion,
+  statusAssertion,
+  textBodyAssertion,
 } from "./v2";
 import { z } from "zod";
 export function serialize(assertions: Assertion[]): string {

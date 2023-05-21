@@ -1,14 +1,7 @@
 "use client";
 
-import React from "react";
-import { Heading } from "@/components/heading";
-import { Stats } from "@/components/stats";
-import { Trace } from "@/components/trace";
-import { Select, SelectTrigger, SelectItem, SelectContent, SelectValue } from "@/components/select";
-import { PlayResult } from "@/lib/trpc/routers/play";
+import { Button } from "@/components/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
-import { AwsLambda } from "@/components/icons/AwsLambda";
-import { VercelEdge } from "@/components/icons/VercelEdge";
 import {
   Dialog,
   DialogContent,
@@ -17,9 +10,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/dialog";
-import { Button } from "@/components/button";
-import { parseCacheControlHeaders, parseXVercelId } from "@planetfall/header-analysis";
+import { Heading } from "@/components/heading";
+import { AwsLambda } from "@/components/icons/AwsLambda";
+import { VercelEdge } from "@/components/icons/VercelEdge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
+import { Stats } from "@/components/stats";
 import { Text } from "@/components/text";
+import { Trace } from "@/components/trace";
+import { PlayResult } from "@/lib/trpc/routers/play";
+import { parseCacheControlHeaders, parseXVercelId } from "@planetfall/header-analysis";
+import React from "react";
 
 type Props = {
   urls: PlayResult["urls"];

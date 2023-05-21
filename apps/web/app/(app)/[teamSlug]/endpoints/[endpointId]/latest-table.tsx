@@ -1,8 +1,12 @@
 "use client";
 
-import React from "react";
-import type { Check } from "@planetfall/tinybird";
+import { AwsLambda } from "@/components/icons/AwsLambda";
+import { Fly } from "@/components/icons/Fly";
+import { VercelEdge } from "@/components/icons/VercelEdge";
+import { Tag } from "@/components/tag";
+import { Time } from "@/components/time";
 import type { Region } from "@planetfall/db";
+import type { Check } from "@planetfall/tinybird";
 import {
   createColumnHelper,
   flexRender,
@@ -10,15 +14,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import ms from "ms";
-import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import { Time } from "@/components/time";
 import { ChevronRight, Minus } from "lucide-react";
-import { Tag } from "@/components/tag";
-import { AwsLambda } from "@/components/icons/AwsLambda";
-import { Fly } from "@/components/icons/Fly";
-import { VercelEdge } from "@/components/icons/VercelEdge";
+import Link from "next/link";
+import React from "react";
 export type Props = {
   endpointId: string;
   checks: Check[];

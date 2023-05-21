@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 const validation = z.object({
   endpointId: z.string(),

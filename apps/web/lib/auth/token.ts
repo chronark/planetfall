@@ -1,5 +1,5 @@
-import crypto from "node:crypto";
 import baseX from "base-x";
+import crypto from "node:crypto";
 
 const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 

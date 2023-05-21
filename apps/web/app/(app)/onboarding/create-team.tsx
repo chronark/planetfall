@@ -1,14 +1,5 @@
 "use client";
 
-import { Button } from "@/components/button";
-import { Input } from "@/components/input";
-import { Label } from "@/components/label";
-import { trpc } from "@/lib/trpc";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import slugify from "slugify";
-import type { Team } from "@planetfall/db";
-import { Text } from "@/components/text";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -16,8 +7,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/alert-dialog";
+import { Button } from "@/components/button";
+import { Input } from "@/components/input";
+import { Label } from "@/components/label";
+import { Text } from "@/components/text";
+import { trpc } from "@/lib/trpc";
+import type { Team } from "@planetfall/db";
 import { TRPCError } from "@trpc/server";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import slugify from "slugify";
 
 type Props = {
   user: {

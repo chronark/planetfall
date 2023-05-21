@@ -1,8 +1,8 @@
 "use client";
-import { Chat, PlainProvider } from "@team-plain/react-chat-ui";
-import { useAuth } from "@clerk/nextjs/app-beta/client";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/sheet";
 import { Button } from "@/components/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/sheet";
+import { useAuth } from "@clerk/nextjs/app-beta/client";
+import { Chat, PlainProvider } from "@team-plain/react-chat-ui";
 
 export const SupportBubble: React.FC = () => {
   const auth = useAuth();

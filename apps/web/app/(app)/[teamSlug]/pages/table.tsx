@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/button";
 import { Confirm } from "@/components/confirm";
+import { trpc } from "@/lib/trpc";
 import {
   createColumnHelper,
   flexRender,
@@ -10,7 +11,6 @@ import {
 } from "@tanstack/react-table";
 import classNames from "classnames";
 import Link from "next/link";
-import { trpc } from "@/lib/trpc";
 import { useRouter } from "next/navigation";
 
 type Page = {
