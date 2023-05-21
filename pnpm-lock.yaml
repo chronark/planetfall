@@ -150,6 +150,7 @@ importers:
       '@clerk/nextjs': ^4.18.2
       '@docsearch/react': ^3.3.5
       '@highstorm/client': ^0.0.2
+      '@hookform/resolvers': ^3.1.0
       '@markdoc/markdoc': ^0.2.1
       '@markdoc/next.js': ^0.2.2
       '@planetfall/assertions': workspace:*
@@ -175,6 +176,7 @@ importers:
       '@radix-ui/react-select': ^1.2.1
       '@radix-ui/react-separator': ^1.0.2
       '@radix-ui/react-slider': ^1.1.1
+      '@radix-ui/react-slot': ^1.0.1
       '@radix-ui/react-switch': ^1.0.2
       '@radix-ui/react-tabs': ^1.0.3
       '@radix-ui/react-toast': ^1.1.3
@@ -188,6 +190,7 @@ importers:
       '@tanstack/react-query': ^4.29.7
       '@tanstack/react-table': ^8.9.1
       '@team-plain/react-chat-ui': ^6.2.3
+      '@team-plain/typescript-sdk': ^1.1.1
       '@tremor/react': 2.7.0
       '@trpc/client': ^10.27.1
       '@trpc/next': ^10.27.1
@@ -247,6 +250,7 @@ importers:
       '@clerk/nextjs': 4.18.2_o6dt4yn4syzkhlixdxt4y57rzi
       '@docsearch/react': 3.3.5_n3zx5bln4yeaomne5u6f2t7k74
       '@highstorm/client': 0.0.2
+      '@hookform/resolvers': 3.1.0_react-hook-form@7.43.9
       '@markdoc/markdoc': 0.2.2_s3k22s5ab4eu26xuel7hiaraxy
       '@markdoc/next.js': 0.2.2_tqekui257z2r3f6pasbmf6zm5a
       '@planetfall/assertions': link:../../pkg/assertions
@@ -272,6 +276,7 @@ importers:
       '@radix-ui/react-select': 1.2.1_tqcjxml4rosq5qpg5cznikfcd4
       '@radix-ui/react-separator': 1.0.2_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-slider': 1.1.1_biqbaboplfbrettd7655fr4n2y
+      '@radix-ui/react-slot': 1.0.1_react@18.2.0
       '@radix-ui/react-switch': 1.0.2_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-tabs': 1.0.3_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-toast': 1.1.3_biqbaboplfbrettd7655fr4n2y
@@ -285,6 +290,7 @@ importers:
       '@tanstack/react-query': 4.29.7_biqbaboplfbrettd7655fr4n2y
       '@tanstack/react-table': 8.9.1_biqbaboplfbrettd7655fr4n2y
       '@team-plain/react-chat-ui': 6.2.3_lhsvdmrfrkqkmxtqosqgyd3k4i
+      '@team-plain/typescript-sdk': 1.1.1
       '@tremor/react': 2.7.0_v2m5e27vhdewzwhryxwfaorcca
       '@trpc/client': 10.27.1_@trpc+server@10.27.1
       '@trpc/next': 10.27.1_p5gh4677piwxpnro4gllsu7o4q
@@ -1685,6 +1691,14 @@ packages:
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}
     dev: true
 
+  /@graphql-typed-document-node/core/3.2.0_graphql@16.6.0:
+    resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      graphql: 16.6.0
+    dev: false
+
   /@headlessui/react/1.7.14_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-znzdq9PG8rkwcu9oQ2FwIy0ZFtP9Z7ycS+BAqJ3R5EIqC/0bJGvhT7193rFf+45i9nnPsYvCQVW4V/bB9Xc+gA==}
     engines: {node: '>=10'}
@@ -1699,6 +1713,14 @@ packages:
 
   /@highstorm/client/0.0.2:
     resolution: {integrity: sha512-z/zO9z06qyuRPX4iJhr4SFtQVIJt/hHYJ1vu7SfHbFfTHksj/haL21in8AcRHdjRY89lfjSJWsgvCLXlFRGCvw==}
+    dev: false
+
+  /@hookform/resolvers/3.1.0_react-hook-form@7.43.9:
+    resolution: {integrity: sha512-z0A8K+Nxq+f83Whm/ajlwE6VtQlp/yPHZnXw7XWVPIGm1Vx0QV8KThU3BpbBRfAZ7/dYqCKKBNnQh85BkmBKkA==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.43.9_react@18.2.0
     dev: false
 
   /@humanwhocodes/config-array/0.11.8:
@@ -4133,6 +4155,17 @@ packages:
     transitivePeerDependencies:
       - debug
       - react-native
+    dev: false
+
+  /@team-plain/typescript-sdk/1.1.1:
+    resolution: {integrity: sha512-0oIg5N+vVGzRqCQo/gwVgOv4TXgCMFvGwjOKPLVVO6/+F3K3BBIOZUpNFekgGSoz5m3skgUD+uER00zGP2zc/A==}
+    dependencies:
+      '@graphql-typed-document-node/core': 3.2.0_graphql@16.6.0
+      axios: 1.4.0
+      graphql: 16.6.0
+      zod: 3.21.4
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /@tootallnate/once/1.1.2:
@@ -7991,6 +8024,11 @@ packages:
 
   /graphql/16.4.0:
     resolution: {integrity: sha512-tYDNcRvKCcfHREZYje3v33NSrSD/ZpbWWdPtBtUUuXx9NCo/2QDxYzNqCnMvfsrnbwRpEHMovVrPu/ERoLrIRg==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+    dev: false
+
+  /graphql/16.6.0:
+    resolution: {integrity: sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
     dev: false
 
