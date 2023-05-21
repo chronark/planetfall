@@ -1,14 +1,14 @@
-import { newId } from "@planetfall/id";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { auth, t } from "../trpc";
-import { db } from "@planetfall/db";
-import slugify from "slugify";
-import { DEFAULT_QUOTA } from "plans";
 import { createInvoice } from "@/lib/billing/stripe";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import highstorm from "@highstorm/client";
+import { db } from "@planetfall/db";
 import { Email } from "@planetfall/emails";
+import { newId } from "@planetfall/id";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { TRPCError } from "@trpc/server";
+import { DEFAULT_QUOTA } from "plans";
+import slugify from "slugify";
+import { z } from "zod";
 // import { Email } from "@planetfall/emails";
 
 export const teamRouter = t.router({
@@ -122,7 +122,7 @@ export const teamRouter = t.router({
       if (team.plan === "DISABLED") {
         throw new TRPCError({ code: "FORBIDDEN", message: "This team has been disabled" });
       }
-      const currentUser = team.members.find((m) => m.userId === ctx.user!.id);
+      const currentUser = team.members.find((m) => m.userId === ctx.user?.id);
       if (!currentUser) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
@@ -210,7 +210,7 @@ export const teamRouter = t.router({
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
-      const currentUser = team.members.find((m) => m.userId === ctx.user!.id);
+      const currentUser = team.members.find((m) => m.userId === ctx.user?.id);
       if (!currentUser) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
@@ -272,7 +272,7 @@ export const teamRouter = t.router({
         });
       }
 
-      const currentUser = team.members.find((m) => m.userId === ctx.user!.id);
+      const currentUser = team.members.find((m) => m.userId === ctx.user?.id);
       if (!currentUser) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
@@ -335,7 +335,7 @@ export const teamRouter = t.router({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-      if (team.members.find((m) => m.userId === ctx.user!.id)?.role !== "OWNER") {
+      if (team.members.find((m) => m.userId === ctx.user?.id)?.role !== "OWNER") {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 

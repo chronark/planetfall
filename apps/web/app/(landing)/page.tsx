@@ -1,8 +1,8 @@
 import React from "react";
 import "tailwindcss/tailwind.css";
 
-import { Features } from "./features";
 import { Cta } from "./cta";
+import { Features } from "./features";
 import { Hero } from "./hero";
 import { Pricing } from "./pricing";
 import { Stats } from "./stats";

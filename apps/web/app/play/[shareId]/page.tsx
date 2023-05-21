@@ -1,15 +1,15 @@
-import PageHeader from "@/components/page/header";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Logo } from "@/components/logo";
-import { Redis } from "@upstash/redis";
 import { Chart } from "./chart";
-import { Table } from "./table";
 import { Details } from "./details";
-import type { PlayResult } from "@/lib/trpc/routers/play";
+import { Table } from "./table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
+import { Logo } from "@/components/logo";
+import PageHeader from "@/components/page/header";
+import type { PlayResult } from "@/lib/trpc/routers/play";
 import { auth } from "@clerk/nextjs/app-beta";
+import { Redis } from "@upstash/redis";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 const redis = Redis.fromEnv();
 
 export const revalidate = 3600;

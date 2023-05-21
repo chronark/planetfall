@@ -1,6 +1,6 @@
+import { Form } from "./form";
 import { db } from "@planetfall/db";
 import { notFound } from "next/navigation";
-import { Form } from "./form";
 
 export default async function Page(props: {
   params: { teamSlug: string; endpointId: string };

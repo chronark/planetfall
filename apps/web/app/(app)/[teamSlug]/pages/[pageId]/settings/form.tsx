@@ -3,11 +3,11 @@ import { Endpoint } from "@planetfall/db";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import Link from "next/link";
 import { Loading } from "@/components/loading";
-import { useRouter } from "next/navigation";
-import { trpc } from "@/lib/trpc/hooks";
 import { Toaster, useToast } from "@/components/toast";
+import { trpc } from "@/lib/trpc/hooks";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 type Props = {
   teamSlug: string;
   page: {

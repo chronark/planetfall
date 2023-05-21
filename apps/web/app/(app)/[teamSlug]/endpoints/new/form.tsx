@@ -3,25 +3,17 @@ import { Method, Region } from "@planetfall/db";
 import React, { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import Link from "next/link";
-import { z } from "zod";
+import { Alert, AlertDescription, AlertTitle } from "@/components/alert";
+import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
-import { Loading } from "@/components/loading";
-import { useRouter } from "next/navigation";
-import * as assertions from "@planetfall/assertions";
-import { trpc } from "@/lib/trpc/hooks";
-import { Car, Minus } from "lucide-react";
-import { Toaster, useToast } from "@/components/toast";
-import { VercelEdge } from "@/components/icons/VercelEdge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
+import { Checkbox } from "@/components/checkbox";
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { Fly } from "@/components/icons/Fly";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
-import { Label } from "@/components/label";
-import { Toggle } from "@/components/toggle";
-import { Switch } from "@/components/switch";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/tooltip";
-import { Alert, AlertDescription, AlertTitle } from "@/components/alert";
+import { VercelEdge } from "@/components/icons/VercelEdge";
 import { Input } from "@/components/input";
+import { Label } from "@/components/label";
+import { Loading } from "@/components/loading";
 import {
   Select,
   SelectContent,
@@ -32,11 +24,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/select";
-import { Textarea } from "@/components/textarea";
 import { Separator } from "@/components/separator";
-import { Checkbox } from "@/components/checkbox";
+import { Switch } from "@/components/switch";
+import { Textarea } from "@/components/textarea";
+import { Toaster, useToast } from "@/components/toast";
+import { Toggle } from "@/components/toggle";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/tooltip";
+import { trpc } from "@/lib/trpc/hooks";
+import * as assertions from "@planetfall/assertions";
 import type { Platform } from "@planetfall/db";
-import { Badge } from "@/components/badge";
+import { Car, Minus } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
 type Props = {
   teamId: string;
   teamSlug: string;

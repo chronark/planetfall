@@ -1,16 +1,9 @@
 "use client";
 
-import React from "react";
 import { parseCacheControlHeaders, parseXVercelId } from "@planetfall/header-analysis";
+import React from "react";
 
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Lightbulb } from "lucide-react";
-import { Text } from "@/components/text";
+import { Button } from "@/components/button";
 import {
   Dialog,
   DialogContent,
@@ -19,16 +12,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/dialog";
-import { Button } from "@/components/button";
+import { DataTable } from "@/components/table";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
-  TableCell,
   TableRow,
 } from "@/components/table/table";
-import { DataTable } from "@/components/table";
+import { Text } from "@/components/text";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Lightbulb } from "lucide-react";
 export type Props = {
   header: {
     key: string;

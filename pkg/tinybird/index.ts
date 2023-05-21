@@ -1,2 +1,2 @@
-export * from "./src/client";
+export * from "./src/publish";
 export * from "./src/pipes";

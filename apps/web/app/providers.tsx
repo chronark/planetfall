@@ -1,6 +1,6 @@
 "use client";
 
-import { Toaster, ToastProvider } from "@/components/toast";
+import { ToastProvider, Toaster } from "@/components/toast";
 import React, { PropsWithChildren } from "react";
 
 export const Providers: React.FC<PropsWithChildren> = ({ children }) => {

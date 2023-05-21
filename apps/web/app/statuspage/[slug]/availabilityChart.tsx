@@ -1,18 +1,18 @@
-import * as HoverCard from "@radix-ui/react-hover-card";
 import { EndpointData, MetricsOverTime } from "./types";
+import { Fly } from "@/components/icons/Fly";
 import { Stats } from "@/components/stats";
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
-import classNames from "classnames";
+import { Line } from "@ant-design/plots";
+import * as HoverCard from "@radix-ui/react-hover-card";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Fly } from "@/components/icons/Fly";
-import { Line } from "@ant-design/plots";
+import classNames from "classnames";
 import cn from "classnames";
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 function format(n: number): string {
   return Intl.NumberFormat(undefined).format(Math.round(n));
 }
@@ -101,10 +101,26 @@ export const AvailabilityChart: React.FC<Props> = ({
                           <div>
                             <dl className="grid grid-cols-1 gap-2 mt-5 md:grid-cols-3 lg:grid-cols-6 ">
                               <Stats label="Checks" value={format(bucket.count)} />
-                              <Stats label="P75" value={format(bucket.p75)} suffix="ms" />
-                              <Stats label="P90" value={format(bucket.p90)} suffix="ms" />
-                              <Stats label="P95" value={format(bucket.p95)} suffix="ms" />
-                              <Stats label="P99" value={format(bucket.p99)} suffix="ms" />
+                              <Stats
+                                label="P75"
+                                value={bucket.p75 < 1 ? "<1" : format(bucket.p75)}
+                                suffix="ms"
+                              />
+                              <Stats
+                                label="P90"
+                                value={bucket.p90 < 1 ? "<1" : format(bucket.p90)}
+                                suffix="ms"
+                              />
+                              <Stats
+                                label="P95"
+                                value={bucket.p95 < 1 ? "<1" : format(bucket.p95)}
+                                suffix="ms"
+                              />
+                              <Stats
+                                label="P99"
+                                value={bucket.p99 < 1 ? "<1" : format(bucket.p99)}
+                                suffix="ms"
+                              />
                               <Stats label="Errors" value={format(bucket.errors)} />
                             </dl>
                           </div>
@@ -140,7 +156,11 @@ export const AvailabilityChart: React.FC<Props> = ({
 };
 
 const Latency: React.FC<{ value: number }> = ({ value }) => {
-  return <span className="text-xs text-zinc-700 whitespace-nowrap">{format(value)} ms</span>;
+  return (
+    <span className="text-xs text-zinc-700 whitespace-nowrap">
+      {value < 1 ? "<1" : format(value)} ms
+    </span>
+  );
 };
 
 const Expanded: React.FC<{ endpoint: EndpointData }> = ({ endpoint }) => {

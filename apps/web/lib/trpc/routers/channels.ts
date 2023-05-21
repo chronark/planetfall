@@ -1,8 +1,8 @@
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { auth, t } from "../trpc";
 import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const channelsRouter = t.router({
   createEmail: t.procedure

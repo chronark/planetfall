@@ -1,21 +1,17 @@
 import PageHeader from "@/components/page/header";
+import { getCheck } from "@planetfall/tinybird";
 import { notFound, redirect } from "next/navigation";
-import { Client as Tinybird, getCheck } from "@planetfall/tinybird";
 
-import { Button } from "@/components/button";
-import { db } from "@planetfall/db";
-import { Stats } from "@/components/stats";
-import { Heading } from "@/components/heading";
-import ms from "ms";
-import { Text } from "@/components/text";
 import { HeaderTable } from "./header-table";
-import { auth } from "@clerk/nextjs/app-beta";
-import Link from "next/link";
-import { Tag } from "@/components/tag";
-import { AlertCircle, Check } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
-import { unstable_cache } from "next/cache";
+import { Stats } from "@/components/stats";
+import { Tag } from "@/components/tag";
+import { Text } from "@/components/text";
+import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
+import { AlertCircle, Check } from "lucide-react";
+import ms from "ms";
 type Timings = {
   dnsStart: number;
   dnsDone: number;

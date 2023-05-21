@@ -1,14 +1,14 @@
 import PageHeader from "@/components/page/header";
 import { notFound, redirect } from "next/navigation";
 
-import { Button } from "@/components/button";
 import { StatuspagesTable } from "./table";
-import { db } from "@planetfall/db";
-import { auth } from "@clerk/nextjs/app-beta";
-import Link from "next/link";
+import { Button } from "@/components/button";
 import { Card, CardContent } from "@/components/card";
 import { Text } from "@/components/text";
+import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 export default async function Page(props: { params: { teamSlug: string } }) {
   const { userId } = auth();
   if (!userId) {

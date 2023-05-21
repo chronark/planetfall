@@ -1,8 +1,8 @@
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { auth, t } from "../trpc";
 import { db } from "@planetfall/db";
 import { getCustomAnalytics } from "@planetfall/tinybird";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const tinybirdRouter = t.router({
   analytics: t.procedure

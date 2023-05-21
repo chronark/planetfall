@@ -1,5 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import { Badge } from "@/components/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/dialog";
 import {
   Button,
   Card,
@@ -10,37 +18,29 @@ import {
   Text,
   ToastAction,
 } from "@/components/index";
+import { Input } from "@/components/input";
+import { Loading } from "@/components/loading";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/table/table";
+import { Tag } from "@/components/tag";
+import { Toaster, useToast } from "@/components/toast";
+import { trpc } from "@/lib/trpc/hooks";
+import { MemberRole } from "@prisma/client";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { MemberRole } from "@prisma/client";
-import {
-  DialogDescription,
-  DialogHeader,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/dialog";
-import { Tag } from "@/components/tag";
-import Image from "next/image";
-import { Input } from "@/components/input";
-import { trpc } from "@/lib/trpc/hooks";
-import { useToast, Toaster } from "@/components/toast";
-import { Loading } from "@/components/loading";
-import {
-  Table,
-  TableHead,
-  TableHeader,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@/components/table/table";
-import { Badge } from "@/components/badge";
 import { Trash } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
 
 type Props = {
   teamId: string;

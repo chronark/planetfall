@@ -1,18 +1,18 @@
+import { auth, t } from "../trpc";
+import highstorm from "@highstorm/client";
+import {
+  Assertion,
+  HeaderAssertion,
+  StatusAssertion,
+  deserialize,
+  headerAssertion,
+  serialize as serializeAssertions,
+  statusAssertion,
+} from "@planetfall/assertions";
+import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { auth, t } from "../trpc";
-import { db } from "@planetfall/db";
-import highstorm from "@highstorm/client";
-import {
-  statusAssertion,
-  serialize as serializeAssertions,
-  StatusAssertion,
-  Assertion,
-  headerAssertion,
-  HeaderAssertion,
-  deserialize,
-} from "@planetfall/assertions";
 
 export const endpointRouter = t.router({
   auditLogs: t.procedure
@@ -194,7 +194,7 @@ export const endpointRouter = t.router({
         });
       }
 
-      if (!endpoint.team.members.some((m) => m.userId === ctx.user!.id)) {
+      if (!endpoint.team.members.some((m) => m.userId === ctx.user?.id)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });
@@ -278,7 +278,7 @@ export const endpointRouter = t.router({
         });
       }
 
-      if (!endpoint.team.members.some((m) => m.userId === ctx.user!.id)) {
+      if (!endpoint.team.members.some((m) => m.userId === ctx.user?.id)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });
@@ -327,7 +327,7 @@ export const endpointRouter = t.router({
         });
       }
 
-      if (!endpoint.team.members.some((m) => m.userId === ctx.user!.id)) {
+      if (!endpoint.team.members.some((m) => m.userId === ctx.user?.id)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });

@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "fmt": "pnpm rome check . --apply-suggested && pnpm rome format . --write",
+    "fmt": "pnpm rome check . --apply && pnpm rome format . --write",
     "test": "turbo run test",
     "tf-init": "terraform -chdir=deployment init -upgrade",
     "tf": "pnpm tf-init && terraform -chdir=deployment apply -var-file=.tfvars"
@@ -20,8 +20,8 @@
   "license": "ISC",
   "devDependencies": {
     "prettier": "^2.8.8",
-    "rome": "^11.0.0",
-    "turbo": "^1.9.4",
+    "rome": "^12.1.2",
+    "turbo": "^1.9.8",
     "typescript": "^5.0.4"
   },
   "prisma": {
@@ -32,6 +32,6 @@
     "javascriptreact": "(?:\\bclassName\\s*=\\s*[\\\"\\'](https://github.com/heybourn/headwind/blob/master/[_a-zA-Z0-9\\s\\-\\:\\/]+)[\\\"\\'])|(?:\\btw\\s*`([_a-zA-Z0-9\\s\\-\\:\\/]*)`)"
   },
   "dependencies": {
-    "next": "13.4.2"
+    "next": "13.4.3"
   }
 }

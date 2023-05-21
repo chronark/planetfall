@@ -1,6 +1,6 @@
-import { ClerkProvider } from "@clerk/nextjs/app-beta";
 import { ReactQueryProvider } from "./react-query-provider";
 import { SentryIdentifyUser } from "./sentry";
+import { ClerkProvider } from "@clerk/nextjs/app-beta";
 
 export default function AppLayout({
   children,

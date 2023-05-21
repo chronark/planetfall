@@ -1,6 +1,6 @@
-import { db } from "@planetfall/db";
-import { auth } from "@clerk/nextjs/app-beta";
-import { redirect } from "next/navigation";
+import { BillingButton } from "./button";
+import { UsageChart } from "./chart";
+import { Button } from "@/components/button";
 import {
   Card,
   CardContent,
@@ -9,12 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/card";
-import { getUsage } from "@planetfall/tinybird";
 import { Text } from "@/components/text";
-import { Button } from "@/components/button";
+import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
+import { getUsage } from "@planetfall/tinybird";
 import Link from "next/link";
-import { UsageChart } from "./chart";
-import { BillingButton } from "./button";
+import { redirect } from "next/navigation";
 
 export const revalidate = 10;
 

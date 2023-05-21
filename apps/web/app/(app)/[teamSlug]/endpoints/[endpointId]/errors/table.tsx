@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   Table,
   TableBody,
@@ -10,10 +9,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/table/table";
+import React from "react";
 
-import Link from "next/link";
-import { ChevronRight, Minus } from "lucide-react";
 import { Badge } from "@/components/badge";
+import { ChevronRight, Minus } from "lucide-react";
+import Link from "next/link";
 
 type ErrorCheck = {
   id: string;

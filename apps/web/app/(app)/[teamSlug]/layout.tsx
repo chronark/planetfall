@@ -1,11 +1,11 @@
-import { auth } from "@clerk/nextjs/app-beta";
-import { redirect } from "next/navigation";
-import { Banner } from "@/components/banner";
 import { DesktopNavbar } from "../navbar-desktop";
-import Link from "next/link";
-import { db, Team } from "@planetfall/db";
-import ms from "ms";
+import { Banner } from "@/components/banner";
+import { auth } from "@clerk/nextjs/app-beta";
+import { Team, db } from "@planetfall/db";
 import { getUsage } from "@planetfall/tinybird";
+import ms from "ms";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export const revalidate = 60;
 

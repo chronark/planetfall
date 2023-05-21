@@ -1,8 +1,8 @@
+import { Section } from "./section";
 import classNames from "classnames";
 import type { LucideIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-import { Section } from "./section";
 
 export type Props = {
   feature: {

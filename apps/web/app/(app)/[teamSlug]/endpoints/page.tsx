@@ -1,14 +1,14 @@
 import PageHeader from "@/components/page/header";
-import { redirect } from "next/navigation";
 import { getEndpointStatsGlobally } from "@planetfall/tinybird";
+import { redirect } from "next/navigation";
 
-import { Text } from "@/components/text";
-import { Button } from "@/components/button";
-import { db } from "@planetfall/db";
-import { auth } from "@clerk/nextjs/app-beta";
-import Link from "next/link";
 import { ClientPage } from "./client";
+import { Button } from "@/components/button";
+import { Text } from "@/components/text";
+import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 export const revalidate = 10;
 
 export default async function Page(props: { params: { teamSlug: string } }) {

@@ -1,6 +1,6 @@
+import { Form } from "./dynamic";
 import { auth } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
-import { Form } from "./dynamic";
 
 export const revalidate = 3600;
 

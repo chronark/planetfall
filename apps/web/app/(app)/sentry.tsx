@@ -1,7 +1,7 @@
 "use client";
+import { useUser } from "@clerk/nextjs";
 import * as Sentry from "@sentry/nextjs";
 import { useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
 
 export const SentryIdentifyUser: React.FC = () => {
   const { user } = useUser();

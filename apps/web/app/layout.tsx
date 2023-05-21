@@ -1,7 +1,7 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
-import { Metadata } from "next";
 import { Providers } from "./providers";
+import { Metadata } from "next";
+import { Inter } from "next/font/google";
 
 export const metadata: Metadata = {
   metadataBase: process.env.VERCEL_URL

@@ -1,11 +1,11 @@
 import { t } from "../trpc";
-import { endpointRouter } from "./endpoints";
-import { playRouter } from "./play";
-import { billingRouter } from "./billing";
-import { pageRouter } from "./page";
-import { teamRouter } from "./team";
 import { alertsRouter } from "./alerts";
+import { billingRouter } from "./billing";
 import { channelsRouter } from "./channels";
+import { endpointRouter } from "./endpoints";
+import { pageRouter } from "./page";
+import { playRouter } from "./play";
+import { teamRouter } from "./team";
 import { tinybirdRouter } from "./tinybird";
 export const router = t.router({
   play: playRouter,

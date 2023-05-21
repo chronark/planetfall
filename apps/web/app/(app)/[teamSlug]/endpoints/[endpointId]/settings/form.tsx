@@ -1,27 +1,27 @@
 "use client";
-import React, { useEffect, useReducer, useState } from "react";
-import { PageHeader } from "@/components/page";
-import { useFieldArray, useForm } from "react-hook-form";
-import { Endpoint, Region } from "@planetfall/db";
 import { Button } from "@/components/button";
-import { trpc } from "@/lib/trpc/hooks";
+import { AwsLambda } from "@/components/icons/AwsLambda";
+import { Fly } from "@/components/icons/Fly";
+import { VercelEdge } from "@/components/icons/VercelEdge";
+import { PageHeader } from "@/components/page";
 import { useToast } from "@/components/toast";
-import { useRouter } from "next/navigation";
-import * as Slider from "@radix-ui/react-slider";
+import { trpc } from "@/lib/trpc/hooks";
 import {
+  HeaderAssertion,
   assertion,
   deserialize as deserializeAssertions,
-  HeaderAssertion,
   headerAssertion,
   statusAssertion,
 } from "@planetfall/assertions";
-import { z } from "zod";
+import { Endpoint, Region } from "@planetfall/db";
+import * as Slider from "@radix-ui/react-slider";
 import classNames from "classnames";
-import Link from "next/link";
 import { Minus, Plus } from "lucide-react";
-import { AwsLambda } from "@/components/icons/AwsLambda";
-import { VercelEdge } from "@/components/icons/VercelEdge";
-import { Fly } from "@/components/icons/Fly";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useReducer, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
 type Props = {
   teamSlug: string;
   endpoint: Omit<Endpoint, "createdAt" | "updatedAt"> & { regions: Region[] };

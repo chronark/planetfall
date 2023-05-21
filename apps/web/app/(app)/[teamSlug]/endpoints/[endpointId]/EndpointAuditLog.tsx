@@ -2,7 +2,7 @@
 import { Button } from "@/components/button";
 import React from "react";
 
-import { trpc } from "@/lib/trpc/hooks";
+import { ScrollArea } from "@/components/scroll-area";
 import {
   Sheet,
   SheetContent,
@@ -11,10 +11,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/sheet";
+import { trpc } from "@/lib/trpc/hooks";
 import classNames from "classnames";
 import { CheckIcon } from "lucide-react";
 import ms from "ms";
-import { ScrollArea } from "@/components/scroll-area";
 
 type Props = {
   endpointId: string;

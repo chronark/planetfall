@@ -1,14 +1,14 @@
 import PageHeader from "@/components/page/header";
-import { notFound, redirect } from "next/navigation";
 import { getErrors } from "@planetfall/tinybird";
+import { notFound, redirect } from "next/navigation";
 
-import { db } from "@planetfall/db";
 import { ErrorsTable } from "./table";
-import { auth } from "@clerk/nextjs/app-beta";
 import { Button } from "@/components/button";
-import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card";
 import { Divider } from "@/components/divider";
+import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
+import Link from "next/link";
 
 export const revalidate = 10;
 
@@ -49,10 +49,10 @@ export default async function Page(props: {
   ).data.map((e) => ({
     id: e.id,
     time: e.time,
-    error: e.error!,
+    error: e.error,
     status: e.status,
     latency: e.latency,
-    region: endpoint.regions.find((r) => r.id === e.regionId)!.name,
+    region: endpoint.regions.find((r) => r.id === e.regionId)?.name ?? "Unknown",
     detailsUrl: `/${props.params.teamSlug}/checks/${e.id}`,
   }));
 

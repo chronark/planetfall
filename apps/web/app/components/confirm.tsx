@@ -1,4 +1,5 @@
 "use client";
+import { Button, buttonVariants } from "./button";
 import {
   Dialog,
   DialogContent,
@@ -8,9 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
-import React, { Fragment, useEffect, useState } from "react";
-import { Button, buttonVariants } from "./button";
 import { Loading } from "./loading";
+import React, { Fragment, useEffect, useState } from "react";
 // import { Button } from "components";
 
 export type ConfirmProps = {

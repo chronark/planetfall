@@ -2,6 +2,7 @@
 
 import { AwsLambda } from "@/components/icons/AwsLambda";
 import { VercelEdge } from "@/components/icons/VercelEdge";
+import { PlayResult } from "@/lib/trpc/routers/play";
 import {
   createColumnHelper,
   flexRender,
@@ -9,7 +10,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { PlayResult } from "@/lib/trpc/routers/play";
 
 type Props = {
   regions: PlayResult["regions"];

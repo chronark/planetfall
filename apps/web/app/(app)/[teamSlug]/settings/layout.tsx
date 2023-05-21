@@ -1,11 +1,11 @@
-import { auth } from "@clerk/nextjs/app-beta";
-import { redirect } from "next/navigation";
-import { Banner } from "@/components/banner";
-import Link from "next/link";
-import { db } from "@planetfall/db";
-import ms from "ms";
-import classNames from "classnames";
 import { NavLink } from "./NavLink";
+import { Banner } from "@/components/banner";
+import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
+import classNames from "classnames";
+import ms from "ms";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function SettingsLayout(props: {
   children: React.ReactNode;

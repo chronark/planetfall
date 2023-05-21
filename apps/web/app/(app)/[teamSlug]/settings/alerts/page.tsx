@@ -1,7 +1,7 @@
-import { db } from "@planetfall/db";
-import { auth } from "@clerk/nextjs/app-beta";
-import { redirect } from "next/navigation";
 import { ClientPage } from "./client";
+import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
+import { redirect } from "next/navigation";
 
 export default async function AlertsPage(props: { params: { teamSlug: string } }) {
   const { userId } = auth();

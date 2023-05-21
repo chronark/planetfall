@@ -1,4 +1,6 @@
 VERSION 1
+TOKEN "live" READ
+
 DESCRIPTION >
     returns the metrics aggregated for each day for the last 90 days 
 

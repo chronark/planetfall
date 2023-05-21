@@ -1,6 +1,6 @@
-import { Email } from "@planetfall/emails";
-import { PrismaClient } from "@planetfall/db";
 import { Logger } from "./logger";
+import { PrismaClient } from "@planetfall/db";
+import { Email } from "@planetfall/emails";
 
 type Alert = {
   type: "check";

@@ -1,7 +1,7 @@
-import { Tinybird } from "./base";
+import { Tinybird } from "@chronark/zod-bird";
 import { z } from "zod";
 
-export const tb = new Tinybird();
+export const tb = new Tinybird({ token: process.env.TINYBIRD_TOKEN! });
 
 const nullableNumberWithDefault = z
   .number()
@@ -111,34 +111,38 @@ export const getUsage = tb.buildPipe({
   }),
 });
 
+const check = z.object({
+  id: z.string(),
+  endpointId: z.string(),
+  latency: z.number().nullable(),
+  status: z.number().nullable(),
+  regionId: z.string(),
+  teamId: z.string(),
+  time: z.string().transform((s) => new Date(s).getTime()),
+  error: z.string().nullable(),
+  body: z.string().nullable(),
+  headers: z
+    .string()
+    .nullable()
+    .transform((v) => (v ? (JSON.parse(v) as Record<string, string>) : null)),
+  timing: z
+    .string()
+    .nullable()
+    .transform((v) => (v ? (JSON.parse(v) as Record<string, number>) : null)),
+});
+
 export const getCheck = tb.buildPipe({
   pipe: "get_check__v1",
   parameters: z.object({
     checkId: z.string(),
   }),
-  data: z.object({
-    id: z.string(),
-    endpointId: z.string(),
-    latency: z.number().nullable(),
-    status: z.number().nullable(),
-    regionId: z.string(),
-    teamId: z.string(),
-    time: z.string().transform((s) => new Date(s).getTime()),
-    error: z.string().nullable(),
-    body: z.string().nullable(),
-    headers: z
-      .string()
-      .nullable()
-      .transform((v) => (v ? JSON.parse(v) : null)),
-    timing: z
-      .string()
-      .nullable()
-      .transform((v) => (v ? JSON.parse(v) : null)),
-  }),
+  data: check,
   opts: {
     revalidate: 60 * 60 * 24, // 1 day
   },
 });
+
+export type Check = z.infer<typeof check>;
 
 export const globalUsage = tb.buildPipe({
   pipe: "landingpage__average_usage__v1",
@@ -146,6 +150,9 @@ export const globalUsage = tb.buildPipe({
     usage: z.number(),
     time: z.string().transform((s) => new Date(s).getTime()),
   }),
+  opts: {
+    revalidate: 60 * 60 * 24, // 1 day
+  },
 });
 
 export const getErrors = tb.buildPipe({
@@ -189,4 +196,13 @@ export const getCustomAnalytics = tb.buildPipe({
     p99: nullableNumberWithDefault,
     errors: nullableNumberWithDefault,
   }),
+});
+
+export const getLatestChecksByEndpoint = tb.buildPipe({
+  pipe: "checks_by_endpoint__v1",
+  parameters: z.object({
+    endpointId: z.string(),
+    limit: z.number().optional().default(100),
+  }),
+  data: check,
 });

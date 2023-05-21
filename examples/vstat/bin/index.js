@@ -47,7 +47,7 @@ httpstat(opts.target, opts.options, headers, opts.data, opts.formInputs)
     serverTiming
       .split(",")
       .map((part) => part.split(";dur="))
-      .forEach((part) => console.log(part) || (timings[part[0]] = Number(part[1])));
+      .forEach((part) => console.log(part) || timings[part[0]] === Number(part[1]));
     reporter(results, opts, timings);
   })
   .catch((e) => {

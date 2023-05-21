@@ -1,8 +1,8 @@
-import PageHeader from "@/components/page/header";
-import { notFound, redirect } from "next/navigation";
-import { db } from "@planetfall/db";
 import { Form } from "./form";
+import PageHeader from "@/components/page/header";
 import { auth } from "@clerk/nextjs/app-beta";
+import { db } from "@planetfall/db";
+import { notFound, redirect } from "next/navigation";
 
 export default async function Page(props: {
   params: { teamSlug: string; pageId: string };

@@ -1,5 +1,5 @@
-import { Header } from "./header";
 import { Footer } from "./footer";
+import { Header } from "./header";
 import { SupportBubble } from "@/components/support";
 import { ClerkProvider } from "@clerk/nextjs/app-beta";
 

@@ -1,10 +1,10 @@
-import { db, Plan } from "@planetfall/db";
-import { redirect } from "next/navigation";
-import { CurrentButton, DowngradeButton, UpgradeButton, ContactButton } from "./cta";
-import { DEFAULT_QUOTA } from "plans";
-import { Check, Minus } from "lucide-react";
-import { Fragment } from "react";
+import { ContactButton, CurrentButton, DowngradeButton, UpgradeButton } from "./cta";
 import { auth } from "@clerk/nextjs/app-beta";
+import { Plan, db } from "@planetfall/db";
+import { Check, Minus } from "lucide-react";
+import { redirect } from "next/navigation";
+import { DEFAULT_QUOTA } from "plans";
+import { Fragment } from "react";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -175,7 +175,7 @@ export default async function PlanPage(props: { params: { teamSlug: string } }) 
     <>
       <div className="max-w-md mx-auto space-y-8 md:hidden">
         {tiers.map((tier) => (
-          <section key={tier.name} className='p-8'>
+          <section key={tier.name} className="p-8">
             <h3 id={tier.name} className="text-sm font-semibold leading-6 text-zinc-900">
               {tier.name}
             </h3>

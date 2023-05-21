@@ -7,10 +7,10 @@ import { AwsLambda } from "@/components/icons/AwsLambda";
 import { Fly } from "@/components/icons/Fly";
 import { VercelEdge } from "@/components/icons/VercelEdge";
 import { MultiSelect } from "@/components/multiselect";
-import { SelectItem, SelectTrigger, Select, SelectContent, SelectValue } from "@/components/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
 import { Text } from "@/components/text";
 import { Area, Line } from "@ant-design/plots";
-import { Check } from "@planetfall/tinybird";
+import type { Check } from "@planetfall/tinybird";
 import { Region } from "@prisma/client";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -80,7 +80,7 @@ export const ChartsSection: React.FC<Props> = ({ endpoint, checks, team }) => {
   );
 };
 
-function toRGBA(color: number[], alpha: number = 1) {
+function toRGBA(color: number[], alpha = 1) {
   return `rgba(${color.join(",")},${alpha})`;
 }
 

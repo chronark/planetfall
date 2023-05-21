@@ -1,10 +1,10 @@
+import { DebugEvent } from "./emails/DebugEvent";
+import { EndpointAlert } from "./emails/EndpointAlert";
+import TeamInvitation from "./emails/TeamInvitation";
+import TrialEnded from "./emails/TrialEnded";
+import { UsageExceeded } from "./emails/UsageExceeded";
 import { render } from "@react-email/render";
 import { Resend } from "resend";
-import { EndpointAlert } from "./emails/EndpointAlert";
-import { DebugEvent } from "./emails/DebugEvent";
-import TeamInvitation from "./emails/TeamInvitation";
-import { UsageExceeded } from "./emails/UsageExceeded";
-import TrialEnded from "./emails/TrialEnded";
 export class Email {
   private client: Resend;
 

@@ -1,12 +1,12 @@
-import { Endpoint, PrismaClient, Region, Setup } from "@planetfall/db";
-import * as tb from "@planetfall/tinybird";
-import { newId } from "@planetfall/id";
-import { Logger } from "./logger";
-import * as assertions from "@planetfall/assertions";
 import { AlertNotifications } from "./alerts";
-import { getUsage } from "@planetfall/tinybird";
+import { Logger } from "./logger";
 import { Notifications } from "./notifications";
 import { SetupManager } from "./setup";
+import * as assertions from "@planetfall/assertions";
+import { Endpoint, PrismaClient, Region, Setup } from "@planetfall/db";
+import { newId } from "@planetfall/id";
+import { publishCheck } from "@planetfall/tinybird";
+import { getUsage } from "@planetfall/tinybird";
 
 export class Scheduler {
   // key: endpointId
@@ -14,7 +14,6 @@ export class Scheduler {
   private endpoints: Map<string, { intervalId: NodeJS.Timeout; updatedAt: number }>;
   private db: PrismaClient;
   private logger: Logger;
-  private tinybird: tb.Client;
   private alerts: AlertNotifications;
   private notifications: Notifications;
   private setupManager: SetupManager;
@@ -32,7 +31,6 @@ export class Scheduler {
     signingKey: string;
   }) {
     this.db = new PrismaClient();
-    this.tinybird = new tb.Client();
     this.endpoints = new Map();
     this.logger = logger;
     this.regions = {};
@@ -389,14 +387,23 @@ export class Scheduler {
           };
         });
 
-        await this.tinybird.publishChecks(data).catch((err) => {
-          this.logger.error("error publishing checks to tinybird", {
-            endpointId: endpoint.id,
-            regionId: region.id,
-            error: (err as Error).message,
-          });
-          throw err;
-        });
+        await Promise.all(
+          data.map((d) =>
+            publishCheck({
+              ...d,
+              headers: d.headers ? JSON.stringify(d.headers) : undefined,
+              timing: JSON.stringify(d.timing),
+            }).catch((err) => {
+              this.logger.error("error publishing checks to tinybird", {
+                endpointId: endpoint.id,
+                regionId: region.id,
+                error: (err as Error).message,
+              });
+              throw err;
+            }),
+          ),
+        );
+
         for (const d of data) {
           if (d.error) {
             this.logger.info("emitting notification event", {
