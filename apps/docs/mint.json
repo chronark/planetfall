@@ -1,0 +1,74 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Documentation Starter Kit",
+  "logo": {
+    "dark": "https://planetfall.io/img/wordmark-dark.svg",
+    "light": "https://planetfall.io/img/wordmark.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#3366FF",
+    "light": "#d4d4d4",
+    "dark": "#0a0a0a"
+  },
+  "topbarLinks": [
+    {
+      "name": "Documentation",
+      "url": "https://planetfall.io/docs"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url": "https://planetfall.io/auth/sign-in"
+  },
+  "anchors": [
+    {
+      "name": "API Reference",
+      "icon": "rectangle-terminal",
+      "url": "api-reference"
+    },
+    {
+      "name": "Changelog",
+      "icon": "list",
+      "url": "https://planetfall.io/changelog"
+    },
+    {
+      "name": "Community",
+      "icon": "discord",
+      "url": "https://discord.gg/438dArF6pJ"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Home",
+      "pages": [
+        "introduction",
+        "features"
+      ]
+    },
+    {
+      "group": "API Documentation",
+      "pages": [
+        "api-reference/authentication"
+      ]
+    },
+    {
+      "group": "Endpoint Examples",
+      "pages": [
+        "api-reference/endpoint/get",
+        "api-reference/endpoint/create",
+        "api-reference/endpoint/update",
+        "api-reference/endpoint/delete"
+      ]
+    }
+  ],
+  "api": {
+    "baseUrl": "https://api.planetfall.io",
+    "auth":{"method":"bearer"}
+  },
+  "footerSocials": {
+    "twitter": "https://twitter.com/mintlify",
+    "github": "https://github.com/mintlify",
+    "linkedin": "https://www.linkedin.com/company/mintsearch"
+  }
+}

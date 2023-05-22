@@ -66,7 +66,7 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
             }
           />
           <div className="flex items-center justify-between gap-4">
-            <Feedback /> 
+            <Feedback />
             <UserButton
               user={{
                 email: user.email,

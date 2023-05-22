@@ -27,7 +27,7 @@
     "@types/chai": "^4.3.5",
     "@types/isomorphic-fetch": "^0.0.36",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^20.2.1",
+    "@types/node": "^20.2.3",
     "chai": "^4",
     "eslint": "^8.41.0",
     "eslint-config-oclif": "^4",

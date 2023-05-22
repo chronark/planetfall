@@ -30,7 +30,7 @@
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",
     "@types/ms": "^0.7.31",
-    "@types/node": "20.2.1",
+    "@types/node": "20.2.3",
     "dotenv-cli": "^7.2.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"

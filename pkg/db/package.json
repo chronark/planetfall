@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",
-    "@types/node": "^20.2.1",
+    "@types/node": "^20.2.3",
     "prisma": "^4.14.1",
     "typescript": "^5.0.4"
   },

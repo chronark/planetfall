@@ -12,11 +12,11 @@
   "license": "ISC",
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",
-    "@types/node": "20.2.1",
+    "@types/node": "20.2.3",
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@chronark/zod-bird": "^0.0.2",
+    "@chronark/zod-bird": "^0.0.3",
     "zod": "^3.21.4"
   }
 }
