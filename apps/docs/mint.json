@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Documentation Starter Kit",
+  "name": "Planetfall Documentation",
   "logo": {
     "dark": "https://planetfall.io/img/wordmark-dark.svg",
     "light": "https://planetfall.io/img/wordmark.svg"
