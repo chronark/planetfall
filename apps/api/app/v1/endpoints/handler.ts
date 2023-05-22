@@ -1,14 +1,13 @@
 import { kysely } from "@/lib/kysely";
 import { authorize } from "@/lib/auth";
 import { makeRequestHandler } from "@/lib/server";
-import { NextResponse } from "next/server";
 import { z } from "zod";
 import { assertion } from "@planetfall/assertions";
 
 export const getEndpoints = makeRequestHandler({
   method: "GET",
-  path: "/v1/endpoint/:endpointId",
-  description: "Retrieve a single endpoint by its id",
+  path: "/v1/endpoints",
+  description: "Retrieve a list of all endpoints for a team",
   input: z.object({}),
   output: z.object({
     endpoints: z.array(

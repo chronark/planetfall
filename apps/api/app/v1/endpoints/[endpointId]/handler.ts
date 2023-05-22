@@ -7,8 +7,8 @@ import { assertion } from "@planetfall/assertions";
 
 export const getEndpoint = makeRequestHandler({
   method: "GET",
-  path: "/v1/endpoints",
-  description: "Retrieve a list of all endpoints for a team",
+  path: "/v1/endpoints/:endpointId",
+  description: "Retrieve a single endpoint by its id",
   input: z.object({
     endpointId: z.string(),
   }),
