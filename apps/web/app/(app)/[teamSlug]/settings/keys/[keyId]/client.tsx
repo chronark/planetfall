@@ -28,14 +28,14 @@ export const Client: React.FC<Props> = ({ apiKey, endpointIdToName }) => {
   const policy = apiKey.policy ? Policy.parse(apiKey.policy) : null;
 
   return (
-   
-  <div>
-  <PageHeader
+
+    <div>
+      <PageHeader
         title={apiKey.name}
         description={`created at ${apiKey.createdAt.toUTCString()}`}
         actions={[
           <Badge key="key" size="md">{apiKey.firstCharacters ?? undefined}...</Badge>,
-          <DeleteKeyButton key="delete"  keyId={apiKey.id}>
+          <DeleteKeyButton key="delete" keyId={apiKey.id}>
             <Button variant="subtle" >
               <Trash className="w-4 h-4 mr-2" />
               <span>Revoke</span>
@@ -45,8 +45,8 @@ export const Client: React.FC<Props> = ({ apiKey, endpointIdToName }) => {
       />
       <div className="mt-8 space-y-10 divide-y divide-zinc-900/10">
         {policy?.statements.map((statement, _i) => {
-          return Object.entries(statement.resources).map(([_resourceType, resources]) => (
-            <div className="flex flex-col md:flex-row ">
+          return Object.entries(statement.resources).map(([resourceType, resources]) => (
+            <div key={[statement, resourceType].join("-")} className="flex flex-col md:flex-row ">
               {/* <div className="w-full md:w-1/5">
     This is here in preparateion for the future where we'll have more than just channels
                                 <CardHeader>
@@ -58,7 +58,7 @@ export const Client: React.FC<Props> = ({ apiKey, endpointIdToName }) => {
                 <CardContent>
                   {Object.entries(resources ?? {}).map(([grid, permissions]) => {
                     return (
-                      <div className="flex flex-col items-start justify-between w-full gap-4 py-6 md:flex-row md:items-center">
+                      <div key={grid} className="flex flex-col items-start justify-between w-full gap-4 py-6 md:flex-row md:items-center">
                         <span className="text-sm font-medium leading-6 text-zinc-800">
                           {endpointIdToName[grid.split("::").at(-1) ?? ""]}
                         </span>
