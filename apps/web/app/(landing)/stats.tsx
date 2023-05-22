@@ -13,15 +13,15 @@ export const Stats = asyncComponent(async () => {
       Promise.all([
         {
           label: "Teams",
-          value: await db.team.count(),
+          value:await db.team.count(),
         },
         {
           label: "Endpoints",
-          value: await db.endpoint.count(),
+          value:await db.endpoint.count(),
         },
         {
           label: "Status Pages",
-          value: await db.statusPage.count(),
+          value:await db.statusPage.count(),
         },
         {
           label: "Ø Checks per Day",

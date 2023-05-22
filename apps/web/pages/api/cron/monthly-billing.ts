@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const start = new Date(now.getUTCFullYear(), now.getUTCMonth() - 1, 1, 0, 0, 0, 0);
   const end = new Date(now.getUTCFullYear(), now.getUTCMonth(), 1, 0, 0, 0, 0);
 
-  const teams = await db.team.findMany({
+  const teams =await db.team.findMany({
     where: {
       AND: {
         stripeCustomerId: {

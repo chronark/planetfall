@@ -19,7 +19,7 @@ export const endpointRouter = t.router({
     .use(auth)
     .input(z.object({ endpointId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const endpoint = await db.endpoint.findUnique({
+      const endpoint =await db.endpoint.findUnique({
         where: {
           id: input.endpointId,
         },
@@ -73,7 +73,7 @@ export const endpointRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team = await db.team.findUnique({
+      const team =await db.team.findUnique({
         where: {
           id: input.teamId,
         },
@@ -114,7 +114,7 @@ export const endpointRouter = t.router({
         assertions.push(new HeaderAssertion(a));
       }
 
-      const created = await db.endpoint.create({
+      const created =await db.endpoint.create({
         data: {
           id: newId("endpoint"),
           method: input.method,
@@ -183,7 +183,7 @@ export const endpointRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const endpoint = await db.endpoint.findUnique({
+      const endpoint =await db.endpoint.findUnique({
         where: { id: input.endpointId },
         include: { team: { include: { members: true } } },
       });
@@ -214,7 +214,7 @@ export const endpointRouter = t.router({
           : existingAssertions.filter((a) => a.schema.type === "header")),
       );
 
-      const updatedEndpoint = await db.endpoint.update({
+      const updatedEndpoint =await db.endpoint.update({
         where: { id: input.endpointId },
         data: {
           updatedAt: new Date(),
@@ -267,7 +267,7 @@ export const endpointRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const endpoint = await db.endpoint.findUnique({
+      const endpoint =await db.endpoint.findUnique({
         where: { id: input.endpointId },
         include: { team: { include: { members: true } } },
       });
@@ -285,7 +285,7 @@ export const endpointRouter = t.router({
       }
 
       const active = !endpoint.active;
-      const updated = await db.endpoint.update({
+      const updated =await db.endpoint.update({
         where: { id: input.endpointId },
         data: {
           active,
@@ -316,7 +316,7 @@ export const endpointRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const endpoint = await db.endpoint.findUnique({
+      const endpoint =await db.endpoint.findUnique({
         where: { id: input.endpointId },
         include: { team: { include: { members: true } } },
       });
@@ -333,7 +333,7 @@ export const endpointRouter = t.router({
         });
       }
 
-      const deleted = await db.endpoint.update({
+      const deleted =await db.endpoint.update({
         where: { id: input.endpointId },
         data: {
           deletedAt: new Date(),

@@ -81,7 +81,7 @@ export const playRouter = t.router({
 
       // get and cache outside of the handler
       if (regions.length === 0) {
-        regions = await db.region.findMany({
+        regions =await db.region.findMany({
           where: {
             platform: "fly",
           },

@@ -11,7 +11,7 @@ export const dynamic = "error";
 
 const getStatusPage = cache(
   async (slug: string) =>
-    await db.statusPage.findUnique({
+   await db.statusPage.findUnique({
       where: { slug },
       include: {
         endpoints: {

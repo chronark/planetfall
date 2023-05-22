@@ -4,6 +4,15 @@ datasource db {
   relationMode = "prisma"
 }
 
+generator kysely {
+  provider = "prisma-kysely"
+
+  // Optionally provide a destination directory for the generated file
+  // and a filename of your choice
+  output   = "../src/kysely"
+  fileName = "types.ts"
+}
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -128,6 +137,8 @@ model Team {
 
   // When the user deletes a team it is marked as deactivated until all billing is done
   deactivatedAt DateTime?
+
+  apiKeys ApiKey[]
 
   // How many checks may be done per month
   maxMonthlyRequests Int
@@ -267,23 +278,21 @@ model Endpoint {
 
   setup Setup?
 
-
   @@index([teamId])
   @@index([ownerId])
 }
 
 // Setup can be used to create credentials
-model Setup { 
-  id String @id
-  endpoint Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
-  endpointId String @unique
+model Setup {
+  id         String   @id
+  endpoint   Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  endpointId String   @unique
 
-  url String
+  url     String
   headers Json?
 
   // How long the setup response should be cached
   ttl Int
-
 
   @@index([endpointId])
 }
@@ -354,5 +363,22 @@ model SlackChannel {
   active Boolean
 
   @@unique([teamId, url])
+  @@index([teamId])
+}
+
+model ApiKey {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  name            String
+  keyHash         String  @unique
+  // first 4 characters of the original key
+  firstCharacters String
+  policy          String @db.Text
+
   @@index([teamId])
 }

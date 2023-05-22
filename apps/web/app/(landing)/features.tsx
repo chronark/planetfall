@@ -19,7 +19,7 @@ import React, { cache } from "react";
 export const Features = asyncComponent(async () => {
   const regions = await cache(() => db.region.findMany())();
   // const stats = await cache(async () => {
-  // 	const endpoint = await db.endpoint.findUnique({
+  // 	const endpoint =await db.endpoint.findUnique({
   // 		where: {
   // 			id:
   // 				process.env.NODE_ENV === "production"

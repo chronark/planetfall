@@ -22,6 +22,7 @@
     "@planetfall/emails": "workspace:*",
     "@planetfall/header-analysis": "workspace:^1.0.0",
     "@planetfall/id": "workspace:*",
+    "@planetfall/policies": "workspace:^1.0.0",
     "@planetfall/tinybird": "workspace:*",
     "@prisma/client": "^4.14.1",
     "@radix-ui/react-accordion": "^1.1.1",

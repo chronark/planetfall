@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getGreeting } from "../hello/handler";
+import { getEndpoints } from "../endpoints/handler"
+import { getEndpoint } from "../endpoints/[endpointId]/handler"
 
 import { OpenAPIObject, OpenAPIPathsObject } from "@/lib/utils";
 
 // it's ugly, I know, but this nicely combines
 // multiple openAPI definitions from different route handlers :)
 const pathsObject: OpenAPIPathsObject = [
-  getGreeting.openAPIPathsObject,
+  getEndpoint.openAPIPathsObject,
+  getEndpoints.openAPIPathsObject,
   // ...add others here
 ].reduce((acc, curr) => {
   Object.keys(curr).forEach((k) => {

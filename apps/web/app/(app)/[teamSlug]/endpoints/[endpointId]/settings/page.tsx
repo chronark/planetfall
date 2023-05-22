@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 export default async function Page(props: {
   params: { teamSlug: string; endpointId: string };
 }) {
-  const endpoint = await db.endpoint.findUnique({
+  const endpoint =await db.endpoint.findUnique({
     where: { id: props.params.endpointId },
     include: { regions: true },
   });
@@ -13,7 +13,7 @@ export default async function Page(props: {
     return notFound();
   }
 
-  const regions = await db.region.findMany({ where: { visible: true } });
+  const regions =await db.region.findMany({ where: { visible: true } });
 
   /**
    * Date is not serializable between server and client

@@ -30,7 +30,7 @@ import classNames from "classnames";
 export async function generateMetadata({
   params,
 }: { params: { teamSlug: string; endpointId: string } }): Promise<Metadata> {
-  const endpoint = await db.endpoint.findUnique({
+  const endpoint =await db.endpoint.findUnique({
     where: {
       id: params.endpointId,
     },
@@ -70,7 +70,7 @@ export default async function Page(props: {
     return redirect("/auth/sign-in");
   }
 
-  const endpoint = await db.endpoint.findUnique({
+  const endpoint =await db.endpoint.findUnique({
     where: {
       id: props.params.endpointId,
     },

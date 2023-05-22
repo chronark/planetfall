@@ -16,7 +16,7 @@ export const pageRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team = await db.team.findUnique({
+      const team =await db.team.findUnique({
         where: { id: input.teamId },
         select: {
           id: true,
@@ -56,7 +56,7 @@ export const pageRouter = t.router({
         });
       }
 
-      const page = await db.statusPage.create({
+      const page =await db.statusPage.create({
         data: {
           id: newId("page"),
           name: input.name,
@@ -89,7 +89,7 @@ export const pageRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const page = await db.statusPage.findUnique({
+      const page =await db.statusPage.findUnique({
         where: { id: input.pageId },
         include: { team: { include: { members: true } } },
       });
@@ -106,7 +106,7 @@ export const pageRouter = t.router({
         });
       }
 
-      const updated = await db.statusPage.update({
+      const updated =await db.statusPage.update({
         where: { id: input.pageId },
         data: {
           name: input.name,
@@ -137,7 +137,7 @@ export const pageRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const page = await db.statusPage.findUnique({
+      const page =await db.statusPage.findUnique({
         where: { id: input.pageId },
         include: { team: { include: { members: true } } },
       });
@@ -154,7 +154,7 @@ export const pageRouter = t.router({
         });
       }
 
-      const deleted = await db.statusPage.delete({
+      const deleted =await db.statusPage.delete({
         where: { id: input.pageId },
       });
 

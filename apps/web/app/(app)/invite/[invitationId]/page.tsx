@@ -14,7 +14,7 @@ export default async function Home(props: Props) {
     return redirect("/auth/sign-in");
   }
 
-  const invitation = await db.teamInvitation.findUnique({
+  const invitation =await db.teamInvitation.findUnique({
     where: {
       id: props.params.invitationId,
     },
@@ -26,7 +26,7 @@ export default async function Home(props: Props) {
     return notFound();
   }
   if (invitation.expires.getTime() < Date.now()) {
-    await db.teamInvitation.delete({
+   await db.teamInvitation.delete({
       where: {
         id: invitation.id,
       },
@@ -37,7 +37,7 @@ export default async function Home(props: Props) {
     return notFound();
   }
 
-  await db.membership.create({
+ await db.membership.create({
     data: {
       teamId: invitation.team.id,
       userId,

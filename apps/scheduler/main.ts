@@ -20,7 +20,7 @@ const notifications = new Notifications({
 });
 const alerts = new AlertNotifications({
   logger,
-  db: db,
+  db,
   email,
 });
 

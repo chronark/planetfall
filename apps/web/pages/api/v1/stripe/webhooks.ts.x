@@ -109,7 +109,7 @@ export default async function webhookHandler(
 				const subscription = event.data.object as Stripe.Subscription;
 				console.log("subscription deleted", subscription);
 
-				const team = await db.team.findUnique({
+				const team =await db.team.findUnique({
 					where: {
 						stripeCustomerId: subscription.customer.toString(),
 					},

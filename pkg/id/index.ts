@@ -35,6 +35,8 @@ export class IdGenerator<TPrefixes extends string> {
 }
 
 export const newId = new IdGenerator({
+  apiKey: "pf_api",
+  apiKeyId: "api",
   alert: "alrt",
   audit: "aud",
   channel: "chan",

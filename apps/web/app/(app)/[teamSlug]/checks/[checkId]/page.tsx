@@ -170,7 +170,7 @@ export default async function Page(props: {
     return notFound();
   }
 
-  const endpoint = await db.endpoint.findUnique({
+  const endpoint =await db.endpoint.findUnique({
     where: { id: check.endpointId },
     include: {
       team: {

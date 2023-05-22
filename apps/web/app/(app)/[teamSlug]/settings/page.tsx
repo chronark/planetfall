@@ -19,7 +19,7 @@ export default async function SettingsPage(props: {
     return redirect("/auth/sign-in");
   }
 
-  const team = await db.team.findUnique({
+  const team =await db.team.findUnique({
     where: { slug: props.params.teamSlug },
     include: {
       members: {

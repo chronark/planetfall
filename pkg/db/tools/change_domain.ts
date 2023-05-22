@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 async function main() {
   const db = new PrismaClient();
 
-  const regions = await db.region.findMany({
+  const regions =await db.region.findMany({
     where: {
       platform: "vercelEdge",
     },
@@ -11,7 +11,7 @@ async function main() {
 
   for (const region of regions) {
     console.log(region.region);
-    await db.region.update({
+   await db.region.update({
       where: {
         id: region.id,
       },
@@ -21,7 +21,7 @@ async function main() {
     });
   }
 
-  await db.$disconnect();
+ await db.$disconnect();
 }
 
 main();

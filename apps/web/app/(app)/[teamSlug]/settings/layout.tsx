@@ -16,7 +16,11 @@ export default async function SettingsLayout(props: {
     return redirect("/auth/sign-in");
   }
 
-  const links: { href: string; slug: string | null; label: string }[] = [
+  const team = await db.team.findUnique({
+    where: { slug: props.params.teamSlug },
+  })
+
+  const links = [
     {
       label: "General",
       slug: null,
@@ -27,6 +31,12 @@ export default async function SettingsLayout(props: {
       slug: "alerts",
       href: `/${props.params.teamSlug}/settings/alerts`,
     },
+    team?.plan === "ENTERPRISE" || team?.plan === "PRO" ?
+      {
+        label: "API Keys",
+        slug: "keys",
+        href: `/${props.params.teamSlug}/settings/keys`,
+      } : null,
     {
       label: "Usage & Billing",
       slug: "usage",
@@ -48,7 +58,7 @@ export default async function SettingsLayout(props: {
     //     slug: 'danger',
     //     href: `/${props.params.teamSlug}/settings/danger`,
     // },
-  ];
+  ].filter(Boolean) as { href: string; slug: string | null; label: string }[]
 
   return (
     <div className="container flex flex-col items-center justify-center mx-auto mt-8 lg:flex-row lg:items-start lg:mt-24">
