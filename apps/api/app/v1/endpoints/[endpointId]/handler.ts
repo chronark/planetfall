@@ -56,7 +56,6 @@ export const getEndpoint = makeRequestHandler({
       kysely.selectFrom("_EndpointToRegion").select("_EndpointToRegion.B").where("_EndpointToRegion.A", "=", input.endpointId).execute()
     ])
 
-
     if (!endpoint) {
       return NextResponse.json({ error: "Endpoint not found" }, { status: 404 });
     }
