@@ -7,7 +7,7 @@ import { OpenAPIObject, OpenAPIPathsObject } from "@/lib/utils";
 // it's ugly, I know, but this nicely combines
 // multiple openAPI definitions from different route handlers :)
 const pathsObject: OpenAPIPathsObject = [
-  getEndpoint.openAPIPathsObject,
+  // getEndpoint.openAPIPathsObject,
   getEndpoints.openAPIPathsObject,
   // ...add others here
 ].reduce((acc, curr) => {
