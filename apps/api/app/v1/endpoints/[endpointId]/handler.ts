@@ -79,12 +79,12 @@ export const getEndpoint = makeRequestHandler({
         prewarm: Boolean(endpoint.prewarm),
         runs: endpoint.runs,
         ownerId: endpoint.ownerId,
-        auditLog: [],
+        // auditLog: [],
         interval: endpoint.interval,
         active: Boolean(endpoint.active),
         degradedAfter: endpoint.degradedAfter,
-        timeout: endpoint.timeout,
-        distribution: endpoint.distribution as any,
+        timeout: endpoint.timeout ?? 0,
+        distribution: endpoint.distribution ,
         regions: regions.map(r => r.B),
         // headers: endpoint.headers,
         body: endpoint.body,
@@ -93,7 +93,7 @@ export const getEndpoint = makeRequestHandler({
         // alerts: endpoint.alerts,
         // setup: endpoint.setup,
 
-      } as any
+      }
     });
   },
 

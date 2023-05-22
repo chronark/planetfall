@@ -55,8 +55,8 @@
     {
       "group": "Endpoint Examples",
       "pages": [
-        "api-reference/endpoint/list"
-        "api-reference/endpoint/get",
+        "api-reference/endpoints/list",
+        "api-reference/endpoints/get"
       ]
     }
   ],
