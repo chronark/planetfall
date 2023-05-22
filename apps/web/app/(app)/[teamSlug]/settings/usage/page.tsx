@@ -23,7 +23,7 @@ export default async function UsagePage(props: { params: { teamSlug: string } })
   if (!userId) {
     return redirect("/auth/sign-in");
   }
-  const team =await db.team.findUnique({
+  const team = await db.team.findUnique({
     where: { slug: props.params.teamSlug },
   });
   if (!team) {

@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 async function main() {
   const db = new PrismaClient();
 
- await db.endpoint.updateMany({
+  await db.endpoint.updateMany({
     where: {
       teamId: "team_NszcknrCNzjFgnLvqUCXGR",
     },
@@ -12,7 +12,7 @@ async function main() {
     },
   });
 
- await db.$disconnect();
+  await db.$disconnect();
 }
 
 main();

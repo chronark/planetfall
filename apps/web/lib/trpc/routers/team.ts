@@ -23,7 +23,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const user =await db.user.findUnique({
+      const user = await db.user.findUnique({
         where: {
           id: ctx.user.id,
         },
@@ -42,7 +42,7 @@ export const teamRouter = t.router({
       }
       const teamId = newId("team");
 
-      const team =await db.team
+      const team = await db.team
         .create({
           data: {
             id: teamId,
@@ -98,7 +98,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findUnique({
+      const team = await db.team.findUnique({
         where: {
           id: input.teamId,
         },
@@ -133,7 +133,7 @@ export const teamRouter = t.router({
         });
       }
 
-      const invitedUser =await db.user.findUnique({
+      const invitedUser = await db.user.findUnique({
         where: {
           email: input.email,
         },
@@ -145,7 +145,7 @@ export const teamRouter = t.router({
         });
       }
 
-      const invitation =await db.teamInvitation.upsert({
+      const invitation = await db.teamInvitation.upsert({
         where: {
           teamId_userId: {
             teamId: input.teamId,
@@ -199,7 +199,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findUnique({
+      const team = await db.team.findUnique({
         where: {
           id: input.teamId,
         },
@@ -218,7 +218,7 @@ export const teamRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-     await db.membership.upsert({
+      await db.membership.upsert({
         where: {
           userId_teamId: {
             userId: input.userId,
@@ -254,7 +254,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findUnique({
+      const team = await db.team.findUnique({
         where: {
           id: input.teamId,
         },
@@ -283,7 +283,7 @@ export const teamRouter = t.router({
 
       switch (currentUser.role) {
         case "OWNER":
-         await db.membership.delete({
+          await db.membership.delete({
             where: {
               userId_teamId: { userId: input.userId, teamId: input.teamId },
             },
@@ -296,7 +296,7 @@ export const teamRouter = t.router({
               message: "You can't remove the owner of a team",
             });
           }
-         await db.membership.delete({
+          await db.membership.delete({
             where: {
               userId_teamId: { userId: input.userId, teamId: input.teamId },
             },
@@ -323,7 +323,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findUnique({
+      const team = await db.team.findUnique({
         where: {
           id: input.teamId,
         },
@@ -346,7 +346,7 @@ export const teamRouter = t.router({
 
         await createInvoice({ team, year, month });
       }
-     await db.team.delete({
+      await db.team.delete({
         where: { id: input.teamId },
       });
       highstorm("team.deleted", {
@@ -368,7 +368,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findFirst({
+      const team = await db.team.findFirst({
         where: {
           id: input.teamId,
           members: {
@@ -385,7 +385,7 @@ export const teamRouter = t.router({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-     await db.team
+      await db.team
         .update({
           where: {
             id: input.teamId,
@@ -418,7 +418,7 @@ export const teamRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findFirst({
+      const team = await db.team.findFirst({
         where: {
           id: input.teamId,
           members: {
@@ -435,7 +435,7 @@ export const teamRouter = t.router({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-     await db.team
+      await db.team
         .update({
           where: {
             id: input.teamId,

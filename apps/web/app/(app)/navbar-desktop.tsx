@@ -31,13 +31,13 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
     },
   ];
 
-  const user =await db.user.findUnique({ where: { id: userId } });
+  const user = await db.user.findUnique({ where: { id: userId } });
   if (!user) {
     console.warn(__filename, "User not found");
     notFound();
   }
 
-  const teams =await db.team.findMany({
+  const teams = await db.team.findMany({
     where: {
       members: { some: { userId } },
     },

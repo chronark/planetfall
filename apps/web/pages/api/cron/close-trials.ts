@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(404).end();
     return;
   }
-  const teams =await db.team.findMany({
+  const teams = await db.team.findMany({
     where: {
       plan: "PRO",
       stripeCustomerId: null,
@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   for (const team of teams) {
     console.log("Team", team.id, "disabling team because trial expired");
 
-   await db.team.update({
+    await db.team.update({
       where: { id: team.id },
       data: { plan: "DISABLED" },
     });

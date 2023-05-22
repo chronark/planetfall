@@ -18,7 +18,7 @@ export default async function DebugUserPage() {
     );
   }
 
-  const user =await db.user.findUnique({
+  const user = await db.user.findUnique({
     where: { id: userId },
     include: {
       teams: true,

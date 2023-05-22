@@ -4,12 +4,12 @@ import { db } from "@planetfall/db";
 import { Client } from "./client";
 import { auth } from "@clerk/nextjs/app-beta";
 
-export default async function Page(props: { params: { teamSlug: string, keyId: string } }) {
-  const { userId } = auth()
+export default async function Page(props: { params: { teamSlug: string; keyId: string } }) {
+  const { userId } = auth();
   if (!userId) {
     return redirect("/home");
   }
-  const apiKey =await db.apiKey.findUnique({
+  const apiKey = await db.apiKey.findUnique({
     where: {
       id: props.params.keyId,
     },
@@ -29,7 +29,6 @@ export default async function Page(props: { params: { teamSlug: string, keyId: s
     return redirect(`/${props.params.teamSlug}/settings/keys`);
   }
   if (!apiKey.team.members.some((member) => member.userId === userId)) {
-
   }
 
   return (

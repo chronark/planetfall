@@ -23,7 +23,7 @@ export const tinybirdRouter = t.router({
       }),
     )
     .query(async ({ input, ctx }) => {
-      const endpoint =await db.endpoint.findFirst({
+      const endpoint = await db.endpoint.findFirst({
         where: {
           AND: {
             id: input.endpointId,

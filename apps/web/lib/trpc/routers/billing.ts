@@ -24,7 +24,7 @@ export const billingRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findUnique({
+      const team = await db.team.findUnique({
         where: { id: input.teamId },
         include: {
           members: {
@@ -80,7 +80,7 @@ export const billingRouter = t.router({
         }
       }
 
-      const updated =await db.team.update({
+      const updated = await db.team.update({
         where: { id: team.id },
         data: {
           plan: input.plan,
@@ -114,7 +114,7 @@ export const billingRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      let team =await db.team.findUnique({
+      let team = await db.team.findUnique({
         where: { id: input.teamId },
         include: {
           members: {
@@ -155,7 +155,7 @@ export const billingRouter = t.router({
 
         // @ts-ignore We don't return all the fields, but we don't need them anyways
         // Fixing the type would require useless db lookups
-        team =await db.team.update({
+        team = await db.team.update({
           where: {
             id: team.id,
           },

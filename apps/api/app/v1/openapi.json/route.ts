@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getEndpoints } from "../endpoints/handler"
-import { getEndpoint } from "../endpoints/[endpointId]/handler"
+import { getEndpoints } from "../endpoints/handler";
+import { getEndpoint } from "../endpoints/[endpointId]/handler";
 
 import { OpenAPIObject, OpenAPIPathsObject } from "@/lib/utils";
 

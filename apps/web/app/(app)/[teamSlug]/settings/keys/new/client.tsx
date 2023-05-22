@@ -153,7 +153,6 @@ export const ClientPage: React.FC<Props> = ({ team }) => {
       <main className="container mx-auto mt-8">
         {key.data ? (
           <Dialog defaultOpen>
-
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Your API Key</DialogTitle>
@@ -167,11 +166,11 @@ export const ClientPage: React.FC<Props> = ({ team }) => {
                       <AlertTriangle className="w-4 h-4" />
                       <AlertTitle>Root Key Generated</AlertTitle>
                       <AlertDescription>
-                        The root key will provide full read and write access to all current and future
-                        resources.
+                        The root key will provide full read and write access to all current and
+                        future resources.
                         <br />
-                        For production use, we recommend creating a key with only the permissions you
-                        need.
+                        For production use, we recommend creating a key with only the permissions
+                        you need.
                       </AlertDescription>
                     </Alert>
                   ) : null}
@@ -192,7 +191,6 @@ export const ClientPage: React.FC<Props> = ({ team }) => {
               </div>
             </DialogContent>
           </Dialog>
-
         ) : null}
         <Card>
           <CardHeader>

@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   let teams: Team[] = [];
   if (validated.data.customer.externalId) {
-    const memberships =await db.membership.findMany({
+    const memberships = await db.membership.findMany({
       where: {
         userId: validated.data.customer.externalId,
       },
@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     teams = memberships.map((m) => m.team);
   } else {
-    const user =await db.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         email: validated.data.customer.email,
       },

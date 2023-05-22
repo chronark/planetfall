@@ -23,14 +23,14 @@ const teamId = "team_NszcknrCNzjFgnLvqUCXGR";
 async function main() {
   const db = new PrismaClient();
 
-  const endpoints =await db.endpoint.findMany({
+  const endpoints = await db.endpoint.findMany({
     where: {
       teamId,
     },
   });
   for (const e of endpoints) {
     console.log(e);
-   await db.endpoint.update({
+    await db.endpoint.update({
       where: {
         id: e.id,
       },
@@ -43,7 +43,7 @@ async function main() {
   }
   console.log(endpoints.length);
 
- await db.$disconnect();
+  await db.$disconnect();
 }
 
 main();

@@ -10,7 +10,7 @@ export default async function OnboardingPage() {
     return redirect("/auth/sign-in");
   }
 
-  const user =await db.user.upsert({
+  const user = await db.user.upsert({
     where: { id: clerkUser.id },
     update: {
       name: clerkUser.username!,

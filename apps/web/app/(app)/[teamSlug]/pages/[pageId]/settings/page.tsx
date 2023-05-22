@@ -12,14 +12,14 @@ export default async function Page(props: {
     return redirect("/auth/sign-in");
   }
 
-  const team =await db.team.findUnique({
+  const team = await db.team.findUnique({
     where: { slug: props.params.teamSlug },
     include: { endpoints: true },
   });
   if (!team) {
     return notFound();
   }
-  const page =await db.statusPage.findUnique({
+  const page = await db.statusPage.findUnique({
     where: { id: props.params.pageId },
     include: {
       endpoints: true,

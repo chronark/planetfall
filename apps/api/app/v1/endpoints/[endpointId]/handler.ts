@@ -3,7 +3,7 @@ import { authorize } from "@/lib/auth";
 import { makeRequestHandler } from "@/lib/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { assertion } from "@planetfall/assertions"
+import { assertion } from "@planetfall/assertions";
 
 export const getEndpoint = makeRequestHandler({
   method: "GET",
@@ -38,32 +38,37 @@ export const getEndpoint = makeRequestHandler({
       // pages: z.array(z.string()),
       // alerts: z.array(z.object({})),// FIXME:
       // setup: z.object({}).optional(),// FIXME:
-    })
-
+    }),
   }),
   run: async ({ request, input, sendOutput }) => {
-    const auth = await authorize(request)
+    const auth = await authorize(request);
     if (auth.error) {
-      return auth.res
+      return auth.res;
     }
 
-
-
-
-
     const [endpoint, regions] = await Promise.all([
-      kysely.selectFrom("Endpoint").selectAll().where("Endpoint.id", "=", input.endpointId).executeTakeFirst(),
-      kysely.selectFrom("_EndpointToRegion").select("_EndpointToRegion.B").where("_EndpointToRegion.A", "=", input.endpointId).execute()
-    ])
+      kysely
+        .selectFrom("Endpoint")
+        .selectAll()
+        .where("Endpoint.id", "=", input.endpointId)
+        .executeTakeFirst(),
+      kysely
+        .selectFrom("_EndpointToRegion")
+        .select("_EndpointToRegion.B")
+        .where("_EndpointToRegion.A", "=", input.endpointId)
+        .execute(),
+    ]);
 
     if (!endpoint) {
       return NextResponse.json({ error: "Endpoint not found" }, { status: 404 });
     }
-    const access = auth.policy.validate("endpoint:read", `${endpoint.teamId}::endpoint::${endpoint.id}`)
+    const access = auth.policy.validate(
+      "endpoint:read",
+      `${endpoint.teamId}::endpoint::${endpoint.id}`,
+    );
     if (!access.valid) {
       return NextResponse.json({ error: "Unauthorized", message: access.error }, { status: 403 });
     }
-
 
     return sendOutput({
       endpoint: {
@@ -83,17 +88,15 @@ export const getEndpoint = makeRequestHandler({
         active: Boolean(endpoint.active),
         degradedAfter: endpoint.degradedAfter,
         timeout: endpoint.timeout ?? 0,
-        distribution: endpoint.distribution ,
-        regions: regions.map(r => r.B),
+        distribution: endpoint.distribution,
+        regions: regions.map((r) => r.B),
         // headers: endpoint.headers,
         body: endpoint.body,
         assertions: JSON.parse(endpoint.assertions ?? "[]"),
         // pages: endpoint.pages,
         // alerts: endpoint.alerts,
         // setup: endpoint.setup,
-
-      }
+      },
     });
   },
-
 });

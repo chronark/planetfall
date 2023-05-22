@@ -17,7 +17,7 @@ export const alertsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findUnique({
+      const team = await db.team.findUnique({
         where: { id: input.teamId },
         include: {
           members: {
@@ -56,7 +56,7 @@ export const alertsRouter = t.router({
       }
       const email = input.email ?? user.user.email;
 
-      const alert =await db.alert.create({
+      const alert = await db.alert.create({
         data: {
           id: newId("alert"),
           teamId: input.teamId,
@@ -104,7 +104,7 @@ export const alertsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findUnique({
+      const team = await db.team.findUnique({
         where: { id: input.teamId },
         include: {
           members: {
@@ -142,7 +142,7 @@ export const alertsRouter = t.router({
         }
       }
 
-      const alert =await db.alert.create({
+      const alert = await db.alert.create({
         data: {
           id: newId("alert"),
           teamId: input.teamId,
@@ -189,7 +189,7 @@ export const alertsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const alert =await db.alert.findUnique({
+      const alert = await db.alert.findUnique({
         where: {
           id: input.alertId,
         },
@@ -214,7 +214,7 @@ export const alertsRouter = t.router({
         });
       }
 
-      const updated =await db.alert.update({
+      const updated = await db.alert.update({
         where: {
           id: input.alertId,
         },
@@ -246,7 +246,7 @@ export const alertsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const alert =await db.alert.findUnique({
+      const alert = await db.alert.findUnique({
         where: {
           id: input.alertId,
         },
@@ -268,7 +268,7 @@ export const alertsRouter = t.router({
         });
       }
 
-      const deleted =await db.alert.delete({
+      const deleted = await db.alert.delete({
         where: {
           id: input.alertId,
         },

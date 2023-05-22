@@ -14,7 +14,7 @@ export const channelsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findUnique({
+      const team = await db.team.findUnique({
         where: { id: input.teamId },
         include: {
           members: {
@@ -53,7 +53,7 @@ export const channelsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const channel =await db.emailChannel.findUnique({
+      const channel = await db.emailChannel.findUnique({
         where: {
           id: input.channelId,
         },
@@ -93,7 +93,7 @@ export const channelsRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const channel =await db.emailChannel.findUnique({
+      const channel = await db.emailChannel.findUnique({
         where: {
           id: input.channelId,
         },

@@ -776,7 +776,7 @@ async function main() {
   const db = new PrismaClient();
   for (const region of regions) {
     console.log("Upserting", region.id, region.url);
-   await db.region.upsert({
+    await db.region.upsert({
       where: {
         id: region.id,
       },
@@ -785,7 +785,7 @@ async function main() {
     });
   }
 
- await db.$disconnect();
+  await db.$disconnect();
 }
 
 main();

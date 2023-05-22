@@ -49,7 +49,7 @@ export interface IMakeRequestHandlerProps<
   run: ({
     request,
     input,
-    sendOutput
+    sendOutput,
   }: {
     /**
      * the raw request, do whatever you want with it
@@ -59,10 +59,7 @@ export interface IMakeRequestHandlerProps<
      * a helper with the input data
      */
     input: z.infer<TInput>;
-    sendOutput: (
-      output: z.infer<TOutput>,
-      options?: Partial<ResponseInit>
-    ) => Promise<Response>;
+    sendOutput: (output: z.infer<TOutput>, options?: Partial<ResponseInit>) => Promise<Response>;
   }) => Promise<Response>;
 }
 
@@ -124,19 +121,19 @@ export const makeRequestHandler = <
     // query parameters
     ...(!httpMethodSupportsRequestBody[props.method]
       ? Object.keys(props.input.shape)
-        // exclude query parameters that are already path parameters
-        .filter((key) => {
-          return !getKeysFromPathPattern(props.path).some((k) => String(k.name) === key);
-        })
-        .map((key) => {
-          return {
-            name: key,
-            in: "query" as oas31.ParameterLocation,
-            schema: {
-              type: "string" as oas31.SchemaObjectType,
-            },
-          };
-        })
+          // exclude query parameters that are already path parameters
+          .filter((key) => {
+            return !getKeysFromPathPattern(props.path).some((k) => String(k.name) === key);
+          })
+          .map((key) => {
+            return {
+              name: key,
+              in: "query" as oas31.ParameterLocation,
+              schema: {
+                type: "string" as oas31.SchemaObjectType,
+              },
+            };
+          })
       : []),
     // add path parameters
     ...getKeysFromPathPattern(props.path).map((key) => ({
@@ -151,12 +148,12 @@ export const makeRequestHandler = <
   const openAPIRequestBody: oas31.ReferenceObject | oas31.RequestBodyObject | undefined =
     httpMethodSupportsRequestBody[props.method]
       ? {
-        content: {
-          "application/json": {
-            schema: generateSchema(props.input),
+          content: {
+            "application/json": {
+              schema: generateSchema(props.input),
+            },
           },
-        },
-      }
+        }
       : undefined;
 
   const openAPIOperation: oas31.OperationObject = {
@@ -214,9 +211,9 @@ export const makeRequestHandler = <
       // parse input from query parameters or body
       ...(httpMethodSupportsRequestBody[request.method as HTTPMethod]
         ? // if the method supports a body, parse it
-        await request.json()
+          await request.json()
         : // otherwise, parse the query parameters
-        Object.fromEntries(new URL(request.url).searchParams.entries())),
+          Object.fromEntries(new URL(request.url).searchParams.entries())),
     };
 
     // parse the input with zod schema
@@ -228,17 +225,8 @@ export const makeRequestHandler = <
     }
 
     const input = parsedData.data;
-    const sendOutput = async (
-      output: z.infer<TOutput>,
-      options?: Partial<ResponseInit>
-    ) => {
-
-
-      return NextResponse.json(
-        props.output.parse(output),
-        options
-
-      );
+    const sendOutput = async (output: z.infer<TOutput>, options?: Partial<ResponseInit>) => {
+      return NextResponse.json(props.output.parse(output), options);
     };
     // run the user's code
     return props.run({ request: requestForRun, input, sendOutput }).catch((err) => {

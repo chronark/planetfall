@@ -8,7 +8,7 @@ import { useToast } from "@/components/toast";
 import { DeleteKeyButton } from "../delete-key";
 import { Badge } from "@/components/badge";
 import { Trash } from "lucide-react";
-import { Button } from "@/components/button"
+import { Button } from "@/components/button";
 
 const allActions = ["create", "read", "update", "delete", "checks:read", "checks:write"];
 
@@ -28,15 +28,16 @@ export const Client: React.FC<Props> = ({ apiKey, endpointIdToName }) => {
   const policy = apiKey.policy ? Policy.parse(apiKey.policy) : null;
 
   return (
-
     <div>
       <PageHeader
         title={apiKey.name}
         description={`created at ${apiKey.createdAt.toUTCString()}`}
         actions={[
-          <Badge key="key" size="md">{apiKey.firstCharacters ?? undefined}...</Badge>,
+          <Badge key="key" size="md">
+            {apiKey.firstCharacters ?? undefined}...
+          </Badge>,
           <DeleteKeyButton key="delete" keyId={apiKey.id}>
-            <Button variant="subtle" >
+            <Button variant="subtle">
               <Trash className="w-4 h-4 mr-2" />
               <span>Revoke</span>
             </Button>
@@ -58,7 +59,10 @@ export const Client: React.FC<Props> = ({ apiKey, endpointIdToName }) => {
                 <CardContent>
                   {Object.entries(resources ?? {}).map(([grid, permissions]) => {
                     return (
-                      <div key={grid} className="flex flex-col items-start justify-between w-full gap-4 py-6 md:flex-row md:items-center">
+                      <div
+                        key={grid}
+                        className="flex flex-col items-start justify-between w-full gap-4 py-6 md:flex-row md:items-center"
+                      >
                         <span className="text-sm font-medium leading-6 text-zinc-800">
                           {endpointIdToName[grid.split("::").at(-1) ?? ""]}
                         </span>

@@ -32,7 +32,7 @@ export const apikeyRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const team =await db.team.findUnique({
+      const team = await db.team.findUnique({
         where: {
           id: input.teamId,
         },
@@ -49,7 +49,14 @@ export const apikeyRouter = t.router({
       const endpointRules =
         input.permissions.endpoints === "*"
           ? {
-              [`${team.id}::endpoint::*`]: ["create", "read", "update", "delete", "checks:read", "checks:write"],
+              [`${team.id}::endpoint::*`]: [
+                "create",
+                "read",
+                "update",
+                "delete",
+                "checks:read",
+                "checks:write",
+              ],
             }
           : Object.entries(input.permissions.endpoints).reduce((acc, endpoint) => {
               const permissions = Object.entries(endpoint[1])
@@ -71,7 +78,7 @@ export const apikeyRouter = t.router({
 
       const apiKey = newId("apiKey");
 
-     await db.apiKey.create({
+      await db.apiKey.create({
         data: {
           id: newId("apiKeyId"),
           keyHash: crypto.createHash("SHA-256").update(apiKey).digest("base64"),
@@ -95,7 +102,7 @@ export const apikeyRouter = t.router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const key =await db.apiKey.findUnique({
+      const key = await db.apiKey.findUnique({
         where: {
           id: input.keyId,
         },
@@ -112,7 +119,7 @@ export const apikeyRouter = t.router({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-     await db.apiKey.delete({
+      await db.apiKey.delete({
         where: {
           id: key.id,
         },
