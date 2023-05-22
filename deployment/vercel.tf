@@ -173,29 +173,35 @@ resource "vercel_project_domain" "wildcard" {
 }
 
 
-resource "vercel_project" "docs" {
-  name      = "planetfall-docs"
+resource "vercel_project" "api" {
+  name      = "planetfall-api"
   team_id   = var.vercel_team_id
   framework = "nextjs"
 
 
-  root_directory = "apps/docs"
+  root_directory = "apps/api"
 
   git_repository = {
     repo = "chronark/planetfall"
     type = "github"
   }
-
-
 }
 
 
 
-resource "vercel_project_domain" "planetfall_docs" {
-  project_id = vercel_project.docs.id
+resource "vercel_project_domain" "planetfall_api_vercel" {
+  project_id = vercel_project.api.id
   team_id    = var.vercel_team_id
   domain     = "planetfall-docs.vercel.app"
 }
+
+resource "vercel_project_domain" "planetfall_api" {
+  project_id = vercel_project.api.id
+  team_id    = var.vercel_team_id
+  domain     = "api.planetfall.io"
+}
+
+
 
 
 

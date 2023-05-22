@@ -66,6 +66,7 @@
     "baseUrl": "https://api.planetfall.io",
     "auth":{"method":"bearer"}
   },
+  "openapi": "https://api.planetfall.io/v1/openapi.json",
   "footerSocials": {
     "twitter": "https://twitter.com/mintlify",
     "github": "https://github.com/mintlify",
