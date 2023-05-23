@@ -22,7 +22,7 @@ export const t = initTRPC
 export const auth = t.middleware(async ({ next, ctx }) => {
   const auth = await authorize(ctx.authorization);
 
-  console.log("[TRPC] Policy", auth.policy)
+  console.log("[TRPC] Policy", JSON.stringify(auth.policy,null,2))
   return next({
     ctx: {
       ...ctx,
