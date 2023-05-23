@@ -4,7 +4,6 @@ import type { CreateNextContextOptions } from "@trpc/server/adapters/next";
 // eslint-disable-next-line @typescript-eslint/require-await
 export const createContext = async ({ req, res }: CreateNextContextOptions) => {
   const requestId = crypto.randomUUID();
-  console.log("requestId", requestId)
   res.setHeader("x-request-id", requestId);
 
   const authorization = req.headers["authorization"];

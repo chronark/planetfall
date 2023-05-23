@@ -75,8 +75,8 @@ resource "vercel_project" "web" {
       key    = "UPSTASH_REDIS_REST_URL"
       value  = "https:${upstash_redis_database.planetfall.endpoint}"
       target = ["production", "preview", "development"]
-      }, 
-      {
+    },
+    {
       key    = "UPSTASH_REDIS_REST_TOKEN"
       value  = upstash_redis_database.planetfall.rest_token
       target = ["production", "preview", "development"]
@@ -144,9 +144,9 @@ resource "vercel_project" "web" {
       target = ["production"]
     },
     {
-      key: "PLAIN_API_KEY",
-      value: var.plain_api_key,
-      target: ["production", "preview", "development"]
+      key : "PLAIN_API_KEY",
+      value : var.plain_api_key,
+      target : ["production", "preview", "development"]
     }
 
   ]
@@ -187,6 +187,17 @@ resource "vercel_project" "api" {
     repo = "chronark/planetfall"
     type = "github"
   }
+
+  environment = [
+
+    {
+      key    = "DATABASE_URL",
+      value  = var.database_url,
+      target = ["production", "preview"]
+    },
+
+
+  ]
 }
 
 
