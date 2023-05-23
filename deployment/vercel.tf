@@ -197,6 +197,13 @@ resource "vercel_project" "api" {
     },
 
 
+    {
+      key    = "TINYBIRD_TOKEN"
+      value  = var.tinybird_token
+      target = ["production", "preview"]
+    },
+
+
   ]
 }
 
