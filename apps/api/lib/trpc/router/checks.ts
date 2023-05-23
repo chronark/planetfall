@@ -40,7 +40,7 @@ export const checksRouter = t.router({
 
             const access = ctx.auth.policy.validate(
                 "endpoint:events:read",
-                `${ctx.auth.team.teamId}::endpoint::${input.endpointId}`,
+                `${ctx.auth.team.id}::endpoint::${input.endpointId}`,
             );
             if (!access.valid) {
                 console.warn(
