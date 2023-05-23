@@ -10,7 +10,7 @@ import { Badge } from "@/components/badge";
 import { Trash } from "lucide-react";
 import { Button } from "@/components/button";
 
-const allActions = ["create", "read", "update", "delete", "checks:read", "checks:write"];
+const allActions = ["create", "read", "update", "delete"];
 
 type Props = {
   apiKey: {

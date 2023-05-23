@@ -23,8 +23,7 @@ export const apikeyRouter = t.router({
                 read: z.boolean(),
                 update: z.boolean(),
                 delete: z.boolean(),
-                "checks:read": z.boolean(),
-                "checks:write": z.boolean(),
+              
               }),
             ),
           ]),
@@ -54,8 +53,7 @@ export const apikeyRouter = t.router({
                 "read",
                 "update",
                 "delete",
-                "checks:read",
-                "checks:write",
+              
               ],
             }
           : Object.entries(input.permissions.endpoints).reduce((acc, endpoint) => {

@@ -203,7 +203,7 @@ export const endpointsRouter = t.router({
     )
     .query(async ({ ctx, input }) => {
       const access = ctx.auth.policy.validate(
-        "endpoint:checks:read",
+        "endpoint:read",
         `${ctx.auth.team.id}::endpoint::${input.endpointId}`,
       );
       if (!access.valid) {

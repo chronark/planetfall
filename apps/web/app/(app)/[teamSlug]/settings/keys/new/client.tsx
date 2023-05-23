@@ -48,15 +48,14 @@ const FormSchema = z.record(
     read: z.boolean(),
     update: z.boolean(),
     delete: z.boolean(),
-    "checks:read": z.boolean(),
-    "events:create": z.boolean(),
+   
   }),
 );
 
 export const ClientPage: React.FC<Props> = ({ team }) => {
   const [rootKeyModalOpen, setRootKeyModalOpen] = useState(false);
 
-  const actions = ["create", "read", "update", "delete", "checks:read", "checks:write"] as const;
+  const actions = ["create", "read", "update", "delete"] as const;
   type Action = typeof actions[number];
 
   type FormData = {
@@ -74,8 +73,7 @@ export const ClientPage: React.FC<Props> = ({ team }) => {
         read: false,
         update: false,
         delete: false,
-        "checks:read": false,
-        "checks:write": false,
+       
       };
       return acc;
     }, {} as FormData),
