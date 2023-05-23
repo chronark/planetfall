@@ -9,11 +9,10 @@ export const t = initTRPC
   .meta<OpenApiMeta>()
   .create({
     errorFormatter: ({ error, shape }) => {
-      console.error("[TRPC]", error)
+      console.error("[TRPC]", error);
       if (error.code === "INTERNAL_SERVER_ERROR" && process.env.NODE_ENV === "production") {
         return { ...shape, message: "Internal server error" };
       }
-
 
       return shape;
     },
@@ -22,7 +21,7 @@ export const t = initTRPC
 export const auth = t.middleware(async ({ next, ctx }) => {
   const auth = await authorize(ctx.authorization);
 
-  console.log("[TRPC] Policy", JSON.stringify(auth.policy,null,2))
+  console.log("[TRPC] Policy", JSON.stringify(auth.policy, null, 2));
   return next({
     ctx: {
       ...ctx,

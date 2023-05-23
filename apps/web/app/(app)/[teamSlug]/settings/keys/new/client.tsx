@@ -48,7 +48,7 @@ const FormSchema = z.record(
     read: z.boolean(),
     update: z.boolean(),
     delete: z.boolean(),
-    "events:read": z.boolean(),
+    "checks:read": z.boolean(),
     "events:create": z.boolean(),
   }),
 );

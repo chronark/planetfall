@@ -18,8 +18,8 @@ export type Resources = {
      * Can delete an endpoint
      */
     "delete",
-    "events:read",
-    "events:write",
+    "checks:read",
+    "checks:write",
   ];
 };
 

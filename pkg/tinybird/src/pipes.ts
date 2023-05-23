@@ -218,6 +218,5 @@ export const getLatestChecks10Minutes = tb.buildPipe({
     regionId: z.string(),
     status: z.number().nullable(),
     error: z.string().nullable(),
-
-  })
+  }),
 });

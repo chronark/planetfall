@@ -182,18 +182,28 @@ export const endpointsRouter = t.router({
     .output(
       z.array(
         z.object({
-          latency: z.number().nullable().describe("The latency of the check, in ms. Can be null if the check failed"),
-          status: z.number().nullable().describe("The HTTP status code of the check. Can be null if the check failed"),
-          regionId: z.string().describe("The internal planetfall id of the region the check was performed in"),
+          latency: z
+            .number()
+            .nullable()
+            .describe("The latency of the check, in ms. Can be null if the check failed"),
+          status: z
+            .number()
+            .nullable()
+            .describe("The HTTP status code of the check. Can be null if the check failed"),
+          regionId: z
+            .string()
+            .describe("The internal planetfall id of the region the check was performed in"),
           time: z.number().int().describe("The time the check was performed, Unix timestamp in ms"),
-          error: z.string().nullable().describe("The error message of the check. Will be null if the check succeeded"),
-         
+          error: z
+            .string()
+            .nullable()
+            .describe("The error message of the check. Will be null if the check succeeded"),
         }),
       ),
     )
     .query(async ({ ctx, input }) => {
       const access = ctx.auth.policy.validate(
-        "endpoint:events:read",
+        "endpoint:checks:read",
         `${ctx.auth.team.id}::endpoint::${input.endpointId}`,
       );
       if (!access.valid) {
