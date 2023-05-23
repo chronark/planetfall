@@ -1,12 +1,11 @@
 "use client";
 
-import { Button } from "../components";
+import { Button } from "../components/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/dialog";
@@ -15,7 +14,7 @@ import { Input } from "@/components/input";
 import { Label } from "@/components/label";
 import { Loading } from "@/components/loading";
 import { trpc } from "@/lib/trpc/hooks";
-import { Plan } from "@prisma/client";
+import type { Plan } from "@planetfall/db";
 import classNames from "classnames";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import Link from "next/link";

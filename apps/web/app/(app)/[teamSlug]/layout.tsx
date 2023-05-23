@@ -7,8 +7,6 @@ import ms from "ms";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export const revalidate = 60;
-
 export default async function AppLayout(props: {
   children: React.ReactNode;
   params: { teamSlug: string };

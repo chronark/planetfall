@@ -207,9 +207,6 @@ export const getLatestChecksByEndpoint = tb.buildPipe({
   data: check,
 });
 
-
-
-
 export const getLatestChecks10Minutes = tb.buildPipe({
   pipe: "api__get_latest_10m",
   parameters: z.object({

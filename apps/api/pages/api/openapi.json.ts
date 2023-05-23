@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-
-
 import { generateOpenApiDocument } from "trpc-openapi";
 
 import { router } from "@/lib/trpc/router";
@@ -14,7 +12,6 @@ const openApiDocument = generateOpenApiDocument(router, {
   docsUrl: "https://planetfall.io/docs",
   tags: ["endpoints"],
 });
-
 
 // Respond with our OpenAPI schema
 const handler = (_req: NextApiRequest, res: NextApiResponse) => {

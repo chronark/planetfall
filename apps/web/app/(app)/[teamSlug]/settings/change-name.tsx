@@ -1,17 +1,15 @@
 "use client";
+import { Button } from "@/components/button";
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/index";
+} from "@/components/card";
 import { Input } from "@/components/input";
 import { Label } from "@/components/label";
-import { Loading } from "@/components/loading";
-import { Tag } from "@/components/tag";
 import { useToast } from "@/components/toast";
 import { trpc } from "@/lib/trpc";
 import { useRouter } from "next/navigation";

@@ -5,12 +5,13 @@ import { AlertDescription } from "@/components/alert";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/dialog";
-import { Button, Card, CardDescription, CardHeader, CardTitle, Text } from "@/components/index";
+import { Button } from "@/components/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/card";
+import { Text } from "@/components/text";
 import { Input } from "@/components/input";
 import { Loading } from "@/components/loading";
 import { Toaster, useToast } from "@/components/toast";

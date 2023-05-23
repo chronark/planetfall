@@ -372,7 +372,7 @@ export class Scheduler {
             endpointId: endpoint.id,
             latency: c.latency,
             regionId: region.id,
-            checkId
+            checkId,
           });
           return {
             id: checkId,

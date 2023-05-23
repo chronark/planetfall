@@ -35,6 +35,6 @@
     "@react-email/text": "^0.0.5",
     "react": "^18.2.0",
     "react-email": "^1.9.3",
-    "resend": "^0.14.0"
+    "resend": "^0.14.1"
   }
 }

@@ -103,7 +103,7 @@ export const ClientPage: React.FC<Props> = ({ team }) => {
     },
   });
 
-  const snippet = `curl 'http://localhost:3003/v1/endpoints' \\
+  const snippet = `curl 'https://api.planetfall.io/v1/endpoints' \\
   -H "Authorization: ${key.data?.apiKey}"
 `;
 

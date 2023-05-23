@@ -5,16 +5,16 @@ import { db, Team } from "@planetfall/db";
 export type AuthorizationResponse = {
   policy: Policy;
   team: Team;
-}
+};
 
-
-
-export async function authorize(authorizationHeader: string | undefined): Promise<AuthorizationResponse> {
+export async function authorize(
+  authorizationHeader: string | undefined,
+): Promise<AuthorizationResponse> {
   if (!authorizationHeader) {
     throw new TRPCError({
       message: "Unauthorized",
       code: "UNAUTHORIZED",
-    })
+    });
   }
   const token = authorizationHeader.replace("Bearer ", "");
 
@@ -26,15 +26,15 @@ export async function authorize(authorizationHeader: string | undefined): Promis
       keyHash: hash,
     },
     include: {
-      team: true
-    }
-  })
+      team: true,
+    },
+  });
 
   if (!apiKey) {
     throw new TRPCError({
       message: "Unauthorized",
       code: "UNAUTHORIZED",
-    })
+    });
   }
 
   const policy = Policy.parse(apiKey.policy);

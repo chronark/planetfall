@@ -3,21 +3,14 @@ import { Badge } from "@/components/badge";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/dialog";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Confirm,
-  Text,
-  ToastAction,
-} from "@/components/index";
+import { Button } from "@/components/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
+import { Confirm } from "@/components/confirm";
+import { Text } from "@/components/text";
 import { Input } from "@/components/input";
 import { Loading } from "@/components/loading";
 import {
@@ -28,17 +21,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/table/table";
-import { Tag } from "@/components/tag";
-import { Toaster, useToast } from "@/components/toast";
+import { useToast } from "@/components/toast";
 import { trpc } from "@/lib/trpc/hooks";
-import { MemberRole } from "@prisma/client";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Trash } from "lucide-react";
+import type { MemberRole } from "@planetfall/db";
 import Image from "next/image";
 import React, { useState } from "react";
 

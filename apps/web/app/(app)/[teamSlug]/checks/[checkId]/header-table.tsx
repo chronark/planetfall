@@ -3,7 +3,6 @@
 import { parseCacheControlHeaders, parseXVercelId } from "@planetfall/header-analysis";
 import React from "react";
 
-import { Button } from "@/components/button";
 import {
   Dialog,
   DialogContent,
@@ -13,21 +12,9 @@ import {
   DialogTrigger,
 } from "@/components/dialog";
 import { DataTable } from "@/components/table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/table/table";
+
 import { Text } from "@/components/text";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import { Lightbulb } from "lucide-react";
 export type Props = {
   header: {
