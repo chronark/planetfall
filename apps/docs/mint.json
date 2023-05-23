@@ -2,8 +2,8 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Planetfall Documentation",
   "logo": {
-    "dark": "https://planetfall.io/img/wordmark-dark.svg",
-    "light": "https://planetfall.io/img/wordmark.svg"
+    "dark": "/logo/wordmark-dark.svg",
+    "light": "/logo/wordmark.svg"
   },
   "favicon": "/favicon.png",
   "colors": {
