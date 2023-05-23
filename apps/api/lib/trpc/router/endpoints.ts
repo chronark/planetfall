@@ -1,0 +1,175 @@
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { assertion } from "@planetfall/assertions";
+import { db } from "@planetfall/db";
+import { auth, t } from "../trpc";
+
+
+export const endpointsRouter = t.router({
+    listEndpoints: t.procedure.use(auth)
+        .meta({
+            openapi: {
+                method: "GET",
+                path: "/v1/endpoints",
+                tags: ["endpoints"],
+                summary: "Read all endpoints",
+            },
+        })
+        .input(z.void())
+        .output(
+            z.object({
+                endpoints: z.array(
+                    z.object({
+                        id: z.string().describe("The id of the endpoint"),
+                        method: z
+                            .enum(["GET", "POST", "PUT", "PATCH", "DELETE"])
+                            .describe("The HTTP method of the endpoint"),
+                        name: z.string().describe("The name of the endpoint"),
+                        teamId: z.string(),
+                        url: z.string(),
+                        createdAt: z.number().int(),
+                        updatedAt: z.number().int(),
+                        followRedirects: z.boolean(),
+                        prewarm: z.boolean().nullable(),
+                        runs: z.number().int().nullable(),
+                        ownerId: z.string().nullable(),
+                        // auditLog: z.array(z.object({})),// FIXME:
+                        interval: z.number().int(),
+                        active: z.boolean(),
+                        degradedAfter: z.number().int().nullable(),
+                        timeout: z.number().int().nullable(),
+                        distribution: z.enum(["RANDOM", "ALL"]),
+                        regions: z.array(z.string()),
+                        headers: z.record(z.string()).nullable(),
+                        body: z.string().nullable(),
+                        assertions: z.array(assertion),
+
+                        // pages: z.array(z.string()),
+                        // alerts: z.array(z.object({})),// FIXME:
+                        // setup: z.object({}).optional(),// FIXME:
+                    }),
+                ),
+            }),
+        )
+        .query(async ({ ctx }) => {
+            const endpoints = await db.endpoint.findMany({
+                where: {
+                    teamId: ctx.auth.team.id,
+                },
+                include: {
+                    regions: true,
+                },
+            });
+            const endpointsWithAccess = endpoints.filter((endpoint) => {
+                const access = ctx.auth.policy.validate(
+                    "endpoint:read",
+                    `${endpoint.teamId}::endpoint::${endpoint.id}`,
+                );
+                if (!access.valid) {
+                    console.warn(
+                        `Team ${ctx.auth.team.id} tried to access endpoint ${endpoint.id} but was denied access: ${access.error}`,
+                    );
+                    return false;
+                }
+                return true;
+            });
+
+            return {
+                endpoints: endpointsWithAccess.map((e) => ({
+                    ...e,
+                    assertions: JSON.parse(e.assertions ?? "[]") as any,
+                    headers: e.headers as any,
+                    createdAt: e.createdAt.getTime(),
+                    updatedAt: e.updatedAt.getTime(),
+                    method: e.method as any,
+                    regions: e.regions.map((r) => r.id),
+                })),
+            };
+        }),
+    getEndpointById: t.procedure.use(auth)
+        .meta({
+            openapi: {
+                method: "GET",
+                path: "/v1/endpoints/:endpointId",
+                tags: ["endpoints"],
+                summary: "Get an endpoint by id",
+            },
+        })
+        .input(z.object({ endpointId: z.string() }))
+        .output(
+            z.object({
+                endpoint:
+                    z.object({
+                        id: z.string().describe("The id of the endpoint"),
+                        method: z
+                            .enum(["GET", "POST", "PUT", "PATCH", "DELETE"])
+                            .describe("The HTTP method of the endpoint"),
+                        name: z.string().describe("The name of the endpoint"),
+                        teamId: z.string(),
+                        url: z.string(),
+                        createdAt: z.number().int(),
+                        updatedAt: z.number().int(),
+                        followRedirects: z.boolean(),
+                        prewarm: z.boolean().nullable(),
+                        runs: z.number().int().nullable(),
+                        ownerId: z.string().nullable(),
+                        // auditLog: z.array(z.object({})),// FIXME:
+                        interval: z.number().int(),
+                        active: z.boolean(),
+                        degradedAfter: z.number().int().nullable(),
+                        timeout: z.number().int().nullable(),
+                        distribution: z.enum(["RANDOM", "ALL"]),
+                        regions: z.array(z.string()),
+                        headers: z.record(z.string()).nullable(),
+                        body: z.string().nullable(),
+                        assertions: z.array(assertion),
+
+                        // pages: z.array(z.string()),
+                        // alerts: z.array(z.object({})),// FIXME:
+                        // setup: z.object({}).optional(),// FIXME:
+                    }),
+            }),
+
+        )
+        .query(async ({ ctx, input }) => {
+            const access = ctx.auth.policy.validate(
+                "endpoint:read",
+                `${ctx.auth.team.id}::endpoint::${input.endpointId}`,
+            );
+
+            if (!access.valid) {
+                throw new TRPCError({
+                    code: "UNAUTHORIZED",
+                    message: access.error,
+                });
+            }
+
+
+            const endpoint = await db.endpoint.findUnique({
+                where: {
+                    id: input.endpointId,
+                },
+                include: {
+                    regions: true,
+                },
+            });
+            if (!endpoint) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: `Endpoint ${input.endpointId} not found`,
+                })
+            }
+
+            return {
+                endpoint: {
+                    ...endpoint,
+                    assertions: JSON.parse(endpoint.assertions ?? "[]") as any,
+                    headers: endpoint.headers as any,
+                    createdAt: endpoint.createdAt.getTime(),
+                    updatedAt: endpoint.updatedAt.getTime(),
+                    method: endpoint.method as any,
+                    regions: endpoint.regions.map((r) => r.id),
+                }
+            };
+        }),
+});

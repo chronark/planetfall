@@ -367,13 +367,15 @@ export class Scheduler {
               }
             }
           }
+          const checkId = newId("check");
           this.logger.info("report.check", {
             endpointId: endpoint.id,
             latency: c.latency,
             regionId: region.id,
+            checkId
           });
           return {
-            id: newId("check"),
+            id: checkId,
             endpointId: endpoint.id,
             teamId: endpoint.teamId,
             latency: c.latency,

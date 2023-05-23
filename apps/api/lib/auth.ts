@@ -1,49 +1,47 @@
-import { NextResponse } from "next/server";
 import { Policy } from "@planetfall/policies";
-import { kysely } from "./kysely";
+import { TRPCError } from "@trpc/server";
+import { db, Team } from "@planetfall/db";
 
-export type AuthorizationResponse =
-  | {
-      error: true;
-      res: NextResponse;
-      policy?: never;
-    }
-  | {
-      error: false;
-      res?: never;
-      policy: Policy;
-      teamId: string;
-    };
+export type AuthorizationResponse = {
+  policy: Policy;
+  team: Team;
+}
 
-export async function authorize(req: Request): Promise<AuthorizationResponse> {
-  let authorization = req.headers.get("authorization");
-  if (!authorization) {
-    return {
-      error: true,
-      res: NextResponse.json({ error: "Unauthenticated" }, { status: 401 }),
-    };
+
+
+export async function authorize(authorizationHeader: string | undefined): Promise<AuthorizationResponse> {
+  if (!authorizationHeader) {
+    throw new TRPCError({
+      message: "Unauthorized",
+      code: "UNAUTHORIZED",
+    })
   }
-  authorization = authorization.replace("Bearer ", "");
+  const token = authorizationHeader.replace("Bearer ", "");
 
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(authorization));
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
   const hash = toBase64(buf);
 
-  const apiKey = await kysely
-    .selectFrom("ApiKey")
-    .selectAll()
-    .where("ApiKey.keyHash", "=", hash)
-    .executeTakeFirst();
+  const apiKey = await db.apiKey.findUnique({
+    where: {
+      keyHash: hash,
+    },
+    include: {
+      team: true
+    }
+  })
 
   if (!apiKey) {
-    return { error: true, res: NextResponse.json({ error: "Unauthorized" }, { status: 403 }) };
+    throw new TRPCError({
+      message: "Unauthorized",
+      code: "UNAUTHORIZED",
+    })
   }
 
   const policy = Policy.parse(apiKey.policy);
 
   return {
-    error: false,
     policy,
-    teamId: apiKey.teamId,
+    team: apiKey.team,
   };
 }
 

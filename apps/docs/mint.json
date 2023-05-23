@@ -61,12 +61,12 @@
     }
   ],
   "api": {
-    "baseUrl": "https://api.planetfall.io",
+    "baseUrl": "http://localhost:3003",
     "auth": {
       "method": "bearer"
     }
   },
-  "openapi": "https://api.planetfall.io/v1/openapi.json",
+  "openapi": "http://localhost:3003/openapi.json",
   "footerSocials": {
     "twitter": "https://twitter.com/chronark_",
     "github": "https://github.com/chronark"
