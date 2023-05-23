@@ -176,7 +176,7 @@ export const endpointsRouter = t.router({
     .input(
       z.object({
         endpointId: z.string().describe("The id of the endpoint"),
-        since: z.enum(["10m"]).describe("The time since the last check"),
+        since: z.enum(["10m"]).describe("The time since the last check, Must be `10m` for now"),
       }),
     )
     .output(
