@@ -182,17 +182,12 @@ export const endpointsRouter = t.router({
     .output(
       z.array(
         z.object({
-          id: z.string(),
-          endpointId: z.string(),
           latency: z.number().nullable(),
           status: z.number().nullable(),
           regionId: z.string(),
-          teamId: z.string(),
           time: z.number().int(),
           error: z.string().nullable(),
-          body: z.string().nullable(),
-          headers: z.record(z.string()).nullable(),
-          timing: z.record(z.number()).nullable(),
+         
         }),
       ),
     )

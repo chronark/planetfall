@@ -13,8 +13,8 @@
   },
   "topbarLinks": [
     {
-      "name": "Documentation",
-      "url": "https://planetfall.io/docs"
+      "name": "Dashboard",
+      "url": "https://planetfall.io/home"
     }
   ],
   "topbarCtaButton": {
