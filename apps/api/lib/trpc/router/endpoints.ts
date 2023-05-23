@@ -184,11 +184,11 @@ export const endpointsRouter = t.router({
         z.object({
           latency: z
             .number()
-            .nullable()
+            .nullable().optional()
             .describe("The latency of the check, in ms. Can be null if the check failed"),
           status: z
             .number()
-            .nullable()
+            .nullable().optional()
             .describe("The HTTP status code of the check. Can be null if the check failed"),
           regionId: z
             .string()
@@ -196,7 +196,7 @@ export const endpointsRouter = t.router({
           time: z.number().int().describe("The time the check was performed, Unix timestamp in ms"),
           error: z
             .string()
-            .nullable()
+            .nullable().optional()
             .describe("The error message of the check. Will be null if the check succeeded"),
         }),
       ),
