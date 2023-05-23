@@ -178,6 +178,8 @@ resource "vercel_project" "api" {
   team_id   = var.vercel_team_id
   framework = "nextjs"
 
+  serverless_function_region = "fra1"
+
 
   root_directory = "apps/api"
 
