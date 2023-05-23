@@ -88,7 +88,7 @@ export const endpointsRouter = t.router({
     .meta({
       openapi: {
         method: "GET",
-        path: "/v1/endpoints/:endpointId",
+        path: "/v1/endpoints/{endpointId}",
         tags: ["endpoints"],
         summary: "Get an endpoint by id",
       },
@@ -168,7 +168,7 @@ export const endpointsRouter = t.router({
     .meta({
       openapi: {
         method: "GET",
-        path: "/v1/endpoints/:endpointId/checks/latest",
+        path: "/v1/endpoints/{endpointId}/checks/latest",
         tags: ["endpoints"],
         summary: "Get latest check for endpoint",
       },
