@@ -212,5 +212,12 @@ export const getLatestChecks10Minutes = tb.buildPipe({
   parameters: z.object({
     endpointId: z.string(),
   }),
-  data: check,
+  data: z.object({
+    time: z.string().transform((s) => new Date(s).getTime()),
+    latency: z.number().nullable(),
+    regionId: z.string(),
+    status: z.number().nullable(),
+    error: z.string().nullable(),
+
+  })
 });
