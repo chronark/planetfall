@@ -8,6 +8,8 @@ import { asyncComponent } from "@/components/async-component";
 import { Feedback } from "@/components/feedback";
 import { auth } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
+import { Button } from "../components";
+import Link from "next/link";
 
 export type NavbarProps = {
   teamSlug: string;
@@ -66,6 +68,9 @@ export const DesktopNavbar = asyncComponent(async (props: NavbarProps) => {
             }
           />
           <div className="flex items-center justify-between gap-4">
+            <Link href="/docs">
+              <Button size="xs">Docs</Button>
+            </Link>
             <Feedback />
             <UserButton
               user={{
