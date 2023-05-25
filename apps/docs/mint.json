@@ -42,8 +42,15 @@
     {
       "group": "Home",
       "pages": [
-        "introduction",
-        "features"
+        "introduction"
+      ]
+    },
+    {
+      "group": "Check Runners",
+      "pages": [
+        "runner/regions",
+        "runner/custom",
+        "runner/dynamic"
       ]
     },
     {
@@ -56,14 +63,12 @@
       "group": "Team",
       "pages": [
         "api-reference/teams/whoami"
-       
       ]
     },
     {
       "group": "Regions",
       "pages": [
         "api-reference/regions/list"
-       
       ]
     },
     {

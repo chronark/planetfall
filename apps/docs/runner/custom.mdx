@@ -1,0 +1,88 @@
+
+# Custom Runners
+
+If you require custom runtimes or more control over test execution, you can set up custom runners.
+
+Reasons for custom runners include:
+- You want to test the performance of an SDK.
+- You want to test APIs over other protocols, such as TCP.
+- You want to test APIs that are not publicly accessible.
+- You want to test APIs that require special authentication.
+
+
+There are two types of runners: `Managed Runners` where we work together with your to customise your function and then host and manage it.
+And `On Premise` where you host and manage your own check runner by implementing a simple HTTP API for communication.
+
+## Managed Runners
+
+Managed runners are the easiest way to get started with custom runners. We work together with you to customise your function and then host and manage it.
+You can rely on the global infrastructure of Planetfall and still have a customised test runner.
+
+
+## On Premise Runners
+
+By implementing a simple HTTP API, you can host and manage your own check runner. This gives you full control over the test execution and allows you to test APIs that are not publicly accessible.
+
+### API
+
+<CodeGroup>
+
+```ts Request
+{
+    // The method to use for the request
+    method: "GET" | "POST" | "PUT" | "DELETE" | "OPTIONS" | undefined
+  
+    // The url to check.
+    url: string
+
+    // The headers to send with the request
+    headers: Record<string, string>
+
+    // The body to send with the request if applicable
+    body: string | undefined
+
+    // The timeout in milliseconds
+    timeout: number
+
+    // Whether to follow redirects
+    followRedirects: boolean
+
+    // Whether to prewarm the connection
+    // If true, you should make 2 requests to the url and reuse the connection. 
+    // Only measure the second request's latency.
+    prewarm: boolean
+
+    // The number of runs to execute.
+    // An array of results must be returned
+    // @default 1
+    runs: number | undefined 
+
+}
+```
+
+
+Note that this always returns an error, even for single runs.
+
+```ts Response
+{
+  // The status code of the request
+  status?: number
+
+  // The latency of the request in milliseconds
+  latency?: number
+
+  // The response body
+  body?: string
+
+  // The headers of the response
+  headers?: Record<string, string>
+
+  // Unix timestamp in milliseconds of when the request was made
+  time: number
+
+  // An error if something went wrong
+  error?: string
+
+}[]
+```
+</CodeGroup>
