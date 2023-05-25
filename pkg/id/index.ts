@@ -33,9 +33,13 @@ export class IdGenerator<TPrefixes extends string> {
 
     return [this.prefixes[prefix], encodeBase58(buf)].join("_");
   };
+
+  public secret = (prefix: TPrefixes): string => {
+    return [this.prefixes[prefix], encodeBase58(randomBytes(32))].join("_");
+  };
 }
 
-export const newId = new IdGenerator({
+export const gen = new IdGenerator({
   apiKey: "pf_api",
   apiKeyId: "api",
   alert: "alrt",
@@ -51,8 +55,10 @@ export const newId = new IdGenerator({
   token: "tkn",
   jwt: "jwt",
   run: "run",
-}).id;
+});
 
+export const newId = gen.id;
+export const newSecret = gen.secret;
 export const newShortId = () => encodeBase58(randomBytes(8));
 
 export const newAnimalId = () =>

@@ -1,4 +1,133 @@
 ---
 title: "Get Endpoint"
-openapi: "GET /v1/endpoints/{endpointId}"
+api: "GET /v1/endpoints/:endpointId"
 ---
+
+
+Retrieve an endpoint by id.
+
+### Params
+
+<ParamField path="endpointId" type="string" required>
+  The id of the endpoint
+</ParamField>
+
+
+### Response
+
+<ResponseField name="id" type="string" required>
+    The id of the endpoint
+</ResponseField>
+
+
+<ResponseField name="name" type="string" required>
+    The name of the endpoint
+</ResponseField>
+
+<ResponseField name="method" type="string" required>
+    The HTTP method used to make the request to the endpoint
+
+```
+"GET", "POST", "PUT", "PATCH", "DELETE"
+```
+</ResponseField>
+
+
+<ResponseField name="url" type="string" required>
+    The url of the endpoint
+</ResponseField>
+
+<ResponseField name="createdAt" type="number" required>
+    The unix timestamp of when the endpoint was created in milliseconds
+</ResponseField>
+
+<ResponseField name="updatedAt" type="number" required>
+    The unix timestamp of when the endpoint was last updated in milliseconds
+</ResponseField>
+
+<ResponseField name="followRedirects" type="boolean" required>
+    Whether or not to follow redirects when making requests to the endpoint
+</ResponseField>
+
+<ResponseField name="prewarm" type="boolean" required>
+    Whether or not to prewarm the endpoint
+</ResponseField>
+
+<ResponseField name="runs" type="number" required>
+    The number of runs to make when prewarming the endpoint
+</ResponseField>
+
+<ResponseField name="ownerId" type="string" required>
+    The id of the user who owns the endpoint
+</ResponseField>
+
+<ResponseField name="auditLog" type="array" required>
+    The audit log of the endpoint
+</ResponseField>
+
+<ResponseField name="interval" type="number" required>
+    The interval in seconds between runs of the endpoint in milliseconds
+</ResponseField>
+
+<ResponseField name="active" type="boolean" required>
+
+    Whether or not the endpoint is active
+</ResponseField>
+
+<ResponseField name="degradedAfter" type="number" required>
+    The number of failed runs before the endpoint is considered degraded in milliseconds
+</ResponseField>
+
+<ResponseField name="timeout" type="number" required>
+    The timeout in milliseconds for each run of the endpoint in milliseconds
+</ResponseField>
+
+<ResponseField name="distribution" type="string" required>
+    The distribution of runs across regions.
+
+    Possible values are `ALL` or `RANDOM`
+</ResponseField>
+
+
+<ResponseField name="regions" type="Array" required>
+<Expandable title="Regions">
+<ResponseField name="id" type="string" required>
+
+    The planetfall region identifier.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+
+<ResponseField name="headers" type="Record<string, string>" >
+    The headers to send with the request to the endpoint in json notation.
+    For example:
+    ```
+    {
+        "Content-Type": "application/json"
+    }
+    ```
+
+</ResponseField>
+
+
+
+
+<ResponseField name="body" type="string" >
+    The body to send with the request to the endpoint
+</ResponseField>
+
+
+<ResponseField name="assertions" type="Array" required>
+<Expandable title="Assertions">
+<ResponseField name="version" type="string" required>
+    The version of the assertion
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+
+
+

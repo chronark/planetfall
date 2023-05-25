@@ -13,7 +13,7 @@
   "devDependencies": {
     "@planetfall/tsconfig": "workspace:*",
     "@types/node": "^20.2.3",
-    "@types/react": "18.2.6",
+    "@types/react": "18.2.7",
     "typescript": "^5.0.4"
   },
   "dependencies": {
@@ -35,6 +35,6 @@
     "@react-email/text": "^0.0.5",
     "react": "^18.2.0",
     "react-email": "^1.9.3",
-    "resend": "^0.14.1"
+    "resend": "^0.15.0"
   }
 }

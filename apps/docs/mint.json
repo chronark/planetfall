@@ -53,6 +53,20 @@
       ]
     },
     {
+      "group": "Team",
+      "pages": [
+        "api-reference/teams/whoami"
+       
+      ]
+    },
+    {
+      "group": "Regions",
+      "pages": [
+        "api-reference/regions/list"
+       
+      ]
+    },
+    {
       "group": "Endpoint Examples",
       "pages": [
         "api-reference/endpoints/list",
@@ -62,12 +76,12 @@
     }
   ],
   "api": {
-    "baseUrl": "https://api.planetfall.io",
+    "baseUrl": "https://api.chronark.workers.dev",
     "auth": {
       "method": "bearer"
     }
   },
-  "openapi": "https://api.planetfall.io/openapi.json",
+  "openapi": "https://api.chronark.workers.dev/openapi.json",
   "footerSocials": {
     "twitter": "https://twitter.com/chronark_",
     "github": "https://github.com/chronark"

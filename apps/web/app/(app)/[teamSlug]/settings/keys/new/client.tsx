@@ -48,7 +48,6 @@ const FormSchema = z.record(
     read: z.boolean(),
     update: z.boolean(),
     delete: z.boolean(),
-   
   }),
 );
 
@@ -73,7 +72,6 @@ export const ClientPage: React.FC<Props> = ({ team }) => {
         read: false,
         update: false,
         delete: false,
-       
       };
       return acc;
     }, {} as FormData),

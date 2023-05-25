@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { Policy } from "@planetfall/policies";
 
-import { newId } from "@planetfall/id";
+import { newId, newSecret } from "@planetfall/id";
 import { auth, t } from "../trpc";
 
 export const apikeyRouter = t.router({
@@ -23,7 +23,6 @@ export const apikeyRouter = t.router({
                 read: z.boolean(),
                 update: z.boolean(),
                 delete: z.boolean(),
-              
               }),
             ),
           ]),
@@ -48,13 +47,7 @@ export const apikeyRouter = t.router({
       const endpointRules =
         input.permissions.endpoints === "*"
           ? {
-              [`${team.id}::endpoint::*`]: [
-                "create",
-                "read",
-                "update",
-                "delete",
-              
-              ],
+              [`${team.id}::endpoint::*`]: ["create", "read", "update", "delete"],
             }
           : Object.entries(input.permissions.endpoints).reduce((acc, endpoint) => {
               const permissions = Object.entries(endpoint[1])
@@ -74,7 +67,7 @@ export const apikeyRouter = t.router({
       });
       console.log("Y");
 
-      const apiKey = newId("apiKey");
+      const apiKey = newSecret("apiKey");
 
       await db.apiKey.create({
         data: {

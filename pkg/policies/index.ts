@@ -18,7 +18,6 @@ export type Resources = {
      * Can delete an endpoint
      */
     "delete",
-  
   ];
 };
 
