@@ -173,15 +173,13 @@ router.route({
       })
     },
     responses: {
-      
+      ...errorResponses,
       200: z.object({
         id: z.string().describe("The endpoint's id. You can see this in the URL when you open the endpoint in the dashboard."),
         name: z.string().describe("The endpoint's name."),
         url: z.string().url().describe("The endpoint's url."),
       }),
-      400: z.object({
-        error: z.string()
-      })
+
     }
   } as const,
   handler: async (req, ctx) => {
