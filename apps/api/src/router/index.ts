@@ -177,9 +177,15 @@ router.route({
     responses: {
       ...errorResponses,
       200: z.object({
-        id: z.string().describe("The endpoint's id. You can see this in the URL when you open the endpoint in the dashboard."),
-        name: z.string().describe("The endpoint's name."),
-        url: z.string().url().describe("The endpoint's url."),
+        id: z.string().describe("The team's unique id."),
+        name: z.string().describe("The team's name."),
+        slug: z.string().describe("The team's slug. This is used in the url when you open the team in the dashboard."),
+        createdAt: z.number().describe("The timestamp when the team was created. This is a unix timestamp in milliseconds."),
+        plan: z.enum(["FREE", "PRO", "ENTERPRISE"]).describe("The team's current plan."),
+        maxMonthlyRequests: z.number().describe("The maximum number of requests the team can make per month."),
+        maxEndpoints: z.number().describe("The maximum number of endpoints the team can create."),
+        maxTimeout: z.number().describe("The maximum timeout in milliseconds the team can set for an endpoint."),
+        maxPages: z.number().describe("The maximum number of pages the team can set for an endpoint."),
       }),
 
     }
@@ -193,7 +199,6 @@ router.route({
       .select("name")
       .select("slug")
       .select("createdAt")
-      .select("updatedAt")
       .select("plan")
       .select("maxMonthlyRequests")
       .select("maxEndpoints")
