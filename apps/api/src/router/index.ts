@@ -163,9 +163,11 @@ router.route({
 
 
 router.route({
+  operationId: "whoami",
   method: 'GET',
   path: '/v1/whoami',
   description: "Returns information about the currently authenticated team",
+  tags: ["teams"],
   schemas: {
     request: {
       headers: z.object({
