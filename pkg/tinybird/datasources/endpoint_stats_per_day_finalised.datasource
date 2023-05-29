@@ -1,0 +1,17 @@
+VERSION 2
+# TOKEN "live" READWRITE
+
+SCHEMA >
+`endpointId` String,
+`time` DateTime,
+`count` Int32,
+`p75` Int16,
+`p90` Int16,
+`p95` Int16,
+`p99` Int16,
+`errors` Int32,
+`regionId` String
+
+ENGINE "MergeTree"
+ENGINE_TTL "time + INTERVAL 365 DAY"
+ENGINE_SORTING_KEY "endpointId,regionId,time"

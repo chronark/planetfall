@@ -44,7 +44,7 @@ export const getEndpointMetricsOver90Days = tb.buildPipe({
 });
 
 export const getEndpointSeriesOver90Days = tb.buildPipe({
-  pipe: "statuspage__get_aggregated_series__v1",
+  pipe: "statuspage__get_aggregated_series__v2",
   parameters: z.object({
     endpointIds: z.array(z.string()),
   }),
