@@ -128,6 +128,8 @@ export interface Region {
   url: string;
   visible: number;
   custom: string | null;
+  lat: number | null;
+  lon: number | null;
 }
 
 export interface Session {

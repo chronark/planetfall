@@ -20,6 +20,8 @@ export const createV1Regions = (router: Router) =>
                   "The platform the region is hosted on. We use different cloud providers to offer as many regions as possible.",
                 ),
               region: z.string().describe("The region's name according to the cloud provider"),
+              lat: z.number().nullable().describe("The region's latitude"),
+              lon: z.number().nullable().describe("The region's longitude"),
             }),
           )
           .describe("Returns a list of all regions that are currently available"),
@@ -31,6 +33,8 @@ export const createV1Regions = (router: Router) =>
         .select("Region.id")
         .select("Region.platform")
         .select("Region.region")
+        .select("Region.lat"),
+        .select("Region.lon")
         .where("Region.visible", "=", 1)
         .execute();
 
