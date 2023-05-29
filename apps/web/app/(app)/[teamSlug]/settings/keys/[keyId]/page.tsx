@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
 import { db } from "@planetfall/db";
+import { redirect } from "next/navigation";
 
 import { Client } from "./client";
 import { auth } from "@clerk/nextjs/app-beta";

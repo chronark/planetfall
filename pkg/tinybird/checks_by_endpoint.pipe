@@ -1,0 +1,20 @@
+VERSION 1
+DESCRIPTION >
+	Get the latest checks (within the last day) for an endpoint
+  Optionally filter by errors only and limit the number of results
+
+
+TOKEN "live" READ
+
+NODE checks_by_endpoint_0
+SQL >
+
+    %
+        SELECT id,time,status,regionId,error,latency,endpointId,teamId,body,headers,timing
+        FROM checks
+        WHERE endpointId = {{String(endpointId, required=True)}}
+        AND time > now() - INTERVAL 1 DAY
+        ORDER BY time DESC
+        LIMIT {{Int32(limit, default=10)}}
+
+

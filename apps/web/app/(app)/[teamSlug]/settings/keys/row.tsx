@@ -1,20 +1,20 @@
 "use client";
 import { DeleteKeyButton } from "./delete-key";
+import { Badge } from "@/components/badge";
+import { Button } from "@/components/button";
+import { Card } from "@/components/card";
+import { Dialog } from "@/components/dialog";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuGroup,
-  DropdownMenuSeparator,
+  DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/dropdown-menu";
 import { Book, Key, MoreVertical, Rocket, Settings2, Trash } from "lucide-react";
-import { Card } from "@/components/card";
-import { Button } from "@/components/button";
 import Link from "next/link";
-import { Dialog } from "@/components/dialog";
-import { Badge } from "@/components/badge";
 
 type Props = {
   apiKey: {

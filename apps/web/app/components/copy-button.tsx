@@ -5,7 +5,7 @@ import * as React from "react";
 // import { NpmCommands } from "types/unist"
 
 import { cn } from "@/lib/utils";
-import { CopyCheck, Copy } from "lucide-react";
+import { Copy, CopyCheck } from "lucide-react";
 interface CopyButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   value: string;
   src?: string;

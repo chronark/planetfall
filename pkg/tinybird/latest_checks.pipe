@@ -1,0 +1,11 @@
+NODE keep_10m
+SQL >
+
+    SELECT * FROM checks
+
+TYPE materialized
+DATASOURCE keep_10m_mv
+ENGINE "MergeTree"
+ENGINE_SORTING_KEY "endpointId, time"
+ENGINE_TTL "time + toIntervalMinute(10)"
+

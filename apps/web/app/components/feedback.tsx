@@ -1,6 +1,5 @@
 "use client";
 
-import { z } from "zod";
 import {
   Sheet,
   SheetContent,
@@ -9,13 +8,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./sheet";
-import { useState } from "react";
 import { Button } from "@/components/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/form";
-import { useForm } from "react-hook-form";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Loading } from "./loading";
 import {
   Select,
   SelectContent,
@@ -25,9 +25,9 @@ import {
   SelectValue,
 } from "./select";
 import { Textarea } from "./textarea";
-import { trpc } from "@/lib/trpc/hooks";
-import { Loading } from "./loading";
 import { useToast } from "./toast";
+import { trpc } from "@/lib/trpc/hooks";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const issueTypeSchema = z.enum(["bug", "feature", "security", "question"]);
 
@@ -98,7 +98,7 @@ export const Feedback: React.FC = () => {
       <SheetContent className="bg-white">
         <SheetHeader>
           <SheetTitle>Feedback</SheetTitle>
-          <SheetDescription></SheetDescription>
+          <SheetDescription />
         </SheetHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 gap-8">

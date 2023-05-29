@@ -1,12 +1,13 @@
 VERSION 2
-
 DESCRIPTION >
-    Aggregate endpoint stats per region per day
+	Aggregate endpoint stats per region per day
+
 
 TOKEN "live" READ
 
 NODE aggreagate_endpoint_daily_per_region
 SQL >
+
     SELECT
         endpointId,
         toStartOfDay(time) AS time,
@@ -17,10 +18,10 @@ SQL >
         quantileTimingState(0.99)(latency) AS p99,
         COUNTState(error) AS errors,
         regionId
-    FROM checks__v3
+    FROM checks
     GROUP BY time, endpointId, regionId
 
-TYPE MATERIALIZED
-DATASOURCE endpoint_stats_per_day__v2
-ENGINE "AggregatingMergeTree"
-ENGINE_SORTING_KEY "endpointId,regionId,time"
+TYPE materialized
+DATASOURCE endpoint_stats_per_day
+
+

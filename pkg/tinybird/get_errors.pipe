@@ -1,0 +1,19 @@
+VERSION 1
+DESCRIPTION >
+	Return all errors from an endpoint in a specific since
+
+
+TOKEN "live" READ
+
+NODE checks_by_endpoint_0
+SQL >
+
+    %
+        SELECT id,time,status,regionId,error,latency
+        FROM checks
+        WHERE endpointId = {{String(endpointId, required=True)}}
+        AND error is not null
+        AND time > fromUnixTimestamp64Milli({{Int64(since, default=0)}})
+        ORDER BY time DESC
+
+

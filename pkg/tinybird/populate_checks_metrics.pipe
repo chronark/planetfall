@@ -1,0 +1,17 @@
+VERSION 1
+DESCRIPTION >
+	Copy a subset
+
+
+NODE copy_checks
+SQL >
+
+    SELECT
+            endpointId,
+            regionId,
+            time,
+            latency,
+            error
+        FROM checks
+
+

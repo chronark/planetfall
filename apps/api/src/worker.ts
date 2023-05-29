@@ -8,11 +8,11 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { Response } from "fets";
 import { Authorizer } from "./auth";
+import { AuthorizationError, BadRequestError, InternalServerError, NotFoundError } from "./errors";
 import { kysely } from "./kysely";
 import { router } from "./router";
-import { AuthorizationError, BadRequestError, InternalServerError, NotFoundError } from "./errors";
+import { Response } from "fets";
 
 // Export a default object containing event handlers
 const handler: ExportedHandler<Env> = {

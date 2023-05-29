@@ -1,0 +1,15 @@
+VERSION 2
+# Data Source created from Pipe 't_0a46c3ad07a043cabf971c255b458e00'
+
+SCHEMA >
+    `endpointId` String,
+    `count` AggregateFunction(count),
+    `p75` AggregateFunction(quantileTiming(0.75), Nullable(Int16)),
+    `p90` AggregateFunction(quantileTiming(0.9), Nullable(Int16)),
+    `p95` AggregateFunction(quantileTiming(0.95), Nullable(Int16)),
+    `p99` AggregateFunction(quantileTiming(0.99), Nullable(Int16)),
+    `errors` AggregateFunction(count, Nullable(String)),
+    `regionId` String
+
+ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "endpointId, regionId"

@@ -1,0 +1,8 @@
+TOKEN "test_pipe_latency_endpoint_read_8188" READ
+
+NODE test_ingest_latency_pipe_7283_0
+SQL >
+
+    SELECT * FROM test_ingest_latency limit 10
+
+

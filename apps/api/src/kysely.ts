@@ -1,6 +1,6 @@
+import type { DB } from "./gen/db";
 import { Kysely } from "kysely";
 import { PlanetScaleDialect } from "kysely-planetscale";
-import type { DB } from "./gen/db";
 
 export const kysely = (
   url: string,
@@ -16,7 +16,7 @@ export const kysely = (
       // required for Cloudflare Workers to work with PlanetScale
       // @ts-ignore
       fetch: (url: string, init: RequestInit<RequestInitCfProperties>) => {
-        delete (init as any)["cache"]; // Remove cache header
+        (init as any)["cache"] = undefined; // Remove cache header
         if (cf) {
           init.cf = cf;
         }

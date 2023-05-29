@@ -1,16 +1,16 @@
 import { auth, t } from "../trpc";
+import { clerkClient } from "@clerk/nextjs";
+import { Clerk } from "@clerk/nextjs/server";
 import highstorm from "@highstorm/client";
 import { db } from "@planetfall/db";
 import { newId } from "@planetfall/id";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { PlainClient, type UpsertCustomTimelineEntryInput } from "@team-plain/typescript-sdk";
-import { Clerk } from "@clerk/nextjs/server";
-import { clerkClient } from "@clerk/nextjs";
 import { UpsertCustomerInput } from "@team-plain/typescript-sdk";
 import { ComponentSpacerSize } from "@team-plain/typescript-sdk";
 import { ComponentTextSize } from "@team-plain/typescript-sdk";
 import { ComponentTextColor } from "@team-plain/typescript-sdk";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 const issueType = z.enum(["bug", "feature", "security", "question"]);
 const severity = z.enum(["p0", "p1", "p2", "p3"]);

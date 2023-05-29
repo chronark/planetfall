@@ -1,17 +1,17 @@
 VERSION 2
-# TOKEN "live" READWRITE
+# Data Source created from Pipe 't_e29491324a094548b3d75439ec4129cb'
 
 SCHEMA >
-  `endpointId` String,
-`time` DateTime,
-`count` AggregateFunction(count),
-`p75` AggregateFunction(quantileTiming(0.75), Nullable(Int16)),
-`p90` AggregateFunction(quantileTiming(0.9), Nullable(Int16)),
-`p95` AggregateFunction(quantileTiming(0.95), Nullable(Int16)),
-`p99` AggregateFunction(quantileTiming(0.99), Nullable(Int16)),
-`errors` AggregateFunction(count, Nullable(String)),
-`regionId` String
+    `endpointId` String,
+    `time` DateTime,
+    `count` AggregateFunction(count),
+    `p75` AggregateFunction(quantileTiming(0.75), Nullable(Int16)),
+    `p90` AggregateFunction(quantileTiming(0.9), Nullable(Int16)),
+    `p95` AggregateFunction(quantileTiming(0.95), Nullable(Int16)),
+    `p99` AggregateFunction(quantileTiming(0.99), Nullable(Int16)),
+    `errors` AggregateFunction(count, Nullable(String)),
+    `regionId` String
 
 ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "endpointId, regionId, time"
 ENGINE_TTL "time + INTERVAL 365 DAY"
-ENGINE_SORTING_KEY "endpointId,regionId,time"

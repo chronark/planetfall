@@ -1,0 +1,30 @@
+VERSION 1
+DESCRIPTION >
+	Finalise historical data to make it cheaper to query, this pipe will run on a daily cron job
+
+
+TOKEN "scheduled_copy_t_c85c8b4bdb2a49118113a3ce08ba50d3" READ
+
+NODE copy
+SQL >
+
+    SELECT 
+        time,
+        regionId,
+        endpointId,
+        toInt32(countMerge(count)) as count,
+        toInt32(countMerge(errors)) as errors,
+        toInt16(ifNull(quantileTimingMerge(0.75)(p75),0)) AS p75,
+        toInt16(ifNull(quantileTimingMerge(0.90)(p90),0)) AS p90,
+        toInt16(ifNull(quantileTimingMerge(0.95)(p95),0)) AS p95,
+        toInt16(ifNull(quantileTimingMerge(0.99)(p99),0)) AS p99
+  
+
+    FROM endpoint_stats_per_day WHERE time < toStartOfDay(now() - INTERVAL 1 DAY) AND time > toStartOfDay(now()-INTERVAL 2 DAY)
+    GROUP BY time, endpointId, regionId
+
+TYPE copy
+TARGET_DATASOURCE endpoint_stats_per_day_finalised
+COPY_SCHEDULE */10 * * * *
+
+

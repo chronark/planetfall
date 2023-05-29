@@ -1,0 +1,10 @@
+NODE copy_mv_pipe_0523_0
+SQL >
+
+    %
+
+        SELECT *
+        FROM copy_mv
+        PREWHERE id = 'chk_LbqUZrSBLgGsgXCxnaVz4p'
+
+

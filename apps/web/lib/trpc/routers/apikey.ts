@@ -1,11 +1,11 @@
-import crypto from "node:crypto";
 import { db } from "@planetfall/db";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { Policy } from "@planetfall/policies";
+import { TRPCError } from "@trpc/server";
+import crypto from "node:crypto";
+import { z } from "zod";
 
-import { newId, newSecret } from "@planetfall/id";
 import { auth, t } from "../trpc";
+import { newId, newSecret } from "@planetfall/id";
 
 export const apikeyRouter = t.router({
   create: t.procedure

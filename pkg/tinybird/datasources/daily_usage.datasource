@@ -1,5 +1,5 @@
 VERSION 1
-# TOKEN "live" READWRITE
+# Data Source created from Pipe 't_bac00ef5a0a5488aaf694899d12a09b7'
 
 SCHEMA >
     `teamId` String,

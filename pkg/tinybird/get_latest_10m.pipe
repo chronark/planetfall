@@ -1,0 +1,15 @@
+TOKEN "api__get_latest_10m_endpoint_read_3606" READ
+
+NODE endpoint
+SQL >
+
+    %
+    SELECT 
+      time,
+      latency,
+      regionId,
+      status,
+      error
+    FROM keep_10m_mv where endpointId={{String(endpointId, required=True)}}
+
+

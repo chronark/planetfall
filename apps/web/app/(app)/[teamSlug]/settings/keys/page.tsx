@@ -1,4 +1,6 @@
+import { Row } from "./row";
 import { Button } from "@/components/button";
+import { Card } from "@/components/card";
 import { PageHeader } from "@/components/page";
 import { Text } from "@/components/text";
 import { auth } from "@clerk/nextjs/app-beta";
@@ -6,8 +8,6 @@ import { db } from "@planetfall/db";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Row } from "./row";
-import { Card } from "@/components/card";
 
 export default async function KeysPage(props: { params: { teamSlug: string } }) {
   const { userId } = auth();

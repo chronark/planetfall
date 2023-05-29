@@ -1,0 +1,27 @@
+DESCRIPTION >
+	returns the metrics aggregated for each day for the last 90 days
+
+
+TOKEN "live" READ
+
+NODE endpoint
+SQL >
+
+    %
+        SELECT
+        time,
+        regionId,
+        endpointId,
+        countMerge(count) as count,
+        countMerge(errors) as errors,
+        quantileTimingMerge(0.75)(p75) AS p75,
+        quantileTimingMerge(0.90)(p90) AS p90,
+        quantileTimingMerge(0.95)(p95) AS p95,
+        quantileTimingMerge(0.99)(p99) AS p99
+    FROM endpoint_stats_per_day
+    WHERE
+        endpointId IN {{ Array(endpointIds, 'String', required=True) }}
+        AND time > now() - INTERVAL 90 DAY 
+    GROUP BY endpointId, time, regionId
+
+

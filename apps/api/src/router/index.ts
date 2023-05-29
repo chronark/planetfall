@@ -1,6 +1,4 @@
-import { Response, createRouter, useErrorHandling } from "fets";
-import { z } from "zod";
-import { kysely } from "../kysely";
+import { AuthorizationResponse } from "../auth";
 import {
   AuthorizationError,
   BadRequestError,
@@ -8,9 +6,11 @@ import {
   NotFoundError,
   errorResponses,
 } from "../errors";
-import { AuthorizationResponse } from "../auth";
-import { Kysely } from "kysely";
 import { DB } from "../gen/db";
+import { kysely } from "../kysely";
+import { Response, createRouter, useErrorHandling } from "fets";
+import { Kysely } from "kysely";
+import { z } from "zod";
 
 export type Context = ExecutionContext & {
   env: Env;
@@ -50,7 +50,7 @@ router.route({
         .describe("Returns a list of all regions that are currently available"),
     },
   } as const,
-  handler: async (req, ctx) => {
+  handler: async (_req, ctx) => {
     const regions = await ctx.db
       .selectFrom("Region")
       .select("Region.id")

@@ -1,0 +1,53 @@
+VERSION 2
+DESCRIPTION >
+	returns the metrics aggregated for each day for the last 90 days
+
+
+TOKEN "statuspage__get_aggregated_series__v2_endpoint_read_3868" READ
+
+NODE current
+DESCRIPTION >
+    Fetches yesterday and today
+
+SQL >
+
+    %
+    SELECT
+        time,
+        regionId,
+        endpointId,
+        toInt32(ifNull(countMerge(count),0)) as count,
+        toInt32(ifNull(countMerge(errors),0)) as errors,
+        toInt16(ifNull(quantileTimingMerge(0.75)(p75),0)) AS p75,
+        toInt16(ifNull(quantileTimingMerge(0.90)(p90),0)) AS p90,
+        toInt16(ifNull(quantileTimingMerge(0.95)(p95),0)) AS p95,
+        toInt16(ifNull(quantileTimingMerge(0.99)(p99),0)) AS p99
+    FROM endpoint_stats_per_day
+    WHERE
+        endpointId IN {{ Array(endpointIds, 'String', required=True) }}
+        AND time > toStartOfDay(now() - INTERVAL 1 DAY)
+    GROUP BY endpointId, time, regionId
+
+
+
+NODE history
+DESCRIPTION >
+    get everything between 90 days ago to the day before yesterday
+
+SQL >
+
+    %
+    SELECT time, regionId, endpointId, count, errors, p75, p90, p95, p99
+    FROM endpoint_stats_per_day_finalised
+    WHERE
+        endpointId IN {{ Array(endpointIds, 'String', required=True) }}
+        AND time > now() - INTERVAL 90 DAY
+
+
+
+NODE combine
+SQL >
+
+    SELECT * FROM current UNION ALL SELECT * FROM history
+
+

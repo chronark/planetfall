@@ -1,0 +1,16 @@
+VERSION 1
+DESCRIPTION >
+	Copies all checks from the checks datasource to the checks_by_id datasource.
+
+
+NODE copy
+SQL >
+
+    SELECT * FROM checks
+
+TYPE materialized
+DATASOURCE copy_mv
+ENGINE "MergeTree"
+ENGINE_PARTITION_KEY "toYYYYMMDD(time)"
+ENGINE_SORTING_KEY "id"
+

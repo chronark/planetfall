@@ -1,10 +1,10 @@
 VERSION 1
+DESCRIPTION >
+	Collect usage data for each team, day by day and store it in a materialized view.
+
+
 TOKEN "live" READ
 
-
-DESCRIPTION >
-    Collect usage data for each team, day by day and store it in a materialized view.
-    
 NODE aggreagate_usage
 SQL >
 
@@ -14,7 +14,7 @@ SQL >
         toYear(time) AS year,
         toMonth(time) AS month,
         toDayOfMonth(time) AS day
-    FROM checks__v3
+    FROM checks
     GROUP BY
         teamId,
         year,
@@ -23,6 +23,5 @@ SQL >
 
 TYPE materialized
 DATASOURCE daily_usage
-ENGINE "AggregatingMergeTree"
-ENGINE_SORTING_KEY "teamId, year, month, day"
+
 

@@ -1,7 +1,8 @@
-VERSION 1
-DESCRIPTION >
-    Table for storing checks by id for better querying
+VERSION 2
+# Data Source created from Pipe 'copy_to_checks_by_id__v2'
+
 SCHEMA >
+    `hash` UInt64,
     `id` String,
     `endpointId` String,
     `latency` Nullable(Int16),
@@ -15,5 +16,6 @@ SCHEMA >
     `timing` Nullable(String)
 
 ENGINE "MergeTree"
-ENGINE_SORTING_KEY "id"
+ENGINE_PARTITION_KEY "toYYYYMM(time)"
+ENGINE_SORTING_KEY "hash"
 ENGINE_TTL "time + toIntervalDay(30)"

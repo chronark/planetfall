@@ -1,25 +1,19 @@
 VERSION 3
-# TOKEN "live" READWRITE
 
 SCHEMA >
     `id` String `json:$.id`,
     `endpointId` String `json:$.endpointId`,
-    # In milliseconds
     `latency` Nullable(Int16) `json:$.latency`,
     `regionId` String `json:$.regionId`,
     `status` Nullable(Int16) `json:$.status`,
     `teamId` String `json:$.teamId`,
     `time` DateTime `json:$.time`,
     `error` Nullable(String) `json:$.error`,
-    # base64 encoded
     `body` Nullable(String) `json:$.body`,
-    # json encoded
     `headers` Nullable(String) `json:$.headers`,
-    # json encoded
     `timing` Nullable(String) `json:$.timing`
 
-
-
 ENGINE "MergeTree"
+ENGINE_PARTITION_KEY "toYear(time)"
+ENGINE_SORTING_KEY "endpointId, regionId, time, id"
 ENGINE_TTL "time + INTERVAL 90 DAY"
-ENGINE_SORTING_KEY "endpointId,regionId,time,id"

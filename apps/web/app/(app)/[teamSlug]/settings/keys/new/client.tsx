@@ -1,5 +1,6 @@
 "use client";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/alert";
 import { Button } from "@/components/button";
 import {
   Card,
@@ -10,27 +11,26 @@ import {
   CardTitle,
 } from "@/components/card";
 import { Checkbox } from "@/components/checkbox";
-import { Input } from "@/components/input";
-import { Label } from "@/components/label";
-import { PageHeader } from "@/components/page";
-import { trpc } from "@/lib/trpc/hooks";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { z } from "zod";
-import { Loading } from "@/components/loading";
-import { Alert, AlertDescription, AlertTitle } from "@/components/alert";
-import { AlertTriangle } from "lucide-react";
-import { addToast } from "@/components/toast";
+import { CopyButton } from "@/components/copy-button";
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/dialog";
-import { CopyButton } from "@/components/copy-button";
+import { Input } from "@/components/input";
+import { Label } from "@/components/label";
+import { Loading } from "@/components/loading";
+import { PageHeader } from "@/components/page";
+import { addToast } from "@/components/toast";
+import { trpc } from "@/lib/trpc/hooks";
+import { AlertTriangle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { z } from "zod";
 type Props = {
   team: {
     id: string;
@@ -42,7 +42,7 @@ type Props = {
   };
 };
 
-const FormSchema = z.record(
+const _FormSchema = z.record(
   z.object({
     create: z.boolean(),
     read: z.boolean(),
@@ -64,7 +64,7 @@ export const ClientPage: React.FC<Props> = ({ team }) => {
   };
 
   const [name, setName] = useState<string | null>(null);
-  const router = useRouter();
+  const _router = useRouter();
   const [form, setForm] = useState<FormData>(
     team.endpoints.reduce((acc, endpoint) => {
       acc[endpoint.id] = {

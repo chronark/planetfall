@@ -4,11 +4,11 @@ import { TeamSwitcher } from "./team-switcher";
 import { UserButton } from "./user-button";
 import { notFound, redirect } from "next/navigation";
 
+import { Button } from "../components/button";
 import { asyncComponent } from "@/components/async-component";
 import { Feedback } from "@/components/feedback";
 import { auth } from "@clerk/nextjs/app-beta";
 import { db } from "@planetfall/db";
-import { Button } from "../components/button";
 import Link from "next/link";
 
 export type NavbarProps = {
