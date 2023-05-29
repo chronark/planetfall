@@ -1,13 +1,8 @@
 import { AuthorizationResponse } from "../auth";
-import {
-  AuthorizationError,
-  BadRequestError,
-  InternalServerError,
-  NotFoundError,
-  errorResponses,
-} from "../errors";
+import { AuthorizationError, NotFoundError, errorResponses } from "../errors";
 import { DB } from "../gen/db";
 import { kysely } from "../kysely";
+import { createV1Regions } from "./regions";
 import { Response, createRouter, useErrorHandling } from "fets";
 import { Kysely } from "kysely";
 import { z } from "zod";
@@ -27,45 +22,6 @@ export const router = createRouter<Context>({
     },
   },
   plugins: [useErrorHandling()],
-});
-
-router.route({
-  method: "GET",
-  path: "/v1/regions",
-  schemas: {
-    responses: {
-      ...errorResponses,
-      200: z
-        .array(
-          z.object({
-            id: z.string().describe("The region's internal planetfall id"),
-            platform: z
-              .enum(["fly", "aws", "vercelEdge"])
-              .describe(
-                "The platform the region is hosted on. We use different cloud providers to offer as many regions as possible.",
-              ),
-            region: z.string().describe("The region's name according to the cloud provider"),
-          }),
-        )
-        .describe("Returns a list of all regions that are currently available"),
-    },
-  } as const,
-  handler: async (_req, ctx) => {
-    const regions = await ctx.db
-      .selectFrom("Region")
-      .select("Region.id")
-      .select("Region.platform")
-      .select("Region.region")
-      .where("Region.visible", "=", 1)
-      .execute();
-
-    return Response.json(regions, {
-      status: 200,
-      headers: {
-        "Cache-Control": "public, max-age=3600",
-      },
-    });
-  },
 });
 
 router.route({
@@ -258,5 +214,7 @@ router.route({
     return Response.json(team);
   },
 });
+
+createV1Regions(router);
 
 export type Router = typeof router;

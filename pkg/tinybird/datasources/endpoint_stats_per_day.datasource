@@ -14,4 +14,4 @@ SCHEMA >
 
 ENGINE "AggregatingMergeTree"
 ENGINE_SORTING_KEY "endpointId, regionId, time"
-ENGINE_TTL "time + INTERVAL 365 DAY"
+ENGINE_TTL "time + INTERVAL 3 DAY"

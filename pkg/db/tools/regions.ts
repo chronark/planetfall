@@ -9,6 +9,8 @@ const awsRegions: Region[] = [
     url: "https://fwvbnvbb6oz2jzgpovm75hb4540twgye.lambda-url.af-south-1.on.aws",
     region: "af-south-1",
     name: "Cape Town, South Africa",
+    lat: -33.9249,
+    lon: 18.4241,
   },
   {
     id: `${Platform.aws}:ap-east-1`,
@@ -18,6 +20,8 @@ const awsRegions: Region[] = [
     url: "https://pzfcpsl6rah7ob2qcirdbdwoxi0mprfy.lambda-url.ap-east-1.on.aws",
     region: "ap-east-1",
     name: "Hong Kong",
+    lat: 22.3193,
+    lon: 114.1694,
   },
   {
     id: `${Platform.aws}:ap-northeast-1`,
@@ -27,7 +31,10 @@ const awsRegions: Region[] = [
     url: "https://aedkpukrqw2v2xoxiyxqtw2jye0sxqgj.lambda-url.ap-northeast-1.on.aws",
     region: "ap-northeast-1",
     name: "Tokyo, Japan",
+    lat: 35.6895,
+    lon: 139.6917,
   },
+
   {
     id: `${Platform.aws}:ap-northeast-2`,
     platform: Platform.aws,
@@ -36,6 +43,8 @@ const awsRegions: Region[] = [
     url: "https://srbdfu4sloqa36m365l2hxj3zy0sfxgd.lambda-url.ap-northeast-2.on.aws",
     region: "ap-northeast-2",
     name: "Seoul, South Korea",
+    lat: 37.5665,
+    lon: 126.978,
   },
   {
     id: `${Platform.aws}:ap-northeast-3`,
@@ -45,6 +54,8 @@ const awsRegions: Region[] = [
     url: "https://otqwy4ztlzxbfsqblo6aippqne0zsosn.lambda-url.ap-northeast-3.on.aws",
     region: "ap-northeast-3",
     name: "Osaka, Japan",
+    lat: 35.6895,
+    lon: 139.6917,
   },
   {
     id: `${Platform.aws}:ap-south-1`,
@@ -54,6 +65,8 @@ const awsRegions: Region[] = [
     url: "https://z3sxifqdguqafynsgno7oszvlu0vmlvj.lambda-url.ap-south-1.on.aws",
     region: "ap-south-1",
     name: "Mumbai, India",
+    lat: 19.076,
+    lon: 72.8777,
   },
   {
     id: `${Platform.aws}:ap-southeast-1`,
@@ -63,6 +76,8 @@ const awsRegions: Region[] = [
     url: "https://x7gipm6xm43azjux7pocbauzde0sktuf.lambda-url.ap-southeast-1.on.aws",
     region: "ap-southeast-1",
     name: "Singapore",
+    lat: 1.3521,
+    lon: 103.8198,
   },
   {
     id: `${Platform.aws}:ap-southeast-2`,
@@ -72,6 +87,9 @@ const awsRegions: Region[] = [
     url: "https://quiz2c6reccroj4nfanpg5ugam0bwkjn.lambda-url.ap-southeast-2.on.aws",
     region: "ap-southeast-2",
     name: "Sydney, Australia",
+
+    lat: -33.8688,
+    lon: 151.2093,
   },
   {
     id: `${Platform.aws}:ap-southeast-3`,
@@ -81,6 +99,8 @@ const awsRegions: Region[] = [
     url: "https://yarzmqqceswzdjiumxjhxb6wp40hfmon.lambda-url.ap-southeast-3.on.aws",
     region: "ap-southeast-3",
     name: "Jakarta, Indonesia",
+    lat: -6.175,
+    lon: 106.8275,
   },
   {
     id: `${Platform.aws}:ca-central-1`,
@@ -90,6 +110,8 @@ const awsRegions: Region[] = [
     url: "https://lbmzunimpea2xn6avrxatagc340bhqcz.lambda-url.ca-central-1.on.aws",
     region: "ca-central-1",
     name: "Montreal, Canada",
+    lat: 45.5017,
+    lon: -73.5673,
   },
   {
     id: `${Platform.aws}:eu-central-1`,
@@ -99,6 +121,8 @@ const awsRegions: Region[] = [
     url: "https://anurwjl4ys7a4sd5taw2l7yswm0weooh.lambda-url.eu-central-1.on.aws",
     region: "eu-central-1",
     name: "Frankfurt, Germany",
+    lat: 50.1109,
+    lon: 8.6821,
   },
   {
     id: `${Platform.aws}:eu-north-1`,
@@ -108,6 +132,8 @@ const awsRegions: Region[] = [
     url: "https://nm5a2nt7arvrdmkpmghsuw6gbm0jmoud.lambda-url.eu-north-1.on.aws",
     region: "eu-north-1",
     name: "Stockholm, Sweden",
+    lat: 59.3293,
+    lon: 18.0686,
   },
   {
     id: `${Platform.aws}:eu-south-1`,
@@ -117,6 +143,8 @@ const awsRegions: Region[] = [
     url: "https://emmt56urfbjlcsz7g5pthurwra0dpyyb.lambda-url.eu-south-1.on.aws",
     region: "eu-south-1",
     name: "Milan, Italy",
+    lat: 45.464664,
+    lon: 9.18854,
   },
   {
     id: `${Platform.aws}:eu-west-1`,
@@ -126,6 +154,8 @@ const awsRegions: Region[] = [
     url: "https://euyfmjginq73yhz2u2ctkoz2te0vovcl.lambda-url.eu-west-1.on.aws",
     region: "eu-west-1",
     name: "Dublin, Ireland",
+    lat: 53.3498,
+    lon: -6.2603,
   },
   {
     id: `${Platform.aws}:eu-west-2`,
@@ -135,6 +165,8 @@ const awsRegions: Region[] = [
     url: "https://x223heggtqzliqdnjf7ptr64qq0yggsb.lambda-url.eu-west-2.on.aws",
     region: "eu-west-2",
     name: "London, UK",
+    lat: 51.5074,
+    lon: -0.1278,
   },
   {
     id: `${Platform.aws}:eu-west-3`,
@@ -144,6 +176,8 @@ const awsRegions: Region[] = [
     url: "https://p7jcbz4gj6gy74brseg66gyx3y0mfxqo.lambda-url.eu-west-3.on.aws",
     region: "eu-west-3",
     name: "Paris, France",
+    lat: 48.8566,
+    lon: 2.3522,
   },
   {
     id: `${Platform.aws}:me-south-1`,
@@ -153,6 +187,8 @@ const awsRegions: Region[] = [
     url: "https://ebv5syscefvfqaq27ryuh2bydm0aeuwn.lambda-url.me-south-1.on.aws",
     region: "me-south-1",
     name: "Bahrain",
+    lat: 26.0667,
+    lon: 50.5577,
   },
   {
     id: `${Platform.aws}:sa-east-1`,
@@ -162,6 +198,8 @@ const awsRegions: Region[] = [
     url: "https://nqx75bedph5vsytqrywnxotufm0xckzy.lambda-url.sa-east-1.on.aws",
     region: "sa-east-1",
     name: "São Paulo, Brazil",
+    lat: -23.5505,
+    lon: -46.6333,
   },
   {
     id: `${Platform.aws}:us-east-1`,
@@ -171,6 +209,8 @@ const awsRegions: Region[] = [
     url: "https://6dt2klkvdaryvh3pjb4osro4ky0lqtqo.lambda-url.us-east-1.on.aws",
     region: "us-east-1",
     name: "N. Virginia, US",
+    lat: 37.4316,
+    lon: -78.6569,
   },
   {
     id: `${Platform.aws}:us-east-2`,
@@ -179,7 +219,9 @@ const awsRegions: Region[] = [
     visible: true,
     url: "https://ydlfvu24gdqqgowde72tt5zjee0zifnt.lambda-url.us-east-2.on.aws",
     region: "us-east-2",
-    name: "Ohio, US, ",
+    name: "Ohio, US",
+    lat: 40.3736,
+    lon: -82.7755,
   },
   {
     id: `${Platform.aws}:us-west-1`,
@@ -189,6 +231,8 @@ const awsRegions: Region[] = [
     url: "https://dj7qjsq2vjlzyg75zkqogfmwxu0cwcyp.lambda-url.us-west-1.on.aws",
     region: "us-west-1",
     name: "N. California, US",
+    lat: 40.4173,
+    lon: -82.9071,
   },
   {
     id: `${Platform.aws}:us-west-2`,
@@ -198,6 +242,8 @@ const awsRegions: Region[] = [
     url: "https://sqkhjigvvpijz65inuixu6vhum0ppsqp.lambda-url.us-west-2.on.aws",
     region: "us-west-2",
     name: "Oregon, US",
+    lat: 43.8041,
+    lon: -120.5542,
   },
 ];
 const edgeRegions: Region[] = [
@@ -209,6 +255,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/arn1",
     region: "arn1",
     name: "Stockholm, Sweden",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:bom1`,
@@ -218,6 +266,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/bom1",
     region: "bom1",
     name: "Mumbai, India",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:cdg1`,
@@ -227,6 +277,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/cdg1",
     region: "cdg1",
     name: "Paris, France",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:cle1`,
@@ -236,6 +288,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/cle1",
     region: "cle1",
     name: "Cleveland, US",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:cpt1`,
@@ -245,6 +299,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/cpt1",
     region: "cpt1",
     name: "Cape Town, South Africa",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:dub1`,
@@ -254,6 +310,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/dub1",
     region: "dub1",
     name: "Dublin, Ireland",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:fra1`,
@@ -263,6 +321,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/fra1",
     region: "fra1",
     name: "Frankfurt, Germany",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:gru1`,
@@ -272,6 +332,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/gru1",
     region: "gru1",
     name: "São Paulo, Brazil",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:hkg1`,
@@ -281,6 +343,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/hkg1",
     region: "hkg1",
     name: "Hong Kong",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:hnd1`,
@@ -290,6 +354,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/hnd1",
     region: "hnd1",
     name: "Tokyo, Japan",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:iad1`,
@@ -299,6 +365,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/iad1",
     region: "iad1",
     name: "Washington, D.C., US",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:icn1`,
@@ -308,6 +376,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/icn1",
     region: "icn1",
     name: "Seoul, South Korea",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:kix1`,
@@ -317,6 +387,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/kix1",
     region: "kix1",
     name: "Osaka, Japan",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:lhr1`,
@@ -326,6 +398,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/lhr1",
     region: "lhr1",
     name: "London, United Kingdom",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:pdx1`,
@@ -335,6 +409,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/pdx1",
     region: "pdx1",
     name: "Portland, US",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:sfo1`,
@@ -344,6 +420,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/sfo1",
     region: "sfo1",
     name: "San Francisco, US",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:sin1`,
@@ -353,6 +431,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/sin1",
     region: "sin1",
     name: "Singapore",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:syd1`,
@@ -362,6 +442,8 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/syd1",
     region: "syd1",
     name: "Sydney, Australia",
+    lat: null,
+    lon: null,
   },
 ];
 const customVercelEdgeConfigRegions: Region[] = [
@@ -373,6 +455,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/arn1",
     region: "arn1",
     name: "Stockholm, Sweden",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:bom1`,
@@ -382,6 +466,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/bom1",
     region: "bom1",
     name: "Mumbai, India",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:cdg1`,
@@ -391,6 +477,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/cdg1",
     region: "cdg1",
     name: "Paris, France",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:cle1`,
@@ -400,6 +488,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/cle1",
     region: "cle1",
     name: "Cleveland, US",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:cpt1`,
@@ -409,6 +499,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/cpt1",
     region: "cpt1",
     name: "Cape Town, South Africa",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:dub1`,
@@ -418,6 +510,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/dub1",
     region: "dub1",
     name: "Dublin, Ireland",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:fra1`,
@@ -427,6 +521,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/fra1",
     region: "fra1",
     name: "Frankfurt, Germany",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:gru1`,
@@ -436,6 +532,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/gru1",
     region: "gru1",
     name: "São Paulo, Brazil",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:hkg1`,
@@ -445,6 +543,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/hkg1",
     region: "hkg1",
     name: "Hong Kong",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:hnd1`,
@@ -454,6 +554,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/hnd1",
     region: "hnd1",
     name: "Tokyo, Japan",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:iad1`,
@@ -463,6 +565,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/iad1",
     region: "iad1",
     name: "Washington, D.C., US",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:icn1`,
@@ -472,6 +576,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/icn1",
     region: "icn1",
     name: "Seoul, South Korea",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:kix1`,
@@ -481,6 +587,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/kix1",
     region: "kix1",
     name: "Osaka, Japan",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:lhr1`,
@@ -490,6 +598,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/lhr1",
     region: "lhr1",
     name: "London, United Kingdom",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:pdx1`,
@@ -499,6 +609,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/pdx1",
     region: "pdx1",
     name: "Portland, US",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:sfo1`,
@@ -508,6 +620,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/sfo1",
     region: "sfo1",
     name: "San Francisco, US",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:sin1`,
@@ -517,6 +631,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/sin1",
     region: "sin1",
     name: "Singapore",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.vercelEdge}:custom:vercel-edge-config:syd1`,
@@ -526,6 +642,8 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/syd1",
     region: "syd1",
     name: "Sydney, Australia",
+    lat: null,
+    lon: null,
   },
 ];
 const flyRegions: Region[] = [
@@ -537,6 +655,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/ams",
     region: "ams",
     name: "Amsterdam, Netherlands",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:cdg`,
@@ -546,6 +666,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/cdg",
     region: "cdg",
     name: "Paris, France",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:den`,
@@ -555,6 +677,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/den",
     region: "den",
     name: "Denver, Colorado (US)",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:dfw`,
@@ -564,6 +688,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/dfw",
     region: "dfw",
     name: "Dallas, Texas (US)",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:ewr`,
@@ -573,6 +699,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/ewr",
     region: "ewr",
     name: "Secaucus, NJ (US)",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:fra`,
@@ -582,6 +710,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/fra",
     region: "fra",
     name: "Frankfurt, Germany",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:gru`,
@@ -591,6 +721,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/gru",
     region: "gru",
     name: "São Paulo",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:hkg`,
@@ -600,6 +732,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/hkg",
     region: "hkg",
     name: "Hong Kong, Hong Kong",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:iad`,
@@ -609,6 +743,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/iad",
     region: "iad",
     name: "Ashburn, Virginia (US)",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:jnb`,
@@ -618,6 +754,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/jnb",
     region: "jnb",
     name: "Johannesburg, South Africa",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:lax`,
@@ -627,6 +765,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/lax",
     region: "lax",
     name: "Los Angeles, California (US)",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:lhr`,
@@ -636,6 +776,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/lhr",
     region: "lhr",
     name: "London, United Kingdom",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:maa`,
@@ -645,6 +787,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/maa",
     region: "maa",
     name: "Chennai (Madras), India",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:mad`,
@@ -654,6 +798,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/mad",
     region: "mad",
     name: "Madrid, Spain",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:mia`,
@@ -663,6 +809,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/mia",
     region: "mia",
     name: "Miami, Florida (US)",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:nrt`,
@@ -672,6 +820,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/nrt",
     region: "nrt",
     name: "Tokyo, Japan",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:ord`,
@@ -681,6 +831,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/ord",
     region: "ord",
     name: "Chicago, Illinois (US)",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:otp`,
@@ -690,6 +842,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/otp",
     region: "otp",
     name: "Bucharest, Romania",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:scl`,
@@ -699,6 +853,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/scl",
     region: "scl",
     name: "Santiago, Chile",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:sea`,
@@ -708,6 +864,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/sea",
     region: "sea",
     name: "Seattle, Washington (US)",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:sin`,
@@ -717,6 +875,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/sin",
     region: "sin",
     name: "Singapore",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:sjc`,
@@ -726,6 +886,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/sjc",
     region: "sjc",
     name: "Sunnyvale, California (US)",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:syd`,
@@ -735,6 +897,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/syd",
     region: "syd",
     name: "Sydney, Australia",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:waw`,
@@ -744,6 +908,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/waw",
     region: "waw",
     name: "Warsaw, Poland",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:yul`,
@@ -753,6 +919,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/yul",
     region: "yul",
     name: "Montreal, Canada	",
+    lat: null,
+    lon: null,
   },
   {
     id: `${Platform.fly}:yyz`,
@@ -762,6 +930,8 @@ const flyRegions: Region[] = [
     url: "https://planetfall-check-runner.fly.dev/ping/yyz",
     region: "yyz",
     name: "Toronto, Canada",
+    lat: null,
+    lon: null,
   },
 ];
 

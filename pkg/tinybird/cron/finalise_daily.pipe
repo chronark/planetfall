@@ -25,6 +25,6 @@ SQL >
 
 TYPE copy
 TARGET_DATASOURCE endpoint_stats_per_day_finalised
-COPY_SCHEDULE */10 * * * *
+COPY_SCHEDULE 5 0 * * *
 
 

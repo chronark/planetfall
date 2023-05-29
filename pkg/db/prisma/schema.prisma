@@ -175,6 +175,10 @@ model Region {
   visible   Boolean
   custom    String?
 
+  // Coordinates of the region
+  lat Float?
+  lon Float?
+
   @@unique([platform, region, custom])
 }
 
@@ -375,7 +379,7 @@ model ApiKey {
   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   name            String
-  keyHash         String  @unique
+  keyHash         String @unique
   // first 4 characters of the original key
   firstCharacters String
   policy          String @db.Text
