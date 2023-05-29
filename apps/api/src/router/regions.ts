@@ -8,6 +8,11 @@ export const createV1Regions = (router: Router) =>
     method: "GET",
     path: "/v1/regions",
     schemas: {
+      request: {
+        query: z.object({
+          platform: z.enum(["aws", "vercelEdge", "fly"]).optional().describe("Filter by platform"),
+        })
+      },
       responses: {
         ...errorResponses,
         200: z
@@ -27,8 +32,9 @@ export const createV1Regions = (router: Router) =>
           .describe("Returns a list of all regions that are currently available"),
       },
     } as const,
-    handler: async (_req, ctx) => {
-      const regions = await ctx.db
+    handler: async (req, ctx) => {
+
+      let q =  ctx.db
         .selectFrom("Region")
         .select("Region.id")
         .select("Region.platform")
@@ -36,7 +42,12 @@ export const createV1Regions = (router: Router) =>
         .select("Region.lat")
         .select("Region.lon")
         .where("Region.visible", "=", 1)
-        .execute();
+        
+
+        if (req.query.platform) {
+          q = q.where("Region.platform", "=", req.query.platform)
+        }
+        const regions = await q.execute()
 
       return Response.json(regions, {
         status: 200,
