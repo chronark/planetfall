@@ -33,7 +33,7 @@ export const createV1Regions = (router: Router) =>
         .select("Region.id")
         .select("Region.platform")
         .select("Region.region")
-        .select("Region.lat"),
+        .select("Region.lat")
         .select("Region.lon")
         .where("Region.visible", "=", 1)
         .execute();
@@ -44,5 +44,5 @@ export const createV1Regions = (router: Router) =>
           "Cache-Control": "public, max-age=3600",
         },
       });
-    },
+    }
   });
