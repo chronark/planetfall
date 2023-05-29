@@ -10,7 +10,7 @@ export const createV1Regions = (router: Router) =>
     schemas: {
       request: {
         query: z.object({
-          platform: z.enum(["aws", "vercelEdge", "fly"]).optional().describe("Filter by platform"),
+          platform: z.enum(["aws", "vercelEdge", "fly"]).optional().describe("Filter by platform, omit to get all regions"),
         })
       },
       responses: {

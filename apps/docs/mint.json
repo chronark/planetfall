@@ -86,7 +86,7 @@
       "method": "bearer"
     }
   },
-  "openapi": "https://api.planetfall.io/openapi.json",
+  "openapi": "https://planetfall-api.chronark.workers.dev/openapi.json",
   "footerSocials": {
     "twitter": "https://twitter.com/chronark_",
     "github": "https://github.com/chronark"
