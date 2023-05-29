@@ -39,7 +39,7 @@ const nextConfig = {
         type: "host",
         value: "api.planetfall.io",
       }],
-      destination: "planetfall-api.chronark.workers.dev/:match*",
+      destination: "https://planetfall-api.chronark.workers.dev/:match*",
     },
   ],
   sentry: {
