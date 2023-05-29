@@ -5,5 +5,5 @@ resource "vercel_dns_record" "api" {
   name    = "api"
   type    = "CNAME"
   ttl     = 60
-  value   = "planetfall-api.chronark.workers.dev"
+  value   = "api.planetfall.work"
 }
