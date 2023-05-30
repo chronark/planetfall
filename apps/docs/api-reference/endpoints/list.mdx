@@ -22,13 +22,13 @@ The ID of the team that owns this endpoint.
 <ResponseField name="url" type="string" required>
 The URL of the endpoint.
 </ResponseField>
-<ResponseField name="createdAt" type="number" required>
-When this endpoint was created. Unix timestamp in milliseconds.
+<ResponseField name="createdAt" type="string" required>
+When this endpoint was created.
 </ResponseField>
 
 
-<ResponseField name="updatedAt" type="number" required>
-When this endpoint was last updated. Unix timestamp in milliseconds.
+<ResponseField name="updatedAt" type="string" required>
+When this endpoint was last updated.
 </ResponseField>
 <ResponseField name="followRedirects" type="boolean" required>
 Whether or not to follow redirects when making requests to this endpoint.
@@ -99,8 +99,8 @@ curl https://api.planetfall.io/v1/endpoints \
    "name": "My Endpoint",
    "teamId": "team_1234",
    "url": "https://api.planetfall.io/",
-   "createdAt": 123,
-   "updatedAt": 123,
+   "createdAt": "2023-05-08T10:02:51.924Z",
+   "updatedAt": "2023-05-15T21:48:14.922Z",
    "followRedirects": true,
    "prewarm": true,
    "runs": 1,
