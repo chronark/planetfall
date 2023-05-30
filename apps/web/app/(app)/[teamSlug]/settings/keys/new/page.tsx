@@ -11,7 +11,9 @@ export default async function AlertsPage(props: { params: { teamSlug: string } }
   const team = await db.team.findUnique({
     where: { slug: props.params.teamSlug },
     include: {
-      endpoints: true,
+      endpoints: {
+        where: { deletedAt: null },
+      },
     },
   });
   if (!team) {
