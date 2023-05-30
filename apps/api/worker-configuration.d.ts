@@ -1,4 +1,4 @@
-interface Env {
+export interface Env {
   DATABASE_URL: string;
   TINYBIRD_TOKEN: string;
   // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/

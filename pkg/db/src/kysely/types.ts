@@ -1,44 +1,44 @@
-import type { ColumnType, GeneratedAlways } from 'kysely';
+import type { ColumnType, GeneratedAlways } from "kysely";
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export const Method = {
-  GET: 'GET',
-  POST: 'POST',
-  PUT: 'PUT',
-  DELETE: 'DELETE',
-  PATCH: 'PATCH',
-  OPTIONS: 'OPTIONS',
+  GET: "GET",
+  POST: "POST",
+  PUT: "PUT",
+  DELETE: "DELETE",
+  PATCH: "PATCH",
+  OPTIONS: "OPTIONS",
 } as const;
-export type Method = (typeof Method)[keyof typeof Method];
+export type Method = typeof Method[keyof typeof Method];
 export const MemberRole = {
-  OWNER: 'OWNER',
-  ADMIN: 'ADMIN',
-  MEMBER: 'MEMBER',
+  OWNER: "OWNER",
+  ADMIN: "ADMIN",
+  MEMBER: "MEMBER",
 } as const;
-export type MemberRole = (typeof MemberRole)[keyof typeof MemberRole];
+export type MemberRole = typeof MemberRole[keyof typeof MemberRole];
 export const Plan = {
-  DISABLED: 'DISABLED',
-  FREE: 'FREE',
-  PRO: 'PRO',
-  ENTERPRISE: 'ENTERPRISE',
+  DISABLED: "DISABLED",
+  FREE: "FREE",
+  PRO: "PRO",
+  ENTERPRISE: "ENTERPRISE",
 } as const;
-export type Plan = (typeof Plan)[keyof typeof Plan];
+export type Plan = typeof Plan[keyof typeof Plan];
 export const Platform = {
-  vercel: 'vercel',
-  vercelEdge: 'vercelEdge',
-  aws: 'aws',
-  flyRedis: 'flyRedis',
-  fly: 'fly',
+  vercel: "vercel",
+  vercelEdge: "vercelEdge",
+  aws: "aws",
+  flyRedis: "flyRedis",
+  fly: "fly",
 } as const;
-export type Platform = (typeof Platform)[keyof typeof Platform];
+export type Platform = typeof Platform[keyof typeof Platform];
 export const Distribution = {
-  RANDOM: 'RANDOM',
-  ALL: 'ALL',
+  RANDOM: "RANDOM",
+  ALL: "ALL",
 } as const;
-export type Distribution = (typeof Distribution)[keyof typeof Distribution];
+export type Distribution = typeof Distribution[keyof typeof Distribution];
 export type Account = {
   id: string;
   userId: string;

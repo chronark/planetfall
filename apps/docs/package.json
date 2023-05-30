@@ -1,9 +1,9 @@
 {
-    "name": "@planetfall/docs",
-    "scripts": {
-        "dev": "mintlify dev"
-    },
-    "devDependencies": {
-        "mintlify": "^3.0.36"
-    }
+  "name": "@planetfall/docs",
+  "scripts": {
+    "dev": "mintlify dev"
+  },
+  "devDependencies": {
+    "mintlify": "^3.0.36"
+  }
 }

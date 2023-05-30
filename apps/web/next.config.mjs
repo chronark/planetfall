@@ -35,10 +35,12 @@ const nextConfig = {
     },
     {
       source: "/:match*",
-      has: [{
-        type: "host",
-        value: "api.planetfall.io",
-      }],
+      has: [
+        {
+          type: "host",
+          value: "api.planetfall.io",
+        },
+      ],
       destination: "https://planetfall-api.chronark.workers.dev/:match*",
     },
   ],

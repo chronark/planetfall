@@ -1,8 +1,9 @@
+import type { Bindings } from "./bindings";
 import { AuthorizationError } from "./errors";
-// import { TRPCError } from "@trpc/server";
-import type { DB, Team } from "./gen/db";
+import type { Team } from "./gen/db";
+import { kysely } from "./kysely";
 import { Policy } from "@planetfall/policies";
-import type { Kysely } from "kysely";
+import { Context } from "hono";
 
 export type AuthorizationResponse = {
   policy: Policy;
@@ -11,43 +12,41 @@ export type AuthorizationResponse = {
   };
 };
 
-export class Authorizer {
-  private readonly db: Kysely<DB>;
+export async function authorize(
+  c: Context<{ Bindings: Bindings }>,
+): Promise<AuthorizationResponse> {
+  const authorizationHeader = c.req.header("authorization");
 
-  constructor(db: Kysely<DB>) {
-    this.db = db;
+  if (!authorizationHeader) {
+    throw new AuthorizationError("Missing authorization header");
   }
-  public async authorize(authorizationHeader: string | null): Promise<AuthorizationResponse> {
-    if (!authorizationHeader) {
-      throw new AuthorizationError("Missing authorization header");
-    }
-    const token = authorizationHeader.replace("Bearer ", "");
+  const token = authorizationHeader.replace("Bearer ", "");
 
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
 
-    const hash = toBase64(buf);
+  const hash = toBase64(buf);
 
-    const apiKey = await this.db
-      .selectFrom("ApiKey")
-      .select("ApiKey.policy")
-      .select("ApiKey.teamId")
-      .where("ApiKey.keyHash", "=", hash)
-      .executeTakeFirst();
+  const apiKey = await kysely(c.env.DATABASE_URL)
+    .selectFrom("ApiKey")
+    .select("ApiKey.policy")
+    .select("ApiKey.teamId")
+    .where("ApiKey.keyHash", "=", hash)
+    .executeTakeFirst();
 
-    if (!apiKey) {
-      throw new AuthorizationError("Unauthorized, invalid api key");
-    }
-
-    const policy = Policy.parse(apiKey.policy);
-
-    return {
-      policy,
-      team: {
-        id: apiKey.teamId,
-      },
-    };
+  if (!apiKey) {
+    throw new AuthorizationError("Unauthorized, invalid api key");
   }
+
+  const policy = Policy.parse(apiKey.policy);
+
+  return {
+    policy,
+    team: {
+      id: apiKey.teamId,
+    },
+  };
 }
+
 function toBase64(buffer: ArrayBuffer) {
   let binary = "";
   const bytes = new Uint8Array(buffer);

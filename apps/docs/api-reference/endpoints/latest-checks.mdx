@@ -1,4 +1,62 @@
 ---
-title: "Get latest check results for endpoint"
-openapi: "GET /v1/endpoints/{endpointId}/checks/latest"
+title: "Get latest Checks"
+description: "Load the last 10 minutes of checks for an endpoint."
+api: "GET /v1/endpoints/{endpointId}/checks/latest/{range}"
 ---
+
+## Request
+
+
+<ParamField path="endpointId" type="string" required>
+The endpoint ID.
+</ParamField>
+<ParamField path="range" type="string" default="10m" required>
+How far back to load checks from. Currently only `10m` is supported.
+</ParamField>
+
+## Response
+
+<ResponseField name="time" type="int" required>
+The time of the check. Unix timestamp in milliseconds.
+</ResponseField>
+<ResponseField name="latency" type="int">
+The latency of the check. In milliseconds. May be omitted if the check timed out.
+</ResponseField>
+<ResponseField name="regionId" type="string" required>
+ The ID of the region that ran the check.
+ See [Regions](/runner/regions) for more information.
+</ResponseField>
+<ResponseField name="status" type="int">
+The HTTP status code of the check. May be omitted if the check timed out.
+</ResponseField>
+<ResponseField name="error" type="string">
+If the check failed, this will be the error message.
+</ResponseField>
+
+
+<RequestExample>
+    ```sh curl
+    curl https://api.planetfall.io/v1/endpoints/ept_1234/checks/latest/10m \
+        -H "Authorization: Bearer <token>"
+    ```
+</RequestExample>
+
+<ResponseExample>
+```json 200 OK
+[
+    {
+        "time": 1616425200000,
+        "latency": 123,
+        "regionId": "aws:us-east-1",
+        "status": 200
+    },
+    {
+        "time": 1616425200000,
+        "latency": 123,
+        "regionId": "aws:us-east-1",
+        "status": 200
+    },
+    //...
+]
+```
+</ResponseExample>

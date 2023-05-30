@@ -1,4 +1,76 @@
 ---
 title: "List Regions"
-openapi: "GET /v1/regions"
+description: "List all regions that are available."
+api: "GET /v1/regions"
 ---
+
+
+
+## Response
+
+<ResponseField name="id" type="string" required>
+ The region ID. This is usually a combination of the platform and region name.
+</ResponseField>
+
+
+<ResponseField name="name" type="string" required>
+    The region name.
+</ResponseField>
+
+
+<ResponseField name="platform" type="string" required>
+    The platform name. `aws`, `fly` or `vercelEdge`
+</ResponseField>
+
+
+<ResponseField name="lat" type="float">
+    The latitude of the region. This is an approximation because exact coordinates are not available.
+</ResponseField>
+
+
+
+
+<ResponseField name="lon" type="float">
+    The longitude of the region. This is an approximation because exact coordinates are not available.
+</ResponseField>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<RequestExample>
+
+```curl curl
+curl https://api.planetfall.io/v1/regions \
+  -H "Authorization: Bearer <token>"
+```
+
+
+</RequestExample>
+
+
+<ResponseExample>
+```json 200 OK
+[
+  {
+    "id": "aws:us-east-1",
+    "name": "US East (N. Virginia)",
+    "platform": "aws",
+    "region": "us-east-1",
+    "lat": 38.8048,
+    "lon": -77.0469
+  },
+  {
+    ...
+  }
+]
+```
+</ResponseExample>

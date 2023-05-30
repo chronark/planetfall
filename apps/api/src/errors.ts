@@ -1,49 +1,25 @@
-import { HTTPError } from "fets";
-import { z } from "zod";
+import { HTTPException } from "hono/http-exception";
 
-export const errorResponses = {
-  400: z.object({
-    code: z.literal("BAD_REQUEST"),
-    message: z.string().optional().describe("The error message"),
-  }),
-  401: z.object({
-    code: z.literal("UNAUTHORIZED"),
-    message: z.string().optional().describe("The error message"),
-  }),
-  403: z.object({
-    code: z.literal("FORBIDDEN"),
-    message: z.string().optional().describe("The error message"),
-  }),
-  404: z.object({
-    code: z.literal("NOT_FOUND"),
-    message: z.string().optional().describe("The error message"),
-  }),
-  500: z.object({
-    code: z.literal("INTERNAL_SERVER_ERROR"),
-    message: z.string().optional().describe("The error message"),
-  }),
-};
-
-export class AuthorizationError extends HTTPError {
+export class AuthorizationError extends HTTPException {
   constructor(message: string) {
-    super(403, "UNAUTHORIZED", {}, { message });
+    super(403, { message });
   }
 }
 
-export class NotFoundError extends HTTPError {
+export class NotFoundError extends HTTPException {
   constructor(message: string) {
-    super(404, "NOT_FOUND", {}, { message });
+    super(404, { message });
   }
 }
 
-export class InternalServerError extends HTTPError {
+export class InternalServerError extends HTTPException {
   constructor(message: string) {
-    super(500, "INTERNAL_SERVER_ERROR", {}, { message });
+    super(500, { message });
   }
 }
 
-export class BadRequestError extends HTTPError {
-  constructor(message: string, error: z.ZodError) {
-    super(400, "BAD_REQUEST", {}, { message, error });
+export class BadRequestError extends HTTPException {
+  constructor(message: string) {
+    super(400, { message });
   }
 }
