@@ -4,13 +4,13 @@ import { kysely } from "@/lib/kysely";
 import { zValidator } from "@hono/zod-validator";
 import { getLatestChecks10Minutes } from "@planetfall/tinybird";
 import { Hono } from "hono";
-import { cache } from "hono/cache";
 import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-export const app = new Hono()
+
+export const app = new Hono() 
 
 app.onError((err, c) => {
   console.error(err.message);
@@ -31,11 +31,6 @@ app.get("/v1/liveness", (c) => c.text("ok"));
 app.get(
   "/v1/regions/:platform?",
   zValidator("query", z.object({ platform: z.enum(["aws", "vercelEdge", "fly"]).optional() })),
-  cache({
-    cacheName: "regions",
-    cacheControl: "public, max-age=3600",
-    wait: true,
-  }),
   async (c) => {
     const { platform } = c.req.valid("query");
     let q = kysely
@@ -190,10 +185,6 @@ app.get("/v1/endpoints/:endpointId", async (c) => {
 app.get(
   "/v1/endpoints/:endpointId/checks/latest/:interval",
   zValidator("param", z.object({ endpointId: z.string(), interval: z.enum(["10m"]) })),
-  cache({
-    cacheName: "checks",
-    cacheControl: "max-age=10",
-  }),
   async (c) => {
     const endpointId = c.req.param("endpointId");
 
