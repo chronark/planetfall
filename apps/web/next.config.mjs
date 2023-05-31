@@ -33,16 +33,7 @@ const nextConfig = {
       source: "/docs/:match*",
       destination: "https://planetfall.mintlify.dev/docs/:match*",
     },
-    {
-      source: "/:match*",
-      has: [
-        {
-          type: "host",
-          value: "api.planetfall.io",
-        },
-      ],
-      destination: "https://planetfall-api.chronark.workers.dev/:match*",
-    },
+    
   ],
   sentry: {
     // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`

@@ -3,8 +3,14 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/v1/:slug*",
-        destination: "/api/v1/:slug*", // Matched parameters can be used in the destination
+        source: "/:match*",
+        has: [
+          {
+            type: "host",
+            value: "api.planetfall.io",
+          },
+        ],
+        destination: "/api/:match*",
       },
     ];
   },
