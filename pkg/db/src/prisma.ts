@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === "production") {
 } else {
   if (!cachedPrisma) {
     cachedPrisma = new PrismaClient();
-    cachedPrismagi.$queryRaw`SET @@boost_cached_queries = true`;
+    cachedPrisma.$queryRaw`SET @@boost_cached_queries = true`;
   }
   prisma = cachedPrisma;
 }
