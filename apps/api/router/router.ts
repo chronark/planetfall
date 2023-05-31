@@ -10,7 +10,7 @@ import { logger } from "hono/logger";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-export const app = new Hono().basePath("/api");
+export const app = new Hono()
 
 app.onError((err, c) => {
   console.error(err.message);
