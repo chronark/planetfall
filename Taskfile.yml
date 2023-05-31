@@ -37,7 +37,6 @@ tasks:
       - terraform -chdir=deployment init -upgrade
       - terraform -chdir=deployment apply -var-file=".tfvars" -auto-approve
 
-      - task: deploy-api 
        
   build-scheduler:
     cmds:
@@ -56,14 +55,3 @@ tasks:
       - docker push {{.CHECK_RUNNER_IMAGE}}:{{.VERSION}}
       - docker push {{.CHECK_RUNNER_IMAGE}}:latest
     
-  build-api:
-    deps:
-      - install
-    cmds:
-      - pnpm turbo run build --filter=api
-
-  deploy-api:
-    deps:
-      - build-api
-    cmds:
-      - pnpm --dir=apps/api ship

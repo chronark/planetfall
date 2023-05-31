@@ -1,7 +1,6 @@
-import type { Bindings } from "./bindings";
 import { AuthorizationError } from "./errors";
-import type { Team } from "./gen/db";
 import { kysely } from "./kysely";
+import type { Team } from "@/gen/db";
 import { Policy } from "@planetfall/policies";
 import { Context } from "hono";
 
@@ -12,9 +11,7 @@ export type AuthorizationResponse = {
   };
 };
 
-export async function authorize(
-  c: Context<{ Bindings: Bindings }>,
-): Promise<AuthorizationResponse> {
+export async function authorize(c: Context): Promise<AuthorizationResponse> {
   const authorizationHeader = c.req.header("authorization");
 
   if (!authorizationHeader) {
@@ -26,7 +23,7 @@ export async function authorize(
 
   const hash = toBase64(buf);
 
-  const apiKey = await kysely(c.env.DATABASE_URL)
+  const apiKey = await kysely
     .selectFrom("ApiKey")
     .select("ApiKey.policy")
     .select("ApiKey.teamId")

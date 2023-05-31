@@ -1,17 +1,16 @@
-import { authorize } from "../auth";
-import { Bindings } from "../bindings";
-import { AuthorizationError, NotFoundError } from "../errors";
-import { kysely } from "../kysely";
+import { authorize } from "@/lib/auth";
+import { AuthorizationError, NotFoundError } from "@/lib/errors";
+import { kysely } from "@/lib/kysely";
 import { zValidator } from "@hono/zod-validator";
+import { getLatestChecks10Minutes } from "@planetfall/tinybird";
 import { Hono } from "hono";
 import { cache } from "hono/cache";
 import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { Tinybird } from "@chronark/zod-bird";
-
-export const app = new Hono<{ Bindings: Bindings }>();
+export const app = new Hono().basePath("/api");
 
 app.onError((err, c) => {
   console.error(err.message);
@@ -39,7 +38,7 @@ app.get(
   }),
   async (c) => {
     const { platform } = c.req.valid("query");
-    let q = kysely(c.env.DATABASE_URL)
+    let q = kysely
       .selectFrom("Region")
       .select("Region.id")
       .select("Region.platform")
@@ -53,10 +52,11 @@ app.get(
     }
     const regions = await q.execute();
 
-    return Response.json(regions, {
+    return new Response(JSON.stringify(regions), {
       status: 200,
       headers: {
         "Cache-Control": "public, max-age=3600",
+        "Content-Type": "application/json",
       },
     });
   },
@@ -65,15 +65,18 @@ app.get(
 app.get("/v1/endpoints", async (c) => {
   const auth = await authorize(c);
 
-  const endpoints = await kysely(c.env.DATABASE_URL)
+  const endpoints = await kysely
     .selectFrom("Endpoint")
     .where("teamId", "=", auth.team.id)
     .selectAll()
     .execute();
 
   if (endpoints.length === 0) {
-    return Response.json([], {
+    return new Response(JSON.stringify([]), {
       status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
   }
 
@@ -93,7 +96,7 @@ app.get("/v1/endpoints", async (c) => {
 
   const endpointsWithRegions = await Promise.all(
     endpointsWithAccess.map(async (endpoint) => {
-      const regions = await kysely(c.env.DATABASE_URL)
+      const regions = await kysely
         .selectFrom("_EndpointToRegion")
         .select("A")
         .select("B")
@@ -126,7 +129,7 @@ app.get("/v1/endpoints", async (c) => {
     }),
   );
 
-  return Response.json(endpointsWithRegions);
+  return NextResponse.json(endpointsWithRegions);
 });
 
 app.get("/v1/endpoints/:endpointId", async (c) => {
@@ -138,7 +141,7 @@ app.get("/v1/endpoints/:endpointId", async (c) => {
     throw new AuthorizationError(access.error);
   }
 
-  const endpoint = await kysely(c.env.DATABASE_URL)
+  const endpoint = await kysely
     .selectFrom("Endpoint")
     .where("Endpoint.id", "=", endpointId)
     .selectAll()
@@ -148,13 +151,13 @@ app.get("/v1/endpoints/:endpointId", async (c) => {
     throw new NotFoundError("Endpoint not found");
   }
 
-  const regions = await kysely(c.env.DATABASE_URL)
+  const regions = await kysely
     .selectFrom("_EndpointToRegion")
     .select("A")
     .select("B")
     .where("A", "=", endpoint.id)
     .execute();
-  return Response.json(
+  return NextResponse.json(
     {
       id: endpoint.id,
       method: endpoint.method,
@@ -189,7 +192,7 @@ app.get(
   zValidator("param", z.object({ endpointId: z.string(), interval: z.enum(["10m"]) })),
   cache({
     cacheName: "checks",
-    cacheControl: "public, max-age=10",
+    cacheControl: "max-age=10",
   }),
   async (c) => {
     const endpointId = c.req.param("endpointId");
@@ -203,25 +206,9 @@ app.get(
       throw new AuthorizationError(access.error);
     }
 
-    const tb = new Tinybird({ token: c.env.TINYBIRD_TOKEN });
+    const checks = await getLatestChecks10Minutes({ endpointId });
 
-    const get10Minutes = tb.buildPipe({
-      pipe: "api__get_latest_10m",
-      parameters: z.object({
-        endpointId: z.string(),
-      }),
-      data: z.object({
-        time: z.string().transform((s) => new Date(s).getTime()),
-        latency: z.number().nullable(),
-        regionId: z.string(),
-        status: z.number().nullable(),
-        error: z.string().nullable(),
-      }),
-    });
-
-    const checks = await get10Minutes({ endpointId });
-
-    return Response.json(
+    return NextResponse.json(
       checks.data.map((check) => ({
         time: check.time,
         latency: check.latency ?? undefined,
