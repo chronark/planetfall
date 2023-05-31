@@ -33,7 +33,6 @@ const nextConfig = {
       source: "/docs/:match*",
       destination: "https://planetfall.mintlify.dev/docs/:match*",
     },
-    
   ],
   sentry: {
     // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
