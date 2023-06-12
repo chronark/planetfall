@@ -33,12 +33,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     },
   });
   console.log(`Creating invoices for ${teams.length} teams`);
-  for (const team of teams) {
+  for (let team of teams) {
     if (!team.stripeCustomerId) {
       console.error(
         `Team ${team.id} does not have a stripeCustomerId. This should not be possible`,
       );
       continue;
+    }
+    // Set the stripe price id for this team
+    if (!team.stripePriceId) {
+      team = await db.team.update({
+        where: {
+          id: team.id,
+        },
+        data: {
+          stripePriceId: env.STRIPE_PRICE_ID_CHECKS,
+        },
+      });
     }
 
     console.log("creating invoice", { teamId: team.id });
@@ -58,9 +69,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (totalUsage > 100000) {
       const invoice = await stripe.invoices.create({
-        customer: team.stripeCustomerId,
+        customer: team.stripeCustomerId!,
         auto_advance: false,
-
         metadata: {
           teamId: team.id,
           plan: team.plan,
@@ -68,10 +78,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
       const invoiceItem = await stripe.invoiceItems.create({
-        customer: team.stripeCustomerId,
+        customer: team.stripeCustomerId!,
         invoice: invoice.id,
         quantity: totalUsage,
-        price: env.STRIPE_PRICE_ID_CHECKS,
+        price: team.stripePriceId ?? env.STRIPE_PRICE_ID_CHECKS,
         period: {
           start: Math.floor(start.getTime() / 1000),
           end: Math.floor(end.getTime() / 1000),
