@@ -82,7 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         invoice: invoice.id,
         quantity: totalUsage,
         price: team.stripePriceId ?? env.STRIPE_PRICE_ID_CHECKS,
-        currency: "usd",
+        currency: team.stripePriceId ? undefined : "usd", // default to usd if no proce is defined
         period: {
           start: Math.floor(start.getTime() / 1000),
           end: Math.floor(end.getTime() / 1000),
