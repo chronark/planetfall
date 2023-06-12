@@ -11,7 +11,7 @@ import {
 import { Loading } from "@/components/loading";
 import { Tag } from "@/components/tag";
 import { trpc } from "@/lib/trpc";
-import { Plan } from "@prisma/client";
+import type { Plan } from "@planetfall/db";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

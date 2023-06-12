@@ -1,4 +1,4 @@
-import { Platform } from "@prisma/client";
+import type { Platform } from "@planetfall/db";
 
 export type Metrics = {
   p75: number;

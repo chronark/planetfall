@@ -131,6 +131,7 @@ model Team {
   plan Plan
 
   stripeCustomerId String?   @unique
+  stripePriceId String?
   trialExpires     DateTime?
 
   invitations TeamInvitation[]
@@ -151,6 +152,7 @@ model Team {
   alerts             Alert[]
   emailChannels      EmailChannel[]
   slackChannels      SlackChannel[]
+
 
   @@index([slug])
 }

@@ -4,7 +4,7 @@ import { Button } from "@/components/button";
 import { Loading } from "@/components/loading";
 import { useToast } from "@/components/toast";
 import { trpc } from "@/lib/trpc/hooks";
-import { Plan } from "@prisma/client";
+import { Plan } from "@planetfall/db";
 import { TRPCError } from "@trpc/server";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

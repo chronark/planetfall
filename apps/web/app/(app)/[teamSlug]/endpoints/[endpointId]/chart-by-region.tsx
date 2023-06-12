@@ -10,8 +10,8 @@ import { MultiSelect } from "@/components/multiselect";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
 import { Text } from "@/components/text";
 import { Area, Line } from "@ant-design/plots";
+import { Region } from "@planetfall/db";
 import type { Check } from "@planetfall/tinybird";
-import { Region } from "@prisma/client";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
