@@ -1,6 +1,7 @@
 import { Endpoint } from "./endpoint";
 import { EndpointData, Metrics } from "./types";
-import { Region, db } from "@planetfall/db";
+import { type Region, db } from "@planetfall/db";
+import "@prisma/client"
 import { getEndpointMetricsOver90Days, getEndpointSeriesOver90Days } from "@planetfall/tinybird";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -77,15 +78,20 @@ export default async function Page(props: { params: { slug: string } }) {
     };
   }
   for (const s of series.data) {
-    data[s.endpointId].regions[s.regionId].series.push({
-      time: s.time,
-      p75: s.p75,
-      p90: s.p90,
-      p95: s.p95,
-      p99: s.p99,
-      count: s.count,
-      errors: s.errors,
-    });
+    try {
+
+      data[s.endpointId].regions[s.regionId].series.push({
+        time: s.time,
+        p75: s.p75,
+        p90: s.p90,
+        p95: s.p95,
+        p99: s.p99,
+        count: s.count,
+        errors: s.errors,
+      });
+    } catch (e) {
+      console.error(`Unable to push to series in region ${s.regionId} in endpoint ${s.endpointId}: ${(e as Error).message}`)
+    }
   }
 
   for (const [endpointId, regions] of Object.entries(data)) {

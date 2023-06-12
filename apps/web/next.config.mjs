@@ -1,4 +1,5 @@
 import { withAxiom } from "next-axiom";
+import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin"
 
 import { withSentryConfig } from "@sentry/nextjs";
 
@@ -54,6 +55,7 @@ const nextConfig = {
   },
   webpack: (config) => {
     config.experiments.asyncWebAssembly = true;
+    config.plugins = [...config.plugins, new PrismaPlugin()]
     return config;
   },
 };
