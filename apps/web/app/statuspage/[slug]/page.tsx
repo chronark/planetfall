@@ -1,7 +1,6 @@
 import { Endpoint } from "./endpoint";
 import { EndpointData, Metrics } from "./types";
 import { type Region, db } from "@planetfall/db";
-import "@prisma/client"
 import { getEndpointMetricsOver90Days, getEndpointSeriesOver90Days } from "@planetfall/tinybird";
 import Link from "next/link";
 import { notFound } from "next/navigation";

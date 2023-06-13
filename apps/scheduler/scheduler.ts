@@ -305,6 +305,7 @@ export class Scheduler {
           method: "POST",
           headers: checkRunnerHeaders,
           body: bodyStr,
+          cache: "no-store",
         });
         if (res.headers.has("x-vercel-id")) {
           this.logger.info("vercel region response", {
