@@ -346,6 +346,7 @@ export const teamRouter = t.router({
 
         await createInvoice({ team, year, month });
       }
+
       await db.team.delete({
         where: { id: input.teamId },
       });

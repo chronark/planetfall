@@ -44,7 +44,7 @@ app.get(
     if (platform) {
       q = q.where("Region.platform", "=", platform);
     }
-    console.log("platform", platform)
+    console.log("platform", platform);
     const regions = await q.execute();
 
     return new Response(JSON.stringify(regions), {

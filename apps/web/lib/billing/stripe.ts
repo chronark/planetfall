@@ -25,20 +25,21 @@ export async function createInvoice({ team, year, month }: Req): Promise<void> {
   });
   const billableUsage = usage.data.reduce((total, day) => total + day.usage, 0);
 
-  if (billableUsage > 0) {
+  if (billableUsage > 100000) {
     const invoice = await stripe.invoices.create({
       customer: team.stripeCustomerId,
       auto_advance: false,
       metadata: {
         teamId: team.id,
         plan: team.plan,
+        period: `${start.getDate()} - ${end.getDate()}`,
       },
     });
     const invoiceItem = await stripe.invoiceItems.create({
       customer: team.stripeCustomerId,
       invoice: invoice.id,
       quantity: billableUsage,
-      price: env.STRIPE_PRICE_ID_CHECKS,
+      price: team.stripePriceId ?? env.STRIPE_PRICE_ID_CHECKS,
       period: {
         start: Math.floor(start.getTime() / 1000),
         end: Math.floor(end.getTime() / 1000),

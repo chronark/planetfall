@@ -151,7 +151,6 @@ export const billingRouter = t.router({
         const customer = await stripe.customers.create({
           email: team.members[0].user.email,
           name: team.name,
-
         });
 
         // @ts-ignore We don't return all the fields, but we don't need them anyways
@@ -169,7 +168,6 @@ export const billingRouter = t.router({
       const portal = await stripe.billingPortal.sessions.create({
         customer: team?.stripeCustomerId!,
         return_url: ctx.req.headers.referer ?? "https://planetfall.io/home",
-
       });
 
       return { url: portal.url };

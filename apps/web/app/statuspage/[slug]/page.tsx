@@ -78,7 +78,6 @@ export default async function Page(props: { params: { slug: string } }) {
   }
   for (const s of series.data) {
     try {
-
       data[s.endpointId].regions[s.regionId].series.push({
         time: s.time,
         p75: s.p75,
@@ -89,7 +88,11 @@ export default async function Page(props: { params: { slug: string } }) {
         errors: s.errors,
       });
     } catch (e) {
-      console.error(`Unable to push to series in region ${s.regionId} in endpoint ${s.endpointId}: ${(e as Error).message}`)
+      console.error(
+        `Unable to push to series in region ${s.regionId} in endpoint ${s.endpointId}: ${
+          (e as Error).message
+        }`,
+      );
     }
   }
 

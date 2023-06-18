@@ -289,7 +289,7 @@ const edgeRegions: Region[] = [
     region: "cle1",
     name: "Cleveland, US",
     lat: 41.505493,
-    lon: -81.681290,
+    lon: -81.68129,
   },
   {
     id: `${Platform.vercelEdge}:cpt1`,
@@ -300,7 +300,7 @@ const edgeRegions: Region[] = [
     region: "cpt1",
     name: "Cape Town, South Africa",
     lat: -33.918861,
-    lon: 18.423300,
+    lon: 18.4233,
   },
   {
     id: `${Platform.vercelEdge}:dub1`,
@@ -310,7 +310,7 @@ const edgeRegions: Region[] = [
     url: "https://planetfall.io/api/v1/edge-ping/dub1",
     region: "dub1",
     name: "Dublin, Ireland",
-    lat: 53.350140,
+    lat: 53.35014,
     lon: -6.266155,
   },
   {
@@ -333,7 +333,7 @@ const edgeRegions: Region[] = [
     region: "gru1",
     name: "São Paulo, Brazil",
     lat: -23.533773,
-    lon: -46.625290,
+    lon: -46.62529,
   },
   {
     id: `${Platform.vercelEdge}:hkg1`,
@@ -466,7 +466,7 @@ const customVercelEdgeConfigRegions: Region[] = [
     url: "https://planetfall-vercel-edge-config.vercel.app/api/bom1",
     region: "bom1",
     name: "Mumbai, India",
-    lat: 19.0760,
+    lat: 19.076,
     lon: 72.8777,
   },
   {

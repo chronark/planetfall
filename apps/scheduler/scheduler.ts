@@ -279,7 +279,7 @@ export class Scheduler {
          */
         const checkRunnerHeaders = new Headers({
           "Content-Type": "application/json",
-          "Cache-Control": "no-cache"
+          "Cache-Control": "no-cache",
         });
         if (region.platform === "fly") {
           checkRunnerHeaders.set("Fly-Prefer-Region", region.region);

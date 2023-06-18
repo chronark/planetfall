@@ -95,8 +95,8 @@ async function check(req: CheckRequest): Promise<PingResponse> {
     redirect: req.followRedirects ? "follow" : "manual",
     cache: "no-store",
     next: {
-      revalidate: 0
-    }
+      revalidate: 0,
+    },
   });
   const latency = Date.now() - now;
   clearTimeout(timeout);
