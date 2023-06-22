@@ -34,7 +34,7 @@ export const teamRouter = t.router({
       if (!user) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
-      if (user.teams.filter((t) => t.role === "OWNER").length >= 3) {
+      if (user.teams.filter((t) => t.role === "OWNER").length >= 20) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You can only own 3 teams, please contact support@planetfall.io",
