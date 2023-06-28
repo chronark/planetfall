@@ -2,6 +2,7 @@
 locals {
   fly_regions = toset([
     "ams",
+    "bom",
     "cdg",
     "den",
     "dfw",
@@ -13,7 +14,6 @@ locals {
     "jnb",
     "lax",
     "lhr",
-    "maa",
     "mad",
     "mia",
     "nrt",

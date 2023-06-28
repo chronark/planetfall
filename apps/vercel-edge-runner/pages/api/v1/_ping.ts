@@ -92,7 +92,6 @@ async function check(req: CheckRequest): Promise<PingResponse> {
     body: req.body,
     headers: req.headers,
     signal: controller.signal,
-    redirect: req.followRedirects ? "follow" : "manual",
     cache: "no-store",
     next: {
       revalidate: 0,

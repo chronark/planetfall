@@ -38,7 +38,4 @@ provider "vercel" {
 
 provider "fly" {
   fly_api_token        = var.fly_token
-  useinternaltunnel    = true
-  internaltunnelorg    = var.fly_org
-  internaltunnelregion = "fra"
 }
