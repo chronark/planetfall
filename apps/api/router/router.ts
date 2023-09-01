@@ -9,6 +9,7 @@ import { logger } from "hono/logger";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { Redis } from "@upstash/redis"
 
 type Check = {
   time: number
@@ -19,7 +20,7 @@ type Check = {
 }
 
 
-const cache = new Map<string, { expires: number, checks: Check[] }>()
+const redis = Redis.fromEnv()
 
 export const app = new Hono();
 
@@ -208,12 +209,11 @@ app.get(
     if (!access.valid) {
       throw new AuthorizationError(access.error);
     }
+    const cacheKey = c.req.path
+    console.log({ cacheKey })
 
-    let checks: Check[] = []
-    const cached = cache.get(endpointId)
-    if (cached && cached.expires < Date.now()) {
-      checks = cached.checks
-    } else {
+    let checks = await redis.get<Check[]>(endpointId)
+    if (!checks) {
       checks = await getLatestChecks10Minutes({ endpointId }).then((res) => res.data.map((check) => ({
         time: check.time,
         latency: check.latency ?? undefined,
@@ -222,11 +222,11 @@ app.get(
         error: check.error ?? undefined,
       })))
 
-      cache.set(endpointId, { expires: Date.now() + 5 * 60 * 1000, checks })
+      c.executionCtx.waitUntil(redis.set(endpointId, checks, { ex: 60 }))
     }
 
     return NextResponse.json(
-      checks,
+      checks ?? [],
     );
   },
 );

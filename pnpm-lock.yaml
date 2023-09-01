@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -32,6 +36,9 @@ importers:
       '@planetfall/tinybird':
         specifier: workspace:^
         version: link:../../pkg/tinybird
+      '@upstash/redis':
+        specifier: ^1.20.6
+        version: 1.20.6
       hono:
         specifier: ^3.2.3
         version: 3.2.3
