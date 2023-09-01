@@ -84,6 +84,7 @@ app.get("/v1/endpoints", async (c) => {
       status: 200,
       headers: {
         "Content-Type": "application/json",
+        "Cache-Control": "public, max-age=60",
       },
     });
   }
@@ -137,7 +138,13 @@ app.get("/v1/endpoints", async (c) => {
     }),
   );
 
-  return NextResponse.json(endpointsWithRegions);
+  return NextResponse.json(endpointsWithRegions, {
+    headers: {
+      "Cache-Control": "public, max-age=300",
+      "Content-Type": "application/json",
+    },
+
+  });
 });
 
 app.get("/v1/endpoints/:endpointId", async (c) => {
@@ -191,6 +198,12 @@ app.get("/v1/endpoints/:endpointId", async (c) => {
     },
     {
       status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=300",
+        "Content-Type": "application/json",
+      },
+
+
     },
   );
 });
@@ -210,9 +223,8 @@ app.get(
       throw new AuthorizationError(access.error);
     }
     const cacheKey = c.req.path
-    console.log({ cacheKey })
 
-    let checks = await redis.get<Check[]>(endpointId)
+    let checks = await redis.get<Check[]>(cacheKey)
     if (!checks) {
       checks = await getLatestChecks10Minutes({ endpointId }).then((res) => res.data.map((check) => ({
         time: check.time,
@@ -222,11 +234,18 @@ app.get(
         error: check.error ?? undefined,
       })))
 
-      c.executionCtx.waitUntil(redis.set(endpointId, checks, { ex: 60 }))
+      await redis.set(cacheKey, checks, { ex: 60 })
     }
 
     return NextResponse.json(
       checks ?? [],
+      {
+        headers: {
+          "Cache-Control": "public, max-age=60",
+          "Content-Type": "application/json",
+        },
+
+      }
     );
   },
 );
