@@ -4,12 +4,9 @@ export const config = {
   regions: ["arn1"],
 };
 
-
-
 import { ping } from "./_ping";
 
-export const dynamic = "force-dynamic"
-
+export const dynamic = "force-dynamic";
 
 export default async function handler(req: NextRequest): Promise<NextResponse> {
   if (req.method !== "POST") {

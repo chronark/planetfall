@@ -33,22 +33,7 @@ func NewIdleChecker() *IdleChecker {
 		Close:         make(chan struct{}),
 	}
 
-	t := time.NewTicker(10 * time.Second)
-	go func() {
-
-		for range t.C {
-			log.Println("Checking if idle")
-			i.Lock()
-			lastAccessed := i.lastHeartbeat
-			i.Unlock()
-			if time.Since(lastAccessed) > time.Minute {
-				log.Println("IdleChecker: Shutting down")
-				t.Stop()
-				i.Close <- struct{}{}
-			}
-		}
-
-	}()
+	
 	return i
 }
 

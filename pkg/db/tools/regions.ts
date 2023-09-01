@@ -442,7 +442,7 @@ const edgeRegions: Region[] = [
     url: "https://planetfall-edge-runner.vercel.app/api/v1/syd1",
     region: "syd1",
     name: "Sydney, Australia",
-    lat: 33.8688,
+    lat: -33.8688,
     lon: 151.2093,
   },
 ];

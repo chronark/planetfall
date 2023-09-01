@@ -80,12 +80,12 @@ export async function ping(req: PingRequest): Promise<PingResponse[]> {
 }
 
 async function check(req: CheckRequest): Promise<PingResponse> {
-  const now = Date.now();
   const controller = new AbortController();
   const timeout = setTimeout(
     () => controller.abort(new Error(`Request timeout reached after ${req.timeout} ms`)),
     req.timeout,
   );
+  const now = Date.now();
   const res = await fetch(req.url, {
     keepalive: true,
     method: req.method,

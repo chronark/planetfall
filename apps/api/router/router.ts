@@ -9,6 +9,18 @@ import { logger } from "hono/logger";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+
+type Check = {
+  time: number
+  latency?: number
+  regionId: string
+  status?: number
+  error?: string
+}
+
+
+const cache = new Map<string, { expires: number, checks: Check[] }>()
+
 export const app = new Hono();
 
 app.onError((err, c) => {
@@ -197,16 +209,24 @@ app.get(
       throw new AuthorizationError(access.error);
     }
 
-    const checks = await getLatestChecks10Minutes({ endpointId });
-
-    return NextResponse.json(
-      checks.data.map((check) => ({
+    let checks: Check[] = []
+    const cached = cache.get(endpointId)
+    if (cached && cached.expires < Date.now()) {
+      checks = cached.checks
+    } else {
+      checks = await getLatestChecks10Minutes({ endpointId }).then((res) => res.data.map((check) => ({
         time: check.time,
         latency: check.latency ?? undefined,
         regionId: check.regionId,
         status: check.status ?? undefined,
         error: check.error ?? undefined,
-      })),
+      })))
+
+      cache.set(endpointId, { expires: Date.now() + 5 * 60 * 1000, checks })
+    }
+
+    return NextResponse.json(
+      checks,
     );
   },
 );

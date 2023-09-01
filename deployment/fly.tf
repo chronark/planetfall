@@ -52,7 +52,7 @@ resource "fly_machine" "check_runner" {
 
   cpus     = 1
   cputype  = "shared"
-  memorymb = 1024
+  memorymb = 512
   env = {
     AXIOM_TOKEN        = var.axiom_token
     AXIOM_ORG          = var.axiom_org
